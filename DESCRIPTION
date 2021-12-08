@@ -1,0 +1,75 @@
+Package: specific
+Title: Specify Candidate Mental Health System Models
+Version: 0.0.0.9001
+Authors@R: c(
+    person("Matthew", "Hamilton", , "matthew.hamilton@orygen.org.au", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-7407-9194")),
+    person("Caroline", "Gao", , "caroline.gao@orygen.org.au", role = "aut",
+           comment = c(ORCID = "0000-0002-0987-2759")),
+    person("Orygen", role = c("cph", "fnd")),
+    person("Headspace", role = "fnd"),
+    person("National Health and Medical Research Council", role = "fnd")
+  )
+Description: Tools to formalise inverse problems to be solved as part of
+    the development of open and modular mental health systems.  This
+    development version of the specific package has been made available as
+    part of the process of testing and documenting the package.  If you
+    have any questions, please contact the authors
+    (matthew.hamilton@orygen.org.au).
+License: GPL-3 + file LICENSE
+URL: https://ready4-dev.github.io/specific/,
+    https://github.com/ready4-dev/specific,
+    https://ready4-dev.github.io/ready4/
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Imports: 
+    assertthat,
+    boot,
+    Boruta,
+    brms,
+    caret,
+    cowplot,
+    dataverse,
+    DescTools,
+    dplyr,
+    enrichwith,
+    ggalt,
+    ggplot2,
+    here,
+    Hmisc,
+    kableExtra,
+    knitr,
+    knitrBootstrap,
+    lifecycle,
+    magrittr,
+    MASS,
+    methods,
+    pacman,
+    psych,
+    purrr,
+    randomForest,
+    ready4show (>= 0.0.0.9056),
+    ready4use (>= 0.0.0.9199),
+    rlang,
+    rmarkdown,
+    stats,
+    stringi,
+    stringr,
+    synthpop,
+    testthat,
+    tibble,
+    tidyr,
+    tidyselect,
+    utils,
+    viridis,
+    xfun,
+    youthvars (>= 0.0.0.9086)
+VignetteBuilder: knitr
+Depends: 
+    ready4
+Remotes: 
+    ready4-dev/ready4,
+    ready4-dev/ready4show,
+    ready4-dev/ready4use,
+    ready4-dev/youthvars
