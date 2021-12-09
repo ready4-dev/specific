@@ -111,9 +111,9 @@ We next create an object `ds_smry_ls` to store a description of some structural 
 ds_smry_ls <- make_ds_smry_ls(candidate_predrs_chr = predictors_lup$short_name_chr,
                               candidate_covar_nms_chr = c("d_sex_birth_s", "d_age",  "d_sexual_ori_s", "d_relation_s", "d_studying_working"),
                               depnt_var_nm_1L_chr = "EQ5D_total_dbl",
-                              dictionary_tb = dictionary_tb,
-                              id_var_nm_1L_chr = "uid",
-                              round_var_nm_1L_chr = "Timepoint",
+                              dictionary_tb = dictionary_tb, #Dyad
+                              id_var_nm_1L_chr = "uid", # Profile
+                              round_var_nm_1L_chr = "Timepoint", # Series
                               round_bl_val_1L_chr = "BL",
                               predictors_lup = predictors_lup)
 ```
@@ -134,7 +134,7 @@ mdl_types_lup %>%
 We modify this table as appropriate (in the below example, we leave it unchanged). We then add the lookup table to a new object, `mdl_smry_ls` which stores information about the candidate models we will be using. 
 
 ```{r}
-mdl_smry_ls <- mdl_types_lup %>%
+mdl_smry_ls <- mdl_types_lup %>% # New specific cls
   make_mdl_smry_ls()
 ```
 
