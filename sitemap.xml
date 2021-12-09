@@ -121,9 +121,6 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/knit_from_tmpl.html</loc>
-  </url>
-  <url>
     <loc>/reference/knit_mdl_rprt.html</loc>
   </url>
   <url>
@@ -199,9 +196,6 @@
     <loc>/reference/make_funding_text.html</loc>
   </url>
   <url>
-    <loc>/reference/make_header_yaml_args_ls.html</loc>
-  </url>
-  <url>
     <loc>/reference/make_hlth_utl_and_predrs_ls.html</loc>
   </url>
   <url>
@@ -260,12 +254,6 @@
   </url>
   <url>
     <loc>/reference/make_nbr_included_text.html</loc>
-  </url>
-  <url>
-    <loc>/reference/make_output_format_ls.html</loc>
-  </url>
-  <url>
-    <loc>/reference/make_path_params_ls.html</loc>
   </url>
   <url>
     <loc>/reference/make_paths_to_ss_plts_ls.html</loc>
@@ -514,15 +502,6 @@
     <loc>/reference/write_box_cox_tfmn.html</loc>
   </url>
   <url>
-    <loc>/reference/write_csp_output.html</loc>
-  </url>
-  <url>
-    <loc>/reference/write_main_outp_dir.html</loc>
-  </url>
-  <url>
-    <loc>/reference/write_manuscript.html</loc>
-  </url>
-  <url>
     <loc>/reference/write_mdl_cmprsn.html</loc>
   </url>
   <url>
@@ -554,15 +533,6 @@
   </url>
   <url>
     <loc>/reference/write_predr_cmprsn_outps.html</loc>
-  </url>
-  <url>
-    <loc>/reference/write_report.html</loc>
-  </url>
-  <url>
-    <loc>/reference/write_reporting_dir.html</loc>
-  </url>
-  <url>
-    <loc>/reference/write_rprt_with_rcrd.html</loc>
   </url>
   <url>
     <loc>/reference/write_scndry_analysis.html</loc>
