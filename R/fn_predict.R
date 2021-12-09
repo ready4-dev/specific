@@ -495,3 +495,46 @@ predict_uncnstrd_utl <- function (data_tb, model_mdl, new_data_is_1L_chr = "Pred
         tfmn_is_outp_1L_lgl = T)
     return(new_data_dbl)
 }
+#' Predict values
+#' @description predict_vals() is a Predict function that makes predictions from data using a specified statistical model. Specifically, this function implements an algorithm to predict values. The function returns Predicted values (a double vector).
+#' @param data_tb Data (a tibble)
+#' @param model_mdl Model (a model)
+#' @param family_1L_chr Family (a character vector of length one), Default: 'NA'
+#' @param force_new_data_1L_lgl Force new data (a logical vector of length one), Default: F
+#' @param min_max_vals_dbl Minimum maximum values (a double vector), Default: numeric(0)
+#' @param is_brms_mdl_1L_lgl Is bayesian regression models model (a logical vector of length one), Default: T
+#' @param impute_1L_lgl Impute (a logical vector of length one), Default: T
+#' @param new_data_is_1L_chr New data is (a character vector of length one), Default: 'Predicted'
+#' @param predn_type_1L_chr Prediction type (a character vector of length one), Default: NULL
+#' @param sd_dbl Standard deviation (a double vector), Default: NA
+#' @param tfmn_1L_chr Transformation (a character vector of length one), Default: 'NTF'
+#' @param tfmn_for_bnml_1L_lgl Transformation for binomial (a logical vector of length one), Default: F
+#' @param var_cls_fn Variable class (a function), Default: NULL
+#' @return Predicted values (a double vector)
+#' @rdname predict_vals
+#' @export 
+#' @importFrom rlang exec
+predict_vals <- function (data_tb, model_mdl, family_1L_chr = NA_character_, 
+    force_new_data_1L_lgl = F, min_max_vals_dbl = numeric(0), 
+    is_brms_mdl_1L_lgl = T, impute_1L_lgl = T, new_data_is_1L_chr = "Predicted", 
+    predn_type_1L_chr = NULL, sd_dbl = NA_real_, tfmn_1L_chr = "NTF", 
+    tfmn_for_bnml_1L_lgl = F, var_cls_fn = NULL) 
+{
+    predd_vals_dbl <- predict_uncnstrd_utl(data_tb = data_tb, 
+        model_mdl = model_mdl, new_data_is_1L_chr = new_data_is_1L_chr, 
+        predn_type_1L_chr = predn_type_1L_chr, sd_dbl = sd_dbl, 
+        tfmn_for_bnml_1L_lgl = tfmn_for_bnml_1L_lgl, family_1L_chr = family_1L_chr, 
+        tfmn_1L_chr = tfmn_1L_chr, force_new_data_1L_lgl = force_new_data_1L_lgl, 
+        is_brms_mdl_1L_lgl = is_brms_mdl_1L_lgl)
+    if (impute_1L_lgl) 
+        predd_vals_dbl[which(is.na(predd_vals_dbl))] <- predd_vals_dbl %>% 
+            na.omit() %>% mean()
+    if (!identical(numeric(0), min_max_vals_dbl)) {
+        predd_vals_dbl[which(predd_vals_dbl > min_max_vals_dbl[2])] <- min_max_vals_dbl[2]
+        predd_vals_dbl[which(predd_vals_dbl < min_max_vals_dbl[1])] <- min_max_vals_dbl[1]
+    }
+    if (!is.null(var_cls_fn)) {
+        predd_vals_dbl <- predd_vals_dbl %>% rlang::exec(.fn = var_cls_fn)
+    }
+    return(predd_vals_dbl)
+}

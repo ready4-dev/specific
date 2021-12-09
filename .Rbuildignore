@@ -23,3 +23,5 @@
 ^data-raw/fns/write\.R$
 ^\.github$
 ^initial_setup\.R$
+^data-raw/draft_vignettes/Output/A_Candidate_Mdls_Cmprsn/A_TFMN_CMPRSN_DNSTY\.png$
+^data-raw/draft_vignettes/V_01\.Rmd$

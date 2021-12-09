@@ -83,7 +83,7 @@ x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify and Investigate Can
                                                                                                  "make_ten_folds_tbl_title",
                                                                                                  "make_tfmn_cmprsn_plt",
                                                                                                  "make_within_between_ratios_text",
-                                                                                                 "predict_utility",
+                                                                                                 "predict_vals",
                                                                                                  "print_all_plts_for_mdl_set",
                                                                                                  "print_cohort_table",
                                                                                                  "print_cors_tbl",

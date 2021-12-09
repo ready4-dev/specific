@@ -454,38 +454,40 @@ predict_uncnstrd_utl <- function(data_tb, # Rename and generalise from utility
                             tfmn_is_outp_1L_lgl = T)
   return(new_data_dbl)
 }
-# predict_utility <- function (data_tb, ## This should be a TTU method. Generalised version called from specific.
-#                              tfmn_1L_chr = "NTF",
-#                              model_mdl,
-#                              force_min_max_1L_lgl = T,
-#                              force_new_data_1L_lgl = F,
-#                              utl_min_val_1L_dbl = 0.03,
-#                              impute_1L_lgl = T,
-#                              utl_cls_fn = NULL,
-#                              new_data_is_1L_chr = "Predicted",
-#                              predn_type_1L_chr = NULL,
-#                              sd_dbl = NA_real_,
-#                              tfmn_for_bnml_1L_lgl = F,
-#                              family_1L_chr = NA_character_,
-#                              is_brms_mdl_1L_lgl = T){
-#   predd_utl_dbl <- predict_uncnstrd_utl(data_tb = data_tb,
-#                                         model_mdl = model_mdl,
-#                                         new_data_is_1L_chr = new_data_is_1L_chr,
-#                                         predn_type_1L_chr = predn_type_1L_chr,
-#                                         sd_dbl = sd_dbl,
-#                                         tfmn_for_bnml_1L_lgl = tfmn_for_bnml_1L_lgl,
-#                                         family_1L_chr = family_1L_chr,
-#                                         tfmn_1L_chr = tfmn_1L_chr,
-#                                         force_new_data_1L_lgl = force_new_data_1L_lgl,
-#                                         is_brms_mdl_1L_lgl = is_brms_mdl_1L_lgl)
-#     if(impute_1L_lgl)
-#       predd_utl_dbl[which(is.na(predd_utl_dbl))] <- predd_utl_dbl %>% na.omit() %>% mean()
-#     if(force_min_max_1L_lgl){
-#       predd_utl_dbl[which(predd_utl_dbl>1)] <- 1
-#       predd_utl_dbl[which(predd_utl_dbl<utl_min_val_1L_dbl)] <- utl_min_val_1L_dbl
-#     }
-#     if(!is.null(utl_cls_fn)){
-#       predd_utl_dbl <- predd_utl_dbl %>% rlang::exec(.fn = utl_cls_fn)
-#     }
-#     return(predd_utl_dbl)
-# }
+predict_vals <- function (data_tb, ## This should be a TTU method. Generalised version called from specific.
+                         model_mdl,
+                         family_1L_chr = NA_character_,
+                         #force_min_max_1L_lgl = T,
+                         force_new_data_1L_lgl = F,
+                         min_max_vals_dbl = numeric(0),
+                         is_brms_mdl_1L_lgl = T,
+                         impute_1L_lgl = T,
+                         new_data_is_1L_chr = "Predicted",
+                         predn_type_1L_chr = NULL,
+                         sd_dbl = NA_real_,
+                         tfmn_1L_chr = "NTF",
+                         tfmn_for_bnml_1L_lgl = F,
+                         var_cls_fn = NULL
+                             #utl_min_val_1L_dbl = 0.03,
+                             ){
+  predd_vals_dbl <- predict_uncnstrd_utl(data_tb = data_tb,
+                                        model_mdl = model_mdl,
+                                        new_data_is_1L_chr = new_data_is_1L_chr,
+                                        predn_type_1L_chr = predn_type_1L_chr,
+                                        sd_dbl = sd_dbl,
+                                        tfmn_for_bnml_1L_lgl = tfmn_for_bnml_1L_lgl,
+                                        family_1L_chr = family_1L_chr,
+                                        tfmn_1L_chr = tfmn_1L_chr,
+                                        force_new_data_1L_lgl = force_new_data_1L_lgl,
+                                        is_brms_mdl_1L_lgl = is_brms_mdl_1L_lgl)
+    if(impute_1L_lgl)
+      predd_vals_dbl[which(is.na(predd_vals_dbl))] <- predd_vals_dbl %>% na.omit() %>% mean()
+    if(!identical(numeric(0),min_max_vals_dbl)){
+      predd_vals_dbl[which(predd_vals_dbl>min_max_vals_dbl[2])] <- min_max_vals_dbl[2]
+      predd_vals_dbl[which(predd_vals_dbl<min_max_vals_dbl[1])] <- min_max_vals_dbl[1]
+    }
+    if(!is.null(var_cls_fn)){
+      predd_vals_dbl <- predd_vals_dbl %>% rlang::exec(.fn = var_cls_fn)
+    }
+    return(predd_vals_dbl)
+}
