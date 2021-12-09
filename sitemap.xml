@@ -31,6 +31,12 @@
     <loc>/reference/add_uids_to_tbs_ls.html</loc>
   </url>
   <url>
+    <loc>/reference/add_utility_predn_to_ds.html</loc>
+  </url>
+  <url>
+    <loc>/reference/add_utl_predn_to_new_ds.html</loc>
+  </url>
+  <url>
     <loc>/reference/calculate_depnt_var_tfmn.html</loc>
   </url>
   <url>
@@ -386,6 +392,9 @@
   </url>
   <url>
     <loc>/reference/predict_uncnstrd_utl.html</loc>
+  </url>
+  <url>
+    <loc>/reference/predict_vals.html</loc>
   </url>
   <url>
     <loc>/reference/print_all_plts_for_mdl_set.html</loc>
