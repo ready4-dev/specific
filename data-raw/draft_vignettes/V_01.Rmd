@@ -125,7 +125,7 @@ Our first analytic task is to test which models, predictors and covariates perfo
 We begin by reviewing the `TTU` packages lookup table of types of models we can test.
 
 ```{r}
-mdl_types_lup <- TTU::get_cndts_for_mxd_mdls()
+mdl_types_lup <- get_cndts_for_mxd_mdls()
 mdl_types_lup %>%
     ready4show::print_table(output_type_1L_chr = "HTML",
                           caption_1L_chr = "Model types lookup table")
@@ -139,7 +139,6 @@ mdl_smry_ls <- mdl_types_lup %>%
 ```
 
 ```{r warning=F, message=F}
-
 cmprsns_ls <- write_mdl_cmprsn(scored_data_tb = ds_tb,
                                 ds_smry_ls = ds_smry_ls,
                                 mdl_smry_ls = mdl_smry_ls,

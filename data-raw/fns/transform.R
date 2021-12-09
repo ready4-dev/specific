@@ -20,8 +20,9 @@ transform_data_tb_for_cmprsn <- function (data_tb, model_mdl,
   }else{
     min_max_vals_dbl <- numeric(0)
   }
-  new_data_dbl <- predict_utility(data_tb = data_tb, # Call generalised method once it is implemented
+  new_data_dbl <- predict_vals(data_tb = data_tb, # Call generalised method once it is implemented
                                   tfmn_1L_chr = tfmn_1L_chr,
+                                  min_max_vals_dbl = min_max_vals_dbl,
                                   model_mdl = model_mdl,
                                   #force_min_max_1L_lgl = !is.na(utl_min_val_1L_dbl),
                                   force_new_data_1L_lgl = T,
@@ -41,7 +42,6 @@ transform_data_tb_for_cmprsn <- function (data_tb, model_mdl,
         !!rlang::sym(depnt_var_nm_1L_chr)))
     return(tfd_data_tb)
 }
-
 transform_depnt_var_nm <- function (depnt_var_nm_1L_chr, tfmn_1L_chr = "NTF")
 {
     tfd_depnt_var_nm_1L_chr <- paste0(depnt_var_nm_1L_chr,

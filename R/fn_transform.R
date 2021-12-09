@@ -58,8 +58,9 @@ transform_data_tb_for_cmprsn <- function (data_tb, model_mdl, depnt_var_nm_1L_ch
     else {
         min_max_vals_dbl <- numeric(0)
     }
-    new_data_dbl <- predict_utility(data_tb = data_tb, tfmn_1L_chr = tfmn_1L_chr, 
-        model_mdl = model_mdl, force_new_data_1L_lgl = T, impute_1L_lgl = impute_1L_lgl, 
+    new_data_dbl <- predict_vals(data_tb = data_tb, tfmn_1L_chr = tfmn_1L_chr, 
+        min_max_vals_dbl = min_max_vals_dbl, model_mdl = model_mdl, 
+        force_new_data_1L_lgl = T, impute_1L_lgl = impute_1L_lgl, 
         utl_cls_fn = utl_cls_fn, new_data_is_1L_chr = new_data_is_1L_chr, 
         predn_type_1L_chr = predn_type_1L_chr, sd_dbl = sd_dbl, 
         tfmn_for_bnml_1L_lgl = tfmn_for_bnml_1L_lgl, family_1L_chr = family_1L_chr, 
