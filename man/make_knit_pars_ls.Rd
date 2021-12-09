@@ -38,4 +38,3 @@ Knit pars (a list)
 \description{
 make_knit_pars_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make knit pars list. The function returns Knit pars (a list).
 }
-\keyword{internal}
