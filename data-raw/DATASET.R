@@ -123,7 +123,8 @@ x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify and Investigate Can
                            lifecycle_stage_1L_chr = "experimental",
                            path_to_pkg_logo_1L_chr = "../../../../../Documentation/Images/specific-logo/default.png",
                            piggyback_to_1L_chr = "ready4-dev/ready4",
-                           ready4_type_1L_chr = "modelling"#, zenodo_badge_1L_chr = "[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5722708.svg)](https://doi.org/10.5281/zenodo.5722708)"
+                           ready4_type_1L_chr = "modelling",
+                           zenodo_badge_1L_chr = "[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5768689.svg)](https://doi.org/10.5281/zenodo.5768689)"
   )
 ## y
 z <- ready4pack::make_pt_ready4pack_manifest(x#, constructor_r3 = y#,
