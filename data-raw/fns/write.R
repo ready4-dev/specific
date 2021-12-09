@@ -1,7 +1,7 @@
 write_analyses <- function(input_params_ls,
                            abstract_args_ls = NULL,
                            start_at_int = c(2,1)){
-  write_report(params_ls = input_params_ls$params_ls,
+  ready4show::write_report(params_ls = input_params_ls$params_ls,
                paths_ls = input_params_ls$path_params_ls$paths_ls,
                rprt_nm_1L_chr = "AAA_PMRY_ANLYS_MTH",
                abstract_args_ls = abstract_args_ls,
@@ -47,152 +47,6 @@ write_box_cox_tfmn <- function (data_tb, predr_var_nm_1L_chr, path_to_write_to_1
                                               plt_nm_1L_chr = paste0(fl_nm_pfx_1L_chr, "_", predr_var_nm_1L_chr,
                                                                      "_", "BOXCOX"), height_1L_dbl = height_1L_dbl, width_1L_dbl = width_1L_dbl)
   return(path_to_plot_1L_chr)
-}
-write_csp_output <- function(path_to_csp_1L_chr,# Move to ready4show?
-                             dv_ds_doi_1L_chr = NULL,
-                             execute_1L_lgl = T){
-  readLines(path_to_csp_1L_chr) %>%
-    purrr::map_chr(~ifelse(.x == "knitr::opts_chunk$set(eval = F)",
-                           "knitr::opts_chunk$set(eval = T)",
-                           .x)) %>%
-  writeLines(con = path_to_csp_1L_chr)
-  path_to_r_script_1L_chr <- stringr::str_sub(path_to_csp_1L_chr,end=-3)
-  knitr::purl(path_to_csp_1L_chr,
-              path_to_r_script_1L_chr)
-  readLines(path_to_csp_1L_chr) %>%
-    purrr::map_chr(~ifelse(.x == "knitr::opts_chunk$set(eval = T)",
-                           "knitr::opts_chunk$set(eval = F)",
-                           .x)) %>%
-    writeLines(con = path_to_csp_1L_chr)
-  if(execute_1L_lgl){
-    old_wd_1L_chr <- getwd()
-    path_info_ls <- DescTools::SplitPath(path_to_r_script_1L_chr)
-    setwd(path_info_ls$dirname)
-    source(path_info_ls$fullfilename)
-    setwd(old_wd_1L_chr)
-  }
-  rmarkdown::render(path_to_csp_1L_chr)
-  if(!is.null(dv_ds_doi_1L_chr)){
-    dataverse::add_dataset_file(paste0(stringr::str_sub(path_to_csp_1L_chr, end=-4),"pdf"),
-                                dataset = dv_ds_doi_1L_chr,
-                                description = "Methods Report 1: Complete Study Program")
-  }
-}
-write_main_outp_dir <- function(params_ls = NULL, # Move to ready4show?
-                                use_fake_data_1L_lgl = F,
-                                R_fl_nm_1L_chr = "aaaaaaaaaa.txt"){
-  file.create(R_fl_nm_1L_chr)
-  R_fl_nm_1L_chr <- list.files() %>% purrr::pluck(1)
-  paths_ls <- ready4show::make_paths_ls(append(params_ls,list(use_fake_data_1L_lgl = use_fake_data_1L_lgl)),
-                                        depth_1L_int = 0) #
-  paths_ls$path_to_current_1L_chr <- ifelse(!is.null(paths_ls$path_to_current_1L_chr),
-                                            paths_ls$path_to_current_1L_chr,
-                                            params_ls$path_to_current_1L_chr)
-  here::i_am(paste0(paths_ls$path_from_top_level_1L_chr,
-                    "/",
-                    paths_ls$path_to_current_1L_chr,
-                    "/",
-                    R_fl_nm_1L_chr))
-  dir.create(paste0(here::here(paths_ls$path_from_top_level_1L_chr),
-                    "/",
-                    paths_ls$write_to_dir_nm_1L_chr))
-  paths_ls$R_fl_nm_1L_chr <- R_fl_nm_1L_chr
-  paths_ls <- youthvars::write_all_outp_dirs(paths_ls)
-  return(paths_ls)
-}
-write_manuscript <- function(abstract_args_ls = NULL,# Move to ready4show?
-                             input_params_ls = NULL,
-                             results_ls = NULL,
-                             figures_in_body_lgl = NULL,
-                             output_type_1L_chr = NULL,
-                             tables_in_body_lgl = NULL,
-                             title_1L_chr = "Scientific manuscript",
-                             version_1L_chr = "0.5",
-                             write_to_dv_1L_lgl = F){
-  mkdn_data_dir_1L_chr <- ifelse(!is.null(input_params_ls),
-                                 input_params_ls$path_params_ls$paths_ls$mkdn_data_dir_1L_chr,
-                                 results_ls$path_params_ls$paths_ls$mkdn_data_dir_1L_chr)
-  outp_dir_1L_chr <- ifelse(!is.null(input_params_ls),
-                            input_params_ls$path_params_ls$paths_ls$output_data_dir_1L_chr,
-                            results_ls$path_params_ls$paths_ls$output_data_dir_1L_chr)
-  output_type_1L_chr <- ifelse(!is.null(output_type_1L_chr),
-                               output_type_1L_chr,
-                               ifelse(!is.null(input_params_ls),
-                               input_params_ls$output_format_ls$manuscript_outp_1L_chr,
-                               results_ls$output_format_ls$manuscript_outp_1L_chr))
-  path_to_ms_mkdn_1L_dir <- paste0(mkdn_data_dir_1L_chr,"/ttu_lng_ss-",version_1L_chr)
-  path_to_results_dir_1L_chr <- ifelse(!is.null(input_params_ls),
-                                       input_params_ls$path_params_ls$paths_ls$reports_dir_1L_chr,
-                                       results_ls$path_params_ls$paths_ls$reports_dir_1L_chr)
-  if(!dir.exists(path_to_ms_mkdn_1L_dir)){
-    tmp_fl <- tempfile()
-    download.file(paste0("https://github.com/ready4-dev/ttu_lng_ss/archive/refs/tags/v",
-                         version_1L_chr,
-                         ".zip"),
-                         tmp_fl)
-    utils::unzip(tmp_fl,
-                 exdir = mkdn_data_dir_1L_chr)
-    unlink(tmp_fl)
-  }
-  if(!is.null(input_params_ls)){
-    header_yaml_args_ls <- input_params_ls$header_yaml_args_ls
-  }else{
-    header_yaml_args_ls <- results_ls$header_yaml_args_ls
-  }
-  if(is.null(results_ls)){
-    results_ls <- make_results_ls(dv_ds_nm_and_url_chr = input_params_ls$path_params_ls$dv_ds_nm_and_url_chr,
-                                  output_format_ls = input_params_ls$output_format_ls,
-                                  params_ls_ls = input_params_ls,
-                                  path_params_ls = input_params_ls$path_params_ls,
-                                  study_descs_ls = input_params_ls$study_descs_ls,
-                                  var_nm_change_lup = input_params_ls$study_descs_ls$var_nm_change_lup,
-                                  version_1L_chr = version_1L_chr)
-  }
-  if(is.null(abstract_args_ls)){
-    abstract_args_ls <- make_abstract_args_ls(results_ls)
-  }
-  ready4show::write_header_fls(path_to_header_dir_1L_chr = paste0(path_to_ms_mkdn_1L_dir,"/Header"),
-                               header_yaml_args_ls = header_yaml_args_ls,
-                               abstract_args_ls = abstract_args_ls)
-  params_ls <- list(output_type_1L_chr = output_type_1L_chr,
-                    results_ls = results_ls)
-  if(!is.null(figures_in_body_lgl))
-    params_ls$figures_in_body_lgl <- figures_in_body_lgl
-  if(!is.null(tables_in_body_lgl))
-    params_ls$tables_in_body_lgl <- tables_in_body_lgl
-  rmarkdown::render(paste0(path_to_ms_mkdn_1L_dir,
-                           "/",
-                           output_type_1L_chr,
-                           "/",
-                           output_type_1L_chr,
-                           ".Rmd"),
-                    output_format = NULL,
-                    params = params_ls,
-                    output_file = paste0("TTU_Study_Manuscript",
-                                         ifelse(output_type_1L_chr == "Word",".docx",".pdf")),
-                    output_dir = path_to_results_dir_1L_chr)
-  if(write_to_dv_1L_lgl){
-    if(!is.null(input_params_ls)){
-      paths_ls <- input_params_ls$path_params_ls$paths_ls
-    }else{
-      paths_ls <- results_ls$path_params_ls$paths_ls
-    }
-    ready4::write_to_dv_with_wait(dss_tb = tibble::tibble(ds_obj_nm_chr = "TTU_Study_Manuscript",
-                                                          title_chr = title_1L_chr),
-                                  dv_nm_1L_chr = ifelse(!is.null(input_params_ls),
-                                                        input_params_ls$path_params_ls$dv_ds_nm_and_url_chr[1],
-                                                        results_ls$path_params_ls$dv_ds_nm_and_url_chr[1]),
-                                  ds_url_1L_chr = ifelse(!is.null(input_params_ls),
-                                                         input_params_ls$path_params_ls$dv_ds_nm_and_url_chr[2],
-                                                         results_ls$path_params_ls$dv_ds_nm_and_url_chr[2]),
-                                  parent_dv_dir_1L_chr = paths_ls$dv_dir_1L_chr,
-                                  paths_to_dirs_chr = paths_ls$reports_dir_1L_chr,
-                                  inc_fl_types_chr = ifelse(output_type_1L_chr == "Word",".docx",".pdf"),
-                                  paths_are_rltv_1L_lgl = F)
-  }
-  results_ls$path_params_ls$paths_ls$path_to_ms_mkdn_1L_dir <- path_to_ms_mkdn_1L_dir
-  saveRDS(results_ls,paste0(outp_dir_1L_chr,"/results_ls.RDS"))
-  return(results_ls)
 }
 write_mdl_cmprsn <- function(scored_data_tb,
                               ds_smry_ls,
@@ -395,7 +249,7 @@ write_mdl_smry_rprt <- function(input_params_ls = NULL,
                     append(path_params_ls[1:2])
 
                 }
-                write_rprt_with_rcrd(path_to_outp_fl_1L_chr = path_to_outp_fl_1L_chr,
+                ready4show::write_rprt_with_rcrd(path_to_outp_fl_1L_chr = path_to_outp_fl_1L_chr,
                                      paths_ls = paths_ls,
                                      header_yaml_args_ls = header_yaml_args_ls,
                                      use_fake_data_1L_lgl = use_fake_data_1L_lgl,
@@ -607,7 +461,8 @@ write_mdl_type_sngl_outps <- function (data_tb, folds_1L_int = 10, depnt_var_nm_
         plt_idxs_int = plt_idxs_int)
     if (!is.null(folds_1L_int)) {
         smry_of_one_predr_mdl_tb <- make_smry_of_mdl_outp(data_tb,
-            model_mdl = model_mdl, folds_1L_int = folds_1L_int, depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
+            #model_mdl = model_mdl,
+            folds_1L_int = folds_1L_int, depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
             tfmn_1L_chr = tfmn_1L_chr, predr_var_nm_1L_chr = predr_var_nm_1L_chr, covar_var_nms_chr = covar_var_nms_chr,
             mdl_type_1L_chr = mdl_type_1L_chr, mdl_types_lup = mdl_types_lup, start_1L_chr = start_1L_chr,
             predn_type_1L_chr = predn_type_1L_chr)
@@ -736,111 +591,6 @@ write_predr_cmprsn_outps <- function (data_tb, path_to_write_to_1L_chr, new_dir_
         confirmed_predrs_chr)
     return(confirmed_predrs_tb)
 }
-write_report <- function(params_ls,# Move to ready4show
-                         paths_ls,
-                         rprt_nm_1L_chr,
-                         abstract_args_ls = NULL,
-                         header_yaml_args_ls = NULL,
-                         rprt_lup = NULL){
-  if(is.null(rprt_lup))
-    data("rprt_lup", package = "TTU", envir = environment())
-  rprt_type_ls <- rprt_lup %>%
-    ready4show::make_rprt_type_ls(rprt_nm_1L_chr = rprt_nm_1L_chr)
-  here::i_am(paste0(paths_ls$path_from_top_level_1L_chr,
-                    "/",
-                    paths_ls$path_to_current_1L_chr,
-                    "/",
-                    paths_ls$R_fl_nm_1L_chr
-  ))
-  args_ls <- list(rprt_type_ls = rprt_type_ls,
-                  params_ls = params_ls,
-                  output_type_1L_chr = params_ls$output_type_1L_chr,
-                  path_to_prjs_dir_1L_chr = here::here(paths_ls$path_from_top_level_1L_chr),
-                  prj_dir_1L_chr = paths_ls$write_to_dir_nm_1L_chr,
-                  header_yaml_args_ls = header_yaml_args_ls,
-                  abstract_args_ls = abstract_args_ls,
-                  reports_dir_1L_chr = "Reports",
-                  rltv_path_to_data_dir_1L_chr = "../Output",
-                  nm_of_mkdn_dir_1L_chr = "Markdown")
-  rlang::exec(ready4show::write_rprt_from_tmpl,!!!args_ls)
-}
-write_reporting_dir <- function(path_to_write_to_1L_chr = getwd(),# Move to ready4show
-                                new_dir_nm_1L_chr = "TTU_Project",
-                                overwrite_1L_lgl = FALSE){
-  path_to_prjt_dir_1L_chr <- paste0(path_to_write_to_1L_chr,"/",new_dir_nm_1L_chr)
-  if(!dir.exists(path_to_prjt_dir_1L_chr))
-    dir.create(path_to_prjt_dir_1L_chr)
-  path_to_RMD_dir_1L_chr <- system.file("Project/CSP", package = "TTU")
-  file.copy(path_to_RMD_dir_1L_chr, path_to_prjt_dir_1L_chr,
-            recursive = T, overwrite = overwrite_1L_lgl)
-  path_to_csp_1L_chr <- paste0(path_to_prjt_dir_1L_chr,
-                               "/CSP/CSP.Rmd")
-  return(path_to_csp_1L_chr)
-}
-write_rprt_with_rcrd <- function(path_to_outp_fl_1L_chr,# Move to ready4show
-                                 paths_ls,
-                                 header_yaml_args_ls = NULL,
-                                 rprt_lup = NULL,
-                                 use_fake_data_1L_lgl = F,
-                                 rprt_nm_1L_chr = "AAA_TTU_MDL_CTG",
-                                 rcrd_nm_1L_chr = "AAA_RPRT_WRTNG_MTH",
-                                 reference_1L_int = NULL,
-                                 start_at_int = c(2,1),
-                                 output_type_1L_chr = "PDF",
-                                 rprt_output_type_1L_chr = "PDF",
-                                 nbr_of_digits_1L_int = 2L,
-                                 abstract_args_ls = NULL,
-                                 main_rprt_append_ls = NULL,
-                                 rcrd_rprt_append_ls = NULL){
-  if(is.null(rprt_lup)){
-    data("rprt_lup", package = "TTU", #"specific"
-         envir = environment())
-    rprt_lup <- rprt_lup %>% transform_rprt_lup(add_suplry_rprt_1L_lgl = !is.null(reference_1L_int),
-                                                add_sharing_rprt_1L_lgl = F,#T
-                                                start_at_int = start_at_int,
-                                                reference_1L_int = reference_1L_int)
-  }
-  params_ls <- list(abstract_args_ls = NULL,
-       eval_1L_lgl = F,
-       header_yaml_args_ls = header_yaml_args_ls,
-       output_type_1L_chr = rprt_output_type_1L_chr,
-       nbr_of_digits_1L_int = nbr_of_digits_1L_int,
-       rprt_lup = rprt_lup,
-       rprt_nm_1L_chr = rprt_nm_1L_chr,
-       rprt_output_type_1L_chr = output_type_1L_chr,
-       rprt_subtitle_1L_chr = ready4::get_from_lup_obj(rprt_lup,
-                                                          match_value_xx = rprt_nm_1L_chr,
-                                                          match_var_nm_1L_chr = "rprt_nms_chr",
-                                                          target_var_nm_1L_chr = "title_chr",
-                                                          evaluate_1L_lgl = F),
-       subtitle_1L_chr = ready4::get_from_lup_obj(rprt_lup,
-                                                     match_value_xx = "AAA_RPRT_WRTNG_MTH",
-                                                     match_var_nm_1L_chr = "rprt_nms_chr",
-                                                     target_var_nm_1L_chr = "title_chr",
-                                                     evaluate_1L_lgl = F),
-       use_fake_data_1L_lgl = use_fake_data_1L_lgl) %>%
-    append(rcrd_rprt_append_ls)
-  params_ls %>%
-    write_report(paths_ls = paths_ls,
-                 rprt_nm_1L_chr = rcrd_nm_1L_chr,
-                 abstract_args_ls = NULL,
-                 header_yaml_args_ls = header_yaml_args_ls,
-                 rprt_lup = rprt_lup)
-  list(outp_smry_ls =  append(readRDS(path_to_outp_fl_1L_chr),
-                              list(rprt_lup = rprt_lup)),
-       output_type_1L_chr = output_type_1L_chr,
-       subtitle_1L_chr = ready4::get_from_lup_obj(rprt_lup,
-                                                     match_value_xx = rprt_nm_1L_chr,
-                                                     match_var_nm_1L_chr = "rprt_nms_chr",
-                                                     target_var_nm_1L_chr = "title_chr",
-                                                     evaluate_1L_lgl = F)) %>%
-    append(main_rprt_append_ls) %>%
-    write_report(paths_ls = paths_ls,
-                 rprt_nm_1L_chr = rprt_nm_1L_chr,
-                 abstract_args_ls = abstract_args_ls,
-                 header_yaml_args_ls = header_yaml_args_ls,
-                 rprt_lup = rprt_lup)
-}
 write_scndry_analysis <- function(predictors_lup = NULL,
                                   valid_params_ls_ls,
                                   candidate_covar_nms_chr,
@@ -922,7 +672,7 @@ write_scndry_analysis <- function(predictors_lup = NULL,
     purrr::pluck("params_ls") %>%
     append(list(rename_lup = params_ls_ls$rename_lup))
   params_ls %>%
-    write_report(paths_ls = path_params_ls$paths_ls,
+    ready4show::write_report(paths_ls = path_params_ls$paths_ls,
                  rprt_nm_1L_chr = rprt_nm_1L_chr,
                  abstract_args_ls = abstract_args_ls,
                  header_yaml_args_ls = header_yaml_args_ls,
@@ -1188,8 +938,8 @@ write_sngl_predr_multi_mdls_outps <- function (data_tb, mdl_types_chr, predr_var
     return(smry_of_sngl_predr_mdls_tb)
 }
 write_study_outp_ds <- function(input_params_ls,
-                                abstract_args_ls = NULL, # Generalise next arg / remove default.
-                                dv_mdl_desc_1L_chr = "This is a longitudinal transfer to utility model designed for use with the youthu R package.",
+                                abstract_args_ls = NULL,
+                                dv_mdl_desc_1L_chr = "An R model.",# Generalise / remove default.
                                 inc_fl_types_chr = ".pdf",
                                 purge_data_1L_lgl = FALSE,
                                 start_at_int = c(2,1)){
@@ -1243,7 +993,7 @@ write_study_outp_ds <- function(input_params_ls,
                                      use_fake_data_1L_lgl = use_fake_data_1L_lgl) %>%
                      append(path_params_ls[1:2])
                    params_ls %>%
-                     write_report(paths_ls = paths_ls,
+                     ready4show::write_report(paths_ls = paths_ls,
                                   rprt_nm_1L_chr = "AAA_SHARING_MTH",
                                   abstract_args_ls = abstract_args_ls,
                                   header_yaml_args_ls = header_yaml_args_ls,

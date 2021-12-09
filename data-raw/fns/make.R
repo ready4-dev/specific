@@ -742,28 +742,6 @@ make_funding_text <- function(results_ls){
                         results_ls$study_descs_ls$funding_1L_chr)
   return(text_1L_chr)
 }
-make_header_yaml_args_ls <- function(authors_tb,
-                                     institutes_tb,
-                                     title_1L_chr,
-                                     keywords_chr,
-                                     fl_nm_1L_chr = "header_common.yaml",
-                                     use_fake_data_1L_lgl = F){
-  if(!use_fake_data_1L_lgl){
-    header_yaml_args_ls <- list(authors_tb = authors_tb,
-                                institutes_tb = institutes_tb,
-                                fl_nm_1L_chr = "header_common.yaml",
-                                title_1L_chr = title_1L_chr,
-                                keywords_chr = keywords_chr)
-  }else{
-    data("authors_tb", package = "ready4show", envir = environment())
-    data("institutes_tb", package = "ready4show", envir = environment())
-    header_yaml_args_ls <- make_header_yaml_args_ls(authors_tb = authors_tb,
-                                                    institutes_tb = institutes_tb,
-                                                    title_1L_chr = "A hypothetical study using fake data for instructional purposes only",
-                                                    keywords_chr = c("this","is","a","replication","using","fake","data","do", "not","cite"))
-  }
-  return(header_yaml_args_ls)
-}
 make_hlth_utl_and_predrs_ls <- function(outp_smry_ls, # Generalise from HU
                                         descv_tbls_ls,
                                         nbr_of_digits_1L_int = 2L,
@@ -862,7 +840,7 @@ make_input_params <- function(ds_tb, # Generalise MAUI
                               seed_1L_int = 12345,
                               scndry_anlys_params_ls = NULL,
                               write_new_dir_1L_lgl = T){
-  path_params_ls <- make_path_params_ls(use_fake_data_1L_lgl = ds_descvs_ls$is_fake_1L_lgl,
+  path_params_ls <- ready4show::make_path_params_ls(use_fake_data_1L_lgl = ds_descvs_ls$is_fake_1L_lgl,
                                         dv_ds_nm_and_url_chr = dv_ds_nm_and_url_chr,
                                         write_new_dir_1L_lgl = write_new_dir_1L_lgl)
   params_ls_ls <- make_analysis_core_params_ls(ds_descvs_ls = ds_descvs_ls,
@@ -1334,44 +1312,8 @@ make_nbr_included_text <- function(results_ls){
          results_ls$study_descs_ls$health_utl_nm_1L_chr,
          " data")
 }
-make_output_format_ls <- function(manuscript_outp_1L_chr = "Word",
-                                  manuscript_digits_1L_int = 2L,
-                                  supplementary_outp_1L_chr = "PDF",
-                                  supplementary_digits_1L_int = 2L){
-  output_format_ls <- list(manuscript_outp_1L_chr = manuscript_outp_1L_chr,
-                           manuscript_digits_1L_int = manuscript_digits_1L_int,
-                           supplementary_outp_1L_chr = supplementary_outp_1L_chr,
-                           supplementary_digits_1L_int = supplementary_digits_1L_int)
-  return(output_format_ls)
-}
-make_path_params_ls <- function(path_to_data_from_top_level_chr = NULL, # MIGRATE TO READY4USE ?
-                                path_from_top_level_1L_chr = NULL,
-                                path_to_current_1L_chr = NULL,
-                                dv_ds_nm_and_url_chr = NULL,
-                                write_new_dir_1L_lgl = F,
-                                use_fake_data_1L_lgl = F,
-                                R_fl_nm_1L_chr = 'aaaaaaaaaa.txt'){
-  if(is.null(path_to_data_from_top_level_chr))
-    path_to_data_from_top_level_chr <- ifelse(use_fake_data_1L_lgl,
-                                              "fake_data.rds",
-                                              "data.rds")
-  if(is.null(path_from_top_level_1L_chr)){
-    path_from_top_level_1L_chr <- normalizePath("../") %>% strsplit("\\\\") %>% purrr::pluck(1) %>% tail(1)
-  }
-  if(is.null(path_to_current_1L_chr)){
-    path_to_current_1L_chr <- normalizePath(".") %>% strsplit("\\\\") %>% purrr::pluck(1) %>% tail(1)
-  }
-  path_params_ls <- list(path_from_top_level_1L_chr = path_from_top_level_1L_chr,
-                         path_to_data_from_top_level_chr = path_to_data_from_top_level_chr,
-                         path_to_current_1L_chr = path_to_current_1L_chr,
-                         dv_ds_nm_and_url_chr = dv_ds_nm_and_url_chr)
-  if(write_new_dir_1L_lgl)
-  path_params_ls$paths_ls <- write_main_outp_dir(path_params_ls,
-                                                 use_fake_data_1L_lgl = use_fake_data_1L_lgl,
-                                                 R_fl_nm_1L_chr = R_fl_nm_1L_chr)
 
-  return(path_params_ls)
-}
+
 make_paths_to_ss_plts_ls <- function(output_data_dir_1L_chr,
                                      outp_smry_ls,
                                      additional_paths_chr = "/dens_and_sctr.png"){
