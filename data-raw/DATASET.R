@@ -127,7 +127,64 @@ x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify and Investigate Can
                            zenodo_badge_1L_chr = "[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5768689.svg)](https://doi.org/10.5281/zenodo.5768689)"
   )
 ## y
-z <- ready4pack::make_pt_ready4pack_manifest(x#, constructor_r3 = y#,
+y <- ready4class::ready4class_constructor() %>%
+  dplyr::bind_rows(tibble::tribble(
+    ~ make_s3_lgl, ~ name_stub_chr, ~ pt_ls, ~ pt_chkr_pfx_ls, ~ pt_ns_ls, ~ vals_ls, ~ allowed_vals_ls, ~ min_max_vals_ls, ~ start_end_vals_ls, ~ class_desc_chr, ~ parent_class_chr, ~ slots_ls, ~ meaningful_nms_ls, ~ inc_clss_ls, ~ asserts_ls,
+    TRUE, "predictors", list("tibble"), list("is_"), list("tibble"), list(short_name_chr = "character(0)",
+                                                                          long_name_chr = "character(0)",
+                                                                          min_val_dbl = "numeric(0)",
+                                                                          max_val_dbl = "numeric(0)",
+                                                                          class_chr = "character(0)",
+                                                                          increment_dbl = "numeric(0)",
+                                                                          class_fn_chr = "character(0)",
+                                                                          mdl_scaling_dbl = "numeric(0)",
+                                                                          covariate_lgl = "logical(0)"), NULL, NULL, NULL, "Candidate predictors lookup table", NA_character_, NULL, NULL, NULL, NULL,
+    TRUE, "models", list("tibble"), list("is_"), list("tibble"), list(short_name_chr = "character(0)",
+                                                                      long_name_chr = "character(0)",
+                                                                      control_chr = "character(0)",
+                                                                      family_chr = "character(0)",
+                                                                      fn_chr = "character(0)",
+                                                                      start_chr = "character(0)",
+                                                                      predn_type_chr = "character(0)",
+                                                                      tfmn_chr = "character(0)",
+                                                                      tfmn_for_bnml_lgl = "logical(0)",
+                                                                      fixed_acronym_chr = "character(0)",
+                                                                      mixed_acronym_chr = "character(0)",
+                                                                      mixed_type_chr = "character(0)",
+                                                                      with_chr = "character(0)"), NULL, NULL, NULL, "Candidate models lookup table", NA_character_, NULL, NULL, NULL, NULL)) %>%
+  dplyr::bind_rows(ready4class::make_pt_ready4class_constructor(make_s3_lgl = FALSE,
+                                                                name_stub_chr = "Parameters",
+                                                                slots_ls = list("a_ScorzProfile",
+                                                                                "candidate_mdls_chr",
+                                                                                "candidate_mdls_lup",
+                                                                                "candidate_mdl_pfcs_chr",
+                                                                                "candidate_predrs_chr",
+                                                                                "candidate_covars_chr",
+                                                                                "depnt_var_nm_1L_chr",
+                                                                                "depnt_var_max_val_1L_dbl",
+                                                                                "folds_1L_int",
+                                                                                "max_mdl_runs_1L_int",
+                                                                                "seed_1L_int",
+                                                                                "predictors_lup") %>% list(),
+                                                                pt_ls = list("ScorzProfile",
+                                                                             "character",
+                                                                             "specific_models",
+                                                                             "character",
+                                                                             "character",
+                                                                             "character",
+                                                                             "character",
+                                                                             "numeric",
+                                                                             "integer",
+                                                                             "integer",
+                                                                             "integer",
+                                                                             "specific_predictors") %>% list(),
+                                                                #vals_ls = list(list(instrument_version_1L_chr = "'Adolescent'")),
+                                                                class_desc_chr = "Input parameters that specify candidate models to be explored.",
+                                                                parent_class_chr = "Ready4Module"#,inc_clss_ls = list("ScorzAqol6")
+  ))
+
+z <- ready4pack::make_pt_ready4pack_manifest(x,
+                                             constructor_r3 = y#,
                                              # pkg_ds_ls_ls = datasets_ls
 ) %>%
   ready4pack::ready4pack_manifest()

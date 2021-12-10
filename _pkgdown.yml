@@ -9,6 +9,13 @@ home:
 development:
   mode: auto
 reference:
+- title: "S3 Classes"
+- contents:
+  - specific_predictors
+  - specific_models
+- title: "S4 Classes"
+- contents:
+  - SpecificParameters
 - title: "Functions"
 - contents:
   - get_background_text
