@@ -15,6 +15,13 @@ The steps in this exploratory analysis workflow may need to be performed iterati
 library(specific)
 ```
 
+```{r}
+
+x <- SpecificParameters()
+```
+
+
+
 ## Set-up workspace 
 To facilitate reproducibility, we begin by setting a seed.
 

@@ -90,3 +90,4 @@
 ^data-raw/draft_vignettes/Output/E_Predrs_W_Covars_Sngl_Mdl_Cmprsn/E_CK_CV_Psych_well_int_OLS_NTF_PRED_SCTR\.png$
 ^data-raw/draft_vignettes/Output/I_ALL_OUTPUT_\.RDS$
 ^data-raw/TODO\.R$
+^data-raw/s4_fns/exhibit\.R$

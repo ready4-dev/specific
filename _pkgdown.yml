@@ -105,3 +105,6 @@ reference:
   - write_to_delete_ds_copies
   - write_to_delete_mdl_fls
   - write_ts_mdls_from_alg_outp
+- title: "Methods"
+- contents:
+  - exhibit-SpecificParameters
