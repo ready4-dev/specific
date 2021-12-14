@@ -11,8 +11,6 @@ Input parameters that specify candidate models to be explored.
 \section{Slots}{
 
 \describe{
-\item{\code{a_ScorzProfile}}{(an instance of the ScorzProfile class)}
-
 \item{\code{candidate_mdls_chr}}{Candidate models (a character vector)}
 
 \item{\code{candidate_mdls_lup}}{Candidate models (a lookup table)}

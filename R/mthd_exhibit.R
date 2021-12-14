@@ -1,8 +1,8 @@
 #' 
 #' Exhibit features of a class instance by printing to console
-#' @name exhibit-SpecificParameters
-#' @description exhibit method applied to SpecificParameters
-#' @param x An object of class SpecificParameters
+#' @name exhibit-SpecificProject
+#' @description exhibit method applied to SpecificProject
+#' @param x An object of class SpecificProject
 #' @param captions_chr Captions (a character vector), Default: character(0)
 #' @param method_chr Method (a character vector), Default: c("pearson", "spearman")
 #' @param mkdn_tbl_refs_chr Markdown table references (a character vector), Default: NULL
@@ -11,12 +11,12 @@
 #' @param timepoints_int Timepoints (an integer vector), Default: NA
 #' @return NULL
 #' @rdname exhibit-methods
-#' @aliases exhibit,SpecificParameters-method
+#' @aliases exhibit,SpecificProject-method
 #' @export 
 #' @importFrom purrr map
 #' @importFrom youthvars transform_ds_for_tstng make_corstars_tbl_xx
 #' @importFrom ready4 exhibit
-methods::setMethod("exhibit", "SpecificParameters", function (x, captions_chr = character(0), method_chr = c("pearson", 
+methods::setMethod("exhibit", "SpecificProject", function (x, captions_chr = character(0), method_chr = c("pearson", 
     "spearman"), mkdn_tbl_refs_chr = NULL, output_type_1L_chr = "HTML", 
     type_1L_chr = "correlation", timepoints_int = NA_integer_) 
 {
@@ -31,11 +31,16 @@ methods::setMethod("exhibit", "SpecificParameters", function (x, captions_chr = 
             }
         }
         if (identical(character(0), captions_chr)) {
-            captions_chr <- paste0("Correlations at ", x@a_ScorzProfile@a_YouthvarsProfile@timepoint_vals_chr[timepoints_int])
+            captions_chr <- paste0("Correlations", ifelse("timepoint_vals_chr" %in% 
+                slotNames(x@a_ScorzProfile@a_YouthvarsProfile), 
+                paste0(" at ", x@a_ScorzProfile@a_YouthvarsProfile@timepoint_vals_chr[timepoints_int]), 
+                ""))
         }
         1:length(timepoints_int) %>% purrr::map(~youthvars::transform_ds_for_tstng(x@a_ScorzProfile@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
-            depnt_var_nm_1L_chr = x@depnt_var_nm_1L_chr, depnt_var_max_val_1L_dbl = x@depnt_var_max_val_1L_dbl, 
-            candidate_predrs_chr = x@candidate_predrs_chr, round_var_nm_1L_chr = ifelse("timepoint_var_nm_1L_chr" %in% 
+            depnt_var_nm_1L_chr = x@b_SpecificParameters@depnt_var_nm_1L_chr, 
+            depnt_var_max_val_1L_dbl = x@b_SpecificParameters@depnt_var_max_val_1L_dbl, 
+            candidate_predrs_chr = x@b_SpecificParameters@candidate_predrs_chr, 
+            round_var_nm_1L_chr = ifelse("timepoint_var_nm_1L_chr" %in% 
                 slotNames(x@a_ScorzProfile@a_YouthvarsProfile), 
                 x@a_ScorzProfile@a_YouthvarsProfile@timepoint_var_nm_1L_chr, 
                 NA_character_), round_val_1L_chr = ifelse("timepoint_vals_chr" %in% 

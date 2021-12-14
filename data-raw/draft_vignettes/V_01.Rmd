@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Note, this vignette uses fake data - it is for illustrative purposes only and should not be used to inform decision making.
+Note: **This vignette uses fake data** - it is for illustrative purposes only and should not be used to inform decision making.
 
 The steps in this exploratory analysis workflow may need to be performed iteratively, both in order to identify the optimal model types, predictors and covariates to use and modify default values to ensure model convergence. 
 
@@ -15,49 +15,85 @@ The steps in this exploratory analysis workflow may need to be performed iterati
 library(specific)
 ```
 
-```{r}
+## Import data
 
-x <- SpecificParameters()
-```
-
-
-
-## Set-up workspace 
-To facilitate reproducibility, we begin by setting a seed.
+We start by ingesting our data in the form of a `ScorzProfile` object. As this example uses EQ-5D the type of `ScorzProfile` object we import is a `ScorzEuroQol5`. The following step is explained in more detail in [this vignette from the scorz pacakge](https://ready4-dev.github.io/scorz/articles/V_02.html).
 
 ```{r}
-seed_1L_int = 12345
-set.seed(seed_1L_int)
+x <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes", # Get direct from scorz release repo
+                               dv_ds_nm_1L_chr = "https://doi.org/10.7910/DVN/W95KED",
+                               dv_server_1L_chr = "dataverse.harvard.edu") %>%
+  ingest(fls_to_ingest_chr = "ymh_eq5d_dyad_r4",
+         metadata_1L_lgl = F) %>%
+  youthvars::YouthvarsSeries(a_Ready4useDyad = .,
+                                id_var_nm_1L_chr = "uid",
+                                timepoint_var_nm_1L_chr = "Timepoint",
+                                timepoint_vals_chr = unique(.@ds_tb$Timepoint)) %>%
+  scorz::ScorzEuroQol5(a_YouthvarsProfile = .,
+                   country_1L_chr = "UK",
+                   instrument_version_1L_chr = "5L",
+                   itm_var_nms_chr = c("eq5dq_MO", "eq5dq_SC", "eq5dq_UA", "eq5dq_PD", "eq5dq_AD")) %>%
+  renew()
 ```
 
-We next create a directory in which we will write all output.
-
-```{r warning = F}
-path_to_write_to_1L_chr <- "Output" 
-dir.create(path_to_write_to_1L_chr)
+## Inspect data
+```{r echo = F, message=FALSE}
+ds_tb <- x %>% 
+  procureSlot("a_YouthvarsProfile") %>%
+  procureSlot("a_Ready4useDyad") %>%
+  procureSlot("ds_tb")
 ```
 
-## Import and describe data
-We import our data - in this example we are using fake data.
-
-```{r message=FALSE}
-ds_tb <- readRDS(url("https://dataverse.harvard.edu/api/access/datafile/4959218")) 
-```
-
-The dataset we are using has `r nrow(ds_tb)` records on `r length(ds_tb$uid %>% unique())` study participants. The first six records are reproduced below.
+The dataset we are using has a total of `r nrow(ds_tb)` records at two timepoints on `r length(ds_tb$uid %>% unique())` study participants. The first six records are reproduced below.
 
 ```{r inputds, echo=F, eval = knitr::is_html_output(), results='asis'}
-ds_tb %>%
-    head() %>%
-  ready4show::print_table(output_type_1L_chr = "HTML",
-                          caption_1L_chr = "Input dataset",
-                          mkdn_tbl_ref_1L_chr = "tab:inputds")
+x %>% 
+  procureSlot("a_YouthvarsProfile") %>%
+  procureSlot("a_Ready4useDyad") %>%
+  exhibit(display_1L_chr = "head")
 ```
 
-We next create a lookup table summarising key information about the variables from our dataset that we will explore as candidate predictors in our models. The predictors lookup table must be of the `TTU_predictors_lup` class.
+To see how the data in the `a_YouthvarsProfile` slot of `x` (a `YouthvarsSeries` object) can be described in more detail [read this vignette from the youthvars package](https://ready4-dev.github.io/youthvars/articles/V_02.html).
+
+## Create SpecificProject
+
+To start with we create a new instance of a `SpecificProject` object that contains the data we have just ingested.
 
 ```{r}
-predictors_lup <- TTU::TTU_predictors_lup(TTU::make_pt_TTU_predictors_lup(short_name_chr = c("K10_int","Psych_well_int"),
+x <- SpecificProject(a_ScorzProfile = x) # REVERT TO YOUTHVARS
+# Add descriptives methods
+```
+
+
+## Specify parameters
+
+In preparation for exploring our dataset, we need to declare a set of model parameters in a `SpecificParameters` object. This can be done in one step, or in sequential steps. In this example, we will proceed sequentially.
+
+### Dataset and dependent variable
+The first parameter that we declare is the dependent variable (total EQ-5D utility score) for the models we will be exploring.
+
+```{r}
+y <- SpecificParameters(#a_ScorzProfile = x,
+                        depnt_var_nm_1L_chr = "eq5d_total_w")
+```
+
+### Candidate predictors
+
+We add the names of candidate predictor variables to our `SpecificParameters` object.
+
+```{r}
+y <- renewSlot(y,
+               slot_nm_1L_chr = "candidate_predrs_chr",
+               new_val_xx = c("K10_int","Psych_well_int")) 
+
+```
+
+We next add meta-data about each candidate predictor variable in the form of a `specific_predictors` object.
+
+```{r}
+y <- renewSlot(y, 
+               slot_nm_1L_chr = "predictors_lup", 
+               new_val_xx = make_pt_specific_predictors(short_name_chr = c("K10_int","Psych_well_int"),
                                               long_name_chr = c("Kessler Psychological Distress - 10 Item Total Score",
                                                    "Overall Wellbeing Measure (Winefield et al. 2012)"),
                                               min_val_dbl = c(10,18),
@@ -66,91 +102,132 @@ predictors_lup <- TTU::TTU_predictors_lup(TTU::make_pt_TTU_predictors_lup(short_
                                               increment_dbl = 1,
                                               class_fn_chr = "as.integer",
                                               mdl_scaling_dbl = 0.01,
-                                              covariate_lgl = F))
+                                              covariate_lgl = F) %>%
+                 specific_predictors())
 ```
 
-We also require a data dictionary for our input dataset. The dictionary must be of the `ready4use::ready4use_dictionary` class. In the example below we are using an existing dictionary.
+The `specific_predictors` object that we have added to `y` can be retrieved using the `procureSlot` method.
 
 ```{r}
-dictionary_tb <- readRDS(url("https://dataverse.harvard.edu/api/access/datafile/4959217"))
+procureSlot(y,
+            "predictors_lup")
 ```
 
-## Score utility and summarise meta-data
-We now convert study participant responses to the EQ-5D questionnaire to health utility scores. We do this using the `eq5d` package.
+### Covariates
 
-```{r message=FALSE, results='hide', warning=FALSE}
-library(eq5d)
-ds_tb <- ds_tb %>% 
-        dplyr::rename_with(~stringr::str_replace(.x,"eq5dq_",""),dplyr::starts_with("eq5dq_")) %>%
-  dplyr::mutate(`:=`(EQ5D_total_dbl, 
-                     eq5d::eq5d(., country="UK", version = "5L", type = "CW"))) %>%
-    dplyr::rename_with(~paste0("eq5dq_",.x),c("MO","SC","UA","PD","AD"))
-```
-
-We can label dataset variables using descriptions from the data dictionary.
+We also specify the covariates that we aim to explore in conjunction with each candidate predictor.
 
 ```{r}
-ds_tb <- ds_tb %>%
-  ready4use::add_labels_from_dictionary(dictionary_tb = dictionary_tb,
-                                        remove_old_lbls_1L_lgl = T) 
+y <- renewSlot(y,
+               slot_nm_1L_chr = "candidate_covars_chr",
+               new_val_xx = c("d_sex_birth_s", "d_age",  "d_sexual_ori_s", "d_relation_s", "d_studying_working"))
 ```
 
-The first six records of the scored and labelled dataset are reproduced below.
+### Candidate models
 
-```{r scoredds, eval = knitr::is_html_output(), echo=F,results='asis'}
-ds_tb %>%
-    head() %>%
-  ready4show::print_table(output_type_1L_chr = "HTML",
-                          caption_1L_chr = "Scored and labelled dataset",
-                          use_lbls_as_col_nms_1L_lgl = T,
-                          mkdn_tbl_ref_1L_chr = "tab:scoredds")
-```
-
-We next create an object `ds_smry_ls` to store a description of some structural properties of the dataset such as:
-
- - the name of the dependent variable (ie total health utility score);
- - the names of the variables we will be exploring as candidate predictors and as candidate covariates in our modelling;
- - the candidate predictors look-up table that we previously created;
- - the names of the variables for unique participant identifier and data collection round; and
- - the value of the data collection round variable for the baseline timepoint.
+We now add details about the candidate models we will explore in the form of a `specific_models` object.
 
 ```{r}
-ds_smry_ls <- make_ds_smry_ls(candidate_predrs_chr = predictors_lup$short_name_chr,
-                              candidate_covar_nms_chr = c("d_sex_birth_s", "d_age",  "d_sexual_ori_s", "d_relation_s", "d_studying_working"),
-                              depnt_var_nm_1L_chr = "EQ5D_total_dbl",
-                              dictionary_tb = dictionary_tb, #Dyad
-                              id_var_nm_1L_chr = "uid", # Profile
-                              round_var_nm_1L_chr = "Timepoint", # Series
-                              round_bl_val_1L_chr = "BL",
-                              predictors_lup = predictors_lup)
+y <- renewSlot(y,
+               slot_nm_1L_chr = "candidate_mdls_lup",
+               new_val_xx = get_cndts_for_mxd_mdls() %>%
+                 specific_models())
 ```
 
-## Test candidate models, predictors and covariates
-Our first analytic task is to test which models, predictors and covariates perform best. This tasks can be broken down into the following steps.
-
-### Preliminary tasks
-We begin by reviewing the `TTU` packages lookup table of types of models we can test.
+The `specific_models` object that we have just added is reproduced below.
 
 ```{r}
-mdl_types_lup <- get_cndts_for_mxd_mdls()
-mdl_types_lup %>%
+procureSlot(y,
+            "candidate_mdls_lup") %>%
     ready4show::print_table(output_type_1L_chr = "HTML",
-                          caption_1L_chr = "Model types lookup table")
+                            caption_1L_chr = "Model types lookup table")
 ```
 
-We modify this table as appropriate (in the below example, we leave it unchanged). We then add the lookup table to a new object, `mdl_smry_ls` which stores information about the candidate models we will be using. 
+By default, all the models in the `specific_models` object will be explored. However, if we just wish to explore a subset of these we can specify the names (corresponding to those in the `short_name_chr` column) of the models we wish to test, adding it to the `candidate_mdls_chr` slot of `y`.
 
 ```{r}
-mdl_smry_ls <- mdl_types_lup %>% # New specific cls
-  make_mdl_smry_ls()
+x <- renewSlot(y,
+               slot_nm_1L_chr = "candidate_mdls_chr",
+               new_val_xx = c("OLS_NTF","OLS_LOG","OLS_LOGIT"))
+```
+
+We must now also specify the relevant prefix (the first three letters of the names in the `short_name_chr` column of the `specific_models` object) using the `candidate_mdl_pfcs_chr` slot of `y`.
+
+```{r}
+y <- renewSlot(y,
+               slot_nm_1L_chr = "candidate_mdl_pfcs_chr",
+               new_val_xx = c("OLS"))
+```
+
+### Other parameters
+
+Depending on the type of analysis we plan on undertaking, we can also specify parameters such as the number of folds to use in cross validation and the maximum number of model runs to allow.
+
+```{r}
+y <- renewSlot(y,
+               slot_nm_1L_chr = "folds_1L_int",
+               new_val_xx = 10L) %>%
+  renewSlot(slot_nm_1L_chr = "max_mdl_runs_1L_int",
+               new_val_xx = 300L)
+```
+
+We can also specify a seed to ensure reproducibility of results.
+
+```{r}
+y <- renewSlot(y,
+               slot_nm_1L_chr = "seed_1L_int",
+               new_val_xx = 1234L)
+```
+
+Finally, we add `y` to `x`,
+
+```{r}
+x <- renewSlot(x,
+               slot_nm_1L_chr = "b_SpecificParameters",
+               new_val_xx = y)
+```
+
+## Model testing
+
+
+### Set-up workspace 
+
+We create a directory in which we will write all output.
+
+```{r warning = F}
+path_to_write_to_1L_chr <- "Output" 
+dir.create(path_to_write_to_1L_chr)
 ```
 
 ```{r warning=F, message=F}
-cmprsns_ls <- write_mdl_cmprsn(scored_data_tb = ds_tb,
+if(!is.na(x@candidate_mdls_chr[1])){
+  mdl_types_chr <- x@candidate_mdls_chr
+}else{
+  mdl_types_chr <- NULL
+}
+if(!is.na(x@candidate_mdl_pfcs_chr[1])){
+  choose_from_pfx_chr <- x@candidate_mdl_pfcs_chr
+}else{
+  choose_from_pfx_chr <- NULL
+}
+ds_smry_ls <- make_ds_smry_ls(candidate_predrs_chr = x@candidate_predrs_chr,
+                              candidate_covar_nms_chr = x@candidate_covars_chr,
+                              depnt_var_nm_1L_chr = x@depnt_var_nm_1L_chr,
+                              dictionary_tb = x@a_ScorzProfile@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3, #Dyad
+                              id_var_nm_1L_chr = x@a_ScorzProfile@a_YouthvarsProfile@id_var_nm_1L_chr, # Profile
+                              round_var_nm_1L_chr = x@a_ScorzProfile@a_YouthvarsProfile@timepoint_var_nm_1L_chr, # Series
+                              round_bl_val_1L_chr = x@a_ScorzProfile@a_YouthvarsProfile@timepoint_vals_chr[1],
+                              predictors_lup = x@predictors_lup)
+mdl_smry_ls <- make_mdl_smry_ls(mdl_types_lup = x@candidate_mdls_lup,
+                                mdl_types_chr = mdl_types_chr,
+                                choose_from_pfx_chr = choose_from_pfx_chr,
+                                folds_1L_int = x@folds_1L_int,
+                                max_nbr_of_boruta_mdl_runs_int = x@max_mdl_runs_1L_int)
+cmprsns_ls <- write_mdl_cmprsn(scored_data_tb = x@a_ScorzProfile@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
                                 ds_smry_ls = ds_smry_ls,
                                 mdl_smry_ls = mdl_smry_ls,
                                 output_data_dir_1L_chr = path_to_write_to_1L_chr,
-                                seed_1L_int = seed_1L_int)
+                                seed_1L_int = x@seed_1L_int)
 ```
 
 The `write_mdl_cmprsn` function will write each model to be tested to a new sub-directory of "`r path_to_write_to_1L_chr`" called "A_Candidate_Mdls_Cmprsn". Also written to that sub-directory are a number of plots for each model. The `write_mdl_cmprsn` function also outputs a table summarising the performance of each of the candidate models.
@@ -177,15 +254,15 @@ cmprsns_ls$mdl_smry_ls$prefd_mdl_types_chr <- c("OLS_NTF", "BET_CLL")
 We can now compare all of our candidate predictors (with and without candidate covariates) using the most preferred model type.
 
 ```{r message=FALSE, results='hide', warning=FALSE}
-cmprsns_ls <- write_predr_and_covars_cmprsn(scored_data_tb = ds_tb,
-                                            bl_tb = cmprsns_ls$bl_tb,
+cmprsns_ls <- write_predr_and_covars_cmprsn(scored_data_tb = x@a_ScorzProfile@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
+                                            bl_tb = cmprsns_ls$bl_tb, # Create a ds_copies slot
                                             ds_smry_ls = cmprsns_ls$ds_smry_ls,
                                             mdl_smry_ls = cmprsns_ls$mdl_smry_ls,
                                             output_data_dir_1L_chr = path_to_write_to_1L_chr,
-                                            seed_1L_int = seed_1L_int)
+                                            seed_1L_int = x@seed_1L_int)
 ```
 
-Now, we compare the performance of single predictor models of our preferred model type (in our case, a `r mdl_smry_ls$mdl_types_lup %>% ready4::get_from_lup_obj(target_var_nm_1L_chr = "long_name_chr",match_value_xx = cmprsns_ls$mdl_smry_ls$prefd_mdl_types_chr[1], match_var_nm_1L_chr = "short_name_chr", evaluate_1L_lgl = F)`) for each candidate predictor. The call to the `write_predr_and_covars_cmprsn`{.R} function saved the tested models along with model plots in the "B_Candidate_Predrs_Cmprsn" sub-directory of "Output". These results are also viewable as a table.
+Now, we compare the performance of single predictor models of our preferred model type (in our case, a `r cmprsns_ls$mdl_smry_ls$mdl_types_lup %>% ready4::get_from_lup_obj(target_var_nm_1L_chr = "long_name_chr",match_value_xx = cmprsns_ls$mdl_smry_ls$prefd_mdl_types_chr[1], match_var_nm_1L_chr = "short_name_chr", evaluate_1L_lgl = F)`) for each candidate predictor. The call to the `write_predr_and_covars_cmprsn`{.R} function saved the tested models along with model plots in the "B_Candidate_Predrs_Cmprsn" sub-directory of "Output". These results are also viewable as a table.
 
 ```{r}
 cmprsns_ls$mdl_smry_ls$predr_cmprsn_tb %>%
@@ -222,12 +299,12 @@ We can override the covariates to select, potentially because we want to select 
 We now conclude our model testing by rerunning the previous step, except confining our covariates to those we prefer.
 
 ```{r message=FALSE, results='hide', warning=FALSE, fig.show ='hide'}
-outp_smry_ls <- write_mdls_with_covars_cmprsn(scored_data_tb = ds_tb,
+outp_smry_ls <- write_mdls_with_covars_cmprsn(scored_data_tb = x@a_ScorzProfile@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
                                            bl_tb = cmprsns_ls$bl_tb,
                                            ds_smry_ls = cmprsns_ls$ds_smry_ls,
                                            mdl_smry_ls = cmprsns_ls$mdl_smry_ls,
                                            output_data_dir_1L_chr = path_to_write_to_1L_chr,
-                                           seed_1L_int = seed_1L_int)
+                                           seed_1L_int = x@seed_1L_int)
 ```
 
 The previous call to the `write_mdls_with_covars_cmprsn`{.R} function saves the tested models along with the two plots for each model in the "E_Predrs_W_Covars_Sngl_Mdl_Cmprsn" sub-directory of "Output". 

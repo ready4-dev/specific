@@ -11,11 +11,15 @@ development:
 reference:
 - title: "S3 Classes"
 - contents:
-  - specific_predictors
   - specific_models
+  - specific_predictors
 - title: "S4 Classes"
 - contents:
   - SpecificParameters
+  - SpecificPrivate
+  - SpecificShareable
+  - SpecificResults
+  - SpecificProject
 - title: "Functions"
 - contents:
   - get_background_text
@@ -107,4 +111,4 @@ reference:
   - write_ts_mdls_from_alg_outp
 - title: "Methods"
 - contents:
-  - exhibit-SpecificParameters
+  - exhibit-SpecificProject
