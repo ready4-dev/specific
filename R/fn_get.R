@@ -9,20 +9,45 @@ get_background_text <- function (results_ls)
     text_1L_chr <- results_ls$study_descs_ls$background_1L_chr
     return(text_1L_chr)
 }
+#' Get candidate models
+#' @description get_cndt_mdls() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get candidate models. Function argument filter_1L_lgl specifies the where to look for the required object. The function returns Candidate models (a lookup table).
+#' @param filter_1L_lgl Filter (a logical vector of length one), Default: T
+#' @param mdl_short_nms_chr Model short names (a character vector), Default: 'NA'
+#' @param mdl_types_lup Model types (a lookup table), Default: NULL
+#' @return Candidate models (a lookup table)
+#' @rdname get_cndt_mdls
+#' @export 
+#' @importFrom dplyr filter
+#' @keywords internal
+get_cndt_mdls <- function (filter_1L_lgl = T, mdl_short_nms_chr = NA_character_, 
+    mdl_types_lup = NULL) 
+{
+    cndt_mdls_lup <- get_cndts_for_mxd_mdls(mdl_types_lup = mdl_types_lup, 
+        filter_1L_lgl = filter_1L_lgl)
+    if (!is.na(mdl_short_nms_chr[1])) {
+        cndt_mdls_lup <- cndt_mdls_lup %>% dplyr::filter(short_name_chr %in% 
+            mdl_short_nms_chr)
+    }
+    return(cndt_mdls_lup)
+}
 #' Get candidates for mixed models
 #' @description get_cndts_for_mxd_mdls() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get candidates for mixed models. Function argument mdl_types_lup specifies the where to look for the required object. The function returns Candidates for mixed models (a lookup table).
 #' @param mdl_types_lup Model types (a lookup table), Default: NULL
+#' @param filter_1L_lgl Filter (a logical vector of length one), Default: T
 #' @return Candidates for mixed models (a lookup table)
 #' @rdname get_cndts_for_mxd_mdls
 #' @export 
 #' @importFrom utils data
 #' @importFrom dplyr filter
-get_cndts_for_mxd_mdls <- function (mdl_types_lup = NULL) 
+get_cndts_for_mxd_mdls <- function (mdl_types_lup = NULL, filter_1L_lgl = T) 
 {
     if (is.null(mdl_types_lup)) 
-        utils::data("mdl_types_lup", package = "TTU", envir = environment())
-    cndts_for_mxd_mdls_lup <- mdl_types_lup %>% dplyr::filter(!tfmn_for_bnml_lgl, 
-        short_name_chr != "BET_LOG")
+        utils::data("mdl_types_lup", package = "specific", envir = environment())
+    cndts_for_mxd_mdls_lup <- mdl_types_lup
+    if (filter_1L_lgl) 
+        cndts_for_mxd_mdls_lup <- cndts_for_mxd_mdls_lup %>% 
+            dplyr::filter(!tfmn_for_bnml_lgl, short_name_chr != 
+                "BET_LOG")
     return(cndts_for_mxd_mdls_lup)
 }
 #' Get conclusion text

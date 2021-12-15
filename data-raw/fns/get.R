@@ -6,10 +6,26 @@ get_conclusion_text <- function(results_ls){
   text_1L_chr <- results_ls$study_descs_ls$conclusion_1L_chr
   return(text_1L_chr)
 }
-get_cndts_for_mxd_mdls <- function(mdl_types_lup = NULL){
+get_cndt_mdls <- function(filter_1L_lgl = T,
+                          mdl_short_nms_chr = NA_character_,
+                          mdl_types_lup = NULL){
+  cndt_mdls_lup <- get_cndts_for_mxd_mdls(mdl_types_lup = mdl_types_lup,
+                                          filter_1L_lgl = filter_1L_lgl)
+  if(!is.na(mdl_short_nms_chr[1])){
+    cndt_mdls_lup <- cndt_mdls_lup %>%
+      dplyr::filter(short_name_chr %in% mdl_short_nms_chr)
+  }
+  cndt_mdls_lup <- cndt_mdls_lup %>%
+    specific_models()
+  return(cndt_mdls_lup)
+}
+get_cndts_for_mxd_mdls <- function(mdl_types_lup = NULL,
+                                   filter_1L_lgl = T){
   if(is.null(mdl_types_lup))
-    utils::data("mdl_types_lup", package = "TTU", envir = environment())
-  cndts_for_mxd_mdls_lup <- mdl_types_lup %>%
+    utils::data("mdl_types_lup", package = "specific", envir = environment())
+  cndts_for_mxd_mdls_lup <- mdl_types_lup
+  if(filter_1L_lgl)
+  cndts_for_mxd_mdls_lup <- cndts_for_mxd_mdls_lup  %>%
     dplyr::filter(!tfmn_for_bnml_lgl,
                   short_name_chr != "BET_LOG" )
   return(cndts_for_mxd_mdls_lup)

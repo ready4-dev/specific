@@ -13,8 +13,8 @@ x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify and Investigate Can
                                  urls_chr = c("https://ready4-dev.github.io/specific/",
                                               "https://github.com/ready4-dev/specific",
                                               "https://ready4-dev.github.io/ready4/")) %>%
-  ready4fun::make_manifest(addl_pkgs_ls = ready4fun::make_addl_pkgs_ls(depends_chr = c("ready4","scorz"),
-                                                                       suggests_chr = "rmarkdown",
+  ready4fun::make_manifest(addl_pkgs_ls = ready4fun::make_addl_pkgs_ls(depends_chr = c("ready4","youthvars"),
+                                                                       suggests_chr = c("rmarkdown","scorz"),
                                                                        imports_chr = "knitrBootstrap"),
                            build_ignore_ls = ready4fun::make_build_ignore_ls(file_nms_chr = c("initial_setup.R")),
                            check_type_1L_chr = "ready4",
@@ -180,16 +180,16 @@ ready4class::make_pt_ready4class_constructor(make_s3_lgl = FALSE,
                                              inc_clss_ls = list("SpecificShareable","SpecificPrivate") %>% list()),
 ready4class::make_pt_ready4class_constructor(make_s3_lgl = FALSE,
                                              name_stub_chr = "Project",
-                                             slots_ls = list("a_ScorzProfile",
+                                             slots_ls = list("a_YouthvarsProfile",
                                                              "b_SpecificParameters",
                                                              "c_SpecificResults") %>% list(),
-                                             pt_ls = list("ScorzProfile",
+                                             pt_ls = list("YouthvarsProfile",
                                                           "SpecificParameters",
                                                           "SpecificResults") %>% list(),
                                              class_desc_chr = "Modelling project input parameters and results output.",
                                              parent_class_chr = "Ready4Module",
                                              inc_clss_ls = list("SpecificResults","SpecificParameters") %>% list()))
-  y <- y %>%
+y <- y %>%
   dplyr::bind_rows(tibble::tribble(
     ~ make_s3_lgl, ~ name_stub_chr, ~ pt_ls, ~ pt_chkr_pfx_ls, ~ pt_ns_ls, ~ vals_ls, ~ allowed_vals_ls, ~ min_max_vals_ls, ~ start_end_vals_ls, ~ class_desc_chr, ~ parent_class_chr, ~ slots_ls, ~ meaningful_nms_ls, ~ inc_clss_ls, ~ asserts_ls,
     TRUE, "predictors", list("tibble"), list("is_"), list("tibble"), list(short_name_chr = "character(0)",
@@ -215,9 +215,103 @@ ready4class::make_pt_ready4class_constructor(make_s3_lgl = FALSE,
                                                                       mixed_type_chr = "character(0)",
                                                                       with_chr = "character(0)"), NULL, NULL, NULL, "Candidate models lookup table", NA_character_, NULL, NULL, NULL, NULL))  %>%
   ready4class::ready4class_constructor()
+datasets_ls <- list(tibble::tibble(short_name_chr = c("OLS_NTF",
+                                                      "OLS_LOG",
+                                                      "OLS_LOGIT",
+                                                      "OLS_LOGLOG",
+                                                      "OLS_CLL",
+                                                      "GLM_GSN_LOG",
+                                                      "GLM_BNL_LOG",
+                                                      "GLM_BNL_LGT",
+                                                      "GLM_BNL_CLL",
+                                                      "BET_LOG",
+                                                      "BET_LGT",
+                                                      "BET_CLL"),
+                                   long_name_chr = c("Ordinary Least Squares (no transformation)",
+                                                     "Ordinary Least Squares (log transformation)",
+                                                     "Ordinary Least Squares (logit transformation)",
+                                                     "Ordinary Least Squares (log log transformation)",
+                                                     "Ordinary Least Squares (complementary log log transformation)",
+                                                     "Generalised Linear Model with Gaussian distribution and log link",
+                                                     "Generalised Linear Model with Binomial distribution and log link",
+                                                     "Generalised Linear Model with Binomial distribution and logit link",
+                                                     "Generalised Linear Model with Binomial distribution and complementary log log link",
+                                                     "Beta Regression Model with Binomial distribution and log link",
+                                                     "Beta Regression Model with Binomial distribution and logit link",
+                                                     "Beta Regression Model with Binomial distribution and complementary log log link")) %>%
+                      dplyr::mutate(control_chr = c(rep(NA_character_,9),rep("betareg::betareg.control",3)),
+                                    family_chr = c(rep(NA_character_,5),"gaussian(log)","quasibinomial(log)","quasibinomial(logit)","quasibinomial(cloglog)", rep(NA_character_,3)),
+                                    fn_chr = c(rep("lm",5),rep("glm",4),rep("betareg::betareg",3)),
+                                    start_chr = c(rep(NA_character_,5),
+                                                  rep("-0.1,-0.1",4),
+                                                  rep("-0.5,-0.1,3",3)),
+                                    predn_type_chr = c(rep(NA_character_,5),
+                                                       rep("response",7)),
+                                    tfmn_chr = dplyr::case_when(startsWith(short_name_chr, "OLS_") ~ purrr::map_chr(short_name_chr, ~ {
+                                      idx_1L_int <- 1 + stringi::stri_locate_last_fixed(.x,"_")[1,1] %>% as.vector()
+                                      stringr::str_sub(.x, start = idx_1L_int)
+                                    }),
+                                    T ~ "NTF"),
+                                    tfmn_for_bnml_lgl = c(rep(F,6),rep(T,3),rep(F,3)),
+                                    fixed_acronym_chr = dplyr::case_when(startsWith(short_name_chr, "OLS_") ~ "OLS",
+                                                                         T ~ "GLM"),
+                                    mixed_acronym_chr = dplyr::case_when(startsWith(short_name_chr, "OLS_") ~ "LMM",
+                                                                         T ~ "GLMM"),
+                                    mixed_type_chr = dplyr::case_when(startsWith(short_name_chr, "OLS_") ~ "linear mixed model",
+                                                                      T ~ "generalised linear mixed model"),
+                                    with_chr = long_name_chr %>%
+                                      purrr::map_chr(~ifelse(startsWith(.x,"Ordinary Least Squares"),
+                                                             stringr::str_remove(.x,"Ordinary Least Squares ") %>%
+                                                               stringr::str_sub(start = 2, end = -2),
+                                                             stringr::str_remove(.x,"Generalised Linear Model with ") %>%
+                                                               stringr::str_remove("Beta Regression Model with ")))) %>%
+                      ready4fun::make_pkg_ds_ls(db_1L_chr = "mdl_types_lup",
+                                                title_1L_chr = "Model types lookup table",
+                                                desc_1L_chr = "A lookup table of abbreviations to describe the different model types supported by TTU functions"),
+                    tibble::tibble(short_name_chr = c("coefs","hetg",
+                                                      "dnst","sctr_plt",
+                                                      "sim_dnst","sim_sctr",
+                                                      "cnstrd_dnst","cnstrd_sctr_plt",
+                                                      "cnstrd_sim_dnst","cnstrd_sim_sctr"),
+                                   long_name_chr = c("population level effects",
+                                                     "group level effects",
+                                                     "comparative densities of observed data and predictions using mean model parameter values",
+                                                     "comparative scatter plot of observed and predictions using mean model parameter values",
+                                                     "comparative densities of observed data and predictions using sampled model parameter values",
+                                                     "comparative scatter plot of observed and predictions using sampled model parameter values",
+                                                     "comparative densities of observed data and predictions using mean model parameter values and transformation of out of range predictions to upper and lower bounds",
+                                                     "comparative scatter plot of observed and predictions using mean model parameter values and transformation of out of range predictions to upper and lower bounds",
+                                                     "comparative densities of observed data and predictions using sampled model parameter values and transformation of out of range predictions to upper and lower bounds",
+                                                     "comparative scatter plot of observed and predictions using sampled model parameter values and transformation of out of range predictions to upper and lower bounds")) %>%
+                      ready4fun::make_pkg_ds_ls(db_1L_chr = "plt_types_lup",
+                                                title_1L_chr = "Model plot types lookup table",
+                                                desc_1L_chr = "A lookup table of abbreviations to describe the different model plot types supported by TTU functions"),
+                    # ADD TO PLOTS TABLE: # AUTOPLT # LNR_CMPRSN  # PRED_DNSTY # PRED_SCTR # SIM_DNSTY # BORUTA_VAR_IMP # RF_VAR_IMP
+                    tibble::tibble(rprt_nms_chr = "AAA_TTU_MDL_CTG",
+                                   title_chr = "Results supplement: longitudinal transfer to utility models.",
+                                   paths_to_rmd_dir_1L_chr = NA_character_,
+                                   pkg_dirs_chr = "Markdown",
+                                   packages_chr = "TTU",
+                                   nms_of_rmd_chr = "Report_TS_Mdls.RMD",
+                                   rltv_paths_to_outp_yaml_chr = "_output.yml") %>%
+                      tibble::add_case(rprt_nms_chr = "AAA_PMRY_ANLYS_MTH",
+                                       title_chr = "Methods supplement: Main analysis algorithm",
+                                       paths_to_rmd_dir_1L_chr = NA_character_,
+                                       pkg_dirs_chr = "Markdown",
+                                       packages_chr = "TTU",
+                                       nms_of_rmd_chr = "Analyse.Rmd") %>%
+                      tibble::add_case(rprt_nms_chr = "AAA_RPRT_WRTNG_MTH",
+                                       title_chr = "Methods supplement: algorithm to auto-generate reports.",
+                                       paths_to_rmd_dir_1L_chr = NA_character_,
+                                       pkg_dirs_chr = "Markdown",
+                                       packages_chr = "TTU",
+                                       nms_of_rmd_chr = "Report.Rmd") %>%
+                      ready4fun::make_pkg_ds_ls(db_1L_chr = "rprt_lup",
+                                                title_1L_chr = "Report types lookup table",
+                                                desc_1L_chr = "A lookup table of the different report types supported by TTU functions"))
 z <- ready4pack::make_pt_ready4pack_manifest(x,
-                                             constructor_r3 = y#,
-                                             # pkg_ds_ls_ls = datasets_ls
+                                             constructor_r3 = y,
+                                             pkg_ds_ls_ls = datasets_ls
 ) %>%
   ready4pack::ready4pack_manifest()
 z <- ready4::author(z)

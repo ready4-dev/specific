@@ -17,29 +17,26 @@ library(specific)
 
 ## Import data
 
-We start by ingesting our data in the form of a `ScorzProfile` object. As this example uses EQ-5D the type of `ScorzProfile` object we import is a `ScorzEuroQol5`. The following step is explained in more detail in [this vignette from the scorz pacakge](https://ready4-dev.github.io/scorz/articles/V_02.html).
+We start by ingesting our data. As this example uses EQ-5D data, we import a `ScorzEuroQol5` object that was created using the steps described in [this vignette from the scorz pacakge](https://ready4-dev.github.io/scorz/articles/V_02.html).
 
 ```{r}
-x <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes", # Get direct from scorz release repo
-                               dv_ds_nm_1L_chr = "https://doi.org/10.7910/DVN/W95KED",
-                               dv_server_1L_chr = "dataverse.harvard.edu") %>%
-  ingest(fls_to_ingest_chr = "ymh_eq5d_dyad_r4",
-         metadata_1L_lgl = F) %>%
-  youthvars::YouthvarsSeries(a_Ready4useDyad = .,
-                                id_var_nm_1L_chr = "uid",
-                                timepoint_var_nm_1L_chr = "Timepoint",
-                                timepoint_vals_chr = unique(.@ds_tb$Timepoint)) %>%
-  scorz::ScorzEuroQol5(a_YouthvarsProfile = .,
-                   country_1L_chr = "UK",
-                   instrument_version_1L_chr = "5L",
-                   itm_var_nms_chr = c("eq5dq_MO", "eq5dq_SC", "eq5dq_UA", "eq5dq_PD", "eq5dq_AD")) %>%
-  renew()
+x <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz", 
+                               gh_tag_1L_chr = "Documentation_0.0") %>%
+    ingest(fls_to_ingest_chr = "ymh_ScorzEuroQol5",
+         metadata_1L_lgl = F)
 ```
+
+For the purpose of this analysis we only the `YouthvarsProfile` object included in `x` so extract this element using the `procureSlot` method.
+
+```{r}
+x <- x %>% 
+  procureSlot("a_YouthvarsProfile")
+```
+
 
 ## Inspect data
 ```{r echo = F, message=FALSE}
-ds_tb <- x %>% 
-  procureSlot("a_YouthvarsProfile") %>%
+ds_tb <- x %>%
   procureSlot("a_Ready4useDyad") %>%
   procureSlot("ds_tb")
 ```
@@ -47,20 +44,19 @@ ds_tb <- x %>%
 The dataset we are using has a total of `r nrow(ds_tb)` records at two timepoints on `r length(ds_tb$uid %>% unique())` study participants. The first six records are reproduced below.
 
 ```{r inputds, echo=F, eval = knitr::is_html_output(), results='asis'}
-x %>% 
-  procureSlot("a_YouthvarsProfile") %>%
+x %>%
   procureSlot("a_Ready4useDyad") %>%
   exhibit(display_1L_chr = "head")
 ```
 
-To see how the data in the `a_YouthvarsProfile` slot of `x` (a `YouthvarsSeries` object) can be described in more detail [read this vignette from the youthvars package](https://ready4-dev.github.io/youthvars/articles/V_02.html).
+To learn more about the properties of `x` (which is a `YouthvarsSeries` child class of `YouthvarsProfile` object) and how it can be inspected, [read this vignette from the youthvars package](https://ready4-dev.github.io/youthvars/articles/V_02.html).
 
 ## Create SpecificProject
 
-To start with we create a new instance of a `SpecificProject` object that contains the data we have just ingested.
+To start with, we create a new instance of a `SpecificProject` object containing data we have just ingested.
 
 ```{r}
-x <- SpecificProject(a_ScorzProfile = x) # REVERT TO YOUTHVARS
+x <- SpecificProject(a_YouthvarsProfile = x) 
 # Add descriptives methods
 ```
 
@@ -69,12 +65,11 @@ x <- SpecificProject(a_ScorzProfile = x) # REVERT TO YOUTHVARS
 
 In preparation for exploring our dataset, we need to declare a set of model parameters in a `SpecificParameters` object. This can be done in one step, or in sequential steps. In this example, we will proceed sequentially.
 
-### Dataset and dependent variable
+### Dependent variable
 The first parameter that we declare is the dependent variable (total EQ-5D utility score) for the models we will be exploring.
 
 ```{r}
-y <- SpecificParameters(#a_ScorzProfile = x,
-                        depnt_var_nm_1L_chr = "eq5d_total_w")
+y <- SpecificParameters(depnt_var_nm_1L_chr = "eq5d_total_w")
 ```
 
 ### Candidate predictors
@@ -129,34 +124,28 @@ We now add details about the candidate models we will explore in the form of a `
 
 ```{r}
 y <- renewSlot(y,
-               slot_nm_1L_chr = "candidate_mdls_lup",
-               new_val_xx = get_cndts_for_mxd_mdls() %>%
-                 specific_models())
+               slot_nm_1L_chr = "candidate_mdls_lup", # Make slot a dyad child
+               new_val_xx = get_cndt_mdls(mdl_short_nms_chr = c("OLS_NTF","OLS_CLL","GLM_GSN_LOG")))
 ```
 
 The `specific_models` object that we have just added is reproduced below.
 
 ```{r}
 procureSlot(y,
-            "candidate_mdls_lup") %>%
+            "candidate_mdls_lup") %>% # Make method
     ready4show::print_table(output_type_1L_chr = "HTML",
                             caption_1L_chr = "Model types lookup table")
 ```
 
-By default, all the models in the `specific_models` object will be explored. However, if we just wish to explore a subset of these we can specify the names (corresponding to those in the `short_name_chr` column) of the models we wish to test, adding it to the `candidate_mdls_chr` slot of `y`.
-
-```{r}
-x <- renewSlot(y,
-               slot_nm_1L_chr = "candidate_mdls_chr",
-               new_val_xx = c("OLS_NTF","OLS_LOG","OLS_LOGIT"))
-```
-
-We must now also specify the relevant prefix (the first three letters of the names in the `short_name_chr` column of the `specific_models` object) using the `candidate_mdl_pfcs_chr` slot of `y`.
-
-```{r}
-y <- renewSlot(y,
-               slot_nm_1L_chr = "candidate_mdl_pfcs_chr",
-               new_val_xx = c("OLS"))
+```{r echo = F}
+# By default, all the models in the `specific_models` object will be explored. However, if we just wish to explore a subset of these we can specify the names (corresponding to those in the `short_name_chr` column) of the models we wish to test, adding it to the `candidate_mdls_chr` slot of `y`.
+# x <- renewSlot(y,
+#                slot_nm_1L_chr = "candidate_mdls_chr",
+#                new_val_xx = c("OLS_NTF","OLS_LOG","OLS_LOGIT"))
+# We must now also specify the relevant prefix (the first three letters of the names in the `short_name_chr` column of the `specific_models` object) using the `candidate_mdl_pfcs_chr` slot of `y`.
+# y <- renewSlot(y,
+#                slot_nm_1L_chr = "candidate_mdl_pfcs_chr",
+#                new_val_xx = c("OLS"))
 ```
 
 ### Other parameters
@@ -179,7 +168,7 @@ y <- renewSlot(y,
                new_val_xx = 1234L)
 ```
 
-Finally, we add `y` to `x`,
+Finally, we add `y` (model parameters) to `x` (the `SpecificProject`).
 
 ```{r}
 x <- renewSlot(x,
@@ -195,58 +184,132 @@ x <- renewSlot(x,
 We create a directory in which we will write all output.
 
 ```{r warning = F}
-path_to_write_to_1L_chr <- "Output" 
-dir.create(path_to_write_to_1L_chr)
+path_to_write_to_1L_chr <- "Output" # Move to new d_Ready4usePointer slot of x
+
 ```
 
 ```{r warning=F, message=F}
-if(!is.na(x@candidate_mdls_chr[1])){
-  mdl_types_chr <- x@candidate_mdls_chr
+author_SpecificProject <- function (x,
+                       path_to_write_to_1L_chr = "Output",
+                       what_1L_chr = "mdl_cmprsn"){
+  if(!dir.exists(path_to_write_to_1L_chr))
+    dir.create(path_to_write_to_1L_chr)
+if(what_1L_chr == "mdl_cmprsn"){
+  if(!is.na(x@b_SpecificParameters@candidate_mdls_chr[1])){
+  mdl_types_chr <- x@b_SpecificParameters@candidate_mdls_chr
 }else{
   mdl_types_chr <- NULL
 }
-if(!is.na(x@candidate_mdl_pfcs_chr[1])){
-  choose_from_pfx_chr <- x@candidate_mdl_pfcs_chr
+if(!is.na(x@b_SpecificParameters@candidate_mdl_pfcs_chr[1])){
+  choose_from_pfx_chr <- x@b_SpecificParameters@candidate_mdl_pfcs_chr
 }else{
   choose_from_pfx_chr <- NULL
 }
-ds_smry_ls <- make_ds_smry_ls(candidate_predrs_chr = x@candidate_predrs_chr,
-                              candidate_covar_nms_chr = x@candidate_covars_chr,
-                              depnt_var_nm_1L_chr = x@depnt_var_nm_1L_chr,
-                              dictionary_tb = x@a_ScorzProfile@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3, #Dyad
-                              id_var_nm_1L_chr = x@a_ScorzProfile@a_YouthvarsProfile@id_var_nm_1L_chr, # Profile
-                              round_var_nm_1L_chr = x@a_ScorzProfile@a_YouthvarsProfile@timepoint_var_nm_1L_chr, # Series
-                              round_bl_val_1L_chr = x@a_ScorzProfile@a_YouthvarsProfile@timepoint_vals_chr[1],
-                              predictors_lup = x@predictors_lup)
-mdl_smry_ls <- make_mdl_smry_ls(mdl_types_lup = x@candidate_mdls_lup,
+ds_smry_ls <- make_ds_smry_ls(candidate_predrs_chr = x@b_SpecificParameters@candidate_predrs_chr,
+                              candidate_covar_nms_chr = x@b_SpecificParameters@candidate_covars_chr,
+                              depnt_var_nm_1L_chr = x@b_SpecificParameters@depnt_var_nm_1L_chr,
+                              dictionary_tb = x@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3, #Dyad
+                              id_var_nm_1L_chr = x@a_YouthvarsProfile@id_var_nm_1L_chr, # Profile
+                              round_var_nm_1L_chr = x@a_YouthvarsProfile@timepoint_var_nm_1L_chr, # Series
+                              round_bl_val_1L_chr = x@a_YouthvarsProfile@timepoint_vals_chr[1],
+                              predictors_lup = x@b_SpecificParameters@predictors_lup)
+mdl_smry_ls <- make_mdl_smry_ls(mdl_types_lup = x@b_SpecificParameters@candidate_mdls_lup,
                                 mdl_types_chr = mdl_types_chr,
                                 choose_from_pfx_chr = choose_from_pfx_chr,
-                                folds_1L_int = x@folds_1L_int,
-                                max_nbr_of_boruta_mdl_runs_int = x@max_mdl_runs_1L_int)
-cmprsns_ls <- write_mdl_cmprsn(scored_data_tb = x@a_ScorzProfile@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
+                                folds_1L_int = x@b_SpecificParameters@folds_1L_int,
+                                max_nbr_of_boruta_mdl_runs_int = x@b_SpecificParameters@max_mdl_runs_1L_int)
+results_ls <- write_mdl_cmprsn(scored_data_tb = x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
                                 ds_smry_ls = ds_smry_ls,
                                 mdl_smry_ls = mdl_smry_ls,
                                 output_data_dir_1L_chr = path_to_write_to_1L_chr,
-                                seed_1L_int = x@seed_1L_int)
+                                seed_1L_int = x@b_SpecificParameters@seed_1L_int)
+  
+}
+  if(what_1L_chr == "predr_cmprsn"){
+    results_ls <- write_predr_and_covars_cmprsn(scored_data_tb = x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
+                                            bl_tb = x@c_SpecificResults@b_SpecificPrivate@private_outp_ls$bl_tb, # Create a ds_copies slot
+                                            ds_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$ds_smry_ls,
+                                            mdl_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls,
+                                            output_data_dir_1L_chr = path_to_write_to_1L_chr,
+                                            seed_1L_int = x@b_SpecificParameters@seed_1L_int)
+  }
+  if(what_1L_chr == "covar_cmprsn"){
+    results_ls <- write_mdls_with_covars_cmprsn(scored_data_tb = x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
+                                           bl_tb = x@c_SpecificResults@b_SpecificPrivate@private_outp_ls$bl_tb,
+                                           ds_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$ds_smry_ls,
+                                           mdl_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls,
+                                           output_data_dir_1L_chr = path_to_write_to_1L_chr,
+                                           seed_1L_int = x@b_SpecificParameters@seed_1L_int)
+  }
+x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1]
+x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
+return(x)
+                       }
+
+
+```
+```{r}
+exhibit_SpecificProject <- function(x,
+                                    caption_1L_chr = "",
+                                    mkdn_tbl_ref_1L_chr = NULL,
+                                    output_type_1L_chr = "PDF",
+                                    type_1L_chr = "results",
+                                    what_1L_chr = "",
+                                    ...){
+  if(!identical(what_1L_chr,""))
+    object_xx <- procure_SpecificProject(x, # CHANGE TO PROCURE
+                            what_1L_chr = what_1L_chr)
+  if(type_1L_chr == "results"){
+    if(what_1L_chr == "mdl_cmprsn"){
+      if(identical(caption_1L_chr,""))
+        caption_1L_chr <- "Comparison of candidate models using highest correlated predictor"
+    }
+  }
+        object_xx %>%
+        ready4show::print_table(output_type_1L_chr = output_type_1L_chr,
+                                caption_1L_chr = caption_1L_chr,
+                                mkdn_tbl_ref_1L_chr = mkdn_tbl_ref_1L_chr,
+                                ...)
+  }
+```
+```{r}
+procure_SpecificProject <- function(x,
+                                    what_1L_chr = "prefd_mdls"){
+  if(what_1L_chr == "mdl_cmprsn")
+    object_xx <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$smry_of_sngl_predr_mdls_tb
+    if(what_1L_chr == "prefd_mdls")
+    object_xx <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$prefd_mdl_types_chr
+  return(object_xx)
+}
+```
+
+```{r}
+x <- author_SpecificProject(x,
+                            what_1L_chr = "mdl_cmprsn")
 ```
 
 The `write_mdl_cmprsn` function will write each model to be tested to a new sub-directory of "`r path_to_write_to_1L_chr`" called "A_Candidate_Mdls_Cmprsn". Also written to that sub-directory are a number of plots for each model. The `write_mdl_cmprsn` function also outputs a table summarising the performance of each of the candidate models.
 
 ```{r mdl_cmprsn, eval = knitr::is_html_output(), results='asis'}
-cmprsns_ls$mdl_smry_ls$smry_of_sngl_predr_mdls_tb %>%
-  ready4show::print_table(output_type_1L_chr = "HTML",
-                          caption_1L_chr = "Comparison of model types for highest correlated predictor using baseline data",
-                          mkdn_tbl_ref_1L_chr = "tab:mdl_cmprsn")
+exhibit_SpecificProject(x,
+                        mkdn_tbl_ref_1L_chr = "tab:mdl_cmprsn",
+                        output_type_1L_chr = "HTML",
+                        what_1L_chr = "mdl_cmprsn",
+                        type_1L_chr = "results")
+
 ```
 
 We can now identify the highest performing model in each category of candidate model based on the testing R^2^ statistic (RsquaredP in the previous table).
 
 ```{r}
-cmprsns_ls$mdl_smry_ls$prefd_mdl_types_chr
+procure_SpecificProject(x,
+                        what_1L_chr = "prefd_mdls")
+# cmprsns_ls$mdl_smry_ls$prefd_mdl_types_chr
 ```
 We can override these automated selections and instead incorporate other considerations (possibly based on judgments informed by visual inspection of the plots and the desirability of constraining predictions to a maximum value of one). We do this in the following command, specifying new preferred model types, in descending order of preference.
 
 ```{r}
+# MAKE renew MTHD
 cmprsns_ls$mdl_smry_ls$prefd_mdl_types_chr <- c("OLS_NTF", "BET_CLL")
 ```
 
@@ -254,12 +317,8 @@ cmprsns_ls$mdl_smry_ls$prefd_mdl_types_chr <- c("OLS_NTF", "BET_CLL")
 We can now compare all of our candidate predictors (with and without candidate covariates) using the most preferred model type.
 
 ```{r message=FALSE, results='hide', warning=FALSE}
-cmprsns_ls <- write_predr_and_covars_cmprsn(scored_data_tb = x@a_ScorzProfile@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
-                                            bl_tb = cmprsns_ls$bl_tb, # Create a ds_copies slot
-                                            ds_smry_ls = cmprsns_ls$ds_smry_ls,
-                                            mdl_smry_ls = cmprsns_ls$mdl_smry_ls,
-                                            output_data_dir_1L_chr = path_to_write_to_1L_chr,
-                                            seed_1L_int = x@seed_1L_int)
+x <- author_SpecificProject(x,
+                            what_1L_chr = "predr_cmprsn")
 ```
 
 Now, we compare the performance of single predictor models of our preferred model type (in our case, a `r cmprsns_ls$mdl_smry_ls$mdl_types_lup %>% ready4::get_from_lup_obj(target_var_nm_1L_chr = "long_name_chr",match_value_xx = cmprsns_ls$mdl_smry_ls$prefd_mdl_types_chr[1], match_var_nm_1L_chr = "short_name_chr", evaluate_1L_lgl = F)`) for each candidate predictor. The call to the `write_predr_and_covars_cmprsn`{.R} function saved the tested models along with model plots in the "B_Candidate_Predrs_Cmprsn" sub-directory of "Output". These results are also viewable as a table.
@@ -299,12 +358,9 @@ We can override the covariates to select, potentially because we want to select 
 We now conclude our model testing by rerunning the previous step, except confining our covariates to those we prefer.
 
 ```{r message=FALSE, results='hide', warning=FALSE, fig.show ='hide'}
-outp_smry_ls <- write_mdls_with_covars_cmprsn(scored_data_tb = x@a_ScorzProfile@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
-                                           bl_tb = cmprsns_ls$bl_tb,
-                                           ds_smry_ls = cmprsns_ls$ds_smry_ls,
-                                           mdl_smry_ls = cmprsns_ls$mdl_smry_ls,
-                                           output_data_dir_1L_chr = path_to_write_to_1L_chr,
-                                           seed_1L_int = x@seed_1L_int)
+x <- author_SpecificProject(x,
+                            what_1L_chr = "covar_cmprsn")
+
 ```
 
 The previous call to the `write_mdls_with_covars_cmprsn`{.R} function saves the tested models along with the two plots for each model in the "E_Predrs_W_Covars_Sngl_Mdl_Cmprsn" sub-directory of "Output". 
@@ -342,3 +398,15 @@ Finally, we can save a complete record of our analysis.
 ```{r eval=F}
 saveRDS(outp_smry_ls,paste0(outp_smry_ls$path_to_write_to_1L_chr,"/I_ALL_OUTPUT_.RDS"))
 ```
+
+## Share output
+We can now publicly share our scored dataset and its associated metadata, using `Ready4useRepos` and its `share` method [as described in a vignette from the ready4use package](https://ready4-dev.github.io/ready4use/articles/V_01.html).
+
+```{r eval=F}
+z <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz", # Replace with details of your repo.
+                               gh_tag_1L_chr = "Documentation_0.0") # You must have write permissions.
+z <- share(z,
+           obj_to_share_xx = y,
+           fl_nm_1L_chr = "ymh_ScorzAqol6Adol")
+```
+`y` is now available for download as the file `ymh_ScorzAqol6Adol.RDS` from the ["Documentation_0.0" release of the scorz package](https://github.com/ready4-dev/scorz/releases/tag/Documentation_0.0).

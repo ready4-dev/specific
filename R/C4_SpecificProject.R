@@ -3,7 +3,7 @@
 #' Modelling project input parameters and results output.
 #' 
 #' @include C4_SpecificResults.R
-#' @slot a_ScorzProfile  (an instance of the ScorzProfile class)
+#' @slot a_YouthvarsProfile  (an instance of the YouthvarsProfile class)
 #' @slot b_SpecificParameters  (an instance of the SpecificParameters class)
 #' @slot c_SpecificResults  (an instance of the SpecificResults class)
 #' @slot dissemination_1L_chr Dissemination (a character vector of length one)
@@ -14,8 +14,8 @@
 #' @exportClass SpecificProject
 SpecificProject <- methods::setClass("SpecificProject",
 contains = "Ready4Module",
-slots = c(a_ScorzProfile = "ScorzProfile",b_SpecificParameters = "SpecificParameters",c_SpecificResults = "SpecificResults",dissemination_1L_chr = "character"),
-prototype =  list(a_ScorzProfile = scorz::ScorzProfile(),b_SpecificParameters = SpecificParameters(),c_SpecificResults = SpecificResults()))
+slots = c(a_YouthvarsProfile = "YouthvarsProfile",b_SpecificParameters = "SpecificParameters",c_SpecificResults = "SpecificResults",dissemination_1L_chr = "character"),
+prototype =  list(a_YouthvarsProfile = youthvars::YouthvarsProfile(),b_SpecificParameters = SpecificParameters(),c_SpecificResults = SpecificResults()))
 
 
 methods::setValidity(methods::className("SpecificProject"),

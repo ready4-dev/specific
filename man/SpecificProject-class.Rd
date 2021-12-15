@@ -11,7 +11,7 @@ Modelling project input parameters and results output.
 \section{Slots}{
 
 \describe{
-\item{\code{a_ScorzProfile}}{(an instance of the ScorzProfile class)}
+\item{\code{a_YouthvarsProfile}}{(an instance of the YouthvarsProfile class)}
 
 \item{\code{b_SpecificParameters}}{(an instance of the SpecificParameters class)}
 

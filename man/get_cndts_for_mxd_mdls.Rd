@@ -4,10 +4,12 @@
 \alias{get_cndts_for_mxd_mdls}
 \title{Get candidates for mixed models}
 \usage{
-get_cndts_for_mxd_mdls(mdl_types_lup = NULL)
+get_cndts_for_mxd_mdls(mdl_types_lup = NULL, filter_1L_lgl = T)
 }
 \arguments{
 \item{mdl_types_lup}{Model types (a lookup table), Default: NULL}
+
+\item{filter_1L_lgl}{Filter (a logical vector of length one), Default: T}
 }
 \value{
 Candidates for mixed models (a lookup table)

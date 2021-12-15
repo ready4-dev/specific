@@ -9,6 +9,11 @@ home:
 development:
   mode: auto
 reference:
+- title: "Datasets"
+- contents:
+  - mdl_types_lup
+  - plt_types_lup
+  - rprt_lup
 - title: "S3 Classes"
 - contents:
   - specific_models
