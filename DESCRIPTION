@@ -1,7 +1,7 @@
 Package: specific
 Title: Specify and Investigate Candidate Models for Representing Mental
     Health Systems
-Version: 0.0.0.9016
+Version: 0.0.0.9017
 Authors@R: c(
     person("Matthew", "Hamilton", , "matthew.hamilton@orygen.org.au", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7407-9194")),
@@ -51,7 +51,7 @@ Imports:
     purrr,
     randomForest,
     ready4show (>= 0.0.0.9058),
-    ready4use (>= 0.0.0.9201),
+    ready4use (>= 0.0.0.9203),
     rlang,
     stats,
     stringi,
@@ -63,8 +63,7 @@ Imports:
     tidyselect,
     utils,
     viridis,
-    xfun,
-    youthvars (>= 0.0.0.9091)
+    xfun
 VignetteBuilder: knitr
 Collate: 
     'C3_specific_models.R'
@@ -95,9 +94,10 @@ Collate:
     'pkg_specific.R'
     'specific-package.R'
 Depends: 
-    scorz,
+    youthvars,
     ready4
 Suggests: 
+    scorz,
     rmarkdown
 Remotes: 
     ready4-dev/ready4,
