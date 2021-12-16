@@ -25,6 +25,11 @@ reference:
   - SpecificShareable
   - SpecificResults
   - SpecificProject
+  - SpecificInitiator
+  - SpecificModels
+  - SpecificPredictors
+  - SpecificFixed
+  - SpecificMixed
 - title: "Functions"
 - contents:
   - get_background_text
