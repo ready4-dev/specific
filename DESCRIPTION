@@ -1,7 +1,7 @@
 Package: specific
 Title: Specify and Investigate Candidate Models for Representing Mental
     Health Systems
-Version: 0.0.0.9019
+Version: 0.0.0.9020
 Authors@R: c(
     person("Matthew", "Hamilton", , "matthew.hamilton@orygen.org.au", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7407-9194")),
@@ -79,6 +79,11 @@ Collate:
     'C4_SpecificShareable.R'
     'C4_SpecificResults.R'
     'C4_SpecificProject.R'
+    'C4_SpecificFixed.R'
+    'C4_SpecificInitiator.R'
+    'C4_SpecificMixed.R'
+    'C4_SpecificModels.R'
+    'C4_SpecificPredictors.R'
     'db_mdl_types_lup.R'
     'db_plt_types_lup.R'
     'db_rprt_lup.R'
