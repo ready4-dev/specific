@@ -28,6 +28,7 @@ get_cndt_mdls <- function (filter_1L_lgl = T, mdl_short_nms_chr = NA_character_,
         cndt_mdls_lup <- cndt_mdls_lup %>% dplyr::filter(short_name_chr %in% 
             mdl_short_nms_chr)
     }
+    cndt_mdls_lup <- cndt_mdls_lup %>% specific_models()
     return(cndt_mdls_lup)
 }
 #' Get candidates for mixed models

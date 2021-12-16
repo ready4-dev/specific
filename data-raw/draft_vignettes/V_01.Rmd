@@ -184,8 +184,7 @@ x <- renewSlot(x,
 We create a directory in which we will write all output.
 
 ```{r warning = F}
-path_to_write_to_1L_chr <- "Output" # Move to new d_Ready4usePointer slot of x
-
+path_to_write_to_1L_chr <- tempdir()#"Output" # Move to new d_Ready4usePointer slot of x
 ```
 
 ```{r warning=F, message=F}
