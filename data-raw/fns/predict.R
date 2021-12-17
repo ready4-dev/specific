@@ -406,7 +406,7 @@ predict_uncnstrd_utl <- function(data_tb, # Rename and generalise from utility
     if(is_brms_mdl_1L_lgl){
       new_data_dbl <- brms::posterior_predict(model_mdl,
                                               newdata = data_tb,
-                                              nsamples=1) %>% as.vector()
+                                              ndraws=1) %>% as.vector()
 
     }else{
       if("betareg" %in% class(model_mdl) & !force_new_data_1L_lgl){

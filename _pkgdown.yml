@@ -1,9 +1,9 @@
 home:
   links:
   - text: Manual - User (PDF)
-    href: https://github.com/ready4-dev/specific/releases/download/Documentation_0.0/specific_User.pdf
-  - text: Manual - Developer (PDF)
     href: https://github.com/ready4-dev/specific/releases/download/Documentation_0.0/specific_Developer.pdf
+  - text: Manual - Developer (PDF)
+    href: https://github.com/ready4-dev/specific/releases/download/Documentation_0.0/eq5d_ttu_SpecificMixed.RDS
   - text: Project website
     href:  https://ready4-dev.github.io/ready4/
 development:
@@ -121,4 +121,11 @@ reference:
   - write_ts_mdls_from_alg_outp
 - title: "Methods"
 - contents:
+  - author-SpecificProject
   - exhibit-SpecificProject
+  - investigate-SpecificFixed
+  - investigate-SpecificInitiator
+  - investigate-SpecificModels
+  - investigate-SpecificPredictors
+  - procure-SpecificProject
+  - share-SpecificProject

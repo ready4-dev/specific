@@ -2104,7 +2104,7 @@ make_smry_of_brm_mdl <- function (mdl_ls, data_tb, depnt_var_nm_1L_chr = "utl_to
     sd_intcpt_df <- sd_intcpt_df[1:nrow(sd_intcpt_df), 1:4]
     coef <- summary(mdl_ls, digits = 4)$fixed
     coef <- coef[1:nrow(coef), 1:4]
-    R2 <- brms::bayes_R2(mdl_ls)
+    R2 <- brms::bayes_R2(mdl_ls) %>% as.vector()
     RMSE <- psych::describe(apply(predictions, 1, calculate_rmse, 
         y_dbl = data_tb %>% dplyr::pull(!!rlang::sym(depnt_var_nm_1L_chr))), 
         quant = c(0.25, 0.75), skew = F, ranges = F)
@@ -2118,6 +2118,7 @@ make_smry_of_brm_mdl <- function (mdl_ls, data_tb, depnt_var_nm_1L_chr = "utl_to
         "R2", "RMSE", "Sigma"), Model = mdl_nm_1L_chr) %>% dplyr::mutate(`95% CI` = paste(l.95..CI, 
         ",", u.95..CI)) %>% dplyr::rename(SE = Est.Error) %>% 
         dplyr::select(Model, Parameter, Estimate, SE, `95% CI`)
+    rownames(smry_of_brm_mdl_tb) <- NULL
     return(smry_of_brm_mdl_tb)
 }
 #' Make summary of model output

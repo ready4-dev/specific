@@ -1,11 +1,14 @@
-exhibit_SpecificProject<- function(x,
-                                       captions_chr = character(0),
-                                       method_chr = c("pearson", "spearman"),
-                                       mkdn_tbl_refs_chr = NULL,
-                                       output_type_1L_chr = "HTML",
-                                       type_1L_chr = "correlation",
-                                       timepoints_int = NA_integer_){
-  if(type_1L_chr == "correlation"){
+exhibit_SpecificProject <- function(x,
+                                    captions_chr = character(0),
+                                    method_chr = c("pearson", "spearman"),
+                                    mkdn_tbl_refs_chr = NULL,
+                                    output_type_1L_chr = "HTML",
+                                    timepoints_int = NA_integer_,
+                                    type_1L_chr = "dataset",
+                                    what_1L_chr = "correlation",
+                                    ...
+                                    ){
+  if(type_1L_chr == "dataset" & what_1L_chr == "correlation"){
     if(is.na(timepoints_int)){
       if("timepoint_vals_chr" %in% slotNames(x@a_YouthvarsProfile)){
         timepoints_int <- 1:length(x@a_YouthvarsProfile@timepoint_vals_chr) %>% as.integer()
@@ -37,5 +40,26 @@ exhibit_SpecificProject<- function(x,
                                                    method_chr = method_chr,
                                                    result_chr = output_type_1L_chr
                    ))
+  }else{
+    if(!identical(what_1L_chr,""))
+      object_xx <- procure(x,
+                           what_1L_chr = what_1L_chr)
+    if(type_1L_chr == "results"){
+      if(what_1L_chr == "mdl_cmprsn"){
+        if(identical(captions_chr,character(0)))
+          captions_chr <- "Comparison of candidate models using highest correlated predictor"
+      }
+      if(what_1L_chr == "predr_cmprsn"){
+        if(identical(captions_chr,character(0)))
+          captions_chr <- "Comparison of all candidate predictors using preferred model"
+      }
+
+    }
+    object_xx %>%
+      ready4show::print_table(output_type_1L_chr = output_type_1L_chr,
+                              caption_1L_chr = captions_chr,
+                              mkdn_tbl_ref_1L_chr = mkdn_tbl_refs_chr,
+                              ...)
   }
+
 }

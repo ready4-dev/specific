@@ -106,3 +106,7 @@
 ^data-raw/draft_vignettes/Output/E_Predrs_W_Covars_Sngl_Mdl_Cmprsn/E_CK_CV_Psych_well_int_BET_LGT\.RDS$
 ^data-raw/draft_vignettes/Output/E_Predrs_W_Covars_Sngl_Mdl_Cmprsn/E_CK_CV_Psych_well_int_BET_LGT_PRED_DNSTY\.png$
 ^data-raw/draft_vignettes/Output/E_Predrs_W_Covars_Sngl_Mdl_Cmprsn/E_CK_CV_Psych_well_int_BET_LGT_PRED_SCTR\.png$
+^data-raw/s4_fns/investigate\.R$
+^data-raw/s4_fns/procure\.R$
+^data-raw/s4_fns/author\.R$
+^data-raw/s4_fns/share\.R$

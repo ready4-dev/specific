@@ -1940,18 +1940,23 @@ make_smry_of_brm_mdl <- function (mdl_ls,
     sd_intcpt_df <- sd_intcpt_df[1:nrow(sd_intcpt_df), 1:4]
     coef <- summary(mdl_ls, digits = 4)$fixed
     coef <- coef[1:nrow(coef), 1:4]
-    R2 <- brms::bayes_R2(mdl_ls)
+    R2 <- brms::bayes_R2(mdl_ls) %>%
+      as.vector()#
     RMSE <- psych::describe(apply(predictions, 1, calculate_rmse, y_dbl = data_tb %>%
         dplyr::pull(!!rlang::sym(depnt_var_nm_1L_chr))), quant = c(0.25,
         0.75), skew = F, ranges = F)
     RMSE <- cbind(RMSE$mean, RMSE$sd, RMSE$Q0.25, RMSE$Q0.75) %>%
         as.vector()
     Sigma <- summary(mdl_ls, digits = 4)$spec_par[1:4]
-    smry_of_brm_mdl_tb <- data.frame(round(rbind(sd_intcpt_df, coef, R2, RMSE,
-        Sigma), 3)) %>% dplyr::mutate(Parameter = c("SD (Intercept)","Intercept",
-                                                    purrr::map(predr_vars_nms_chr,
-                                                               ~paste0(.x, c(" baseline",
-                                                                             " change"))) %>%
+    smry_of_brm_mdl_tb <- data.frame(round(rbind(sd_intcpt_df,
+                                                 coef,
+                                                 R2,
+                                                 RMSE,
+                                                 Sigma), 3)) %>%
+      dplyr::mutate(Parameter = c("SD (Intercept)","Intercept",
+                                  purrr::map(predr_vars_nms_chr,
+                                             ~paste0(.x, c(" baseline",
+                                                           " change"))) %>%
                                                       purrr::flatten_chr(),
                                                     "R2", "RMSE", "Sigma"),
                                       Model = mdl_nm_1L_chr) %>%
@@ -1960,6 +1965,7 @@ make_smry_of_brm_mdl <- function (mdl_ls,
                                      u.95..CI)) %>%
       dplyr::rename(SE = Est.Error) %>%
         dplyr::select(Model, Parameter, Estimate, SE, `95% CI`)
+    rownames(smry_of_brm_mdl_tb)<-NULL
     return(smry_of_brm_mdl_tb)
 }
 make_smry_of_mdl_outp <- function (data_tb,

@@ -17,6 +17,8 @@ Modelling project dataset, input parameters and empty results placeholder.
 
 \item{\code{c_SpecificResults}}{(an instance of the SpecificResults class)}
 
+\item{\code{paths_chr}}{Paths (a character vector)}
+
 \item{\code{dissemination_1L_chr}}{Dissemination (a character vector of length one)}
 }}
 

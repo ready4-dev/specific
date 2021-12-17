@@ -457,7 +457,7 @@ predict_uncnstrd_utl <- function (data_tb, model_mdl, new_data_is_1L_chr = "Pred
     if (new_data_is_1L_chr == "Simulated") {
         if (is_brms_mdl_1L_lgl) {
             new_data_dbl <- brms::posterior_predict(model_mdl, 
-                newdata = data_tb, nsamples = 1) %>% as.vector()
+                newdata = data_tb, ndraws = 1) %>% as.vector()
         }
         else {
             if ("betareg" %in% class(model_mdl) & !force_new_data_1L_lgl) {

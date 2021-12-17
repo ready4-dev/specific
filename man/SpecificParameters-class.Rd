@@ -21,13 +21,19 @@ Input parameters that specify candidate models to be explored.
 
 \item{\code{candidate_covars_chr}}{Candidate covariates (a character vector)}
 
+\item{\code{control_ls}}{Control (a list)}
+
 \item{\code{depnt_var_nm_1L_chr}}{Dependent variable name (a character vector of length one)}
 
-\item{\code{depnt_var_max_val_1L_dbl}}{Dependent variable maximum value (a double vector of length one)}
+\item{\code{depnt_var_min_max_dbl}}{Dependent variable minimum maximum (a double vector)}
 
 \item{\code{folds_1L_int}}{Folds (an integer vector of length one)}
 
+\item{\code{iters_1L_int}}{Iterations (an integer vector of length one)}
+
 \item{\code{max_mdl_runs_1L_int}}{Maximum model runs (an integer vector of length one)}
+
+\item{\code{prior_ls}}{Prior (a list)}
 
 \item{\code{seed_1L_int}}{Seed (an integer vector of length one)}
 

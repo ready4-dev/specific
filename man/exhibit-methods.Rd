@@ -11,8 +11,10 @@
   method_chr = c("pearson", "spearman"),
   mkdn_tbl_refs_chr = NULL,
   output_type_1L_chr = "HTML",
-  type_1L_chr = "correlation",
-  timepoints_int = NA_integer_
+  timepoints_int = NA_integer_,
+  type_1L_chr = "dataset",
+  what_1L_chr = "correlation",
+  ...
 )
 }
 \arguments{
@@ -26,9 +28,13 @@
 
 \item{output_type_1L_chr}{Output type (a character vector of length one), Default: 'HTML'}
 
-\item{type_1L_chr}{Type (a character vector of length one), Default: 'correlation'}
-
 \item{timepoints_int}{Timepoints (an integer vector), Default: NA}
+
+\item{type_1L_chr}{Type (a character vector of length one), Default: 'dataset'}
+
+\item{what_1L_chr}{What (a character vector of length one), Default: 'correlation'}
+
+\item{...}{Additional arguments}
 }
 \description{
 exhibit method applied to SpecificProject
