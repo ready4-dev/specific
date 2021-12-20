@@ -1,4 +1,4 @@
-library(scorz)
+library(youthvars)
 fns_env_ls <- ready4fun::read_fns(c("data-raw/fns/","data-raw/mthds/"),
                                   fns_env = new.env(parent = globalenv()))
 x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify and Investigate Candidate Models For Representing Mental Health Systems" %>% tools::toTitleCase(),
@@ -14,7 +14,7 @@ x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify and Investigate Can
                                               "https://github.com/ready4-dev/specific",
                                               "https://ready4-dev.github.io/ready4/")) %>%
   ready4fun::make_manifest(addl_pkgs_ls = ready4fun::make_addl_pkgs_ls(depends_chr = c("ready4","youthvars"),
-                                                                       suggests_chr = c("rmarkdown","scorz"),
+                                                                       suggests_chr = c("rmarkdown"),#,"scorz"
                                                                        imports_chr = "knitrBootstrap"),
                            build_ignore_ls = ready4fun::make_build_ignore_ls(file_nms_chr = c("initial_setup.R")),
                            check_type_1L_chr = "ready4",
@@ -389,4 +389,5 @@ z <- ready4pack::make_pt_ready4pack_manifest(x,
 ) %>%
   ready4pack::ready4pack_manifest()
 z <- ready4::author(z)
+usethis::use_dev_package("ready4-dev/scorz", type = "Suggests")
 # devtools::build_vignettes()

@@ -53,10 +53,10 @@ To learn more about the properties of `x` (which is a `YouthvarsSeries` child cl
 
 ## Create SpecificInitiator
 
-To start with, we create a new instance of a `SpecificInitiator` object containing data we have just ingested.
+To start with, we create a new instance of a `SpecificModels` object containing data we have just ingested.
 
 ```{r}
-x <- SpecificInitiator(a_YouthvarsProfile = x) 
+x <- SpecificModels(a_YouthvarsProfile = x) 
 # Add descriptives methods
 ```
 
@@ -167,7 +167,7 @@ y <- renewSlot(y,
                new_val_xx = 1234L)
 ```
 
-Finally, we add `y` (model parameters) to `x` (the `SpecificInitiator`).
+Finally, we add `y` (model parameters) to `x` (the `SpecificModels`).
 
 ```{r}
 x <- renewSlot(x,
@@ -183,24 +183,42 @@ x <- renewSlot(x,
 We create a directory in which we will write all output.
 
 ```{r warning = F}
-x<- renewSlot(x,
+x <- renewSlot(x,
           slot_nm_1L_chr = "paths_chr",
           new_val_xx = tempdir())
 ```
 
+### Model comparison
+
+The `investigate` method will compare the candidate models we have specified in the `SpecificModels` object `x`. In so doing it will transform `x` into a `SpecificParamters` object.
 
 ```{r}
 x <- investigate(x)
 ```
 
+```{r}
+params_ls <- list(results_ls = list(tables_ls = list(tenf_sngl_predr_tb = procure(x,
+        what_1L_chr = "mdl_cmprsn"))),
+        output_type_1L_chr = "HTML")
+#params_ls$results_ls$tables_ls$tenf_sngl_predr_tb
+```
+
+```{r tenfoldolstb, tab.cap='10-fold cross-validated model fitting index', tab.id = 'tenfoldolstb', echo = F, results = 'asis'}
+print_ten_folds_tbl(params_ls,
+                    caption_1L_chr = knitr::opts_current$get("tab.cap"),
+                    mkdn_tbl_ref_1L_chr = paste0("tab:",knitr::opts_current$get("tab.id"))) %>%
+  kableExtra::add_header_above(NULL)#c(" " = 1, "Training model fit (averaged over 10 folds)" = 3, "Testing model fit (averaged over 10 folds)" = 3)
+```
+
 The `investigate` method will write each model to be tested to a new sub-directory of "`r path_to_write_to_1L_chr`" called "A_Candidate_Mdls_Cmprsn". Also written to that sub-directory are a number of plots for each model. The `investigate` method also outputs a table summarising the performance of each of the candidate models.
 
 ```{r mdl_cmprsn, eval = knitr::is_html_output(), results='asis'}
-exhibit(x,
+exhibit_SpecificProject(x,
         mkdn_tbl_refs_chr = "tab:mdl_cmprsn",
         output_type_1L_chr = "HTML",
         what_1L_chr = "mdl_cmprsn",
-        type_1L_chr = "results")
+        type_1L_chr = "results",
+        heading_grps_chr = c(" " = 1, "Training model fit (averaged over 10 folds)" = 3, "Testing model fit (averaged over 10 folds)" = 3))
 ```
 
 We can now identify the highest performing model in each category of candidate model based on the testing R^2^ statistic (RsquaredP in the previous table).

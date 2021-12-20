@@ -17,6 +17,7 @@
 #' @export 
 #' @importFrom purrr map
 #' @importFrom youthvars transform_ds_for_tstng make_corstars_tbl_xx
+#' @importFrom stats setNames
 #' @importFrom ready4show print_table
 #' @importFrom ready4 exhibit
 methods::setMethod("exhibit", "SpecificProject", function (x, captions_chr = character(0), method_chr = c("pearson", 
@@ -53,10 +54,16 @@ methods::setMethod("exhibit", "SpecificProject", function (x, captions_chr = cha
             result_chr = output_type_1L_chr))
     }
     else {
+        heading_grps_chr <- NULL
         if (!identical(what_1L_chr, "")) 
             object_xx <- procure(x, what_1L_chr = what_1L_chr)
         if (type_1L_chr == "results") {
             if (what_1L_chr == "mdl_cmprsn") {
+                heading_grps_chr <- c(1, 3, 3) %>% stats::setNames(" ", 
+                  paste0("Training model fit (averaged over ", 
+                    x@b_SpecificParameters@folds_1L_int, " folds)"), 
+                  paste0("Testing model fit (averaged over ", 
+                    x@b_SpecificParameters@folds_1L_int, " folds)"))
                 if (identical(captions_chr, character(0))) 
                   captions_chr <- "Comparison of candidate models using highest correlated predictor"
             }
@@ -66,7 +73,7 @@ methods::setMethod("exhibit", "SpecificProject", function (x, captions_chr = cha
             }
         }
         object_xx %>% ready4show::print_table(output_type_1L_chr = output_type_1L_chr, 
-            caption_1L_chr = captions_chr, mkdn_tbl_ref_1L_chr = mkdn_tbl_refs_chr, 
-            ...)
+            caption_1L_chr = captions_chr, heading_grps_chr = heading_grps_chr, 
+            mkdn_tbl_ref_1L_chr = mkdn_tbl_refs_chr, ...)
     }
 })
