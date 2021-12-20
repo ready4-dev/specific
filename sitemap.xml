@@ -22,6 +22,36 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/SpecificFixed-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpecificInitiator-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpecificMixed-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpecificModels-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpecificParameters-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpecificPredictors-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpecificPrivate-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpecificProject-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpecificResults-class.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpecificShareable-class.html</loc>
+  </url>
+  <url>
     <loc>/reference/add_prefd_predr_var_to_mdl_smry_ls.html</loc>
   </url>
   <url>
@@ -37,6 +67,9 @@
     <loc>/reference/add_utl_predn_to_new_ds.html</loc>
   </url>
   <url>
+    <loc>/reference/author-methods.html</loc>
+  </url>
+  <url>
     <loc>/reference/calculate_depnt_var_tfmn.html</loc>
   </url>
   <url>
@@ -46,10 +79,16 @@
     <loc>/reference/deprecated.html</loc>
   </url>
   <url>
+    <loc>/reference/exhibit-methods.html</loc>
+  </url>
+  <url>
     <loc>/reference/fit_ts_model_with_brm.html</loc>
   </url>
   <url>
     <loc>/reference/get_background_text.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_cndt_mdls.html</loc>
   </url>
   <url>
     <loc>/reference/get_cndts_for_mxd_mdls.html</loc>
@@ -125,6 +164,9 @@
   </url>
   <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/investigate-methods.html</loc>
   </url>
   <url>
     <loc>/reference/knit_mdl_rprt.html</loc>
@@ -262,6 +304,12 @@
     <loc>/reference/make_nbr_included_text.html</loc>
   </url>
   <url>
+    <loc>/reference/make_new_specific_models.html</loc>
+  </url>
+  <url>
+    <loc>/reference/make_new_specific_predictors.html</loc>
+  </url>
+  <url>
     <loc>/reference/make_paths_to_ss_plts_ls.html</loc>
   </url>
   <url>
@@ -361,6 +409,9 @@
     <loc>/reference/make_within_between_ratios_text.html</loc>
   </url>
   <url>
+    <loc>/reference/mdl_types_lup.html</loc>
+  </url>
+  <url>
     <loc>/reference/pipe.html</loc>
   </url>
   <url>
@@ -377,6 +428,9 @@
   </url>
   <url>
     <loc>/reference/plot_sctr_plt_cmprsn.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plt_types_lup.html</loc>
   </url>
   <url>
     <loc>/reference/predict_from_shareable_mdl.html</loc>
@@ -424,6 +478,9 @@
     <loc>/reference/print_ts_mdl_plts.html</loc>
   </url>
   <url>
+    <loc>/reference/procure-methods.html</loc>
+  </url>
+  <url>
     <loc>/reference/randomise_changes_in_fct_lvls.html</loc>
   </url>
   <url>
@@ -436,10 +493,22 @@
     <loc>/reference/reorder_tbs_for_target_cors.html</loc>
   </url>
   <url>
+    <loc>/reference/rprt_lup.html</loc>
+  </url>
+  <url>
     <loc>/reference/scramble_xx.html</loc>
   </url>
   <url>
+    <loc>/reference/share-methods.html</loc>
+  </url>
+  <url>
     <loc>/reference/specific-package.html</loc>
+  </url>
+  <url>
+    <loc>/reference/specific_models.html</loc>
+  </url>
+  <url>
+    <loc>/reference/specific_predictors.html</loc>
   </url>
   <url>
     <loc>/reference/transform_chr_digit_pairs.html</loc>
@@ -503,6 +572,12 @@
   </url>
   <url>
     <loc>/reference/transform_uid_var.html</loc>
+  </url>
+  <url>
+    <loc>/reference/validate_specific_models.html</loc>
+  </url>
+  <url>
+    <loc>/reference/validate_specific_predictors.html</loc>
   </url>
   <url>
     <loc>/reference/write_analyses.html</loc>
