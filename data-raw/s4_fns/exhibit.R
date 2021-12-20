@@ -47,13 +47,13 @@ exhibit_SpecificProject <- function(x,
                            what_1L_chr = what_1L_chr)
     if(type_1L_chr == "results"){
       if(what_1L_chr == "mdl_cmprsn"){
-        heading_grps_chr <- c(1,3,3) %>% stats::setNames(" ",
+        heading_grps_chr <- c(1,3,3) %>% stats::setNames(c(" ",
                                                          paste0("Training model fit (averaged over ",
                                                                 x@b_SpecificParameters@folds_1L_int,
                                                                 " folds)"),
                                                          paste0("Testing model fit (averaged over ",
                                                                 x@b_SpecificParameters@folds_1L_int,
-                                                                " folds)"))
+                                                                " folds)")))
         if(identical(captions_chr,character(0)))
           captions_chr <- "Comparison of candidate models using highest correlated predictor"
       }

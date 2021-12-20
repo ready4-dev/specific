@@ -122,6 +122,7 @@ reference:
 - title: "Methods"
 - contents:
   - author-SpecificProject
+  - depict-SpecificProject
   - exhibit-SpecificProject
   - investigate-SpecificFixed
   - investigate-SpecificMixed

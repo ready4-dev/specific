@@ -110,3 +110,4 @@
 ^data-raw/s4_fns/procure\.R$
 ^data-raw/s4_fns/author\.R$
 ^data-raw/s4_fns/share\.R$
+^data-raw/s4_fns/depict\.R$

@@ -196,29 +196,33 @@ The `investigate` method will compare the candidate models we have specified in 
 x <- investigate(x)
 ```
 
-```{r}
-params_ls <- list(results_ls = list(tables_ls = list(tenf_sngl_predr_tb = procure(x,
-        what_1L_chr = "mdl_cmprsn"))),
-        output_type_1L_chr = "HTML")
-#params_ls$results_ls$tables_ls$tenf_sngl_predr_tb
+# ```{r tenfoldolstb, tab.cap='10-fold cross-validated model fitting index', tab.id = 'tenfoldolstb', echo = F, results = 'asis'}
+# 
+# ```
+
+The `investigate` method will write each model to be tested to a new sub-directory of "`r path_to_write_to_1L_chr`" called "A_Candidate_Mdls_Cmprsn". Also written to that sub-directory are a number of plots for each model. 
+
+```{r, fig.cap=paste0("Plot"1:5), echo=FALSE, message=F}
+depict(x,
+       mdl_idcs_int = 2)
+
 ```
 
-```{r tenfoldolstb, tab.cap='10-fold cross-validated model fitting index', tab.id = 'tenfoldolstb', echo = F, results = 'asis'}
-print_ten_folds_tbl(params_ls,
-                    caption_1L_chr = knitr::opts_current$get("tab.cap"),
-                    mkdn_tbl_ref_1L_chr = paste0("tab:",knitr::opts_current$get("tab.id"))) %>%
-  kableExtra::add_header_above(NULL)#c(" " = 1, "Training model fit (averaged over 10 folds)" = 3, "Testing model fit (averaged over 10 folds)" = 3)
+```{r, fig.cap=paste0("Plot"1), echo=FALSE, message=F}
+depict(x,
+       mdl_idcs_int = 1,
+       plt_indcs_int = 1)
 ```
 
-The `investigate` method will write each model to be tested to a new sub-directory of "`r path_to_write_to_1L_chr`" called "A_Candidate_Mdls_Cmprsn". Also written to that sub-directory are a number of plots for each model. The `investigate` method also outputs a table summarising the performance of each of the candidate models.
+
+The `investigate` method also outputs a table summarising the performance of each of the candidate models.
 
 ```{r mdl_cmprsn, eval = knitr::is_html_output(), results='asis'}
-exhibit_SpecificProject(x,
+exhibit(x,
         mkdn_tbl_refs_chr = "tab:mdl_cmprsn",
         output_type_1L_chr = "HTML",
         what_1L_chr = "mdl_cmprsn",
-        type_1L_chr = "results",
-        heading_grps_chr = c(" " = 1, "Training model fit (averaged over 10 folds)" = 3, "Testing model fit (averaged over 10 folds)" = 3))
+        type_1L_chr = "results")
 ```
 
 We can now identify the highest performing model in each category of candidate model based on the testing R^2^ statistic (RsquaredP in the previous table).
@@ -226,7 +230,6 @@ We can now identify the highest performing model in each category of candidate m
 ```{r}
 procure(x,
         what_1L_chr = "prefd_mdls")
-# cmprsns_ls$mdl_smry_ls$prefd_mdl_types_chr
 ```
 We can override these automated selections and instead incorporate other considerations (possibly based on judgments informed by visual inspection of the plots and the desirability of constraining predictions to a maximum value of one). We do this in the following command, specifying new preferred model types, in descending order of preference.
 
@@ -240,8 +243,6 @@ We can now compare all of our candidate predictors (with and without candidate c
 
 ```{r message=FALSE, results='hide', warning=FALSE}
 x <- investigate(x)
-# x <- author_SpecificProject(x,
-#                             what_1L_chr = "predr_cmprsn")
 ```
 
 Now, we compare the performance of single predictor models of our preferred model type (in our case, a `r cmprsns_ls$mdl_smry_ls$mdl_types_lup %>% ready4::get_from_lup_obj(target_var_nm_1L_chr = "long_name_chr",match_value_xx = cmprsns_ls$mdl_smry_ls$prefd_mdl_types_chr[1], match_var_nm_1L_chr = "short_name_chr", evaluate_1L_lgl = F)`) for each candidate predictor. The call to the `write_predr_and_covars_cmprsn`{.R} function saved the tested models along with model plots in the "B_Candidate_Predrs_Cmprsn" sub-directory of "Output". These results are also viewable as a table.
