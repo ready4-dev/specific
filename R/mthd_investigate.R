@@ -3,37 +3,13 @@
 #' @name investigate-SpecificModels
 #' @description investigate method applied to SpecificModels
 #' @param x An object of class SpecificModels
-#' @return X (Modelling project dataset, input parameters and predictor comparison results.)
+#' @return NULL
 #' @rdname investigate-methods
 #' @aliases investigate,SpecificModels-method
 #' @export 
-#' @importFrom ready4 investigate
-methods::setMethod("investigate", "SpecificModels", function (x) 
-{
-    results_ls <- write_predr_and_covars_cmprsn(scored_data_tb = x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
-        bl_tb = x@c_SpecificResults@b_SpecificPrivate@private_outp_ls$bl_tb, 
-        ds_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$ds_smry_ls, 
-        mdl_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls, 
-        output_data_dir_1L_chr = x@paths_chr[1], seed_1L_int = x@b_SpecificParameters@seed_1L_int)
-    x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1]
-    x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
-    x_SpecificPredictors <- SpecificPredictors(a_YouthvarsProfile = x@a_YouthvarsProfile, 
-        b_SpecificParameters = x@b_SpecificParameters, c_SpecificResults = x@c_SpecificResults, 
-        paths_chr = x@paths_chr, dissemination_1L_chr = x@dissemination_1L_chr)
-    return(x_SpecificPredictors)
-})
-#' 
-#' Investigate data stored in an instance of a class by executing an algorithm to solve an inverse problem
-#' @name investigate-SpecificInitiator
-#' @description investigate method applied to SpecificInitiator
-#' @param x An object of class SpecificInitiator
-#' @return NULL
-#' @rdname investigate-methods
-#' @aliases investigate,SpecificInitiator-method
-#' @export 
 #' @importFrom methods slotNames
 #' @importFrom ready4 investigate
-methods::setMethod("investigate", "SpecificInitiator", function (x) 
+methods::setMethod("investigate", "SpecificModels", function (x) 
 {
     if (!dir.exists(x@paths_chr[1])) 
         dir.create(x@paths_chr[1])
@@ -68,49 +44,25 @@ methods::setMethod("investigate", "SpecificInitiator", function (x)
             output_data_dir_1L_chr = x@paths_chr[1], seed_1L_int = x@b_SpecificParameters@seed_1L_int)
         x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1]
         x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
-        x_SpecificModels <- SpecificModels(a_YouthvarsProfile = x@a_YouthvarsProfile, 
+        x_SpecificPredictors <- SpecificPredictors(a_YouthvarsProfile = x@a_YouthvarsProfile, 
             b_SpecificParameters = x@b_SpecificParameters, c_SpecificResults = x@c_SpecificResults, 
             paths_chr = x@paths_chr, dissemination_1L_chr = x@dissemination_1L_chr)
-        return(x_SpecificModels)
+        return(x_SpecificPredictors)
     }
 })
 #' 
 #' Investigate data stored in an instance of a class by executing an algorithm to solve an inverse problem
-#' @name investigate-SpecificPredictors
-#' @description investigate method applied to SpecificPredictors
-#' @param x An object of class SpecificPredictors
-#' @return X (Modelling project dataset, input parameters and complete fixed models results.)
-#' @rdname investigate-methods
-#' @aliases investigate,SpecificPredictors-method
-#' @export 
-#' @importFrom ready4 investigate
-methods::setMethod("investigate", "SpecificPredictors", function (x) 
-{
-    results_ls <- write_mdls_with_covars_cmprsn(scored_data_tb = x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
-        bl_tb = x@c_SpecificResults@b_SpecificPrivate@private_outp_ls$bl_tb, 
-        ds_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$ds_smry_ls, 
-        mdl_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls, 
-        output_data_dir_1L_chr = x@paths_chr[1], seed_1L_int = x@b_SpecificParameters@seed_1L_int)
-    x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1]
-    x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
-    x_SpecificFixed <- SpecificFixed(a_YouthvarsProfile = x@a_YouthvarsProfile, 
-        b_SpecificParameters = x@b_SpecificParameters, c_SpecificResults = x@c_SpecificResults, 
-        paths_chr = x@paths_chr, dissemination_1L_chr = x@dissemination_1L_chr)
-    return(x_SpecificFixed)
-})
-#' 
-#' Investigate data stored in an instance of a class by executing an algorithm to solve an inverse problem
-#' @name investigate-SpecificFixed
-#' @description investigate method applied to SpecificFixed
-#' @param x An object of class SpecificFixed
+#' @name investigate-SpecificMixed
+#' @description investigate method applied to SpecificMixed
+#' @param x An object of class SpecificMixed
 #' @param backend_1L_chr Backend (a character vector of length one), Default: 'cmdstanr'
 #' @param new_dir_nm_1L_chr New directory name (a character vector of length one), Default: 'F_TS_Mdls'
-#' @return X (Modelling project dataset, input parameters and complete mixed models results.)
+#' @return x (An object of class SpecificMixed)
 #' @rdname investigate-methods
-#' @aliases investigate,SpecificFixed-method
+#' @aliases investigate,SpecificMixed-method
 #' @export 
 #' @importFrom ready4 investigate
-methods::setMethod("investigate", "SpecificFixed", function (x, backend_1L_chr = "cmdstanr", new_dir_nm_1L_chr = "F_TS_Mdls") 
+methods::setMethod("investigate", "SpecificMixed", function (x, backend_1L_chr = "cmdstanr", new_dir_nm_1L_chr = "F_TS_Mdls") 
 {
     if (identical(x@b_SpecificParameters@prior_ls, list(list()))) {
         prior_ls <- NULL
@@ -131,6 +83,51 @@ methods::setMethod("investigate", "SpecificFixed", function (x, backend_1L_chr =
         backend_1L_chr = backend_1L_chr, new_dir_nm_1L_chr = new_dir_nm_1L_chr, 
         iters_1L_int = x@b_SpecificParameters@iters_1L_int, prior_ls = prior_ls, 
         control_ls = control_ls)
+    x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1]
+    x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
+    return(x)
+})
+#' 
+#' Investigate data stored in an instance of a class by executing an algorithm to solve an inverse problem
+#' @name investigate-SpecificPredictors
+#' @description investigate method applied to SpecificPredictors
+#' @param x An object of class SpecificPredictors
+#' @return X (Modelling project dataset, input parameters and complete fixed models results.)
+#' @rdname investigate-methods
+#' @aliases investigate,SpecificPredictors-method
+#' @export 
+#' @importFrom ready4 investigate
+methods::setMethod("investigate", "SpecificPredictors", function (x) 
+{
+    results_ls <- write_predr_and_covars_cmprsn(scored_data_tb = x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
+        bl_tb = x@c_SpecificResults@b_SpecificPrivate@private_outp_ls$bl_tb, 
+        ds_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$ds_smry_ls, 
+        mdl_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls, 
+        output_data_dir_1L_chr = x@paths_chr[1], seed_1L_int = x@b_SpecificParameters@seed_1L_int)
+    x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1]
+    x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
+    x_SpecificFixed <- SpecificFixed(a_YouthvarsProfile = x@a_YouthvarsProfile, 
+        b_SpecificParameters = x@b_SpecificParameters, c_SpecificResults = x@c_SpecificResults, 
+        paths_chr = x@paths_chr, dissemination_1L_chr = x@dissemination_1L_chr)
+    return(x_SpecificFixed)
+})
+#' 
+#' Investigate data stored in an instance of a class by executing an algorithm to solve an inverse problem
+#' @name investigate-SpecificFixed
+#' @description investigate method applied to SpecificFixed
+#' @param x An object of class SpecificFixed
+#' @return X (Modelling project dataset, input parameters and complete mixed models results.)
+#' @rdname investigate-methods
+#' @aliases investigate,SpecificFixed-method
+#' @export 
+#' @importFrom ready4 investigate
+methods::setMethod("investigate", "SpecificFixed", function (x) 
+{
+    results_ls <- write_mdls_with_covars_cmprsn(scored_data_tb = x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
+        bl_tb = x@c_SpecificResults@b_SpecificPrivate@private_outp_ls$bl_tb, 
+        ds_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$ds_smry_ls, 
+        mdl_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls, 
+        output_data_dir_1L_chr = x@paths_chr[1], seed_1L_int = x@b_SpecificParameters@seed_1L_int)
     x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1]
     x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
     x_SpecificMixed <- SpecificMixed(a_YouthvarsProfile = x@a_YouthvarsProfile, 

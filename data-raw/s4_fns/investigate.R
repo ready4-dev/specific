@@ -1,4 +1,4 @@
-investigate_SpecificFixed <- function(x,
+investigate_SpecificMixed <- function(x,
                                       backend_1L_chr = "cmdstanr",
                                       new_dir_nm_1L_chr = "F_TS_Mdls"){
   if(identical(x@b_SpecificParameters@prior_ls,list(list()))){
@@ -22,14 +22,14 @@ investigate_SpecificFixed <- function(x,
                                             control_ls = control_ls)
   x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1] # EDIT TO REMOVE INPUTS
   x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
-  x_SpecificMixed <- SpecificMixed(a_YouthvarsProfile = x@a_YouthvarsProfile,
-                                   b_SpecificParameters = x@b_SpecificParameters,
-                                   c_SpecificResults = x@c_SpecificResults,
-                                   paths_chr = x@paths_chr,
-                                   dissemination_1L_chr = x@dissemination_1L_chr)
-  return(x_SpecificMixed)
+  # x_SpecificMixed <- SpecificMixed(a_YouthvarsProfile = x@a_YouthvarsProfile,
+  #                                  b_SpecificParameters = x@b_SpecificParameters,
+  #                                  c_SpecificResults = x@c_SpecificResults,
+  #                                  paths_chr = x@paths_chr,
+  #                                  dissemination_1L_chr = x@dissemination_1L_chr)
+  return(x)
 }
-investigate_SpecificInitiator <- function(x){
+investigate_SpecificModels <- function(x){
   if(!dir.exists(x@paths_chr[1]))
     dir.create(x@paths_chr[1])#      ready4::write_new_dirs(x@paths_chr[1])
   if(!is.na(x@b_SpecificParameters@candidate_mdls_chr[1])){
@@ -66,15 +66,15 @@ investigate_SpecificInitiator <- function(x){
     x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1]
     x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
 
-    x_SpecificModels <- SpecificModels(a_YouthvarsProfile = x@a_YouthvarsProfile,
-                                       b_SpecificParameters = x@b_SpecificParameters,
-                                       c_SpecificResults = x@c_SpecificResults,
-                                       paths_chr = x@paths_chr,
-                                       dissemination_1L_chr = x@dissemination_1L_chr)
-    return(x_SpecificModels)
+    x_SpecificPredictors <- SpecificPredictors(a_YouthvarsProfile = x@a_YouthvarsProfile,
+                                               b_SpecificParameters = x@b_SpecificParameters,
+                                               c_SpecificResults = x@c_SpecificResults,
+                                               paths_chr = x@paths_chr,
+                                               dissemination_1L_chr = x@dissemination_1L_chr)
+    return(x_SpecificPredictors)
   }
 }
-investigate_SpecificModels <- function(x){
+investigate_SpecificPredictors <- function(x){
   results_ls <- write_predr_and_covars_cmprsn(scored_data_tb = x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
                                               bl_tb = x@c_SpecificResults@b_SpecificPrivate@private_outp_ls$bl_tb,
                                               ds_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$ds_smry_ls,
@@ -83,14 +83,14 @@ investigate_SpecificModels <- function(x){
                                               seed_1L_int = x@b_SpecificParameters@seed_1L_int)
   x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1]
   x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
-  x_SpecificPredictors <- SpecificPredictors(a_YouthvarsProfile = x@a_YouthvarsProfile,
-                                             b_SpecificParameters = x@b_SpecificParameters,
-                                             c_SpecificResults = x@c_SpecificResults,
-                                             paths_chr = x@paths_chr,
-                                             dissemination_1L_chr = x@dissemination_1L_chr)
-  return(x_SpecificPredictors)
+  x_SpecificFixed <- SpecificFixed(a_YouthvarsProfile = x@a_YouthvarsProfile,
+                                   b_SpecificParameters = x@b_SpecificParameters,
+                                   c_SpecificResults = x@c_SpecificResults,
+                                   paths_chr = x@paths_chr,
+                                   dissemination_1L_chr = x@dissemination_1L_chr)
+  return(x_SpecificFixed)
 }
-investigate_SpecificPredictors <- function(x){
+investigate_SpecificFixed <- function(x){
   results_ls <- write_mdls_with_covars_cmprsn(scored_data_tb = x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
                                               bl_tb = x@c_SpecificResults@b_SpecificPrivate@private_outp_ls$bl_tb,
                                               ds_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$ds_smry_ls,
@@ -99,10 +99,10 @@ investigate_SpecificPredictors <- function(x){
                                               seed_1L_int = x@b_SpecificParameters@seed_1L_int)
   x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1] # EDIT TO REMOVE INPUTS
   x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
-  x_SpecificFixed <- SpecificFixed(a_YouthvarsProfile = x@a_YouthvarsProfile,
+  x_SpecificMixed <- SpecificMixed(a_YouthvarsProfile = x@a_YouthvarsProfile,
                                    b_SpecificParameters = x@b_SpecificParameters,
                                    c_SpecificResults = x@c_SpecificResults,
                                    paths_chr = x@paths_chr,
                                    dissemination_1L_chr = x@dissemination_1L_chr)
-  return(x_SpecificFixed)
+  return(x_SpecificMixed)
 }

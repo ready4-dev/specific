@@ -3,8 +3,8 @@
 \name{investigate-SpecificModels}
 \alias{investigate-SpecificModels}
 \alias{investigate,SpecificModels-method}
-\alias{investigate-SpecificInitiator}
-\alias{investigate,SpecificInitiator-method}
+\alias{investigate-SpecificMixed}
+\alias{investigate,SpecificMixed-method}
 \alias{investigate-SpecificPredictors}
 \alias{investigate,SpecificPredictors-method}
 \alias{investigate-SpecificFixed}
@@ -13,11 +13,11 @@
 \usage{
 \S4method{investigate}{SpecificModels}(x)
 
-\S4method{investigate}{SpecificInitiator}(x)
+\S4method{investigate}{SpecificMixed}(x, backend_1L_chr = "cmdstanr", new_dir_nm_1L_chr = "F_TS_Mdls")
 
 \S4method{investigate}{SpecificPredictors}(x)
 
-\S4method{investigate}{SpecificFixed}(x, backend_1L_chr = "cmdstanr", new_dir_nm_1L_chr = "F_TS_Mdls")
+\S4method{investigate}{SpecificFixed}(x)
 }
 \arguments{
 \item{x}{An object of class SpecificFixed}
@@ -27,7 +27,7 @@
 \item{new_dir_nm_1L_chr}{New directory name (a character vector of length one), Default: 'F_TS_Mdls'}
 }
 \value{
-X (Modelling project dataset, input parameters and predictor comparison results.)
+x (An object of class SpecificMixed)
 
 X (Modelling project dataset, input parameters and complete fixed models results.)
 
@@ -36,7 +36,7 @@ X (Modelling project dataset, input parameters and complete mixed models results
 \description{
 investigate method applied to SpecificModels
 
-investigate method applied to SpecificInitiator
+investigate method applied to SpecificMixed
 
 investigate method applied to SpecificPredictors
 
