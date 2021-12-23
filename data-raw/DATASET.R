@@ -10,13 +10,13 @@ x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify and Investigate Can
                                                   utils::person(given = "Caroline",family = "Gao",email = "caroline.gao@orygen.org.au", role = c("aut"),comment = c(ORCID = "0000-0002-0987-2759")),
                                                   utils::person("Orygen", role = c("cph", "fnd")),
                                                   utils::person("Headspace", role = c( "fnd")),
-                                                  utils::person("National Health and Medical Research Council", role = c( "fnd"))),
+                                                  utils::person("National Health and Medical Research Council", role = c("fnd"))),
                                  urls_chr = c("https://ready4-dev.github.io/specific/",
                                               "https://github.com/ready4-dev/specific",
                                               "https://ready4-dev.github.io/ready4/")) %>%
   ready4fun::make_manifest(addl_pkgs_ls = ready4fun::make_addl_pkgs_ls(depends_chr = c("ready4","youthvars"),
-                                                                       suggests_chr = c("rmarkdown"),#
-                                                                       imports_chr = c("knitrBootstrap","scorz")),
+                                                                       suggests_chr = c("rmarkdown","scorz"),#
+                                                                       imports_chr = c("knitrBootstrap")),
                            build_ignore_ls = ready4fun::make_build_ignore_ls(file_nms_chr = c("initial_setup.R")),
                            check_type_1L_chr = "ready4",
                            copyright_holders_chr = "Orygen",
@@ -390,5 +390,5 @@ z <- ready4pack::make_pt_ready4pack_manifest(x,
 ) %>%
   ready4pack::ready4pack_manifest()
 z <- ready4::author(z)
-#usethis::use_dev_package("ready4-dev/scorz", type = "Suggests")
+#usethis::use_dev_package("scorz", type = "Suggests",remote = "ready4-dev/scorz")
 # devtools::build_vignettes()
