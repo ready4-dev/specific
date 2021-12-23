@@ -1,7 +1,7 @@
 Package: specific
 Title: Specify and Investigate Candidate Models for Representing Mental
     Health Systems
-Version: 0.0.0.9027
+Version: 0.0.0.9028
 Authors@R: c(
     person("Matthew", "Hamilton", , "matthew.hamilton@orygen.org.au", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7407-9194")),
@@ -50,9 +50,10 @@ Imports:
     psych,
     purrr,
     randomForest,
-    ready4show (>= 0.0.0.9059),
-    ready4use (>= 0.0.0.9204),
+    ready4show (>= 0.0.0.9063),
+    ready4use (>= 0.0.0.9208),
     rlang,
+    scorz,
     stats,
     stringi,
     stringr,
@@ -108,6 +109,7 @@ Collate:
     'mthd_exhibit.R'
     'mthd_investigate.R'
     'mthd_procure.R'
+    'mthd_renew.R'
     'mthd_share.R'
     'pkg_specific.R'
     'specific-package.R'
