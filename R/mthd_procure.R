@@ -1,5 +1,5 @@
 #' 
-#' Procure data by executing a search and retrieval algorithm using data contained in an instance of a class
+#' Procure (get) data
 #' @name procure-SpecificProject
 #' @description procure method applied to SpecificProject
 #' @param x An object of class SpecificProject

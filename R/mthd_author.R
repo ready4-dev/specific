@@ -1,5 +1,5 @@
 #' 
-#' Author and save files to local or remote locations
+#' Author and save files
 #' @name author-SpecificProject
 #' @description author method applied to SpecificProject
 #' @param x An object of class SpecificProject

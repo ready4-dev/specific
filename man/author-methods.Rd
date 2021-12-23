@@ -3,7 +3,7 @@
 \name{author-SpecificProject}
 \alias{author-SpecificProject}
 \alias{author,SpecificProject-method}
-\title{Author and save files to local or remote locations}
+\title{Author and save files}
 \usage{
 \S4method{author}{SpecificProject}(
   x,

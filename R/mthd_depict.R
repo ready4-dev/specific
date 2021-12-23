@@ -1,5 +1,5 @@
 #' 
-#' Depict features of an instance of a class by generating a plot
+#' Depict (plot) an object
 #' @name depict-SpecificProject
 #' @description depict method applied to SpecificProject
 #' @param x An object of class SpecificProject

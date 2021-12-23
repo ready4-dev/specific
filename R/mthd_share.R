@@ -1,5 +1,5 @@
 #' 
-#' Share data contained in an instance of a class via an online repository
+#' Share (publish) open data
 #' @name share-SpecificProject
 #' @description share method applied to SpecificProject
 #' @param x An object of class SpecificProject

@@ -3,7 +3,7 @@
 \name{procure-SpecificProject}
 \alias{procure-SpecificProject}
 \alias{procure,SpecificProject-method}
-\title{Procure data by executing a search and retrieval algorithm using data contained in an instance of a class}
+\title{Procure (get) data}
 \usage{
 \S4method{procure}{SpecificProject}(x, type_1L_chr = "results", what_1L_chr = "prefd_mdls")
 }

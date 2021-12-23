@@ -1,4 +1,4 @@
-# specific <img src="man/figures/fav120.png" align="right" />
+# specific
 
 ## Specify and Investigate Candidate Models for Representing Mental Health Systems
 

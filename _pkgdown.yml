@@ -1,10 +1,16 @@
+url: https://ready4-dev.github.io/specific/
+
+template:
+  bootstrap: 5
+  bootswatch: journal
+
 home:
   links:
   - text: Manual - User (PDF)
     href: https://github.com/ready4-dev/specific/releases/download/Documentation_0.0/specific_Developer.pdf
   - text: Manual - Developer (PDF)
     href: https://github.com/ready4-dev/specific/releases/download/Documentation_0.0/eq5d_ttu_SpecificMixed.RDS
-  - text: Project website
+  - text: ready4 framework
     href:  https://ready4-dev.github.io/ready4/
 development:
   mode: auto
@@ -124,9 +130,12 @@ reference:
   - author-SpecificProject
   - depict-SpecificProject
   - exhibit-SpecificProject
+  - exhibit.specific_models
+  - exhibit.specific_predictors
   - investigate-SpecificFixed
   - investigate-SpecificMixed
   - investigate-SpecificModels
   - investigate-SpecificPredictors
   - procure-SpecificProject
+  - renew-SpecificProject
   - share-SpecificProject

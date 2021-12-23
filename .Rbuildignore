@@ -111,3 +111,6 @@
 ^data-raw/s4_fns/author\.R$
 ^data-raw/s4_fns/share\.R$
 ^data-raw/s4_fns/depict\.R$
+^data-raw/draft_vignettes/V_01\.html$
+^data-raw/mthds/exhibit\.R$
+^data-raw/s4_fns/renew\.R$

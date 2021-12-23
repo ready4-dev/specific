@@ -3,7 +3,7 @@
 \name{share-SpecificProject}
 \alias{share-SpecificProject}
 \alias{share,SpecificProject-method}
-\title{Share data contained in an instance of a class via an online repository}
+\title{Share (publish) open data}
 \usage{
 \S4method{share}{SpecificProject}(x, fl_nm_1L_chr, repos_Ready4useRepos)
 }

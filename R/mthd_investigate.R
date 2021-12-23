@@ -1,5 +1,5 @@
 #' 
-#' Investigate data stored in an instance of a class by executing an algorithm to solve an inverse problem
+#' Investigate a dataset
 #' @name investigate-SpecificModels
 #' @description investigate method applied to SpecificModels
 #' @param x An object of class SpecificModels
@@ -51,7 +51,7 @@ methods::setMethod("investigate", "SpecificModels", function (x)
     }
 })
 #' 
-#' Investigate data stored in an instance of a class by executing an algorithm to solve an inverse problem
+#' Investigate a dataset
 #' @name investigate-SpecificMixed
 #' @description investigate method applied to SpecificMixed
 #' @param x An object of class SpecificMixed
@@ -88,7 +88,7 @@ methods::setMethod("investigate", "SpecificMixed", function (x, backend_1L_chr =
     return(x)
 })
 #' 
-#' Investigate data stored in an instance of a class by executing an algorithm to solve an inverse problem
+#' Investigate a dataset
 #' @name investigate-SpecificPredictors
 #' @description investigate method applied to SpecificPredictors
 #' @param x An object of class SpecificPredictors
@@ -112,7 +112,7 @@ methods::setMethod("investigate", "SpecificPredictors", function (x)
     return(x_SpecificFixed)
 })
 #' 
-#' Investigate data stored in an instance of a class by executing an algorithm to solve an inverse problem
+#' Investigate a dataset
 #' @name investigate-SpecificFixed
 #' @description investigate method applied to SpecificFixed
 #' @param x An object of class SpecificFixed
