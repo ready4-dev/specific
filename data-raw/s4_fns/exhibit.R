@@ -49,11 +49,12 @@ exhibit_SpecificProject <- function(x,
                            what_1L_chr = what_1L_chr)
     if(type_1L_chr == "results"){
       if(what_1L_chr %in% c("mdl_cmprsn",
-                            "fxd_sngl_cmprsn"))
+                            "fxd_sngl_cmprsn",
+                            "fxd_full_cmprsn"))
       object_xx <- as.data.frame(object_xx)
       if(what_1L_chr %in% c("mdl_cmprsn",
                             "fxd_sngl_cmprsn"))
-      names(object_xx) <- c("Model","R-Squared","RMSE","MAE","R-Squared","RMSE","MAE")
+        names(object_xx) <- c("Model","R-Squared","RMSE","MAE","R-Squared","RMSE","MAE")
       if(what_1L_chr %in% c("fxd_full_cmprsn"))
         names(object_xx) <- c("Model","R-Squared","AIC","BIC","Significant terms")
       if(what_1L_chr %in% c("mdl_cmprsn",

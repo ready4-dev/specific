@@ -1,8 +1,8 @@
 ---
-title: "Exploratory Analysis Workflow"
+title: "Use SpecificProject and SpecificParameters To Undertake An Exploratory Analysis"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Exploratory Analysis Workflow}
+  %\VignetteIndexEntry{Use SpecificProject and SpecificParameters To Undertake An Exploratory Analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -59,7 +59,6 @@ To start with, we create a new instance of a `SpecificModels` object containing 
 ```{r}
 x <- SpecificModels(a_YouthvarsProfile = x) 
 ```
-
 
 ## Specify parameters
 
@@ -138,17 +137,6 @@ procureSlot(y,
   exhibit()
 ```
 
-```{r echo = F}
-# By default, all the models in the `specific_models` object will be explored. However, if we just wish to explore a subset of these we can specify the names (corresponding to those in the `short_name_chr` column) of the models we wish to test, adding it to the `candidate_mdls_chr` slot of `y`.
-# x <- renewSlot(y,
-#                slot_nm_1L_chr = "candidate_mdls_chr",
-#                new_val_xx = c("OLS_NTF","OLS_LOG","OLS_LOGIT"))
-# We must now also specify the relevant prefix (the first three letters of the names in the `short_name_chr` column of the `specific_models` object) using the `candidate_mdl_pfcs_chr` slot of `y`.
-# y <- renewSlot(y,
-#                slot_nm_1L_chr = "candidate_mdl_pfcs_chr",
-#                new_val_xx = c("OLS"))
-```
-
 ### Other parameters
 
 Depending on the type of analysis we plan on undertaking, we can also specify parameters such as the number of folds to use in cross validation and the maximum number of model runs to allow.
@@ -194,15 +182,12 @@ x <- renewSlot(x,
 
 The `investigate` method will compare the candidate models we have specified in the `SpecificModels` object `x`. In so doing it will transform `x` into a `SpecificParamters` object.
 
-```{r}
+```{r results='hide', message=FALSE, warning=FALSE}
 x <- investigate(x)
 ```
 
-# ```{r tenfoldolstb, tab.cap='10-fold cross-validated model fitting index', tab.id = 'tenfoldolstb', echo = F, results = 'asis'}
-# 
-# ```
+The `investigate` method will write each model to be tested to a new sub-directory of our output directory. Also written to that sub-directory are a number of plots for each model, that can be inspected using the `depict` method.
 
-The `investigate` method will write each model to be tested to a new sub-directory of "`r x@paths_chr`" called "A_Candidate_Mdls_Cmprsn". Also written to that sub-directory are a number of plots for each model. 
 ```{r echo=F}
 plt_nms_chr <- paste0("Plot ",1:5) # Make fn
 ```
@@ -210,16 +195,6 @@ plt_nms_chr <- paste0("Plot ",1:5) # Make fn
 ```{r, fig.cap=plt_nms_chr, out.width = "400px", echo=FALSE, message=F}
 depict(x,
        mdl_idcs_int = 2)
-```
-
-```{r echo=F}
-plt_nms_chr <- paste0("Plot ",1) # Make fn
-```
-
-```{r, fig.cap=plt_nms_chr, out.width = "400px", echo=FALSE, message=F}
-depict(x,
-       mdl_idcs_int = 1,
-       plt_indcs_int = 1)
 ```
 
 The `investigate` method also outputs a table summarising the performance of each of the candidate models.
@@ -230,12 +205,13 @@ exhibit(x,
         type_1L_chr = "results")
 ```
 
-We can now identify the highest performing model in each category of candidate model based on the testing R^2^ statistic (RsquaredP in the previous table).
+We can now identify the highest performing model in each category of candidate model based on the testing R^2^ statistic.
 
 ```{r}
 procure(x,
         what_1L_chr = "prefd_mdls") # Fix for NA_ returns (one option within ctg)
 ```
+
 We can override these automated selections and instead incorporate other considerations (possibly based on judgments informed by visual inspection of the plots and the desirability of constraining predictions to a maximum value of one). We do this in the following command, specifying new preferred model types, in descending order of preference.
 
 ```{r}
@@ -251,8 +227,7 @@ We can now compare all of our candidate predictors (with and without candidate c
 ```{r message=FALSE, results='hide', warning=FALSE}
 x <- investigate(x)
 ```
-
-Now, we compare the performance of single predictor models of our preferred model type (in our case, a `r x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$mdl_types_lup %>% ready4::get_from_lup_obj(target_var_nm_1L_chr = "long_name_chr",match_value_xx = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$prefd_mdl_types_chr[1], match_var_nm_1L_chr = "short_name_chr", evaluate_1L_lgl = F)`) for each candidate predictor. The call to the `write_predr_and_covars_cmprsn`{.R} function saved the tested models along with model plots in the "B_Candidate_Predrs_Cmprsn" sub-directory of "Output". These results are also viewable as a table.
+Now, we compare the performance of single predictor models of our preferred model type (in our case, a `r x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$mdl_types_lup %>% ready4::get_from_lup_obj(target_var_nm_1L_chr = "long_name_chr",match_value_xx = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$prefd_mdl_types_chr[1], match_var_nm_1L_chr = "short_name_chr", evaluate_1L_lgl = F)`) for each candidate predictor. The last call to the `investigate`{.R} saved the tested models along with model plots in a sub-directory of our output directory. These results are also viewable as a table.
 
 
 ```{r predr_cmprsn, tab.cap='Comparison of all candidate predictors using preferred model', tab.id = 'predr_cmprsn', results = "asis"}
@@ -261,24 +236,18 @@ exhibit(x,
         type_1L_chr = "results")
 ```
 
-The call to the `write_predr_and_covars_cmprsn`{.R} function also saved single predictor R model objects (one for each candidate predictors) along with the two plots for each model in the "C_Predrs_Sngl_Mdl_Cmprsn" sub-directory of "Output". The performance of each single predictor model can also be summarised in a table.
+The call to the `investigate`{.R} method also saved single predictor R model objects (one for each candidate predictors) along with the two plots for each model in a sub-directory of our output directory. The performance of each single predictor model can also be summarised in a table.
 
 ```{r fxd_cmprsn, tab.cap='Preferred single predictor model performance by candidate predictor', tab.id = 'fxd_cmprsn', results = "asis"}
-# x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$smry_of_mdl_sngl_predrs_tb %>%
-#     ready4show::print_table(output_type_1L_chr = "HTML",
-#                           caption_1L_chr = "Preferred single predictor model performance by candidate predictor")
-
 exhibit(x,
         type_1L_chr = "results",
         what_1L_chr = "fxd_sngl_cmprsn")
 ```
-Updated versions of each of the models in the previous step (this time with covariates added) are saved to the "D_Predr_Covars_Cmprsn" subdirectory of "Output" and we can summarise the performance of each of the updated models, along with all signficant model terms, in a table.
 
-```{r fxdfull_cmprsn, tab.cap='Performance of preferred models with covariate predictors by candidate predictor', tab.id = 'fxdfull_cmprsn', results = "asis"}
-# x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$mdls_with_covars_smry_tb %>%
-#     ready4show::print_table(output_type_1L_chr = "HTML",
-#                             caption_1L_chr = "Performance of preferred models with covariate predictors by candidate predictor",
-#                           use_lbls_as_col_nms_1L_lgl = T)
+Updated versions of each of the models in the previous step (this time with covariates added) are saved to a new subdirectory of the output directory and we can summarise the performance of each of the updated models, along with all signficant model terms, in a table.
+
+```{r fxdfull_cmprsn, eval = F, tab.cap='Performance of preferred models with covariate predictors by candidate predictor', tab.id = 'fxdfull_cmprsn', results = "asis"}
+
 exhibit(x,
         type_1L_chr = "results",
         what_1L_chr = "fxd_full_cmprsn")
@@ -289,11 +258,12 @@ We can now identify which, if any, of the candidate covariates we previously spe
 procure(x,
         type_1L_chr = "results",
         what_1L_chr = "signt_covars")
-# x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$signt_covars_chr
 ```
+
+
 We can override the covariates to select, potentially because we want to select only covariates that are significant for all or most of the models. However, in the below example we have opted not to do so and continue to use `r ifelse(is.na(x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$signt_covars_chr),"no covariates",paste0(x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$signt_covars_chr, collapse = "and "))` as selected by the algorithm in the previous step.
 
-```{r}
+```{r eval = F}
 # x <- renew(x,
 #             new_val_xx = c("COVARIATE OF YOUR CHOICE", "ANOTHER COVARIATE"),
 #                                               type_1L_chr = "results",
@@ -306,6 +276,7 @@ We now conclude our model testing by rerunning the previous step, except confini
 ```{r message=FALSE, results='hide', warning=FALSE, fig.show ='hide'}
 x <- investigate(x)
 ```
+
 
 The previous call to the `write_mdls_with_covars_cmprsn`{.R} function saves the tested models along with the two plots for each model in the "E_Predrs_W_Covars_Sngl_Mdl_Cmprsn" sub-directory of "Output". 
 
@@ -343,17 +314,15 @@ Next we create longitudinal and mixed versions of each of the models we specifie
 x <- investigate(x)
 ```
 
-The `write_ts_mdls_from_alg_outp`{.R} function writes the models it tests to the "F_TS_Mdls" sub-directory of "Output" along with three plots for each model. 
+The last call to `investigate`{.R} function wrote the models it tests to a sub-directory of the output directory along with plots for each model. 
 
 ## Purge dataset copies
-Because the files created in analysis are large, multiple objects containing copies of the source dataset have been saved to our output directory during the analysis process. We therefore need to delete all of these copies.
 
-Purge write ...
+Because the files created in analysis are large, multiple objects containing copies of the source dataset have been saved to our output directory during the analysis process. We therefore need to delete all of these copies using the `author` method.
 
 ```{r eval=F}
 author(x,
        type_1L_chr = "purge_write")
-#outp_smry_ls$scored_data_tb <- NULL
 ```
 
 ## Share output
@@ -369,3 +338,7 @@ share(x,
 ```
 
 `y` is now available for download as the file `ymh_ScorzAqol6Adol.RDS` from the ["Documentation_0.0" release of the scorz package](https://github.com/ready4-dev/scorz/releases/tag/Documentation_0.0).
+
+
+
+

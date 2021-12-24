@@ -114,3 +114,5 @@
 ^data-raw/draft_vignettes/V_01\.html$
 ^data-raw/mthds/exhibit\.R$
 ^data-raw/s4_fns/renew\.R$
+^doc$
+^Meta$

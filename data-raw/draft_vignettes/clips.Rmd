@@ -1,0 +1,110 @@
+---
+title: "clips"
+author: "Matthew Hamilton"
+date: "24/12/2021"
+output: html_document
+---
+
+```{r echo=F}
+plt_nms_chr <- paste0("Plot ",1) # Make fn
+```
+
+```{r, eval=F, echo=FALSE fig.cap=plt_nms_chr, out.width = "400px", message=F}
+depict(x,
+       mdl_idcs_int = 1,
+       plt_indcs_int = 1)
+```
+
+```{r fxdfull_cmprsn, eval = F, tab.cap='Performance of preferred models with covariate predictors by candidate predictor', tab.id = 'fxdfull_cmprsn', results = "asis"}
+
+exhibit(x,
+        type_1L_chr = "results",
+        what_1L_chr = "fxd_full_cmprsn")
+```
+We can now identify which, if any, of the candidate covariates we previously specified are significant predictors in any of the models.
+
+```{r}
+procure(x,
+        type_1L_chr = "results",
+        what_1L_chr = "signt_covars")
+```
+
+
+We can override the covariates to select, potentially because we want to select only covariates that are significant for all or most of the models. However, in the below example we have opted not to do so and continue to use `r ifelse(is.na(x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$signt_covars_chr),"no covariates",paste0(x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$signt_covars_chr, collapse = "and "))` as selected by the algorithm in the previous step.
+
+```{r eval = F}
+# x <- renew(x,
+#             new_val_xx = c("COVARIATE OF YOUR CHOICE", "ANOTHER COVARIATE"),
+#                                               type_1L_chr = "results",
+#                                   what_1L_chr = "prefd_covars")
+```
+
+### Test preferred model with preferred covariates for each candidate predictor
+We now conclude our model testing by rerunning the previous step, except confining our covariates to those we prefer.
+
+```{r message=FALSE, results='hide', warning=FALSE, fig.show ='hide'}
+x <- investigate(x)
+```
+
+
+The previous call to the `write_mdls_with_covars_cmprsn`{.R} function saves the tested models along with the two plots for each model in the "E_Predrs_W_Covars_Sngl_Mdl_Cmprsn" sub-directory of "Output". 
+
+## Apply preferred model types and predictors to longitudinal data
+The next main step is to use the preferred model types and covariates identified from the preceding analysis of cross-sectional data in longitudinal analysis. 
+
+### Longitudinal mixed modelling
+
+```{r}
+y <- renewSlot(y,
+             slot_nm_1L_chr = "iters_1L_int",
+             new_val_xx = 4000L)
+```
+```{r}
+y <- renewSlot(y,
+             slot_nm_1L_chr = "control_ls",
+             new_val_xx = list(adapt_delta = 0.99))
+```
+
+```{r}
+y <- renewSlot(y,
+               slot_nm_1L_chr = "depnt_var_min_max_dbl",
+               new_val_xx = c(-1,1))
+```
+
+```{r}
+x <- renewSlot(x,
+               slot_nm_1L_chr = "b_SpecificParameters",
+               y)
+```
+
+Next we create longitudinal and mixed versions of each of the models we specified in the previous step. Note, that in many cases both the `prior_ls` and `control_ls` arguments can be set to `NULL` (which may speed up execution). However, in this example doing so would result in warning messages suggesting a change to the adapt_delta control value (default = 0.8). We have therefore passed a value to the `control_ls` argument that addresses this issue.
+
+```{r eval = F}
+x <- investigate(x)
+```
+
+The last call to `investigate`{.R} function wrote the models it tests to a sub-directory of the output directory along with plots for each model. 
+
+## Purge dataset copies
+
+Because the files created in analysis are large, multiple objects containing copies of the source dataset have been saved to our output directory during the analysis process. We therefore need to delete all of these copies using the `author` method.
+
+```{r eval=F}
+author(x,
+       type_1L_chr = "purge_write")
+```
+
+## Share output
+We can now publicly share our scored dataset and its associated metadata, using `Ready4useRepos` and its `share` method [as described in a vignette from the ready4use package](https://ready4-dev.github.io/ready4use/articles/V_01.html).
+
+```{r eval=F}
+z <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/specific", # Replace with details of your repo.
+                               gh_tag_1L_chr = "Documentation_0.0") # You must have write permissions.
+share(x,
+      fl_nm_1L_chr = "eq5d_ttu_SpecificMixed",
+      repos_Ready4useRepos = z)
+
+```
+
+`y` is now available for download as the file `ymh_ScorzAqol6Adol.RDS` from the ["Documentation_0.0" release of the scorz package](https://github.com/ready4-dev/scorz/releases/tag/Documentation_0.0).
+

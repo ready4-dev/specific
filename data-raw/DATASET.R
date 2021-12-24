@@ -13,7 +13,7 @@ x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify and Investigate Can
                                                   utils::person("National Health and Medical Research Council", role = c("fnd"))),
                                  urls_chr = c("https://ready4-dev.github.io/specific/",
                                               "https://github.com/ready4-dev/specific",
-                                              "https://ready4-dev.github.io/ready4/")) %>%
+                                              "https://www.ready4-dev.com/")) %>%
   ready4fun::make_manifest(addl_pkgs_ls = ready4fun::make_addl_pkgs_ls(depends_chr = c("ready4","youthvars"),
                                                                        suggests_chr = c("rmarkdown","scorz"),#
                                                                        imports_chr = c("knitrBootstrap")),

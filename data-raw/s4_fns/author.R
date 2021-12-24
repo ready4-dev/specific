@@ -20,7 +20,7 @@ author_SpecificProject <- function(x,
     }
     if(type_1L_chr == "parameters")
       output_xx <- x@b_SpecificParameters
-    if(type_1L_chr == "project"){
+    if(type_1L_chr %in% c("project","purge_write")){
       if(what_1L_chr == "public"){
         output_xx <- x
         output_xx@a_YouthvarsProfile@a_Ready4useDyad@ds_tb <- output_xx@a_YouthvarsProfile@a_Ready4useDyad@ds_tb[0,]

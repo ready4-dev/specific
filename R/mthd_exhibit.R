@@ -113,7 +113,8 @@ methods::setMethod("exhibit", "SpecificProject", function (x, captions_chr = cha
         if (!identical(what_1L_chr, "")) 
             object_xx <- procure(x, what_1L_chr = what_1L_chr)
         if (type_1L_chr == "results") {
-            if (what_1L_chr %in% c("mdl_cmprsn", "fxd_sngl_cmprsn")) 
+            if (what_1L_chr %in% c("mdl_cmprsn", "fxd_sngl_cmprsn", 
+                "fxd_full_cmprsn")) 
                 object_xx <- as.data.frame(object_xx)
             if (what_1L_chr %in% c("mdl_cmprsn", "fxd_sngl_cmprsn")) 
                 names(object_xx) <- c("Model", "R-Squared", "RMSE", 
