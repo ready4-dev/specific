@@ -390,5 +390,7 @@ z <- ready4pack::make_pt_ready4pack_manifest(x,
 ) %>%
   ready4pack::ready4pack_manifest()
 z <- ready4::author(z)
-#usethis::use_dev_package("scorz", type = "Suggests",remote = "ready4-dev/scorz")
+usethis::use_dev_package("scorz",
+                         type = "Suggests",
+                         remote = "ready4-dev/scorz")
 # devtools::build_vignettes()

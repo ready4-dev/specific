@@ -48,7 +48,7 @@ exhibit.specific_predictors(
   mkdn_tbl_refs_chr = NULL,
   output_type_1L_chr = "HTML",
   timepoints_int = NA_integer_,
-  type_1L_chr = "dataset",
+  type_1L_chr = "data",
   what_1L_chr = "correlation",
   ...
 )
@@ -72,7 +72,7 @@ exhibit.specific_predictors(
 
 \item{timepoints_int}{Timepoints (an integer vector), Default: NA}
 
-\item{type_1L_chr}{Type (a character vector of length one), Default: 'dataset'}
+\item{type_1L_chr}{Type (a character vector of length one), Default: 'data'}
 
 \item{what_1L_chr}{What (a character vector of length one), Default: 'correlation'}
 

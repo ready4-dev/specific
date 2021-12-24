@@ -13,6 +13,7 @@ The steps in this exploratory analysis workflow may need to be performed iterati
 
 ```{r message=FALSE, warning=FALSE}
 library(specific)
+library(scorz)
 ```
 
 ## Import data
@@ -132,7 +133,7 @@ The `specific_models` object that we have just added is reproduced below.
 ```{r mdlslup, tab.cap='Model types lookup table', tab.id = 'mdlslup', results = "asis"}
 procureSlot(y,
             "candidate_mdls_lup") %>% # 
-  exhibit.specific_models()
+  exhibit()
 ```
 
 ```{r echo = F}
@@ -223,8 +224,6 @@ The `investigate` method also outputs a table summarising the performance of eac
 
 ```{r mdl_cmprsn, tab.cap='Comparison of candidate models using highest correlated predictor', tab.id = 'mdl_cmprsn', results = "asis"}
 exhibit(x,
-        # mkdn_tbl_refs_chr = "tab:mdl_cmprsn", # Make default
-        # output_type_1L_chr = "HTML", # Make default
         what_1L_chr = "mdl_cmprsn",
         type_1L_chr = "results")
 ```
@@ -233,15 +232,15 @@ We can now identify the highest performing model in each category of candidate m
 
 ```{r}
 procure(x,
-        what_1L_chr = "prefd_mdls")
+        what_1L_chr = "prefd_mdls") # Fix for NA_ returns (one option within ctg)
 ```
 We can override these automated selections and instead incorporate other considerations (possibly based on judgments informed by visual inspection of the plots and the desirability of constraining predictions to a maximum value of one). We do this in the following command, specifying new preferred model types, in descending order of preference.
 
 ```{r}
-x <- renew_SpecificProject(x,
-                          new_val_xx = c("OLS_NTF", "BET_CLL"),
-                          type_1L_chr = "results",
-                          what_1L_chr = "prefd_mdls")
+x <- renew(x,
+           new_val_xx = c("OLS_CLL","GLM_GSN_LOG"),
+           type_1L_chr = "results",
+           what_1L_chr = "prefd_mdls")
 ```
 
 ### Use most preferred model to compare all candidate predictors
@@ -253,10 +252,11 @@ x <- investigate(x)
 
 Now, we compare the performance of single predictor models of our preferred model type (in our case, a `r x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$mdl_types_lup %>% ready4::get_from_lup_obj(target_var_nm_1L_chr = "long_name_chr",match_value_xx = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$prefd_mdl_types_chr[1], match_var_nm_1L_chr = "short_name_chr", evaluate_1L_lgl = F)`) for each candidate predictor. The call to the `write_predr_and_covars_cmprsn`{.R} function saved the tested models along with model plots in the "B_Candidate_Predrs_Cmprsn" sub-directory of "Output". These results are also viewable as a table.
 
+
 ```{r predr_cmprsn, tab.cap='Comparison of all candidate predictors using preferred model', tab.id = 'predr_cmprsn', results = "asis"}
 exhibit(x,
-        mkdn_tbl_refs_chr = "tab:predr_cmprsn", # Make default
-        output_type_1L_chr = "HTML", # Make default
+        # mkdn_tbl_refs_chr = "tab:predr_cmprsn", # Make default
+        # output_type_1L_chr = "HTML", # Make default
         what_1L_chr = "predr_cmprsn",
         type_1L_chr = "results")
 ```
@@ -271,10 +271,10 @@ x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$smry_of_md
 Updated versions of each of the models in the previous step (this time with covariates added) are saved to the "D_Predr_Covars_Cmprsn" subdirectory of "Output" and we can summarise the performance of each of the updated models, along with all signficant model terms, in a table.
 
 ```{r}
-# x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$mdls_with_covars_smry_tb %>%
-#     ready4show::print_table(output_type_1L_chr = "HTML",
-#                             caption_1L_chr = "Performance of preferred models with covariate predictors by candidate predictor", 
-#                           use_lbls_as_col_nms_1L_lgl = T)
+x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$mdls_with_covars_smry_tb %>%
+    ready4show::print_table(output_type_1L_chr = "HTML",
+                            caption_1L_chr = "Performance of preferred models with covariate predictors by candidate predictor",
+                          use_lbls_as_col_nms_1L_lgl = T)
 ```
 We can now identify which, if any, of the candidate covariates we previously specified are significant predictors in any of the models.
 
