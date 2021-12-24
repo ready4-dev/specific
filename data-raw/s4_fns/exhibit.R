@@ -56,7 +56,8 @@ exhibit_SpecificProject <- function(x,
       names(object_xx) <- c("Model","R-Squared","RMSE","MAE","R-Squared","RMSE","MAE")
       if(what_1L_chr %in% c("fxd_full_cmprsn"))
         names(object_xx) <- c("Model","R-Squared","AIC","BIC","Significant terms")
-      if(what_1L_chr == "mdl_cmprsn"){
+      if(what_1L_chr %in% c("mdl_cmprsn",
+                            "fxd_sngl_cmprsn")){
         heading_grps_chr <- c(1,3,3) %>% stats::setNames(c(" ",
                                                          paste0("Training model fit (averaged over ",
                                                                 x@b_SpecificParameters@folds_1L_int,
