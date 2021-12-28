@@ -11,7 +11,7 @@ home:
   - text: Manual - Developer (PDF)
     href: https://github.com/ready4-dev/specific/releases/download/Documentation_0.0/eq5d_ttu_SpecificMixed.RDS
   - text: ready4 framework
-    href:  https://ready4-dev.github.io/ready4/
+    href:  https://www.ready4-dev.com/
 development:
   mode: auto
 reference:

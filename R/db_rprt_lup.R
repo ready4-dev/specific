@@ -1,6 +1,6 @@
 #' Report types lookup table
 #' 
-#' A lookup table of the different report types supported by TTU functions
+#' A lookup table of different report types
 #' 
 #' A tibble
 #' 

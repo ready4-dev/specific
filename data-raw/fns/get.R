@@ -175,7 +175,7 @@ get_mdls_with_signft_covars <- function(outp_smry_ls,
 get_mdl_type_from_nm <- function(mdl_nm_1L_chr,
                                  mdl_types_lup = NULL){
   if(is.null(mdl_types_lup))
-    utils::data("mdl_types_lup", package = "TTU", envir = environment())
+    utils::data("mdl_types_lup", package = "specific", envir = environment())
   mdl_type_1L_chr <- (mdl_types_lup %>%
                         dplyr::pull(short_name_chr))[mdl_types_lup %>%
                                                        dplyr::pull(short_name_chr) %>%

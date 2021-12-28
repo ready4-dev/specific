@@ -216,7 +216,7 @@ write_mdl_smry_rprt <- function (input_params_ls = NULL, abstract_args_ls = NULL
         0, length(input_params_ls$scndry_anlys_params_ls)))
     paths_ls <- path_params_ls$paths_ls
     if (is.null(rprt_lup)) 
-        data("rprt_lup", package = "TTU", envir = environment())
+        data("rprt_lup", package = "specific", envir = environment())
     rprt_lups_ls <- purrr::map(reference_int, ~{
         if (.x == 0) {
             reference_1L_int <- NULL
@@ -766,7 +766,7 @@ write_scndry_analysis <- function (predictors_lup = NULL, valid_params_ls_ls, ca
             match_value_xx = .x, match_var_nm_1L_chr = "old_nms_chr", 
             target_var_nm_1L_chr = "new_nms_chr", evaluate_1L_lgl = F)))
     }
-    data("rprt_lup", package = "TTU", envir = environment())
+    data("rprt_lup", package = "specific", envir = environment())
     rprt_lup <- rprt_lup %>% transform_rprt_lup(start_at_int = start_at_int, 
         reference_1L_int = reference_1L_int) %>% dplyr::filter(rprt_nms_chr == 
         "AAA_SUPLRY_ANLYS_MTH")
@@ -1104,7 +1104,7 @@ write_study_outp_ds <- function (input_params_ls, abstract_args_ls = NULL, dv_md
         reference_1L_int <- ifelse(.y == "Primary", 0, as.numeric(stringr::str_remove(.y, 
             "secondary_")))
         if (is.null(rprt_lup)) {
-            data("rprt_lup", package = "TTU", envir = environment())
+            data("rprt_lup", package = "specific", envir = environment())
             rprt_lup <- transform_rprt_lup(rprt_lup, add_suplry_rprt_1L_lgl = reference_1L_int > 
                 0, add_sharing_rprt_1L_lgl = T, start_at_int = start_at_int, 
                 reference_1L_int = reference_1L_int)

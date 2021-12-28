@@ -116,3 +116,4 @@
 ^data-raw/s4_fns/renew\.R$
 ^doc$
 ^Meta$
+^data-raw/draft_vignettes/clips\.Rmd$

@@ -342,7 +342,7 @@ datasets_ls <- list(tibble::tibble(short_name_chr = c("OLS_NTF",
                                                                stringr::str_remove("Beta Regression Model with ")))) %>%
                       ready4fun::make_pkg_ds_ls(db_1L_chr = "mdl_types_lup",
                                                 title_1L_chr = "Model types lookup table",
-                                                desc_1L_chr = "A lookup table of abbreviations to describe the different model types supported by TTU functions"),
+                                                desc_1L_chr = "A lookup table of abbreviations to describe the different model types"),
                     tibble::tibble(short_name_chr = c("coefs","hetg",
                                                       "dnst","sctr_plt",
                                                       "sim_dnst","sim_sctr",
@@ -360,30 +360,30 @@ datasets_ls <- list(tibble::tibble(short_name_chr = c("OLS_NTF",
                                                      "comparative scatter plot of observed and predictions using sampled model parameter values and transformation of out of range predictions to upper and lower bounds")) %>%
                       ready4fun::make_pkg_ds_ls(db_1L_chr = "plt_types_lup",
                                                 title_1L_chr = "Model plot types lookup table",
-                                                desc_1L_chr = "A lookup table of abbreviations to describe the different model plot types supported by TTU functions"),
+                                                desc_1L_chr = "A lookup table of abbreviations to describe different model plot types"),
                     # ADD TO PLOTS TABLE: # AUTOPLT # LNR_CMPRSN  # PRED_DNSTY # PRED_SCTR # SIM_DNSTY # BORUTA_VAR_IMP # RF_VAR_IMP
                     tibble::tibble(rprt_nms_chr = "AAA_TTU_MDL_CTG",
                                    title_chr = "Results supplement: longitudinal transfer to utility models.",
                                    paths_to_rmd_dir_1L_chr = NA_character_,
                                    pkg_dirs_chr = "Markdown",
-                                   packages_chr = "TTU",
+                                   packages_chr = "specific",
                                    nms_of_rmd_chr = "Report_TS_Mdls.RMD",
                                    rltv_paths_to_outp_yaml_chr = "_output.yml") %>%
                       tibble::add_case(rprt_nms_chr = "AAA_PMRY_ANLYS_MTH",
                                        title_chr = "Methods supplement: Main analysis algorithm",
                                        paths_to_rmd_dir_1L_chr = NA_character_,
                                        pkg_dirs_chr = "Markdown",
-                                       packages_chr = "TTU",
+                                       packages_chr = "specific",
                                        nms_of_rmd_chr = "Analyse.Rmd") %>%
                       tibble::add_case(rprt_nms_chr = "AAA_RPRT_WRTNG_MTH",
                                        title_chr = "Methods supplement: algorithm to auto-generate reports.",
                                        paths_to_rmd_dir_1L_chr = NA_character_,
                                        pkg_dirs_chr = "Markdown",
-                                       packages_chr = "TTU",
+                                       packages_chr = "specific",
                                        nms_of_rmd_chr = "Report.Rmd") %>%
                       ready4fun::make_pkg_ds_ls(db_1L_chr = "rprt_lup",
                                                 title_1L_chr = "Report types lookup table",
-                                                desc_1L_chr = "A lookup table of the different report types supported by TTU functions"))
+                                                desc_1L_chr = "A lookup table of different report types"))
 z <- ready4pack::make_pt_ready4pack_manifest(x,
                                              constructor_r3 = y,
                                              pkg_ds_ls_ls = datasets_ls

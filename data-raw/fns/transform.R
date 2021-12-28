@@ -398,7 +398,7 @@ transform_rprt_lup <- function(rprt_lup, # Generalise TTU parts - Also need to a
                        title_chr = "Report outlining the algorithm to run the supplemenatary analysis.",
                        paths_to_rmd_dir_1L_chr = NA_character_,
                        pkg_dirs_chr = "Markdown",
-                       packages_chr = "TTU",
+                       packages_chr = "specific",
                        nms_of_rmd_chr = "Supplement.Rmd") %>%
       dplyr::filter(rprt_nms_chr != "AAA_PMRY_ANLYS_MTH")
   }
@@ -408,7 +408,7 @@ transform_rprt_lup <- function(rprt_lup, # Generalise TTU parts - Also need to a
                        title_chr = "Supplementary report outlining the algorithm to create and disseminate shareable study output.",
                        paths_to_rmd_dir_1L_chr = NA_character_,
                        pkg_dirs_chr = "Markdown",
-                       packages_chr = "TTU",
+                       packages_chr = "specific",
                        nms_of_rmd_chr = "Share.Rmd")
   }
   if(!is.null(start_at_int[1])){

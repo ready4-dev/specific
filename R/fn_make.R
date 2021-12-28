@@ -11,7 +11,7 @@ make_abstract_args_ls <- function (results_ls, fl_nm_1L_chr = "abstract.txt")
 {
     mdl_cmprsns_ls <- get_mdl_cmprsns(results_ls, as_list_1L_lgl = T)
     abstract_args_ls <- list(abstract_ls = list(Background = get_background_text(results_ls), 
-        Objectives = paste0("We aimed to identify the best transfer to utility (TTU) regression models to predict ", 
+        Objectives = paste0("We aimed to identify the best regression models to predict ", 
             get_hlth_utl_nm(results_ls, short_nm_1L_lgl = F), 
             " (", get_hlth_utl_nm(results_ls), ") utility and evaluate the predictive ability of ", 
             get_nbr_of_predrs(results_ls), " candidate measure", 
@@ -22,7 +22,7 @@ make_abstract_args_ls <- function (results_ls, fl_nm_1L_chr = "abstract.txt")
             " after baseline. ", paste0(length(mdl_cmprsns_ls$OLS) %>% 
                 xfun::numbers_to_words() %>% Hmisc::capitalize()), 
             " Ordinary Least Squares (OLS) and ", length(mdl_cmprsns_ls$GLM) %>% 
-                xfun::numbers_to_words(), " generalised linear models (GLMs) were explored to identify the best TTU algorithm. ", 
+                xfun::numbers_to_words(), " generalised linear models (GLMs) were explored to identify the best algorithm. ", 
             " Predictive ability of ", get_nbr_of_predrs(results_ls), 
             " candidate measure", ifelse(get_nbr_of_predrs(results_ls, 
                 as_words_1L_lgl = F) > 1, "s", ""), " of ", get_predr_ctgs(results_ls), 
@@ -298,7 +298,7 @@ make_cndt_predr_text <- function (results_ls, type_1L_chr = "description")
             ifelse(nbr_of_predrs_1L_int > 1, " were", " was"), 
             " used as ", ifelse(nbr_of_predrs_1L_int > 1, "", 
                 "a "), "candidate predictor", ifelse(nbr_of_predrs_1L_int > 
-                1, "s", ""), " to construct TTU models.")
+                1, "s", ""), " to construct models.")
     }
     if (type_1L_chr == "comparison") {
         text_1L_chr <- paste0(ifelse(nbr_of_predrs_1L_int > 1, 
@@ -436,7 +436,7 @@ make_covar_ttu_tbl_refs <- function (params_ls)
 #' @keywords internal
 make_covar_ttu_tbl_title <- function (results_ls, ref_1L_int = 1) 
 {
-    title_1L_chr <- paste0("Estimated coefficients from longitudinal TTU models based on individual candidate predictors with ", 
+    title_1L_chr <- paste0("Estimated coefficients from longitudinal models based on individual candidate predictors with ", 
         results_ls$ttu_lngl_ls$incld_covars_chr %>% paste0(collapse = ", ") %>% 
             stringi::stri_replace_last(fixed = ",", " and"), 
         " using ", results_ls$ttu_lngl_ls$best_mdls_tb[[ref_1L_int, 
@@ -579,7 +579,7 @@ make_cs_ts_ratios_tb <- function (predr_ctgs_ls, mdl_coef_ratios_ls, candidate_p
 make_data_availability_text <- function (results_ls) 
 {
     text_1L_chr <- ifelse(is.null(results_ls$dv_ds_nm_and_url_chr), 
-        "None available", paste0("Detailed results in the form of catalogues of the TTU models produced by this study and other supporting information are available in the online repository: ", 
+        "None available", paste0("Detailed results in the form of catalogues of the models produced by this study and other supporting information are available in the online repository: ", 
             results_ls$dv_ds_nm_and_url_chr[2]))
     return(text_1L_chr)
 }
@@ -594,17 +594,17 @@ make_data_availability_text <- function (results_ls)
 make_dnst_and_sctr_plt_title <- function (results_ls) 
 {
     title_1L_chr <- paste0("Comparison of observed and predicted ", 
-        results_ls$study_descs_ls$health_utl_nm_1L_chr, " utility score from longitudinal TTU model using ", 
+        results_ls$study_descs_ls$health_utl_nm_1L_chr, " score from longitudinal model using ", 
         results_ls$predr_var_nms_chr %>% paste0(collapse = ", ") %>% 
             stringi::stri_replace_last(fixed = ",", " and"), 
         " (A) Density plots of observed and predicted utility scores (", 
         results_ls$ttu_lngl_ls$best_mdls_tb %>% purrr::pmap_chr(~paste0(..1, 
             " (", ..2, ")")) %>% purrr::pluck(1), ") (B) Scatter plots of observed and predicted utility scores by timepoint (", 
         results_ls$ttu_lngl_ls$best_mdls_tb %>% purrr::pmap_chr(~paste0(..1, 
-            " (", ..2, ")")) %>% purrr::pluck(1), ") (C) Density plots of observed and predicted utility scores (", 
+            " (", ..2, ")")) %>% purrr::pluck(1), ") (C) Density plots of observed and predicted results (", 
         ifelse(nrow(results_ls$ttu_lngl_ls$best_mdls_tb) > 1, 
             paste0(results_ls$ttu_lngl_ls$best_mdls_tb %>% purrr::pmap_chr(~paste0(..1, 
-                " (", ..2, ")")) %>% purrr::pluck(2), ") (D) Scatter plots of observed and predicted utility scores by timepoint (", 
+                " (", ..2, ")")) %>% purrr::pluck(2), ") (D) Scatter plots of observed and predicted results by timepoint (", 
                 results_ls$ttu_lngl_ls$best_mdls_tb %>% purrr::pmap_chr(~paste0(..1, 
                   " (", ..2, ")")) %>% purrr::pluck(2), ")"), 
             ""))
@@ -800,7 +800,7 @@ make_hlth_utl_and_predrs_ls <- function (outp_smry_ls, descv_tbls_ls, nbr_of_dig
 #' @export 
 make_indpnt_predrs_lngl_tbl_title <- function (results_ls, ref_1L_int = 1) 
 {
-    title_1L_chr <- paste0("Estimated coefficients for single predictor longitudinal TTU models using ", 
+    title_1L_chr <- paste0("Estimated coefficients for single predictor longitudinal models using ", 
         results_ls$ttu_lngl_ls$best_mdls_tb[[ref_1L_int, "model_type"]], 
         " (", results_ls$ttu_lngl_ls$best_mdls_tb[[ref_1L_int, 
             "link_and_tfmn_chr"]], ")")
@@ -1283,7 +1283,7 @@ make_mdl_smry_ls <- function (mdl_types_lup = get_cndts_for_mxd_mdls(), mdl_type
     choose_from_pfx_chr = NULL, folds_1L_int = 10L, max_nbr_of_boruta_mdl_runs_int = 300L) 
 {
     if (is.null(mdl_types_lup)) 
-        data("mdl_types_lup", package = "TTU", envir = environment())
+        data("mdl_types_lup", package = "specific", envir = environment())
     if (is.null(mdl_types_chr)) 
         mdl_types_chr <- mdl_types_lup$short_name_chr
     if (is.null(choose_from_pfx_chr)) 
@@ -1581,7 +1581,7 @@ make_prefd_mdls_vec <- function (smry_of_sngl_predr_mdls_tb, choose_from_pfx_chr
     "GLM", "OLS"), mdl_types_lup = NULL) 
 {
     if (is.null(mdl_types_lup)) 
-        utils::data("mdl_types_lup", envir = environment(), package = "TTU")
+        utils::data("mdl_types_lup", envir = environment(), package = "specific")
     ordered_mdl_types_chr <- dplyr::inner_join(smry_of_sngl_predr_mdls_tb %>% 
         dplyr::select(Model) %>% dplyr::rename(long_name_chr = Model), 
         mdl_types_lup) %>% dplyr::pull(short_name_chr)
@@ -1809,7 +1809,7 @@ make_results_ls <- function (spine_of_results_ls = NULL, abstract_args_ls = NULL
         tables_ls = make_ss_tbls_ls(spine_of_results_ls$outp_smry_ls, 
             mdls_smry_tbls_ls = mdls_smry_tbls_ls, covars_mdls_ls = covars_mdls_ls, 
             descv_tbls_ls = descv_tbls_ls, nbr_of_digits_1L_int = spine_of_results_ls$nbr_of_digits_1L_int), 
-        ttu_cs_ls = ttu_cs_ls, ttu_lngl_ls = ttu_lngl_ls, ttu_version_1L_chr = spine_of_results_ls$outp_smry_ls$session_data_ls$otherPkgs$TTU$Version, 
+        ttu_cs_ls = ttu_cs_ls, ttu_lngl_ls = ttu_lngl_ls, ttu_version_1L_chr = spine_of_results_ls$outp_smry_ls$session_data_ls$otherPkgs$specific$Version, 
         var_nm_change_lup = spine_of_results_ls$var_nm_change_lup, 
         version_1L_chr = version_1L_chr)
     return(results_ls)

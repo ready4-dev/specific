@@ -19,7 +19,7 @@ Useful links:
 \itemize{
   \item \url{https://ready4-dev.github.io/specific/}
   \item \url{https://github.com/ready4-dev/specific}
-  \item \url{https://ready4-dev.github.io/ready4/}
+  \item \url{https://www.ready4-dev.com/}
 }
 
 
@@ -27,7 +27,7 @@ Useful links:
 \itemize{
   \item \url{https://ready4-dev.github.io/specific/}
   \item \url{https://github.com/ready4-dev/specific}
-  \item \url{https://ready4-dev.github.io/ready4/}
+  \item \url{https://www.ready4-dev.com/}
 }
 
 }
