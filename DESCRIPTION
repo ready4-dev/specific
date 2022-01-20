@@ -64,9 +64,9 @@ Imports:
     xfun
 VignetteBuilder: knitr
 Depends: 
-    ready4,
+    ready4 (>= 0.0.0.9084),
     R (>= 2.10),
-    youthvars
+    youthvars (>= 0.0.0.9101)
 LazyData: true
 Collate: 
     'C3_specific_models.R'
@@ -111,10 +111,11 @@ Collate:
     'pkg_specific.R'
     'specific-package.R'
 Suggests: 
-    scorz,
+    scorz (>= 0.0.0.9044),
     rmarkdown
 Remotes: 
     ready4-dev/ready4,
     ready4-dev/ready4show,
     ready4-dev/ready4use,
-    ready4-dev/youthvars
+    ready4-dev/youthvars,
+    ready4-dev/scorz

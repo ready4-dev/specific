@@ -1,3 +1,5 @@
+library(ready4show)
+library(ready4use)
 library(youthvars)
 library(scorz)
 fns_env_ls <- ready4fun::read_fns(c("data-raw/fns/","data-raw/mthds/"),
@@ -390,6 +392,12 @@ z <- ready4pack::make_pt_ready4pack_manifest(x,
 ) %>%
   ready4pack::ready4pack_manifest()
 z <- ready4::author(z)
+usethis::use_dev_package("ready4",
+                         type = "Depends",
+                         remote = "ready4-dev/ready4")
+usethis::use_dev_package("youthvars",
+                         type = "Depends",
+                         remote = "ready4-dev/youthvars")
 usethis::use_dev_package("scorz",
                          type = "Suggests",
                          remote = "ready4-dev/scorz")
