@@ -7,9 +7,9 @@ template:
 home:
   links:
   - text: Manual - User (PDF)
-    href: https://github.com/ready4-dev/specific/releases/download/Documentation_0.0/specific_Developer.pdf
+    href: https://github.com/ready4-dev/specific/releases/download/Documentation_0.0/specific_User.pdf
   - text: Manual - Developer (PDF)
-    href: https://github.com/ready4-dev/specific/releases/download/Documentation_0.0/eq5d_ttu_SpecificMixed.RDS
+    href: https://github.com/ready4-dev/specific/releases/download/Documentation_0.0/specific_Developer.pdf
   - text: ready4 framework
     href:  https://www.ready4-dev.com/
 development:
@@ -138,4 +138,6 @@ reference:
   - investigate-SpecificPredictors
   - procure-SpecificProject
   - renew-SpecificProject
+  - renew.specific_models
+  - renew.specific_predictors
   - share-SpecificProject

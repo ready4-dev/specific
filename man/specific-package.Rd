@@ -4,7 +4,7 @@
 \name{specific-package}
 \alias{specific}
 \alias{specific-package}
-\title{specific: Specify and Investigate Candidate Models for Representing Mental Health Systems}
+\title{specific: Specify Candidate Models for Representing Mental Health Systems}
 \description{
 \if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
 

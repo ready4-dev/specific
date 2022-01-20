@@ -14,9 +14,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, warning=FALSE, message=FALSE}
 library(specific)
 ```
 This development version of the `specific` package has been made available as part of the process of testing and documenting the package. Currently there is one vignette describing how to use tools contained within `specific`:
 
-- [Use SpecificProject and SpecificParameters To Undertake An Exploratory Analysis](V_01.html)
+- [Undertake An Exploratory Modelling Analysis](V_01.html)

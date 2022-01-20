@@ -2,7 +2,7 @@ library(youthvars)
 library(scorz)
 fns_env_ls <- ready4fun::read_fns(c("data-raw/fns/","data-raw/mthds/"),
                                   fns_env = new.env(parent = globalenv()))
-x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify and Investigate Candidate Models For Representing Mental Health Systems" %>% tools::toTitleCase(),
+x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify Candidate Models For Representing Mental Health Systems" %>% tools::toTitleCase(),
                                  pkg_desc_1L_chr = "Tools to standardise the formalising and solving of inverse problems as part of the development of open and modular mental health systems.
   This development version of the specific package has been made available as part of the process of testing and documenting the package.
                             If you have any questions, please contact the authors (matthew.hamilton@orygen.org.au).",

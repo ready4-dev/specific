@@ -9,7 +9,7 @@
 \alias{investigate,SpecificPredictors-method}
 \alias{investigate-SpecificFixed}
 \alias{investigate,SpecificFixed-method}
-\title{Investigate a dataset}
+\title{Investigate solutions to an inverse problem}
 \usage{
 \S4method{investigate}{SpecificModels}(x)
 

@@ -1,8 +1,8 @@
 ---
-title: "Use SpecificProject and SpecificParameters To Undertake An Exploratory Analysis"
+title: "Undertake An Exploratory Modelling Analysis"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Use SpecificProject and SpecificParameters To Undertake An Exploratory Analysis}
+  %\VignetteIndexEntry{Undertake An Exploratory Modelling Analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,23 +21,23 @@ library(scorz)
 We start by ingesting our data. As this example uses EQ-5D data, we import a `ScorzEuroQol5` object that was created using the steps described in [this vignette from the scorz pacakge](https://ready4-dev.github.io/scorz/articles/V_02.html).
 
 ```{r message=FALSE}
-x <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz", 
+X <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz", 
                                gh_tag_1L_chr = "Documentation_0.0") %>%
     ingest(fls_to_ingest_chr = "ymh_ScorzEuroQol5",
          metadata_1L_lgl = F)
 ```
 
-For the purpose of this analysis we only the `YouthvarsProfile` object included in `x` so extract this element using the `procureSlot` method.
+For the purpose of this analysis we only the `YouthvarsProfile` object included in `X` so extract this element using the `procureSlot` method.
 
 ```{r}
-x <- x %>% 
+X <- X %>% 
   procureSlot("a_YouthvarsProfile")
 ```
 
 
 ## Inspect data
 ```{r echo = F, message=FALSE}
-ds_tb <- x %>%
+ds_tb <- X %>%
   procureSlot("a_Ready4useDyad") %>%
   procureSlot("ds_tb")
 ```
@@ -45,19 +45,19 @@ ds_tb <- x %>%
 The dataset we are using has a total of `r nrow(ds_tb)` records at two timepoints on `r length(ds_tb$uid %>% unique())` study participants. The first six records are reproduced below.
 
 ```{r inputds, echo=F, eval = knitr::is_html_output(), results='asis'}
-x %>%
+X %>%
   procureSlot("a_Ready4useDyad") %>%
   exhibit(display_1L_chr = "head")
 ```
 
-To learn more about the properties of `x` (which is a `YouthvarsSeries` child class of `YouthvarsProfile` object) and how it can be inspected, [read this vignette from the youthvars package](https://ready4-dev.github.io/youthvars/articles/V_02.html).
+To learn more about the properties of `X` (which is a `YouthvarsSeries` child class of `YouthvarsProfile` object) and how it can be inspected, [read this vignette from the youthvars package](https://ready4-dev.github.io/youthvars/articles/V_02.html).
 
 ## Create SpecificModels
 
 To start with, we create a new instance of a `SpecificModels` object containing data we have just ingested.
 
 ```{r}
-x <- SpecificModels(a_YouthvarsProfile = x) 
+X <- SpecificModels(a_YouthvarsProfile = X) 
 ```
 
 ## Specify parameters
@@ -69,7 +69,7 @@ In preparation for exploring our dataset, we need to declare a set of model para
 The first parameter that we declare is the dependent variable (total EQ-5D utility score) for the models we will be exploring and its allowable range (-1 to 1).
 
 ```{r}
-y <- SpecificParameters(depnt_var_nm_1L_chr = "eq5d_total_w",
+Y <- SpecificParameters(depnt_var_nm_1L_chr = "eq5d_total_w",
                         depnt_var_min_max_dbl = c(-1,1))
 ```
 
@@ -78,7 +78,7 @@ y <- SpecificParameters(depnt_var_nm_1L_chr = "eq5d_total_w",
 We add the names of candidate predictor variables to our `SpecificParameters` object.
 
 ```{r}
-y <- renewSlot(y,
+Y <- renewSlot(Y,
                "candidate_predrs_chr",
                new_val_xx = c("K10_int","Psych_well_int")) 
 ```
@@ -86,7 +86,7 @@ y <- renewSlot(y,
 We next add meta-data about each candidate predictor variable in the form of a `specific_predictors` object.
 
 ```{r}
-y <- renewSlot(y, 
+Y <- renewSlot(Y, 
                "predictors_lup", 
                new_val_xx = make_pt_specific_predictors(short_name_chr = c("K10_int","Psych_well_int"),
                                               long_name_chr = c("Kessler Psychological Distress - 10 Item Total Score",
@@ -101,10 +101,10 @@ y <- renewSlot(y,
                  specific_predictors())
 ```
 
-The `specific_predictors` object that we have added to `y` can be retrieved using the `procureSlot` method.
+The `specific_predictors` object that we have added to `Y` can be retrieved using the `procureSlot` method.
 
 ```{r}
-procureSlot(y,
+procureSlot(Y,
             "predictors_lup") %>%
   exhibit.specific_predictors()
 ```
@@ -114,7 +114,7 @@ procureSlot(y,
 We also specify the covariates that we aim to explore in conjunction with each candidate predictor.
 
 ```{r}
-y <- renewSlot(y, 
+Y <- renewSlot(Y, 
                "candidate_covars_chr",
                new_val_xx = c("d_sex_birth_s", "d_age",  "d_sexual_ori_s", "d_studying_working"))
 ```
@@ -124,7 +124,7 @@ y <- renewSlot(y,
 We now add details about the candidate models we will explore in the form of a `specific_models` object.
 
 ```{r}
-y <- renewSlot(y,
+Y <- renewSlot(Y,
                "candidate_mdls_lup", 
                new_val_xx = get_cndt_mdls(mdl_short_nms_chr = c("OLS_NTF","OLS_CLL","GLM_GSN_LOG")))
 ```
@@ -132,7 +132,7 @@ y <- renewSlot(y,
 The `specific_models` object that we have just added is reproduced below.
 
 ```{r mdlslup, tab.cap='Model types lookup table', tab.id = 'mdlslup', results = "asis"}
-procureSlot(y,
+procureSlot(Y,
             "candidate_mdls_lup") %>% # 
   exhibit()
 ```
@@ -142,7 +142,7 @@ procureSlot(y,
 Depending on the type of analysis we plan on undertaking, we can also specify parameters such as the number of folds to use in cross validation and the maximum number of model runs to allow.
 
 ```{r}
-y <- renewSlot(y,
+Y <- renewSlot(Y,
                "folds_1L_int",
                new_val_xx = 10L) %>%
   renewSlot("max_mdl_runs_1L_int",
@@ -152,17 +152,17 @@ y <- renewSlot(y,
 We can also specify a seed to ensure reproducibility of results.
 
 ```{r}
-y <- renewSlot(y,
+Y <- renewSlot(Y,
                "seed_1L_int",
                new_val_xx = 1234L)
 ```
 
-Finally, we add `y` (model parameters) to `x` (the `SpecificModels`).
+Finally, we add `Y` (model parameters) to `X` (the `SpecificModels`).
 
 ```{r}
-x <- renewSlot(x,
+X <- renewSlot(X,
                "b_SpecificParameters",
-               new_val_xx = y)
+               new_val_xx = Y)
 ```
 
 ## Model testing
@@ -173,34 +173,35 @@ x <- renewSlot(x,
 We add details of the directory to which we will write all output. In this example we create a temporary directory (`tempdir()`), but in practice this would be an existing directory on your local machine.
 
 ```{r warning = F}
-x <- renewSlot(x,
+X <- renewSlot(X,
                "paths_chr",
                new_val_xx = tempdir())
 ```
 
 ### Model comparison
 
-The `investigate` method will compare the candidate models we have specified in the `SpecificModels` object `x`. In so doing it will transform `x` into a `SpecificParamters` object.
+The `investigate` method will compare the candidate models we have specified in the `SpecificModels` object `X`. In so doing it will transform `X` into a `SpecificParamters` object.
 
 ```{r results='hide', message=FALSE, warning=FALSE}
-x <- investigate(x)
+X <- investigate(X)
 ```
 
-The `investigate` method will write each model to be tested to a new sub-directory of our output directory. Also written to that sub-directory are a number of plots for each model, that can be inspected using the `depict` method.
+The `investigate` method will write each model to be tested to a new sub-directory of our output directory. 
 
 ```{r echo=F}
 plt_nms_chr <- paste0("Plot ",1:5) # Make fn
 ```
 
-```{r, fig.cap=plt_nms_chr, out.width = "400px", echo=FALSE, message=F}
-depict(x,
+```{r, eval = F, fig.cap=plt_nms_chr, out.width = "400px", echo=FALSE, message=F}
+# Also written to that sub-directory are a number of plots for each model, that can be inspected using the `depict` method.
+depict(X,
        mdl_idcs_int = 2)
 ```
 
 The `investigate` method also outputs a table summarising the performance of each of the candidate models.
 
 ```{r mdl_cmprsn, tab.cap='Comparison of candidate models using highest correlated predictor', tab.id = 'mdl_cmprsn', results = "asis"}
-exhibit(x,
+exhibit(X,
         what_1L_chr = "mdl_cmprsn",
         type_1L_chr = "results")
 ```
@@ -208,14 +209,14 @@ exhibit(x,
 We can now identify the highest performing model in each category of candidate model based on the testing R^2^ statistic.
 
 ```{r}
-procure(x,
+procure(X,
         what_1L_chr = "prefd_mdls") # Fix for NA_ returns (one option within ctg)
 ```
 
 We can override these automated selections and instead incorporate other considerations (possibly based on judgments informed by visual inspection of the plots and the desirability of constraining predictions to a maximum value of one). We do this in the following command, specifying new preferred model types, in descending order of preference.
 
 ```{r}
-x <- renew(x,
+X <- renew(X,
            new_val_xx = c("OLS_CLL","GLM_GSN_LOG"),
            type_1L_chr = "results",
            what_1L_chr = "prefd_mdls")
@@ -225,13 +226,13 @@ x <- renew(x,
 We can now compare all of our candidate predictors (with and without candidate covariates) using the most preferred model type.
 
 ```{r message=FALSE, results='hide', warning=FALSE}
-x <- investigate(x)
+X <- investigate(X)
 ```
-Now, we compare the performance of single predictor models of our preferred model type (in our case, a `r x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$mdl_types_lup %>% ready4::get_from_lup_obj(target_var_nm_1L_chr = "long_name_chr",match_value_xx = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$prefd_mdl_types_chr[1], match_var_nm_1L_chr = "short_name_chr", evaluate_1L_lgl = F)`) for each candidate predictor. The last call to the `investigate`{.R} saved the tested models along with model plots in a sub-directory of our output directory. These results are also viewable as a table.
+Now, we compare the performance of single predictor models of our preferred model type (in our case, a `r X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$mdl_types_lup %>% ready4::get_from_lup_obj(target_var_nm_1L_chr = "long_name_chr",match_value_xx = X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$prefd_mdl_types_chr[1], match_var_nm_1L_chr = "short_name_chr", evaluate_1L_lgl = F)`) for each candidate predictor. The last call to the `investigate`{.R} saved the tested models along with model plots in a sub-directory of our output directory. These results are also viewable as a table.
 
 
 ```{r predr_cmprsn, tab.cap='Comparison of all candidate predictors using preferred model', tab.id = 'predr_cmprsn', results = "asis"}
-exhibit(x,
+exhibit(X,
         what_1L_chr = "predr_cmprsn",
         type_1L_chr = "results")
 ```
@@ -239,7 +240,7 @@ exhibit(x,
 The call to the `investigate`{.R} method also saved single predictor R model objects (one for each candidate predictors) along with the two plots for each model in a sub-directory of our output directory. The performance of each single predictor model can also be summarised in a table.
 
 ```{r fxd_cmprsn, tab.cap='Preferred single predictor model performance by candidate predictor', tab.id = 'fxd_cmprsn', results = "asis"}
-exhibit(x,
+exhibit(X,
         type_1L_chr = "results",
         what_1L_chr = "fxd_sngl_cmprsn")
 ```
@@ -248,23 +249,23 @@ Updated versions of each of the models in the previous step (this time with cova
 
 ```{r fxdfull_cmprsn, eval = F, tab.cap='Performance of preferred models with covariate predictors by candidate predictor', tab.id = 'fxdfull_cmprsn', results = "asis"}
 
-exhibit(x,
+exhibit(X,
         type_1L_chr = "results",
         what_1L_chr = "fxd_full_cmprsn")
 ```
+
 We can now identify which, if any, of the candidate covariates we previously specified are significant predictors in any of the models.
 
 ```{r}
-procure(x,
+procure(X,
         type_1L_chr = "results",
         what_1L_chr = "signt_covars")
 ```
 
-
-We can override the covariates to select, potentially because we want to select only covariates that are significant for all or most of the models. However, in the below example we have opted not to do so and continue to use `r ifelse(is.na(x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$signt_covars_chr),"no covariates",paste0(x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$signt_covars_chr, collapse = "and "))` as selected by the algorithm in the previous step.
+We can override the covariates to select, potentially because we want to select only covariates that are significant for all or most of the models. However, in the below example we have opted not to do so and continue to use `r ifelse(is.na(X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$signt_covars_chr),"no covariates",paste0(X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$signt_covars_chr, collapse = "and "))` as selected by the algorithm in the previous step.
 
 ```{r eval = F}
-# x <- renew(x,
+# X <- renew(X,
 #             new_val_xx = c("COVARIATE OF YOUR CHOICE", "ANOTHER COVARIATE"),
 #                                               type_1L_chr = "results",
 #                                   what_1L_chr = "prefd_covars")
@@ -274,9 +275,8 @@ We can override the covariates to select, potentially because we want to select 
 We now conclude our model testing by rerunning the previous step, except confining our covariates to those we prefer.
 
 ```{r message=FALSE, results='hide', warning=FALSE, fig.show ='hide'}
-x <- investigate(x)
+X <- investigate(X)
 ```
-
 
 The previous call to the `write_mdls_with_covars_cmprsn`{.R} function saves the tested models along with the two plots for each model in the "E_Predrs_W_Covars_Sngl_Mdl_Cmprsn" sub-directory of "Output". 
 
@@ -286,32 +286,32 @@ The next main step is to use the preferred model types and covariates identified
 ### Longitudinal mixed modelling
 
 ```{r}
-y <- renewSlot(y,
+Y <- renewSlot(Y,
              slot_nm_1L_chr = "iters_1L_int",
              new_val_xx = 4000L)
 ```
 ```{r}
-y <- renewSlot(y,
+Y <- renewSlot(Y,
              slot_nm_1L_chr = "control_ls",
              new_val_xx = list(adapt_delta = 0.99))
 ```
 
 ```{r}
-y <- renewSlot(y,
+Y <- renewSlot(Y,
                slot_nm_1L_chr = "depnt_var_min_max_dbl",
                new_val_xx = c(-1,1))
 ```
 
 ```{r}
-x <- renewSlot(x,
+X <- renewSlot(X,
                slot_nm_1L_chr = "b_SpecificParameters",
-               y)
+               Y)
 ```
 
 Next we create longitudinal and mixed versions of each of the models we specified in the previous step. Note, that in many cases both the `prior_ls` and `control_ls` arguments can be set to `NULL` (which may speed up execution). However, in this example doing so would result in warning messages suggesting a change to the adapt_delta control value (default = 0.8). We have therefore passed a value to the `control_ls` argument that addresses this issue.
 
 ```{r eval = F}
-x <- investigate(x)
+X <- investigate(X)
 ```
 
 The last call to `investigate`{.R} function wrote the models it tests to a sub-directory of the output directory along with plots for each model. 
@@ -321,7 +321,7 @@ The last call to `investigate`{.R} function wrote the models it tests to a sub-d
 Because the files created in analysis are large, multiple objects containing copies of the source dataset have been saved to our output directory during the analysis process. We therefore need to delete all of these copies using the `author` method.
 
 ```{r eval=F}
-author(x,
+author(X,
        type_1L_chr = "purge_write")
 ```
 
@@ -329,15 +329,15 @@ author(x,
 We can now publicly share our scored dataset and its associated metadata, using `Ready4useRepos` and its `share` method [as described in a vignette from the ready4use package](https://ready4-dev.github.io/ready4use/articles/V_01.html).
 
 ```{r eval=F}
-z <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/specific", # Replace with details of your repo.
+Z <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/specific", # Replace with details of your repo.
                                gh_tag_1L_chr = "Documentation_0.0") # You must have write permissions.
-share(x,
+share(X,
       fl_nm_1L_chr = "eq5d_ttu_SpecificMixed",
-      repos_Ready4useRepos = z)
+      repos_Ready4useRepos = Z)
 
 ```
 
-`y` is now available for download as the file `ymh_ScorzAqol6Adol.RDS` from the ["Documentation_0.0" release of the scorz package](https://github.com/ready4-dev/scorz/releases/tag/Documentation_0.0).
+`Y` is now available for download as the file `ymh_ScorzAqol6Adol.RDS` from the ["Documentation_0.0" release of the scorz package](https://github.com/ready4-dev/scorz/releases/tag/Documentation_0.0).
 
 
 

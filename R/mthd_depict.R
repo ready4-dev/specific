@@ -1,5 +1,5 @@
 #' 
-#' Depict (plot) an object
+#' Depict (plot) features of a ready4 framework module (or sub-module)
 #' @name depict-SpecificProject
 #' @description depict method applied to SpecificProject
 #' @param x An object of class SpecificProject

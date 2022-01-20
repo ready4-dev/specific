@@ -117,3 +117,4 @@
 ^doc$
 ^Meta$
 ^data-raw/draft_vignettes/clips\.Rmd$
+^data-raw/mthds/renew\.R$

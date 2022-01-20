@@ -1,6 +1,6 @@
 # specific
 
-## Specify and Investigate Candidate Models for Representing Mental Health Systems
+## Specify Candidate Models for Representing Mental Health Systems
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)

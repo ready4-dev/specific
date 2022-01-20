@@ -1,4 +1,4 @@
-#' Exhibit (print to console) an object
+#' Exhibit (print to console) features of a ready4 framework module (or sub-module)
 #' @description exhibit.specific_models() is an exhibit method that exhibits features of a class instance by printing to console. This method is implemented for the Candidate models lookup table The function is called for its side effects and does not return a value.
 #' @param x An instance of Candidate models lookup table
 #' @param caption_1L_chr Caption (a character vector of length one), Default: NULL
@@ -25,7 +25,7 @@ exhibit.specific_models <- function (x, caption_1L_chr = NULL, mkdn_tbl_ref_1L_c
 #' @aliases exhibit,specific_models-method
 #' @importFrom ready4 exhibit
 methods::setMethod("exhibit", methods::className("specific_models", package = "specific"), exhibit.specific_models)
-#' Exhibit (print to console) an object
+#' Exhibit (print to console) features of a ready4 framework module (or sub-module)
 #' @description exhibit.specific_predictors() is an exhibit method that exhibits features of a class instance by printing to console. This method is implemented for the Candidate predictors lookup table The function is called for its side effects and does not return a value.
 #' @param x An instance of Candidate predictors lookup table
 #' @param caption_1L_chr Caption (a character vector of length one), Default: NULL
@@ -52,7 +52,7 @@ exhibit.specific_predictors <- function (x, caption_1L_chr = NULL, mkdn_tbl_ref_
 #' @importFrom ready4 exhibit
 methods::setMethod("exhibit", methods::className("specific_predictors", package = "specific"), exhibit.specific_predictors)
 #' 
-#' Exhibit (print to console) an object
+#' Exhibit (print to console) features of a ready4 framework module (or sub-module)
 #' @name exhibit-SpecificProject
 #' @description exhibit method applied to SpecificProject
 #' @param x An object of class SpecificProject
