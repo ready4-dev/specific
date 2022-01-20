@@ -1,10 +1,10 @@
 pandoc: 2.7.3
-pkgdown: 2.0.1
+pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   V_01: V_01.html
   specific: specific.html
-last_built: 2021-12-28T04:19Z
+last_built: 2022-01-20T07:28Z
 urls:
   reference: https://ready4-dev.github.io/specific/reference
   article: https://ready4-dev.github.io/specific/articles
