@@ -12,8 +12,9 @@ Note: **This vignette uses fake data** - it is for illustrative purposes only an
 The steps in this exploratory analysis workflow may need to be performed iteratively, both in order to identify the optimal model types, predictors and covariates to use and modify default values to ensure model convergence. 
 
 ```{r message=FALSE, warning=FALSE}
-library(specific)
+library(ready4)
 library(scorz)
+library(specific)
 ```
 
 ## Import data
