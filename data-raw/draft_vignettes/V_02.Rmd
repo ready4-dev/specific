@@ -1,0 +1,179 @@
+---
+title: "Report A Modelling Analysis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Undertake An Exploratory Modelling Analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Note: **This vignette uses fake data** - it is for illustrative purposes only and should not be used to inform decision making.
+
+```{r message=FALSE, warning=FALSE}
+library(ready4)
+library(ready4show)
+library(ready4use)
+library(scorz)
+library(specific)
+```
+
+## Import data
+
+We start by ingesting our data. As this example uses EQ-5D data, we import a `ScorzEuroQol5` object that was created using the steps described in [this vignette from the scorz pacakge](https://ready4-dev.github.io/scorz/articles/V_02.html).
+
+```{r message=FALSE}
+X <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz", 
+                               gh_tag_1L_chr = "Documentation_0.0") %>%
+    ingest(fls_to_ingest_chr = "ymh_ScorzEuroQol5",
+         metadata_1L_lgl = F)
+```
+
+```{r}
+X <- renewSlot(X,
+          "instrument_short_nm_1L_chr",
+          "EQ-5D")
+# X@itm_prefix_1L_chr
+# X@instrument_nm_1L_chr
+```
+```{r}
+Y <- SpecificModels(a_YouthvarsProfile = procureSlot(X,"a_YouthvarsProfile"), # Metamorphose
+                    paths_chr = tempdir()) 
+```
+
+## Specify parameters
+
+In preparation for exploring our dataset, we need to declare a set of model parameters in a `SpecificParameters` object. 
+
+```{r}
+Y <- renewSlot(Y,
+               "b_SpecificParameters",
+               SpecificParameters(depnt_var_nm_1L_chr = X@total_wtd_var_nm_1L_chr,
+                                  depnt_var_min_max_dbl = c(-1,1),
+                                  candidate_predrs_chr = c("K10_int","Psych_well_int"),
+                                  candidate_covars_chr = c("d_sex_birth_s", "d_age",  "d_sexual_ori_s", "d_studying_working"),
+                                  candidate_mdls_lup = get_cndt_mdls(mdl_short_nms_chr = c("OLS_NTF","OLS_CLL","GLM_GSN_LOG")),
+                                  control_ls = list(adapt_delta = 0.99),
+                                  folds_1L_int = 10L,
+                                  max_mdl_runs_1L_int = 300L,
+                                  seed_1L_int = 1234L))
+```
+
+```{r}
+Y <- renewSlot(Y, 
+               "b_SpecificParameters@predictors_lup", 
+               short_name_chr = procureSlot(Y,
+                                            "b_SpecificParameters@candidate_predrs_chr"),
+               long_name_chr = c("Kessler Psychological Distress - 10 Item Total Score",
+                                 "Overall Wellbeing Measure (Winefield et al. 2012)"),
+               min_val_dbl = c(10,18),
+               max_val_dbl = c(50,90),
+               class_chr = "integer",
+               increment_dbl = 1,
+               class_fn_chr = "as.integer",
+               mdl_scaling_dbl = 0.01,
+               covariate_lgl = F)
+```
+
+## Specify metadata about the manuscript to be authored
+
+```{r}
+Z <- ready4show::Ready4showSynopsis(authors_r3 = ready4show::authors_tb,
+                                    coi_1L_chr = "None declared.",
+                                    digits_int = c(3L,3L),
+                                    ethics_1L_chr = "The study was reviewed and granted approval by Awesome University's Human Research Ethics Committee (1111111.1).",
+                                    funding_1L_chr = "The study was funded by Generous Benefactor.",
+                                    institutes_r3 = ready4show::institutes_tb,
+                                    interval_chr = "three months",
+                                    keywords_chr = c("entirely","fake","do", "not","cite"),
+                                    outp_formats_chr = c("PDF","PDF"),
+                                    title_1L_chr = "A hypothetical study using fake data")
+```
+```{r}
+Z <- renewSlot(Z,
+               "correspondences_r3",
+               old_nms_chr = c("PHQ9", "GAD7"),
+               new_nms_chr = c("PHQ-9", "GAD-7"))
+```
+
+
+```{r}
+A <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes",
+                          dv_ds_nm_1L_chr = "https://doi.org/10.7910/DVN/GW7ZKC")
+```
+
+```{r}
+ds_descvs_ls <- make_ds_descvs_ls(candidate_predrs_chr =  Y@b_SpecificParameters@candidate_predrs_chr,
+                                  candidate_covar_nms_chr = Y@b_SpecificParameters@candidate_covars_chr,
+                                  cohort_descv_var_nms_chr = c("d_age", "Gender", 
+                                                               "d_relation_s","d_sexual_ori_s", 
+                                                               "Region", "d_studying_working"), # Add to Params
+                                  dictionary_tb = Y@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3, 
+                                  id_var_nm_1L_chr = Y@a_YouthvarsProfile@id_var_nm_1L_chr, 
+                                  is_fake_1L_lgl = T,
+                                  msrmnt_date_var_nm_1L_chr = "data_collection_dtm",
+                                  round_var_nm_1L_chr = Y@a_YouthvarsProfile@timepoint_var_nm_1L_chr, 
+                                  round_vals_chr = Y@a_YouthvarsProfile@timepoint_vals_chr,
+                                  maui_item_pfx_1L_chr = X@itm_prefix_1L_chr, 
+                                  utl_wtd_var_nm_1L_chr = X@total_wtd_var_nm_1L_chr,
+                                  utl_unwtd_var_nm_1L_chr = X@total_unwtd_var_nm_1L_chr) # Manufacture
+```
+```{r}
+header_yaml_args_ls <- ready4show::make_header_yaml_args_ls(authors_tb = Z@authors_r3,
+                                                institutes_tb = Z@institutes_r3,
+                                                title_1L_chr = Z@title_1L_chr,
+                                                keywords_chr = Z@keywords_chr)
+```
+
+```{r}
+maui_params_ls <- make_maui_params_ls(maui_domains_pfxs_1L_chr = X@itm_prefix_1L_chr,
+                                      maui_itm_short_nms_chr = X@itm_labels_chr,
+                                      maui_scoring_fn = function(data_tb,
+                                             maui_item_pfx_1L_chr,
+                                             id_var_nm_1L_chr, 
+                                             utl_wtd_var_nm_1L_chr,
+                                             utl_unwtd_var_nm_1L_chr){
+                    require(eq5d)
+                    data_tb %>% 
+                      dplyr::rename_with(~stringr::str_replace(.x,maui_item_pfx_1L_chr,""),
+                                         dplyr::starts_with(maui_item_pfx_1L_chr)) %>%
+                      dplyr::mutate(`:=`(!!rlang::sym(utl_wtd_var_nm_1L_chr), 
+                                         eq5d::eq5d(., country="UK", version = "5L", type = "CW"))) %>%
+                      dplyr::rename_with(~paste0(maui_item_pfx_1L_chr,.x),c("MO","SC","UA","PD","AD")) %>%
+                      dplyr::mutate(`:=`(!!rlang::sym(utl_unwtd_var_nm_1L_chr),                                          rowSums(dplyr::across(dplyr::starts_with(maui_item_pfx_1L_chr))))) %>%
+                      dplyr::filter(!is.na(!!rlang::sym(utl_unwtd_var_nm_1L_chr)))
+                    },
+                    short_and_long_nm = c("EQ-5D",
+                                          "EuroQol - Five Dimension"))
+```
+
+```{r}
+output_format_ls <- ready4show::make_output_format_ls(manuscript_outp_1L_chr = Z@outp_formats_chr[1],
+                                          manuscript_digits_1L_int = Z@digits_int[1],
+                                          supplementary_outp_1L_chr = ifelse(length(Z@outp_formats_chr)>1,Z@outp_formats_chr[2],Z@outp_formats_chr[1]),
+                                          supplementary_digits_1L_int = ifelse(length(Z@digits_int)>1,Z@digits_int[2],Z@digits_int[1]))
+```
+```{r}
+# scndry_anlys_params_ls <- make_scndry_anlys_params(candidate_predrs_chr = c("SOFAS"),
+#                                                    prefd_covars_chr = NA_character_)
+```
+
+```{r}
+input_params_ls <- make_input_params(Y@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
+                                     control_ls = Y@b_SpecificParameters@control_ls,
+                                     ds_descvs_ls = ds_descvs_ls,
+                                     dv_ds_nm_and_url_chr = c(A@dv_nm_1L_chr, 
+                                                              A@dv_ds_nm_1L_chr), 
+                                     header_yaml_args_ls = header_yaml_args_ls,
+                                     maui_params_ls = maui_params_ls,
+                                     output_format_ls = output_format_ls,
+                                     predictors_lup = Y@b_SpecificParameters@predictors_lup,
+                                     prefd_covars_chr = NA_character_#,
+                                     #prefd_mdl_types_chr = c("OLS_CLL","GLM_GSN_LOG"),
+                                     #scndry_anlys_params_ls = scndry_anlys_params_ls
+                                     )#
+```
+
+```{r}
+write_analyses(input_params_ls)
+```
+

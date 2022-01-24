@@ -89,17 +89,16 @@ We next add meta-data about each candidate predictor variable in the form of a `
 ```{r}
 Y <- renewSlot(Y, 
                "predictors_lup", 
-               new_val_xx = make_pt_specific_predictors(short_name_chr = c("K10_int","Psych_well_int"),
-                                              long_name_chr = c("Kessler Psychological Distress - 10 Item Total Score",
-                                                   "Overall Wellbeing Measure (Winefield et al. 2012)"),
-                                              min_val_dbl = c(10,18),
-                                              max_val_dbl = c(50,90),
-                                              class_chr = "integer",
-                                              increment_dbl = 1,
-                                              class_fn_chr = "as.integer",
-                                              mdl_scaling_dbl = 0.01,
-                                              covariate_lgl = F) %>%
-                 specific_predictors())
+               short_name_chr = c("K10_int","Psych_well_int"),
+               long_name_chr = c("Kessler Psychological Distress - 10 Item Total Score",
+                                 "Overall Wellbeing Measure (Winefield et al. 2012)"),
+               min_val_dbl = c(10,18),
+               max_val_dbl = c(50,90),
+               class_chr = "integer",
+               increment_dbl = 1,
+               class_fn_chr = "as.integer",
+               mdl_scaling_dbl = 0.01,
+               covariate_lgl = F)
 ```
 
 The `specific_predictors` object that we have added to `Y` can be retrieved using the `procureSlot` method.
@@ -181,7 +180,7 @@ X <- renewSlot(X,
 
 ### Model comparison
 
-The `investigate` method will compare the candidate models we have specified in the `SpecificModels` object `X`. In so doing it will transform `X` into a `SpecificParamters` object.
+The `investigate` method will compare the candidate models we have specified in the `SpecificModels` object `X`. In so doing it will transform `X` into a `SpecificPredictors` object.
 
 ```{r results='hide', message=FALSE, warning=FALSE}
 X <- investigate(X)
