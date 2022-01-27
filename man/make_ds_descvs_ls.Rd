@@ -6,7 +6,7 @@
 \usage{
 make_ds_descvs_ls(
   candidate_predrs_chr,
-  descv_var_nms_chr,
+  cohort_descv_var_nms_chr,
   dictionary_tb,
   id_var_nm_1L_chr,
   msrmnt_date_var_nm_1L_chr,
@@ -22,7 +22,7 @@ make_ds_descvs_ls(
 \arguments{
 \item{candidate_predrs_chr}{Candidate predictors (a character vector)}
 
-\item{descv_var_nms_chr}{Descriptive variable names (a character vector)}
+\item{cohort_descv_var_nms_chr}{Cohort descriptive variable names (a character vector)}
 
 \item{dictionary_tb}{Dictionary (a tibble)}
 

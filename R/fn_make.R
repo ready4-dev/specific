@@ -613,7 +613,7 @@ make_dnst_and_sctr_plt_title <- function (results_ls)
 #' Make dataset descriptives list
 #' @description make_ds_descvs_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make dataset descriptives list. The function returns Dataset descriptives (a list).
 #' @param candidate_predrs_chr Candidate predictors (a character vector)
-#' @param descv_var_nms_chr Descriptive variable names (a character vector)
+#' @param cohort_descv_var_nms_chr Cohort descriptive variable names (a character vector)
 #' @param dictionary_tb Dictionary (a tibble)
 #' @param id_var_nm_1L_chr Identity variable name (a character vector of length one)
 #' @param msrmnt_date_var_nm_1L_chr Measurement date variable name (a character vector of length one)
@@ -627,14 +627,14 @@ make_dnst_and_sctr_plt_title <- function (results_ls)
 #' @return Dataset descriptives (a list)
 #' @rdname make_ds_descvs_ls
 #' @export 
-make_ds_descvs_ls <- function (candidate_predrs_chr, descv_var_nms_chr, dictionary_tb, 
+make_ds_descvs_ls <- function (candidate_predrs_chr, cohort_descv_var_nms_chr, dictionary_tb, 
     id_var_nm_1L_chr, msrmnt_date_var_nm_1L_chr, round_var_nm_1L_chr, 
     round_vals_chr, maui_item_pfx_1L_chr, utl_wtd_var_nm_1L_chr = "wtd_utl_dbl", 
     utl_unwtd_var_nm_1L_chr = "unwtd_utl_dbl", candidate_covar_nms_chr = NULL, 
     is_fake_1L_lgl = NULL) 
 {
     ds_descvs_ls <- list(candidate_covar_nms_chr = candidate_covar_nms_chr, 
-        candidate_predrs_chr = candidate_predrs_chr, descv_var_nms_chr = descv_var_nms_chr, 
+        candidate_predrs_chr = candidate_predrs_chr, cohort_descv_var_nms_chr = cohort_descv_var_nms_chr, 
         dictionary_tb = dictionary_tb, id_var_nm_1L_chr = id_var_nm_1L_chr, 
         is_fake_1L_lgl = is_fake_1L_lgl, msrmnt_date_var_nm_1L_chr = msrmnt_date_var_nm_1L_chr, 
         round_var_nm_1L_chr = round_var_nm_1L_chr, round_vals_chr = round_vals_chr, 

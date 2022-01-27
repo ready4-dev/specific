@@ -531,7 +531,7 @@ make_dnst_and_sctr_plt_title <- function(results_ls){ # Generalise from utility
   return(title_1L_chr)
 }
 make_ds_descvs_ls <- function(candidate_predrs_chr,# Generalise from utility
-                              descv_var_nms_chr,
+                              cohort_descv_var_nms_chr,
                               dictionary_tb,
                               id_var_nm_1L_chr,
                               msrmnt_date_var_nm_1L_chr,
@@ -544,7 +544,7 @@ make_ds_descvs_ls <- function(candidate_predrs_chr,# Generalise from utility
                               is_fake_1L_lgl = NULL){
   ds_descvs_ls <- list(candidate_covar_nms_chr = candidate_covar_nms_chr,
                        candidate_predrs_chr = candidate_predrs_chr,
-                       descv_var_nms_chr = descv_var_nms_chr,
+                       cohort_descv_var_nms_chr = cohort_descv_var_nms_chr,
                        dictionary_tb = dictionary_tb,
                        id_var_nm_1L_chr = id_var_nm_1L_chr,
                        is_fake_1L_lgl = is_fake_1L_lgl,

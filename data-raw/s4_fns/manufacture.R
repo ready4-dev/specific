@@ -1,5 +1,6 @@
 manufacture_SpecificModels <- function(x,
                                        what_1L_chr = "ds_descvs_ls"){
+  cohort_descv_var_nms_chr
   if(what_1L_chr %in% c("ds_descvs_ls","ds_smry_ls"))
     object_xx <- make_ds_descvs_ls(candidate_predrs_chr =  x@b_SpecificParameters@candidate_predrs_chr,
                                    candidate_covar_nms_chr = x@b_SpecificParameters@candidate_covars_chr,
