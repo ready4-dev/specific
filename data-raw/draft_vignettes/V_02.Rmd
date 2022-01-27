@@ -30,8 +30,8 @@ X <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz",
 
 ```{r}
 X <- renewSlot(X,
-          "instrument_short_nm_1L_chr",
-          "EQ-5D")
+               "instrument_short_nm_1L_chr",
+               "EQ-5D")
 # X@itm_prefix_1L_chr
 # X@instrument_nm_1L_chr
 ```
@@ -95,62 +95,254 @@ Z <- renewSlot(Z,
                new_nms_chr = c("PHQ-9", "GAD-7"))
 ```
 
-
 ```{r}
 A <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes",
                           dv_ds_nm_1L_chr = "https://doi.org/10.7910/DVN/GW7ZKC")
 ```
 
 ```{r}
-ds_descvs_ls <- make_ds_descvs_ls(candidate_predrs_chr =  Y@b_SpecificParameters@candidate_predrs_chr,
+# Y <- renew(Y,
+#            c("OLS_CLL","GLM_GSN_LOG"),
+#            what_1L_chr = "prefd_mdls")
+```
+```{r}
+# Y <- renew(Y,
+#            NA_character_,
+#            what_1L_chr = "prefd_covars")
+```
+```{r }
+set.seed(procureSlot(Y,
+                     "b_SpecificParameters@seed_1L_int"))
+session_data_ls <- sessionInfo() # Add to results?
+```
+```{r}
+cohort_descv_var_nms_chr = c("d_age", "Gender","d_relation_s","d_sexual_ori_s", 
+                             "Region", "d_studying_working")
+fake_1L_lgl = T 
+itm_labels_chr = X@itm_labels_chr 
+itm_prefix_1L_chr = X@itm_prefix_1L_chr 
+msrmnt_date_var_nm_1L_chr = "data_collection_dtm" 
+paths_ls = NULL # UPDATED BELOW
+total_unwtd_var_nm_1L_chr = X@total_unwtd_var_nm_1L_chr #
+```
+```{r }
+## AUTHOR METHOD
+if(is.null(reference_1L_int)){
+transform_paths_ls <- list(fn = transform_paths_ls_for_scndry,
+                          args_ls = list(reference_1L_int = reference_1L_int)) # FOR SECONDARY
+}else{
+  transform_paths_ls <- NULL
+}
+path_params_ls <- make_path_params_ls() 
+path_params_ls$use_fake_data_1L_lgl <- fake_1L_lgl
+paths_ls <- path_params_ls %>%
+  ready4show::make_paths_ls(depth_1L_int = ifelse(is.null(transform_paths_ls),
+                                                  1,
+                                                  2))
+if(!is.null(transform_paths_ls)){
+  paths_ls <- rlang::exec(transform_paths_ls$fn,
+                          paths_ls,
+                        !!!transform_paths_ls$args_ls)
+}
+paths_ls <- ready4show::write_all_outp_dirs(paths_ls = paths_ls)
+```
+```{r }
+# Ratify method
+Y@a_YouthvarsProfile@a_Ready4useDyad@ds_tb <- Y@a_YouthvarsProfile@a_Ready4useDyad@ds_tb %>% 
+  youthvars::add_interval_var(id_var_nm_1L_chr = Y@a_YouthvarsProfile@id_var_nm_1L_chr,
+                              msrmnt_date_var_nm_1L_chr = ifelse(!is.null(msrmnt_date_var_nm_1L_chr), 
+                                                                 ## CHANGE REF - ADD TO MODULE
+                                                                 msrmnt_date_var_nm_1L_chr,
+                                                                 "d_interview_date")) %>%
+  youthvars::add_participation_var(id_var_nm_1L_chr = Y@a_YouthvarsProfile@id_var_nm_1L_chr,
+                                   fup_round_nbr_1L_int = length( Y@a_YouthvarsProfile@timepoint_vals_chr))
+if(is.na(Y@a_YouthvarsProfile@participation_var_1L_chr)){
+ Y@a_YouthvarsProfile@participation_var_1L_chr <- "participation"
+}
+Y@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3 <- Y@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3 %>%
+  ready4::renew(var_nm_chr = c("bl_date_dtm", 
+                               "interval_dbl", 
+                               Y@a_YouthvarsProfile@participation_var_1L_chr), 
+                var_ctg_chr = c("Temporal", 
+                                "Temporal", 
+                                "Temporal"), 
+                var_desc_chr = c("Date of baseline assessment", 
+                                 "Interval between baseline and follow-up assessments", 
+                                 "Rounds participated in"), 
+                var_type_chr = c("date", 
+                                 "interval", 
+                                 "character"))
+Y <- renewSlot(Y,
+               "a_YouthvarsProfile@a_Ready4useDyad",
+               type_1L_chr = "label")
+Y@a_YouthvarsProfile@a_Ready4useDyad@ds_tb <- Y@a_YouthvarsProfile@a_Ready4useDyad@ds_tb %>%
+  transform_mdl_vars_with_clss(predictors_lup = Y@b_SpecificParameters@predictors_lup,
+                               depnt_var_nm_1L_chr = Y@b_SpecificParameters@depnt_var_nm_1L_chr#,
+                               #prototype_lup = params_ls$prototype_lup, # Supplied as arg?
+                               #class_fn_1L_chr = "as.numeric" # Supplied as arg?
+                               )
+```
+
+## SAVE COPY OF INPUT DATA (WRITE_INPUTS_FOR_MAIN ANALYSIS) ???
+```{r}
+## TRANSFORMATION FN HAD BEEN HERE
+## DONT DELETE - NEEDED FOR REAL DATA
+```
+
+
+
+<!-- DESCRIPTIVES  -- START -->
+
+```{r}
+## MANUFACTURE
+if(what_1L_chr %in% c("ds_descvs_ls","ds_smry_ls"))
+object_xx <- make_ds_descvs_ls(candidate_predrs_chr =  Y@b_SpecificParameters@candidate_predrs_chr,
                                   candidate_covar_nms_chr = Y@b_SpecificParameters@candidate_covars_chr,
-                                  cohort_descv_var_nms_chr = c("d_age", "Gender", 
-                                                               "d_relation_s","d_sexual_ori_s", 
-                                                               "Region", "d_studying_working"), # Add to Params
+                                  cohort_descv_var_nms_chr = descv_var_nms_chr, # Add to Params
                                   dictionary_tb = Y@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3, 
                                   id_var_nm_1L_chr = Y@a_YouthvarsProfile@id_var_nm_1L_chr, 
-                                  is_fake_1L_lgl = T,
-                                  msrmnt_date_var_nm_1L_chr = "data_collection_dtm",
+                                  is_fake_1L_lgl = fake_1L_lgl,
+                                  msrmnt_date_var_nm_1L_chr = msrmnt_date_var_nm_1L_chr,
                                   round_var_nm_1L_chr = Y@a_YouthvarsProfile@timepoint_var_nm_1L_chr, 
                                   round_vals_chr = Y@a_YouthvarsProfile@timepoint_vals_chr,
-                                  maui_item_pfx_1L_chr = X@itm_prefix_1L_chr, 
-                                  utl_wtd_var_nm_1L_chr = X@total_wtd_var_nm_1L_chr,
-                                  utl_unwtd_var_nm_1L_chr = X@total_unwtd_var_nm_1L_chr) # Manufacture
+                                  utl_wtd_var_nm_1L_chr = Y@b_SpecificParameters@depnt_var_nm_1L_chr,
+                               maui_item_pfx_1L_chr = itm_prefix_1L_chr, ### ADD 1
+                                  utl_unwtd_var_nm_1L_chr = total_unwtd_var_nm_1L_chr) ### ADD 2
+
+if(what_1L_chr == ("ds_smry_ls"))
+  object_xx <- object_xx %>%
+  make_analysis_ds_smry_ls(candidate_covar_nms_chr = Y@b_SpecificParameters@candidate_covars_chr,
+                           predictors_lup = Y@b_SpecificParameters@predictors_lup)
+if(what_1L_chr == "mdl_smry_ls"){
+  if(is.na(Y@b_SpecificParameters@candidate_mdls_chr)){
+  mdl_types_chr <- NULL
+}else{
+  mdl_types_chr <- Y@b_SpecificParameters@candidate_mdls_chr
+}
+if(is.na(Y@b_SpecificParameters@candidate_mdl_pfcs_chr)){
+  choose_from_pfx_chr <- NULL
+}else{
+  choose_from_pfx_chr <- Y@b_SpecificParameters@candidate_mdl_pfcs_chr
+}
+object_xx <- make_mdl_smry_ls(mdl_types_lup = Y@b_SpecificParameters@candidate_mdls_lup,
+                             mdl_types_chr = mdl_types_chr,
+                             choose_from_pfx_chr = choose_from_pfx_chr,
+                             folds_1L_int = Y@b_SpecificParameters@folds_1L_int,
+                             max_nbr_of_boruta_mdl_runs_int = Y@b_SpecificParameters@max_mdl_runs_1L_int)
+}
+
+
+  
+  #params_ls$mdl_smry_ls
 ```
-```{r}
-header_yaml_args_ls <- ready4show::make_header_yaml_args_ls(authors_tb = Z@authors_r3,
-                                                institutes_tb = Z@institutes_r3,
-                                                title_1L_chr = Z@title_1L_chr,
-                                                keywords_chr = Z@keywords_chr)
+
+```{r, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
+# Author Method
+descv_tbl_ls <- youthvars::write_descv_tbls(Y@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
+                                            ds_descvs_ls = ds_descvs_ls,
+                                            predictors_lup = Y@b_SpecificParameters@predictors_lup,
+                                            descv_outp_dir_1L_chr = paths_ls$descv_outp_dir_1L_chr,
+                                            nbr_of_digits_1L_int = Z@digits_int[1])
+descv_plts_paths_ls <- youthvars::write_descv_plots(Y@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
+                                                    ds_descvs_ls = ds_descvs_ls,
+                                                    descv_outp_dir_1L_chr = paths_ls$descv_outp_dir_1L_chr, ### PATHS LS REQUIRED
+                                                    lbl_nms_chr = itm_labels_chr, ## ADD 3
+                                                    maui_domains_pfxs_1L_chr = itm_prefix_1L_chr) ## ADD 1
+
+```
+
+<!-- DESCRIPTIVES  -- END-->
+
+
+Compare model types using most correlated predictor.
+
+```{r message=FALSE, results='hide', warning=FALSE}
+cmprsns_ls <- write_mdl_cmprsn(scored_data_tb = data_tb,
+                                ds_smry_ls = ds_smry_ls,
+                                mdl_smry_ls = mdl_smry_ls,
+                                output_data_dir_1L_chr = paths_ls$output_data_dir_1L_chr,
+                                seed_1L_int = params_ls$seed_1L_int)
+
+```
+
+Select preferred model types.
+
+```{r echo = !is.null(params_ls$prefd_mdl_types_chr), eval= !is.null(params_ls$prefd_mdl_types_chr), message=FALSE, results='hide', warning=FALSE}
+if(!is.null(params_ls$prefd_mdl_types_chr)){
+  cmprsns_ls$mdl_smry_ls$prefd_mdl_types_chr <- params_ls$prefd_mdl_types_chr
+}
+```
+
+Compare candidate predictors and covariates using most preferred model type.
+
+```{r message=FALSE, results='hide', warning=FALSE}
+cmprsns_ls <- write_predr_and_covars_cmprsn(scored_data_tb = data_tb,
+                                           bl_tb = cmprsns_ls$bl_tb,
+                                           ds_smry_ls = cmprsns_ls$ds_smry_ls,
+                                           mdl_smry_ls  = cmprsns_ls$mdl_smry_ls,
+                                           output_data_dir_1L_chr = paths_ls$output_data_dir_1L_chr,
+                                           seed_1L_int = params_ls$seed_1L_int)
+```
+
+`r ifelse(!is.null(params_ls$prefd_covars_chr),"Specify the covariates to include.","")`
+
+```{r echo = !is.null(params_ls$prefd_covars_chr), eval = !is.null(params_ls$prefd_covars_chr), message=FALSE, results='hide', warning=FALSE}
+if(!is.null(params_ls$prefd_covars_chr)){
+  cmprsns_ls$mdl_smry_ls$prefd_covars_chr <- params_ls$prefd_covars_chr
+}
+```
+
+Compare selected models with selected predictors and selected covariates.
+
+```{r message=FALSE, results='hide', warning=FALSE, fig.show ='hide'}
+outp_smry_ls <- write_mdls_with_covars_cmprsn(scored_data_tb = data_tb,
+                                           bl_tb = cmprsns_ls$bl_tb,
+                                           ds_smry_ls = cmprsns_ls$ds_smry_ls,
+                                           mdl_smry_ls = cmprsns_ls$mdl_smry_ls,
+                                           output_data_dir_1L_chr = paths_ls$output_data_dir_1L_chr,
+                                           seed_1L_int = params_ls$seed_1L_int,
+                                           session_data_ls = session_data_ls)
+```
+
+```{r results='hide', message=FALSE, warning=FALSE}
+outp_smry_ls <- write_ts_mdls_from_alg_outp(outp_smry_ls,
+                                                 utl_min_val_1L_dbl = params_ls$utl_min_val_1L_dbl,
+                                                 predictors_lup = params_ls$predictors_lup,
+                                                 backend_1L_chr = "cmdstanr",
+                                                 new_dir_nm_1L_chr = "F_TS_Mdls",
+                                                 iters_1L_int = params_ls$iters_1L_int, 
+                                                 prior_ls = params_ls$prior_ls, 
+                                                 control_ls = params_ls$control_ls)
+```
+```{r results='hide', message=FALSE, warning=FALSE}
+saveRDS(outp_smry_ls, 
+        paste0(outp_smry_ls$path_to_write_to_1L_chr, "/I_ALL_OUTPUT_.RDS"))
 ```
 
 ```{r}
-maui_params_ls <- make_maui_params_ls(maui_domains_pfxs_1L_chr = X@itm_prefix_1L_chr,
-                                      maui_itm_short_nms_chr = X@itm_labels_chr,
-                                      maui_scoring_fn = function(data_tb,
-                                             maui_item_pfx_1L_chr,
-                                             id_var_nm_1L_chr, 
-                                             utl_wtd_var_nm_1L_chr,
-                                             utl_unwtd_var_nm_1L_chr){
-                    require(eq5d)
-                    data_tb %>% 
-                      dplyr::rename_with(~stringr::str_replace(.x,maui_item_pfx_1L_chr,""),
-                                         dplyr::starts_with(maui_item_pfx_1L_chr)) %>%
-                      dplyr::mutate(`:=`(!!rlang::sym(utl_wtd_var_nm_1L_chr), 
-                                         eq5d::eq5d(., country="UK", version = "5L", type = "CW"))) %>%
-                      dplyr::rename_with(~paste0(maui_item_pfx_1L_chr,.x),c("MO","SC","UA","PD","AD")) %>%
-                      dplyr::mutate(`:=`(!!rlang::sym(utl_unwtd_var_nm_1L_chr),                                          rowSums(dplyr::across(dplyr::starts_with(maui_item_pfx_1L_chr))))) %>%
-                      dplyr::filter(!is.na(!!rlang::sym(utl_unwtd_var_nm_1L_chr)))
-                    },
-                    short_and_long_nm = c("EQ-5D",
-                                          "EuroQol - Five Dimension"))
+# write_analyses(input_params_ls) # Secondary analyses component
+
+```
+
+
+```{r}
+# header_yaml_args_ls <- ready4show::make_header_yaml_args_ls(authors_tb = Z@authors_r3,
+#                                                 institutes_tb = Z@institutes_r3,
+#                                                 title_1L_chr = Z@title_1L_chr,
+#                                                 keywords_chr = Z@keywords_chr)
 ```
 
 ```{r}
-output_format_ls <- ready4show::make_output_format_ls(manuscript_outp_1L_chr = Z@outp_formats_chr[1],
-                                          manuscript_digits_1L_int = Z@digits_int[1],
-                                          supplementary_outp_1L_chr = ifelse(length(Z@outp_formats_chr)>1,Z@outp_formats_chr[2],Z@outp_formats_chr[1]),
-                                          supplementary_digits_1L_int = ifelse(length(Z@digits_int)>1,Z@digits_int[2],Z@digits_int[1]))
+# maui_params_ls <- make_maui_params_ls(maui_domains_pfxs_1L_chr = X@itm_prefix_1L_chr,
+#                                       maui_itm_short_nms_chr = X@itm_labels_chr,
+#                                       maui_scoring_fn = NULL)
+```
+
+```{r}
+# output_format_ls <- ready4show::make_output_format_ls(manuscript_outp_1L_chr = Z@outp_formats_chr[1],
+#                                           manuscript_digits_1L_int = Z@digits_int[1],
+#                                           supplementary_outp_1L_chr = ifelse(length(Z@outp_formats_chr)>1,Z@outp_formats_chr[2],Z@outp_formats_chr[1]),
+#                                           supplementary_digits_1L_int = ifelse(length(Z@digits_int)>1,Z@digits_int[2],Z@digits_int[1]))
 ```
 ```{r}
 # scndry_anlys_params_ls <- make_scndry_anlys_params(candidate_predrs_chr = c("SOFAS"),
@@ -158,22 +350,17 @@ output_format_ls <- ready4show::make_output_format_ls(manuscript_outp_1L_chr = Z
 ```
 
 ```{r}
-input_params_ls <- make_input_params(Y@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
-                                     control_ls = Y@b_SpecificParameters@control_ls,
-                                     ds_descvs_ls = ds_descvs_ls,
-                                     dv_ds_nm_and_url_chr = c(A@dv_nm_1L_chr, 
-                                                              A@dv_ds_nm_1L_chr), 
-                                     header_yaml_args_ls = header_yaml_args_ls,
-                                     maui_params_ls = maui_params_ls,
-                                     output_format_ls = output_format_ls,
-                                     predictors_lup = Y@b_SpecificParameters@predictors_lup,
-                                     prefd_covars_chr = NA_character_#,
-                                     #prefd_mdl_types_chr = c("OLS_CLL","GLM_GSN_LOG"),
-                                     #scndry_anlys_params_ls = scndry_anlys_params_ls
-                                     )#
+# input_params_ls <- make_input_params(Y@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
+#                                      control_ls = Y@b_SpecificParameters@control_ls,
+#                                      ds_descvs_ls = ds_descvs_ls,
+#                                      dv_ds_nm_and_url_chr = c(A@dv_nm_1L_chr, 
+#                                                               A@dv_ds_nm_1L_chr), 
+#                                      header_yaml_args_ls = header_yaml_args_ls,
+#                                      maui_params_ls = maui_params_ls,
+#                                      output_format_ls = output_format_ls,
+#                                      predictors_lup = Y@b_SpecificParameters@predictors_lup,
+#                                      prefd_covars_chr = procure(Y,what = "prefd_covars"),
+#                                      prefd_mdl_types_chr = procure(Y,what = "prefd_mdls")#,
+#                                      #scndry_anlys_params_ls = scndry_anlys_params_ls
+#                                      )#
 ```
-
-```{r}
-write_analyses(input_params_ls)
-```
-
