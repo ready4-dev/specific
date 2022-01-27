@@ -27,15 +27,29 @@ Input parameters that specify candidate models to be explored.
 
 \item{\code{depnt_var_min_max_dbl}}{Dependent variable minimum maximum (a double vector)}
 
+\item{\code{cohort_descv_var_nms_chr}}{Cohort descriptive variable names (a character vector)}
+
+\item{\code{fake_1L_lgl}}{Fake (a logical vector of length one)}
+
 \item{\code{folds_1L_int}}{Folds (an integer vector of length one)}
+
+\item{\code{itm_labels_chr}}{Item labels (a character vector)}
+
+\item{\code{itm_prefix_1L_chr}}{Item prefix (a character vector of length one)}
 
 \item{\code{iters_1L_int}}{Iterations (an integer vector of length one)}
 
 \item{\code{max_mdl_runs_1L_int}}{Maximum model runs (an integer vector of length one)}
 
+\item{\code{msrmnt_date_var_nm_1L_chr}}{Measurement date variable name (a character vector of length one)}
+
+\item{\code{paths_ls}}{Paths (a list)}
+
 \item{\code{prior_ls}}{Prior (a list)}
 
 \item{\code{seed_1L_int}}{Seed (an integer vector of length one)}
+
+\item{\code{total_unwtd_var_nm_1L_chr}}{Total unweighted variable name (a character vector of length one)}
 
 \item{\code{predictors_lup}}{Predictors (a lookup table)}
 

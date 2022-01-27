@@ -25,6 +25,8 @@ methods::setMethod("procure", "SpecificProject", function (x, type_1L_chr = "res
             object_xx <- results_ls$smry_of_sngl_predr_mdls_tb
         if (what_1L_chr == "predr_cmprsn") 
             object_xx <- results_ls$predr_cmprsn_tb
+        if (what_1L_chr == "prefd_covars") 
+            object_xx <- results_ls$prefd_covars_chr
         if (what_1L_chr == "prefd_mdls") 
             object_xx <- results_ls$prefd_mdl_types_chr
         if (what_1L_chr == "signt_covars") 

@@ -142,11 +142,18 @@ y <- dplyr::bind_rows(ready4class::make_pt_ready4class_constructor(make_s3_lgl =
                                                                      "control_ls", #
                                                                      "depnt_var_nm_1L_chr",
                                                                      "depnt_var_min_max_dbl",
+                                                                     "cohort_descv_var_nms_chr", #1
+                                                                     "fake_1L_lgl", #2
                                                                      "folds_1L_int",
+                                                                     "itm_labels_chr", #3
+                                                                     "itm_prefix_1L_chr", #4
                                                                      "iters_1L_int", #
                                                                      "max_mdl_runs_1L_int",
+                                                                     "msrmnt_date_var_nm_1L_chr", #5
+                                                                     "paths_ls",# 6
                                                                      "prior_ls",#
                                                                      "seed_1L_int",
+                                                                     "total_unwtd_var_nm_1L_chr", #7
                                                                      "predictors_lup") %>% list(),
                                                                    pt_ls = list(#"ScorzProfile",
                                                                      "character",
@@ -157,11 +164,18 @@ y <- dplyr::bind_rows(ready4class::make_pt_ready4class_constructor(make_s3_lgl =
                                                                      "list",
                                                                      "character",
                                                                      "numeric",
+                                                                     "character",#1
+                                                                     "logical",#2
+                                                                     "integer",
+                                                                     "character",#3
+                                                                     "character",#4
                                                                      "integer",
                                                                      "integer",
-                                                                     "integer",
+                                                                     "character",#5
+                                                                     "list", # 6
                                                                      "list",
                                                                      "integer",
+                                                                     "character",#7
                                                                      "specific_predictors") %>% list(),
                                                                    #vals_ls = list(list(instrument_version_1L_chr = "'Adolescent'")),
                                                                    class_desc_chr = "Input parameters that specify candidate models to be explored.",
