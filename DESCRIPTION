@@ -113,10 +113,11 @@ Collate:
     'pkg_specific.R'
     'specific-package.R'
 Suggests: 
-    scorz,
+    scorz (>= 0.0.0.9046),
     rmarkdown
-Remotes: 
+Remotes:  
     ready4-dev/ready4,
     ready4-dev/ready4show,
     ready4-dev/ready4use,
-    ready4-dev/youthvars
+    ready4-dev/youthvars,
+    ready4-dev/scorz
