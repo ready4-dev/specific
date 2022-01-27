@@ -127,6 +127,7 @@ reference:
   - write_ts_mdls_from_alg_outp
 - title: "Methods"
 - contents:
+  - author-SpecificModels
   - author-SpecificProject
   - depict-SpecificProject
   - exhibit-SpecificProject
@@ -136,7 +137,9 @@ reference:
   - investigate-SpecificMixed
   - investigate-SpecificModels
   - investigate-SpecificPredictors
+  - manufacture-SpecificModels
   - procure-SpecificProject
+  - ratify-SpecificModels
   - renew-SpecificProject
   - renew.specific_models
   - renew.specific_predictors

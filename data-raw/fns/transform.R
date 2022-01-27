@@ -286,7 +286,7 @@ transform_params_ls_from_lup <- function(params_ls,
                                                   match_var_nm_1L_chr = "old_nms_chr",
                                                   target_var_nm_1L_chr = "new_nms_chr",
                                                   evaluate_1L_lgl = F)))
-    params_ls$ds_descvs_ls$cohort_descv_var_nms_chr <- params_ls$ds_descvs_ls$cohort_descv_var_nms_chr %>%
+    params_ls$ds_descvs_ls$descv_var_nms_chr <- params_ls$ds_descvs_ls$descv_var_nms_chr %>%
       purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
                              .x,
                              ready4::get_from_lup_obj(rename_lup,

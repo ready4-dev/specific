@@ -10,7 +10,7 @@
 #' @slot control_ls Control (a list)
 #' @slot depnt_var_nm_1L_chr Dependent variable name (a character vector of length one)
 #' @slot depnt_var_min_max_dbl Dependent variable minimum maximum (a double vector)
-#' @slot cohort_descv_var_nms_chr Cohort descriptive variable names (a character vector)
+#' @slot descv_var_nms_chr Descriptive variable names (a character vector)
 #' @slot fake_1L_lgl Fake (a logical vector of length one)
 #' @slot folds_1L_int Folds (an integer vector of length one)
 #' @slot itm_labels_chr Item labels (a character vector)
@@ -31,8 +31,8 @@
 #' @exportClass SpecificParameters
 SpecificParameters <- methods::setClass("SpecificParameters",
 contains = "Ready4Module",
-slots = c(candidate_mdls_chr = "character",candidate_mdls_lup = "specific_models",candidate_mdl_pfcs_chr = "character",candidate_predrs_chr = "character",candidate_covars_chr = "character",control_ls = "list",depnt_var_nm_1L_chr = "character",depnt_var_min_max_dbl = "numeric",cohort_descv_var_nms_chr = "character",fake_1L_lgl = "logical",folds_1L_int = "integer",itm_labels_chr = "character",itm_prefix_1L_chr = "character",iters_1L_int = "integer",max_mdl_runs_1L_int = "integer",msrmnt_date_var_nm_1L_chr = "character",paths_ls = "list",prior_ls = "list",seed_1L_int = "integer",total_unwtd_var_nm_1L_chr = "character",predictors_lup = "specific_predictors",dissemination_1L_chr = "character"),
-prototype =  list(candidate_mdls_chr = NA_character_,candidate_mdls_lup = specific_models(),candidate_mdl_pfcs_chr = NA_character_,candidate_predrs_chr = NA_character_,candidate_covars_chr = NA_character_,control_ls = list(list()),depnt_var_nm_1L_chr = NA_character_,depnt_var_min_max_dbl = NA_real_,cohort_descv_var_nms_chr = NA_character_,fake_1L_lgl = NA,folds_1L_int = NA_integer_,itm_labels_chr = NA_character_,itm_prefix_1L_chr = NA_character_,iters_1L_int = NA_integer_,max_mdl_runs_1L_int = NA_integer_,msrmnt_date_var_nm_1L_chr = NA_character_,paths_ls = list(list()),prior_ls = list(list()),seed_1L_int = NA_integer_,total_unwtd_var_nm_1L_chr = NA_character_,predictors_lup = specific_predictors()))
+slots = c(candidate_mdls_chr = "character",candidate_mdls_lup = "specific_models",candidate_mdl_pfcs_chr = "character",candidate_predrs_chr = "character",candidate_covars_chr = "character",control_ls = "list",depnt_var_nm_1L_chr = "character",depnt_var_min_max_dbl = "numeric",descv_var_nms_chr = "character",fake_1L_lgl = "logical",folds_1L_int = "integer",itm_labels_chr = "character",itm_prefix_1L_chr = "character",iters_1L_int = "integer",max_mdl_runs_1L_int = "integer",msrmnt_date_var_nm_1L_chr = "character",paths_ls = "list",prior_ls = "list",seed_1L_int = "integer",total_unwtd_var_nm_1L_chr = "character",predictors_lup = "specific_predictors",dissemination_1L_chr = "character"),
+prototype =  list(candidate_mdls_chr = NA_character_,candidate_mdls_lup = specific_models(),candidate_mdl_pfcs_chr = NA_character_,candidate_predrs_chr = NA_character_,candidate_covars_chr = NA_character_,control_ls = list(list()),depnt_var_nm_1L_chr = NA_character_,depnt_var_min_max_dbl = NA_real_,descv_var_nms_chr = NA_character_,fake_1L_lgl = NA,folds_1L_int = NA_integer_,itm_labels_chr = NA_character_,itm_prefix_1L_chr = NA_character_,iters_1L_int = NA_integer_,max_mdl_runs_1L_int = NA_integer_,msrmnt_date_var_nm_1L_chr = NA_character_,paths_ls = list(list()),prior_ls = list(list()),seed_1L_int = NA_integer_,total_unwtd_var_nm_1L_chr = NA_character_,predictors_lup = specific_predictors()))
 
 
 methods::setValidity(methods::className("SpecificParameters"),

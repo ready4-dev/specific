@@ -142,7 +142,7 @@ y <- dplyr::bind_rows(ready4class::make_pt_ready4class_constructor(make_s3_lgl =
                                                                      "control_ls", #
                                                                      "depnt_var_nm_1L_chr",
                                                                      "depnt_var_min_max_dbl",
-                                                                     "cohort_descv_var_nms_chr", #1
+                                                                     "descv_var_nms_chr", #1
                                                                      "fake_1L_lgl", #2
                                                                      "folds_1L_int",
                                                                      "itm_labels_chr", #3

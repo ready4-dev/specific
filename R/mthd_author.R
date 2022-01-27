@@ -1,5 +1,55 @@
 #' 
 #' Author and save files
+#' @name author-SpecificModels
+#' @description author method applied to SpecificModels
+#' @param x An object of class SpecificModels
+#' @param what_1L_chr What (a character vector of length one), Default: 'workspace'
+#' @param digits_1L_int Digits (an integer vector of length one), Default: 3
+#' @param reference_1L_int Reference (an integer vector of length one), Default: NULL
+#' @return x (An object of class SpecificModels)
+#' @rdname author-methods
+#' @aliases author,SpecificModels-method
+#' @export 
+#' @importFrom ready4show make_paths_ls write_all_outp_dirs
+#' @importFrom rlang exec
+#' @importFrom youthvars write_descv_tbls write_descv_plots
+#' @importFrom ready4 author
+methods::setMethod("author", "SpecificModels", function (x, what_1L_chr = "workspace", digits_1L_int = 3L, reference_1L_int = NULL) 
+{
+    if (what_1L_chr == "workspace") {
+        if (!is.null(reference_1L_int)) {
+            transform_paths_ls <- list(fn = transform_paths_ls_for_scndry, 
+                args_ls = list(reference_1L_int = reference_1L_int))
+        }
+        else {
+            transform_paths_ls <- NULL
+        }
+        path_params_ls <- make_path_params_ls()
+        path_params_ls$use_fake_data_1L_lgl <- x@b_SpecificParameters@fake_1L_lgl
+        paths_ls <- path_params_ls %>% ready4show::make_paths_ls(depth_1L_int = ifelse(is.null(transform_paths_ls), 
+            1, 2))
+        if (!is.null(transform_paths_ls)) {
+            paths_ls <- rlang::exec(transform_paths_ls$fn, paths_ls, 
+                !!!transform_paths_ls$args_ls)
+        }
+        paths_ls <- ready4show::write_all_outp_dirs(paths_ls = paths_ls)
+        x@b_SpecificParameters@paths_ls <- paths_ls
+    }
+    if (what_1L_chr == "descriptives") {
+        ds_descvs_ls <- manufacture(x, what_1L_chr = "ds_descvs_ls")
+        descv_tbl_ls <- youthvars::write_descv_tbls(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
+            ds_descvs_ls = ds_descvs_ls, predictors_lup = x@b_SpecificParameters@predictors_lup, 
+            descv_outp_dir_1L_chr = x@b_SpecificParameters@paths_ls$descv_outp_dir_1L_chr, 
+            nbr_of_digits_1L_int = digits_1L_int)
+        descv_plts_paths_ls <- youthvars::write_descv_plots(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
+            ds_descvs_ls = ds_descvs_ls, descv_outp_dir_1L_chr = x@b_SpecificParameters@paths_ls$descv_outp_dir_1L_chr, 
+            lbl_nms_chr = x@b_SpecificParameters@itm_labels_chr, 
+            maui_domains_pfxs_1L_chr = x@b_SpecificParameters@itm_prefix_1L_chr)
+    }
+    return(x)
+})
+#' 
+#' Author and save files
 #' @name author-SpecificProject
 #' @description author method applied to SpecificProject
 #' @param x An object of class SpecificProject

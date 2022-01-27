@@ -63,6 +63,10 @@ Y <- renewSlot(Y,
                            c("d_sex_birth_s", "d_age",  "d_sexual_ori_s", "d_studying_working")) %>%
                  renewSlot("candidate_mdls_lup",
                            get_cndt_mdls(mdl_short_nms_chr = c("OLS_NTF","OLS_CLL","GLM_GSN_LOG"))) %>%
+                 renewSlot("descv_var_nms_chr",
+                           c("d_age","Gender","d_relation_s",
+                                                               "d_sexual_ori_s", "Region",
+                                                               "d_studying_working")) %>% ### RENAME)
                  renewSlot("control_ls",
                            list(adapt_delta = 0.99)) %>%
                  renewSlot("fake_1L_lgl",
@@ -80,7 +84,7 @@ Y <- renewSlot(Y,
 #                                   candidate_predrs_chr = c("K10_int","Psych_well_int"),
 #                                   candidate_covars_chr = c("d_sex_birth_s", "d_age",  "d_sexual_ori_s", "d_studying_working"),
 #                                   candidate_mdls_lup = get_cndt_mdls(mdl_short_nms_chr = c("OLS_NTF","OLS_CLL","GLM_GSN_LOG")),
-#                                   cohort_descv_var_nms_chr = c("d_age","Gender","d_relation_s",
+#                                   descv_var_nms_chr = c("d_age","Gender","d_relation_s",
 #                                                                "d_sexual_ori_s", "Region",
 #                                                                "d_studying_working"), ### RENAME
 #                                   control_ls = list(adapt_delta = 0.99),
@@ -146,148 +150,31 @@ A <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes",
 #            what_1L_chr = "prefd_covars")
 ```
 ```{r }
-set.seed(procureSlot(Y,
-                     "b_SpecificParameters@seed_1L_int"))
+# set.seed(procureSlot(Y,
+#                      "b_SpecificParameters@seed_1L_int"))
 session_data_ls <- sessionInfo() # Add to results?
 ```
 
 ```{r }
 ## AUTHOR METHOD
-author_SpecificModels <- function(x,
-                                  what_1L_chr = "workspace",
-                                  digits_1L_int = 3L,
-                                  reference_1L_int = NULL){
-if(what_1L_chr == "workspace"){
-  if(!is.null(reference_1L_int)){
-transform_paths_ls <- list(fn = transform_paths_ls_for_scndry,
-                          args_ls = list(reference_1L_int = reference_1L_int)) # FOR SECONDARY
-}else{
-  transform_paths_ls <- NULL
-}
-path_params_ls <- make_path_params_ls() 
-path_params_ls$use_fake_data_1L_lgl <- x@b_SpecificParameters@fake_1L_lgl
-paths_ls <- path_params_ls %>%
-  ready4show::make_paths_ls(depth_1L_int = ifelse(is.null(transform_paths_ls),
-                                                  1,
-                                                  2))
-if(!is.null(transform_paths_ls)){
-  paths_ls <- rlang::exec(transform_paths_ls$fn,
-                          paths_ls,
-                        !!!transform_paths_ls$args_ls)
-}
-paths_ls <- ready4show::write_all_outp_dirs(paths_ls = paths_ls)
-x@b_SpecificParameters@paths_ls <- paths_ls
-}
-  if(what_1L_chr == "descriptives"){
-ds_descvs_ls <- manufacture_SpecificModels(x,
-                                           what_1L_chr = "ds_descvs_ls")
-descv_tbl_ls <- youthvars::write_descv_tbls(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
-                                            ds_descvs_ls = ds_descvs_ls,
-                                            predictors_lup = x@b_SpecificParameters@predictors_lup,
-                                            descv_outp_dir_1L_chr = x@b_SpecificParameters@paths_ls$descv_outp_dir_1L_chr,
-                                            nbr_of_digits_1L_int = digits_1L_int)
-descv_plts_paths_ls <- youthvars::write_descv_plots(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
-                                                    ds_descvs_ls = ds_descvs_ls,
-                                                    descv_outp_dir_1L_chr = x@b_SpecificParameters@paths_ls$descv_outp_dir_1L_chr, 
-                                                    lbl_nms_chr = x@b_SpecificParameters@itm_labels_chr, 
-                                                    maui_domains_pfxs_1L_chr = x@b_SpecificParameters@itm_prefix_1L_chr)
 
-  }
-
-return(x)
-                                  }
 
 ```
 ```{r }
 # Ratify method
-ratify_SpecificModels <- function(x,
-                      class_fn_1L_chr = "as.numeric",
-                      prototype_lup = NULL){
-  x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb <- x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb %>% 
-  youthvars::add_interval_var(id_var_nm_1L_chr = x@a_YouthvarsProfile@id_var_nm_1L_chr,
-                              msrmnt_date_var_nm_1L_chr = ifelse(!is.na(x@b_SpecificParameters@msrmnt_date_var_nm_1L_chr),
-                                                                 x@b_SpecificParameters@msrmnt_date_var_nm_1L_chr,
-                                                                 "d_interview_date")) %>%
-  youthvars::add_participation_var(id_var_nm_1L_chr = x@a_YouthvarsProfile@id_var_nm_1L_chr,
-                                   fup_round_nbr_1L_int = length( x@a_YouthvarsProfile@timepoint_vals_chr))
-if(is.na(x@a_YouthvarsProfile@participation_var_1L_chr)){
- x@a_YouthvarsProfile@participation_var_1L_chr <- "participation"
-}
-x@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3 <- x@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3 %>%
-  ready4::renew(var_nm_chr = c("bl_date_dtm", 
-                               "interval_dbl", 
-                               x@a_YouthvarsProfile@participation_var_1L_chr), 
-                var_ctg_chr = c("Temporal", 
-                                "Temporal", 
-                                "Temporal"), 
-                var_desc_chr = c("Date of baseline assessment", 
-                                 "Interval between baseline and follow-up assessments", 
-                                 "Rounds participated in"), 
-                var_type_chr = c("date", 
-                                 "interval", 
-                                 "character"))
-x <- renewSlot(x,
-               "a_YouthvarsProfile@a_Ready4useDyad",
-               type_1L_chr = "label")
-x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb <- x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb %>%
-  transform_mdl_vars_with_clss(predictors_lup = x@b_SpecificParameters@predictors_lup,
-                               depnt_var_nm_1L_chr = x@b_SpecificParameters@depnt_var_nm_1L_chr,
-                               prototype_lup = prototype_lup, # Supplied as arg?
-                               class_fn_1L_chr = class_fn_1L_chr # Supplied as arg?
-                               )
-return(x)
 
-                      }
 
 ```
 ```{r}
 ## MANUFACTURE
-manufacture_SpecificModels <- function(x,
-                                       what_1L_chr = "ds_descvs_ls"){
-  if(what_1L_chr %in% c("ds_descvs_ls","ds_smry_ls"))
-object_xx <- make_ds_descvs_ls(candidate_predrs_chr =  x@b_SpecificParameters@candidate_predrs_chr,
-                                  candidate_covar_nms_chr = x@b_SpecificParameters@candidate_covars_chr,
-                                  cohort_descv_var_nms_chr = x@b_SpecificParameters@cohort_descv_var_nms_chr, 
-                                  dictionary_tb = x@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3, 
-                                  id_var_nm_1L_chr = x@a_YouthvarsProfile@id_var_nm_1L_chr, 
-                                  is_fake_1L_lgl = x@b_SpecificParameters@fake_1L_lgl,
-                                  msrmnt_date_var_nm_1L_chr = x@b_SpecificParameters@msrmnt_date_var_nm_1L_chr,
-                                  round_var_nm_1L_chr = x@a_YouthvarsProfile@timepoint_var_nm_1L_chr, 
-                                  round_vals_chr = x@a_YouthvarsProfile@timepoint_vals_chr,
-                                  utl_wtd_var_nm_1L_chr = x@b_SpecificParameters@depnt_var_nm_1L_chr,
-                               maui_item_pfx_1L_chr = x@b_SpecificParameters@itm_prefix_1L_chr, 
-                                  utl_unwtd_var_nm_1L_chr = x@b_SpecificParameters@total_unwtd_var_nm_1L_chr) 
 
-if(what_1L_chr == ("ds_smry_ls"))
-  object_xx <- object_xx %>%
-  make_analysis_ds_smry_ls(candidate_covar_nms_chr = x@b_SpecificParameters@candidate_covars_chr,
-                           predictors_lup = x@b_SpecificParameters@predictors_lup)
-if(what_1L_chr == "mdl_smry_ls"){
-  if(is.na(x@b_SpecificParameters@candidate_mdls_chr)){
-  mdl_types_chr <- NULL
-}else{
-  mdl_types_chr <- x@b_SpecificParameters@candidate_mdls_chr
-}
-if(is.na(x@b_SpecificParameters@candidate_mdl_pfcs_chr)){
-  choose_from_pfx_chr <- NULL
-}else{
-  choose_from_pfx_chr <- x@b_SpecificParameters@candidate_mdl_pfcs_chr
-}
-object_xx <- make_mdl_smry_ls(mdl_types_lup = x@b_SpecificParameters@candidate_mdls_lup,
-                             mdl_types_chr = mdl_types_chr,
-                             choose_from_pfx_chr = choose_from_pfx_chr,
-                             folds_1L_int = x@b_SpecificParameters@folds_1L_int,
-                             max_nbr_of_boruta_mdl_runs_int = x@b_SpecificParameters@max_mdl_runs_1L_int)
-}
-return(object_xx)
-                                       }
   #params_ls$mdl_smry_ls
 ```
 
 ```{r}
-Y <- ratify_SpecificModels(Y)
-Y <- author_SpecificModels(Y,
-                           what_1L_chr = "workspace")
+Y <- ratify(Y)
+Y <- author(Y,
+            what_1L_chr = "workspace")
 ```
 
 ## SAVE COPY OF INPUT DATA (WRITE_INPUTS_FOR_MAIN ANALYSIS) ???
@@ -297,31 +184,31 @@ Y <- author_SpecificModels(Y,
 ```
 
 ```{r, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
-Y <- author_SpecificModels(Y,
-                           what_1L_chr = "descriptives",
-                           digits_1L_int = Z@digits_int[1])
+Y <- author(Y,
+            what_1L_chr = "descriptives",
+            digits_1L_int = Z@digits_int[1])
 
 ```
-
-<!-- DESCRIPTIVES  -- END-->
-
 
 Compare model types using most correlated predictor.
 
 ```{r message=FALSE, results='hide', warning=FALSE}
-cmprsns_ls <- write_mdl_cmprsn(scored_data_tb = data_tb,
-                                ds_smry_ls = ds_smry_ls,
-                                mdl_smry_ls = mdl_smry_ls,
-                                output_data_dir_1L_chr = paths_ls$output_data_dir_1L_chr,
-                                seed_1L_int = params_ls$seed_1L_int)
+cmprsns_ls <- write_mdl_cmprsn(scored_data_tb = Y@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
+                                ds_smry_ls = manufacture(Y,
+                                                                        what_1L_chr = "ds_smry_ls"),
+                                mdl_smry_ls = manufacture(Y,
+                                                                        what_1L_chr = "mdl_smry_ls"),
+                                output_data_dir_1L_chr = Y@b_SpecificParameters@paths_ls$output_data_dir_1L_chr,
+                                seed_1L_int = Y@b_SpecificParameters@seed_1L_int)
 
 ```
 
 Select preferred model types.
 
-```{r echo = !is.null(params_ls$prefd_mdl_types_chr), eval= !is.null(params_ls$prefd_mdl_types_chr), message=FALSE, results='hide', warning=FALSE}
-if(!is.null(params_ls$prefd_mdl_types_chr)){
-  cmprsns_ls$mdl_smry_ls$prefd_mdl_types_chr <- params_ls$prefd_mdl_types_chr
+```{r, message=FALSE, results='hide', warning=FALSE}
+prefd_mdl_types_chr <- NULL
+if(!is.null(prefd_mdl_types_chr)){
+  cmprsns_ls$mdl_smry_ls$prefd_mdl_types_chr <- prefd_mdl_types_chr
 }
 ```
 
