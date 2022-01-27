@@ -3,7 +3,7 @@ manufacture_SpecificModels <- function(x,
   if(what_1L_chr %in% c("ds_descvs_ls","ds_smry_ls"))
     object_xx <- make_ds_descvs_ls(candidate_predrs_chr =  x@b_SpecificParameters@candidate_predrs_chr,
                                    candidate_covar_nms_chr = x@b_SpecificParameters@candidate_covars_chr,
-                                   descv_var_nms_chr = x@b_SpecificParameters@descv_var_nms_chr,
+                                   cohort_descv_var_nms_chr = x@b_SpecificParameters@descv_var_nms_chr,
                                    dictionary_tb = x@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3,
                                    id_var_nm_1L_chr = x@a_YouthvarsProfile@id_var_nm_1L_chr,
                                    is_fake_1L_lgl = x@b_SpecificParameters@fake_1L_lgl,

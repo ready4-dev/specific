@@ -66,7 +66,7 @@ Y <- renewSlot(Y,
                  renewSlot("descv_var_nms_chr",
                            c("d_age","Gender","d_relation_s",
                                                                "d_sexual_ori_s", "Region",
-                                                               "d_studying_working")) %>% ### RENAME)
+                                                               "d_studying_working")) %>% 
                  renewSlot("control_ls",
                            list(adapt_delta = 0.99)) %>%
                  renewSlot("fake_1L_lgl",
@@ -79,22 +79,6 @@ Y <- renewSlot(Y,
                            "data_collection_dtm") %>%
                  renewSlot("seed_1L_int",
                            1234L)) 
-#
-# SpecificParameters(depnt_var_min_max_dbl = c(-1,1), 
-#                                   candidate_predrs_chr = c("K10_int","Psych_well_int"),
-#                                   candidate_covars_chr = c("d_sex_birth_s", "d_age",  "d_sexual_ori_s", "d_studying_working"),
-#                                   candidate_mdls_lup = get_cndt_mdls(mdl_short_nms_chr = c("OLS_NTF","OLS_CLL","GLM_GSN_LOG")),
-#                                   descv_var_nms_chr = c("d_age","Gender","d_relation_s",
-#                                                                "d_sexual_ori_s", "Region",
-#                                                                "d_studying_working"), ### RENAME
-#                                   control_ls = list(adapt_delta = 0.99),
-#                                   fake_1L_lgl = T,
-#                                   folds_1L_int = 10L, # DEFAULT
-#                                   
-#                                   max_mdl_runs_1L_int = 300L,# DEFAULT
-#                                   msrmnt_date_var_nm_1L_chr = "data_collection_dtm",
-#                                   seed_1L_int = 1234L # DEFAULT
-#                                   )
 ```
 
 ```{r}
@@ -153,22 +137,6 @@ A <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes",
 # set.seed(procureSlot(Y,
 #                      "b_SpecificParameters@seed_1L_int"))
 session_data_ls <- sessionInfo() # Add to results?
-```
-
-```{r }
-## AUTHOR METHOD
-
-
-```
-```{r }
-# Ratify method
-
-
-```
-```{r}
-## MANUFACTURE
-
-  #params_ls$mdl_smry_ls
 ```
 
 ```{r}

@@ -40,7 +40,7 @@ methods::setMethod("author", "SpecificModels", function (x, what_1L_chr = "works
         descv_tbl_ls <- youthvars::write_descv_tbls(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
             ds_descvs_ls = ds_descvs_ls, predictors_lup = x@b_SpecificParameters@predictors_lup, 
             descv_outp_dir_1L_chr = x@b_SpecificParameters@paths_ls$descv_outp_dir_1L_chr, 
-            nbr_of_digits_1L_int = digits_1L_int)
+            nbr_of_digits_1L_int = digits_1L_int, participation_var_1L_chr = x@a_YouthvarsProfile@participation_var_1L_chr)
         descv_plts_paths_ls <- youthvars::write_descv_plots(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
             ds_descvs_ls = ds_descvs_ls, descv_outp_dir_1L_chr = x@b_SpecificParameters@paths_ls$descv_outp_dir_1L_chr, 
             lbl_nms_chr = x@b_SpecificParameters@itm_labels_chr, 
