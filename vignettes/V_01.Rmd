@@ -13,82 +13,79 @@ The steps in this exploratory analysis workflow may need to be performed iterati
 
 ```{r message=FALSE, warning=FALSE}
 library(ready4)
+library(ready4show)
+library(ready4use)
 library(scorz)
 library(specific)
 ```
 
 ## Import data
 
-We start by ingesting our data. As this example uses EQ-5D data, we import a `ScorzEuroQol5` object that was created using the steps described in [this vignette from the scorz pacakge](https://ready4-dev.github.io/scorz/articles/V_02.html).
+We start by ingesting our data. As this example uses EQ-5D data, we import a `ScorzEuroQol5` [ready4 framework module](https://ready4-dev.github.io/ready4/articles/V_01.html) (created using the steps described in [this vignette from the scorz pacakge](https://ready4-dev.github.io/scorz/articles/V_02.html)) into a `SpecificConverter` Module and then apply the `metamorphose` method to convert it into a `SpecificModel` module.
 
 ```{r message=FALSE}
-X <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz", 
-                               gh_tag_1L_chr = "Documentation_0.0") %>%
-    ingest(fls_to_ingest_chr = "ymh_ScorzEuroQol5",
-         metadata_1L_lgl = F)
+X <- SpecificConverter(a_ScorzProfile = ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz", 
+                                                                  gh_tag_1L_chr = "Documentation_0.0") %>%
+                         ingest(fls_to_ingest_chr = "ymh_ScorzEuroQol5",
+                                metadata_1L_lgl = F)) %>%
+  metamorphose() 
 ```
-
-For the purpose of this analysis we only the `YouthvarsProfile` object included in `X` so extract this element using the `procureSlot` method.
-
 ```{r}
-X <- X %>% 
-  procureSlot("a_YouthvarsProfile")
+class(X)
 ```
-
 
 ## Inspect data
 ```{r echo = F, message=FALSE}
 ds_tb <- X %>%
-  procureSlot("a_Ready4useDyad") %>%
-  procureSlot("ds_tb")
+  procureSlot("a_YouthvarsProfile@a_Ready4useDyad@ds_tb") 
 ```
 
 The dataset we are using has a total of `r nrow(ds_tb)` records at two timepoints on `r length(ds_tb$uid %>% unique())` study participants. The first six records are reproduced below.
 
 ```{r inputds, echo=F, eval = knitr::is_html_output(), results='asis'}
 X %>%
-  procureSlot("a_Ready4useDyad") %>%
+  procureSlot("a_YouthvarsProfile@a_Ready4useDyad") %>%
   exhibit(display_1L_chr = "head")
 ```
 
-To learn more about the properties of `X` (which is a `YouthvarsSeries` child class of `YouthvarsProfile` object) and how it can be inspected, [read this vignette from the youthvars package](https://ready4-dev.github.io/youthvars/articles/V_02.html).
-
-## Create SpecificModels
-
-To start with, we create a new instance of a `SpecificModels` object containing data we have just ingested.
-
-```{r}
-X <- SpecificModels(a_YouthvarsProfile = X) 
-```
+To source dataset of `X` is contained in the `a_YouthvarsProfile` slot and is a `YouthvarsSeries` module. For more information about methods that can be used to explore this dataset, [read this vignette from the youthvars package](https://ready4-dev.github.io/youthvars/articles/V_02.html).
 
 ## Specify parameters
 
-In preparation for exploring our dataset, we need to declare a set of model parameters in a `SpecificParameters` object. This can be done in one step, or in sequential steps. In this example, we will proceed sequentially.
+In preparation for exploring our dataset, we need to declare a set of model parameters in a `b_SpecificParameters` slot of `X`. This can be done in one step, or in sequential steps. In this example, we will proceed sequentially.
 
 ### Dependent variable
-
-The first parameter that we declare is the dependent variable (total EQ-5D utility score) for the models we will be exploring and its allowable range (-1 to 1).
+The dependent variable (total EQ-5D utility score) has already been specified when we imported the data from the `ScorzEuroQol5` module.
 
 ```{r}
-Y <- SpecificParameters(depnt_var_nm_1L_chr = "eq5d_total_w",
-                        depnt_var_min_max_dbl = c(-1,1))
+procureSlot(X,
+            "b_SpecificParameters@depnt_var_nm_1L_chr")
+```
+We can now add details of the allowable range of dependent variable values.
+
+```{r}
+X <- renewSlot(X,
+               "b_SpecificParameters@depnt_var_min_max_dbl",
+               c(-0.9999,0.9999))
+# Y <- SpecificParameters(depnt_var_nm_1L_chr = "eq5d_total_w",
+#                         depnt_var_min_max_dbl = c(-0.9999,0.9999))
 ```
 
 ### Candidate predictors
 
-We add the names of candidate predictor variables to our `SpecificParameters` object.
+We can now specify the names of candidate predictor variables.
 
 ```{r}
-Y <- renewSlot(Y,
-               "candidate_predrs_chr",
+X <- renewSlot(X,
+               "b_SpecificParameters@candidate_predrs_chr",
                new_val_xx = c("K10_int","Psych_well_int")) 
 ```
 
 We next add meta-data about each candidate predictor variable in the form of a `specific_predictors` object.
 
 ```{r}
-Y <- renewSlot(Y, 
-               "predictors_lup", 
+X <- renewSlot(X, 
+               "b_SpecificParameters@predictors_lup", 
                short_name_chr = c("K10_int","Psych_well_int"),
                long_name_chr = c("Kessler Psychological Distress - 10 Item Total Score",
                                  "Overall Wellbeing Measure (Winefield et al. 2012)"),
@@ -101,12 +98,11 @@ Y <- renewSlot(Y,
                covariate_lgl = F)
 ```
 
-The `specific_predictors` object that we have added to `Y` can be retrieved using the `procureSlot` method.
+The `specific_predictors` object that we have added to `X` can be inspected using the `exhibitSlot` method.
 
 ```{r}
-procureSlot(Y,
-            "predictors_lup") %>%
-  exhibit.specific_predictors()
+exhibitSlot(X,
+            "b_SpecificParameters@predictors_lup")
 ```
 
 ### Covariates
@@ -114,59 +110,79 @@ procureSlot(Y,
 We also specify the covariates that we aim to explore in conjunction with each candidate predictor.
 
 ```{r}
-Y <- renewSlot(Y, 
-               "candidate_covars_chr",
+X <- renewSlot(X, 
+               "b_SpecificParameters@candidate_covars_chr",
                new_val_xx = c("d_sex_birth_s", "d_age",  "d_sexual_ori_s", "d_studying_working"))
+```
+
+### Descriptive variables
+We also specify variables that we will use for generating descriptive statistics about the dataset. 
+
+```{r}
+X <- renewSlot(X,
+               "b_SpecificParameters@descv_var_nms_chr",
+               c("d_age","Gender","d_relation_s",
+                 "d_sexual_ori_s", "Region", "d_studying_working")) 
+```
+
+### Temporal variables
+The name of the dataset variable for data collection timepoint and all of its unique values were imported when converting the `ScorzEuroQol5` module. 
+
+```{r}
+procureSlot(X,"a_YouthvarsProfile@timepoint_var_nm_1L_chr")
+```
+```{r}
+procureSlot(X,"a_YouthvarsProfile@timepoint_vals_chr")
+```
+
+However, we also need to specify the name of the variable that contains the datestamp for each dataset record.
+
+```{r}
+X <- renewSlot(X,
+               "b_SpecificParameters@msrmnt_date_var_nm_1L_chr",
+               "data_collection_dtm")
 ```
 
 ### Candidate models
 
-We now add details about the candidate models we will explore in the form of a `specific_models` object.
-
-```{r}
-Y <- renewSlot(Y,
-               "candidate_mdls_lup", 
-               new_val_xx = get_cndt_mdls(mdl_short_nms_chr = c("OLS_NTF","OLS_CLL","GLM_GSN_LOG")))
-```
-
-The `specific_models` object that we have just added is reproduced below.
+`X` was created with a default set of candidate models, stored as a `specific_models` sub-module, which can be inspected using the `exhibitSlot` method. 
 
 ```{r mdlslup, tab.cap='Model types lookup table', tab.id = 'mdlslup', results = "asis"}
-procureSlot(Y,
-            "candidate_mdls_lup") %>% # 
-  exhibit()
+exhibitSlot(X,
+            "b_SpecificParameters@candidate_mdls_lup")
+```
+We can choose to select just a subset of these to explore using the `renewSlot` method. As this is an illustrative example, we have restricted the models we will explore to just three types, passing the relevant row numbers to the `slice_idxs_int` argument.
+
+```{r warning=F}
+X <- renewSlot(X,
+               "b_SpecificParameters@candidate_mdls_lup",
+               slice_idxs_int = c(1L,5L,6L))
 ```
 
 ### Other parameters
 
-Depending on the type of analysis we plan on undertaking, we can also specify parameters such as the number of folds to use in cross validation and the maximum number of model runs to allow.
+Depending on the type of analysis we plan on undertaking, we can also specify parameters such as the number of folds to use in cross validation, the maximum number of model runs to allow and a seed to ensure reproducibility of results. In this case we are going to use the default values generated when we first created `X`.
 
 ```{r}
-Y <- renewSlot(Y,
-               "folds_1L_int",
-               new_val_xx = 10L) %>%
-  renewSlot("max_mdl_runs_1L_int",
-            new_val_xx = 300L)
+procureSlot(X,
+            "b_SpecificParameters@folds_1L_int")
 ```
-
-We can also specify a seed to ensure reproducibility of results.
-
 ```{r}
-Y <- renewSlot(Y,
-               "seed_1L_int",
-               new_val_xx = 1234L)
+procureSlot(X,
+            "b_SpecificParameters@max_mdl_runs_1L_int")
 ```
-
-Finally, we add `Y` (model parameters) to `X` (the `SpecificModels`).
-
 ```{r}
-X <- renewSlot(X,
-               "b_SpecificParameters",
-               new_val_xx = Y)
+procureSlot(X,
+            "b_SpecificParameters@seed_1L_int")
 ```
 
 ## Model testing
 
+Before we start to use the data stored in `X` to undertake modelling, we must first validate that it contains all necessary (and internally consistent) data by using the `ratify` method.
+
+```{r}
+X <- ratify(X)
+```
 
 ### Set-up workspace 
 
@@ -175,12 +191,37 @@ We add details of the directory to which we will write all output. In this examp
 ```{r warning = F}
 X <- renewSlot(X,
                "paths_chr",
-               new_val_xx = tempdir())
+               tempdir())
 ```
 
-### Model comparison
+It can be useful to save fake data (useful for demonstrating the generalisability and replicability of an analysis) and real data (required for write-up and reproducibility) is distinctly labelled directories. By default, `X` is created with a flag to save all output in a sub-directory "Real". As we are using fake data, we can override this value.
 
-The `investigate` method will compare the candidate models we have specified in the `SpecificModels` object `X`. In so doing it will transform `X` into a `SpecificPredictors` object.
+```{r}
+X <- renewSlot(X,
+               "b_SpecificParameters@fake_1L_lgl",
+               T)
+```
+
+We can now write a number of sub-directories to our specified output directory.
+
+```{r}
+X <- author(X,
+            what_1L_chr = "workspace")
+```
+
+### Descriptives
+The first set of outputs we write to our output directories is a set of descriptive tables and plots.
+
+```{r, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
+X <- author(X,
+            what_1L_chr = "descriptives",
+            digits_1L_int = 3L)
+
+```
+
+### Model comparisons
+
+The `investigate` method can now be used to compare the candidate models we have specified earlier. In so doing it will transform `X` into a `SpecificPredictors` object.
 
 ```{r results='hide', message=FALSE, warning=FALSE}
 X <- investigate(X)

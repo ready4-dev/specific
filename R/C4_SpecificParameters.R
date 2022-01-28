@@ -2,6 +2,7 @@
 #' 
 #' Input parameters that specify candidate models to be explored.
 #' 
+#' @include fn_get.R
 #' @slot candidate_mdls_chr Candidate models (a character vector)
 #' @slot candidate_mdls_lup Candidate models (a lookup table)
 #' @slot candidate_mdl_pfcs_chr Candidate model pfcs (a character vector)
@@ -32,7 +33,7 @@
 SpecificParameters <- methods::setClass("SpecificParameters",
 contains = "Ready4Module",
 slots = c(candidate_mdls_chr = "character",candidate_mdls_lup = "specific_models",candidate_mdl_pfcs_chr = "character",candidate_predrs_chr = "character",candidate_covars_chr = "character",control_ls = "list",depnt_var_nm_1L_chr = "character",depnt_var_min_max_dbl = "numeric",descv_var_nms_chr = "character",fake_1L_lgl = "logical",folds_1L_int = "integer",itm_labels_chr = "character",itm_prefix_1L_chr = "character",iters_1L_int = "integer",max_mdl_runs_1L_int = "integer",msrmnt_date_var_nm_1L_chr = "character",paths_ls = "list",prior_ls = "list",seed_1L_int = "integer",total_unwtd_var_nm_1L_chr = "character",predictors_lup = "specific_predictors",dissemination_1L_chr = "character"),
-prototype =  list(candidate_mdls_chr = NA_character_,candidate_mdls_lup = specific_models(),candidate_mdl_pfcs_chr = NA_character_,candidate_predrs_chr = NA_character_,candidate_covars_chr = NA_character_,control_ls = list(list()),depnt_var_nm_1L_chr = NA_character_,depnt_var_min_max_dbl = NA_real_,descv_var_nms_chr = NA_character_,fake_1L_lgl = NA,folds_1L_int = NA_integer_,itm_labels_chr = NA_character_,itm_prefix_1L_chr = NA_character_,iters_1L_int = NA_integer_,max_mdl_runs_1L_int = NA_integer_,msrmnt_date_var_nm_1L_chr = NA_character_,paths_ls = list(list()),prior_ls = list(list()),seed_1L_int = NA_integer_,total_unwtd_var_nm_1L_chr = NA_character_,predictors_lup = specific_predictors()))
+prototype =  list(candidate_mdls_chr = NA_character_,candidate_mdls_lup = get_cndt_mdls(),candidate_mdl_pfcs_chr = NA_character_,candidate_predrs_chr = NA_character_,candidate_covars_chr = NA_character_,control_ls = list(list()),depnt_var_nm_1L_chr = NA_character_,depnt_var_min_max_dbl = NA_real_,descv_var_nms_chr = NA_character_,fake_1L_lgl = F,folds_1L_int = 10L,itm_labels_chr = NA_character_,itm_prefix_1L_chr = NA_character_,iters_1L_int = 4000L,max_mdl_runs_1L_int = 300L,msrmnt_date_var_nm_1L_chr = NA_character_,paths_ls = list(list()),prior_ls = list(list()),seed_1L_int = 1234L,total_unwtd_var_nm_1L_chr = NA_character_,predictors_lup = specific_predictors()))
 
 
 methods::setValidity(methods::className("SpecificParameters"),

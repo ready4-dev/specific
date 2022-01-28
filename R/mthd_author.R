@@ -25,6 +25,7 @@ methods::setMethod("author", "SpecificModels", function (x, what_1L_chr = "works
             transform_paths_ls <- NULL
         }
         path_params_ls <- make_path_params_ls()
+        path_params_ls$path_from_top_level_1L_chr <- x@paths_chr
         path_params_ls$use_fake_data_1L_lgl <- x@b_SpecificParameters@fake_1L_lgl
         paths_ls <- path_params_ls %>% ready4show::make_paths_ls(depth_1L_int = ifelse(is.null(transform_paths_ls), 
             1, 2))

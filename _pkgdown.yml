@@ -36,6 +36,7 @@ reference:
   - SpecificPredictors
   - SpecificFixed
   - SpecificMixed
+  - SpecificConverter
 - title: "Functions"
 - contents:
   - get_background_text
@@ -138,6 +139,7 @@ reference:
   - investigate-SpecificModels
   - investigate-SpecificPredictors
   - manufacture-SpecificModels
+  - metamorphose-SpecificConverter
   - procure-SpecificProject
   - ratify-SpecificModels
   - renew-SpecificProject

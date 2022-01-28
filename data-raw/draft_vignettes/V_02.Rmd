@@ -19,13 +19,13 @@ library(specific)
 
 ## Import data
 
-We start by ingesting our data. As this example uses EQ-5D data, we import a `ScorzEuroQol5` object that was created using the steps described in [this vignette from the scorz pacakge](https://ready4-dev.github.io/scorz/articles/V_02.html).
+We start by ingesting our data. As this example uses EQ-5D data, we import a `ScorzEuroQol5` module (created using the steps described in [this vignette from the scorz pacakge](https://ready4-dev.github.io/scorz/articles/V_02.html))    into a `SpecificConverter` Module.
 
 ```{r message=FALSE}
-X <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz", 
-                               gh_tag_1L_chr = "Documentation_0.0") %>%
-    ingest(fls_to_ingest_chr = "ymh_ScorzEuroQol5",
-         metadata_1L_lgl = F)
+X <- SpecificConverter(a_ScorzProfile = ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz", 
+                                                 gh_tag_1L_chr = "Documentation_0.0") %>%
+                         ingest(fls_to_ingest_chr = "ymh_ScorzEuroQol5",
+                                metadata_1L_lgl = F))
 ```
 
 ```{r}
@@ -36,14 +36,8 @@ X <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz",
 # X@instrument_nm_1L_chr
 ```
 ```{r}
-paths_chr <- tempdir()
-# Metamorphose
-Y <- SpecificModels(a_YouthvarsProfile = procureSlot(X,"a_YouthvarsProfile"), 
-                    b_SpecificParameters = SpecificParameters(depnt_var_nm_1L_chr = X@total_wtd_var_nm_1L_chr,
-                                                              itm_labels_chr = X@itm_labels_chr,
-                                  itm_prefix_1L_chr = X@itm_prefix_1L_chr,
-                                  total_unwtd_var_nm_1L_chr = X@total_unwtd_var_nm_1L_chr),
-                    paths_chr = paths_chr) 
+Y <- metamorphose(X,
+                  paths_chr = tempdir())
 ```
 
 ## Specify parameters
@@ -56,7 +50,7 @@ Y <- renewSlot(Y,
                procureSlot(Y,
                            "b_SpecificParameters") %>%
                  renewSlot("depnt_var_min_max_dbl",
-                           c(-1,1)) %>%
+                           c(-1,1)) %>% ## Check min/max
                  renewSlot("candidate_predrs_chr",
                            c("K10_int","Psych_well_int")) %>%
                  renewSlot("candidate_covars_chr",
@@ -117,12 +111,10 @@ Z <- renewSlot(Z,
                old_nms_chr = c("PHQ9", "GAD7"),
                new_nms_chr = c("PHQ-9", "GAD-7"))
 ```
-
 ```{r}
 A <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes",
                           dv_ds_nm_1L_chr = "https://doi.org/10.7910/DVN/GW7ZKC")
 ```
-
 ```{r}
 # Y <- renew(Y,
 #            c("OLS_CLL","GLM_GSN_LOG"),
@@ -189,6 +181,8 @@ cmprsns_ls <- write_predr_and_covars_cmprsn(scored_data_tb = data_tb,
                                            mdl_smry_ls  = cmprsns_ls$mdl_smry_ls,
                                            output_data_dir_1L_chr = paths_ls$output_data_dir_1L_chr,
                                            seed_1L_int = params_ls$seed_1L_int)
+
+
 ```
 
 `r ifelse(!is.null(params_ls$prefd_covars_chr),"Specify the covariates to include.","")`

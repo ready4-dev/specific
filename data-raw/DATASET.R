@@ -177,6 +177,12 @@ y <- dplyr::bind_rows(ready4class::make_pt_ready4class_constructor(make_s3_lgl =
                                                                      "integer",
                                                                      "character",#7
                                                                      "specific_predictors") %>% list(),
+                                                                   vals_ls = list(list(candidate_mdls_lup = "get_cndt_mdls()",
+                                                                                       fake_1L_lgl = "F",
+                                                                                       folds_1L_int = "10L",
+                                                                                       iters_1L_int = "4000L",
+                                                                                       max_mdl_runs_1L_int = "300L",
+                                                                                       seed_1L_int = "1234L")),
                                                                    #vals_ls = list(list(instrument_version_1L_chr = "'Adolescent'")),
                                                                    class_desc_chr = "Input parameters that specify candidate models to be explored.",
                                                                    parent_class_chr = "Ready4Module"#,inc_clss_ls = list("ScorzAqol6")
@@ -279,7 +285,13 @@ ready4class::make_pt_ready4class_constructor(make_s3_lgl = FALSE,
                                                           "character") %>% list(),
                                              class_desc_chr = "Modelling project dataset, input parameters and complete mixed models results.",
                                              parent_class_chr = "SpecificProject",
-                                             inc_clss_ls = list("SpecificResults","SpecificParameters") %>% list())
+                                             inc_clss_ls = list("SpecificResults","SpecificParameters") %>% list()),
+ready4class::make_pt_ready4class_constructor(make_s3_lgl = FALSE,
+                                             name_stub_chr = "Converter",
+                                             slots_ls = list("a_ScorzProfile") %>% list(),
+                                             pt_ls = list("ScorzProfile") %>% list(),
+                                             class_desc_chr = "Container for seed objects used for creating SpecificModels modules.",
+                                             parent_class_chr = "Ready4Module")
 )
 y <- y %>%
   dplyr::bind_rows(tibble::tribble(
