@@ -1,6 +1,6 @@
 Package: specific
 Title: Specify Candidate Models for Representing Mental Health Systems
-Version: 0.0.0.9045
+Version: 0.0.0.9046
 Authors@R: c(
     person("Matthew", "Hamilton", , "matthew.hamilton@orygen.org.au", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7407-9194")),
@@ -72,6 +72,7 @@ Collate:
     'C3_specific_models.R'
     'C3_specific_predictors.R'
     'C4_SpecificConverter.R'
+    'fn_get.R'
     'C4_SpecificParameters.R'
     'C4_SpecificPrivate.R'
     'C4_SpecificShareable.R'
@@ -88,7 +89,6 @@ Collate:
     'fn_add.R'
     'fn_calculate.R'
     'fn_fit.R'
-    'fn_get.R'
     'fn_knit.R'
     'fn_make.R'
     'fn_plot.R'
