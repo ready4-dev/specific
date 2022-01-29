@@ -9,7 +9,8 @@
 \usage{
 \S4method{author}{SpecificModels}(
   x,
-  what_1L_chr = "workspace",
+  prefd_mdl_types_chr = NULL,
+  what_1L_chr = "all",
   digits_1L_int = 3L,
   reference_1L_int = NULL
 )
@@ -24,6 +25,8 @@
 }
 \arguments{
 \item{x}{An object of class SpecificProject}
+
+\item{prefd_mdl_types_chr}{Preferred model types (a character vector), Default: NULL}
 
 \item{what_1L_chr}{What (a character vector of length one), Default: 'public'}
 

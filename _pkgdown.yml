@@ -142,6 +142,7 @@ reference:
   - metamorphose-SpecificConverter
   - procure-SpecificProject
   - ratify-SpecificModels
+  - renew-SpecificMixed
   - renew-SpecificProject
   - renew.specific_models
   - renew.specific_predictors

@@ -1576,7 +1576,7 @@ make_predrs_for_best_mdls <- function (outp_smry_ls, old_nms_chr = NULL, new_nms
 #' @export 
 #' @importFrom utils data
 #' @importFrom dplyr inner_join select rename pull
-#' @importFrom purrr map_chr map_int map_lgl
+#' @importFrom purrr map_chr map_int
 make_prefd_mdls_vec <- function (smry_of_sngl_predr_mdls_tb, choose_from_pfx_chr = c("BET", 
     "GLM", "OLS"), mdl_types_lup = NULL) 
 {
@@ -1584,14 +1584,11 @@ make_prefd_mdls_vec <- function (smry_of_sngl_predr_mdls_tb, choose_from_pfx_chr
         utils::data("mdl_types_lup", envir = environment(), package = "specific")
     ordered_mdl_types_chr <- dplyr::inner_join(smry_of_sngl_predr_mdls_tb %>% 
         dplyr::select(Model) %>% dplyr::rename(long_name_chr = Model), 
-        mdl_types_lup) %>% dplyr::pull(short_name_chr)
+        mdl_types_lup, by = "long_name_chr") %>% dplyr::pull(short_name_chr)
     prefd_mdls_chr <- purrr::map_chr(choose_from_pfx_chr, ~ordered_mdl_types_chr[startsWith(ordered_mdl_types_chr, 
         .x)][1])
     prefd_mdls_chr <- prefd_mdls_chr[order(prefd_mdls_chr %>% 
         purrr::map_int(~which(ordered_mdl_types_chr == .x)))]
-    prefd_mdls_chr <- prefd_mdls_chr[-max((1:length(prefd_mdls_chr))[prefd_mdls_chr %>% 
-        purrr::map_lgl(~(startsWith(.x, "BET") | startsWith(.x, 
-            "GLM")))])]
     return(prefd_mdls_chr)
 }
 #' Make primary analysis parameters list

@@ -3,7 +3,8 @@
 #' @name author-SpecificModels
 #' @description author method applied to SpecificModels
 #' @param x An object of class SpecificModels
-#' @param what_1L_chr What (a character vector of length one), Default: 'workspace'
+#' @param prefd_mdl_types_chr Preferred model types (a character vector), Default: NULL
+#' @param what_1L_chr What (a character vector of length one), Default: 'all'
 #' @param digits_1L_int Digits (an integer vector of length one), Default: 3
 #' @param reference_1L_int Reference (an integer vector of length one), Default: NULL
 #' @return x (An object of class SpecificModels)
@@ -14,9 +15,11 @@
 #' @importFrom rlang exec
 #' @importFrom youthvars write_descv_tbls write_descv_plots
 #' @importFrom ready4 author
-methods::setMethod("author", "SpecificModels", function (x, what_1L_chr = "workspace", digits_1L_int = 3L, reference_1L_int = NULL) 
+methods::setMethod("author", "SpecificModels", function (x, prefd_mdl_types_chr = NULL, what_1L_chr = "all", 
+    digits_1L_int = 3L, reference_1L_int = NULL) 
 {
-    if (what_1L_chr == "workspace") {
+    session_data_ls <- sessionInfo()
+    if (what_1L_chr %in% c("workspace", "all")) {
         if (!is.null(reference_1L_int)) {
             transform_paths_ls <- list(fn = transform_paths_ls_for_scndry, 
                 args_ls = list(reference_1L_int = reference_1L_int))
@@ -36,7 +39,7 @@ methods::setMethod("author", "SpecificModels", function (x, what_1L_chr = "works
         paths_ls <- ready4show::write_all_outp_dirs(paths_ls = paths_ls)
         x@b_SpecificParameters@paths_ls <- paths_ls
     }
-    if (what_1L_chr == "descriptives") {
+    if (what_1L_chr %in% c("descriptives", "all")) {
         ds_descvs_ls <- manufacture(x, what_1L_chr = "ds_descvs_ls")
         descv_tbl_ls <- youthvars::write_descv_tbls(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
             ds_descvs_ls = ds_descvs_ls, predictors_lup = x@b_SpecificParameters@predictors_lup, 
@@ -46,6 +49,19 @@ methods::setMethod("author", "SpecificModels", function (x, what_1L_chr = "works
             ds_descvs_ls = ds_descvs_ls, descv_outp_dir_1L_chr = x@b_SpecificParameters@paths_ls$descv_outp_dir_1L_chr, 
             lbl_nms_chr = x@b_SpecificParameters@itm_labels_chr, 
             maui_domains_pfxs_1L_chr = x@b_SpecificParameters@itm_prefix_1L_chr)
+    }
+    if (what_1L_chr %in% c("models", "all")) {
+        x <- investigate(x)
+        if (!is.null(prefd_mdl_types_chr)) 
+            x <- renew(x, new_val_xx = prefd_mdl_types_chr, type_1L_chr = "results", 
+                what_1L_chr = "prefd_mdls")
+        x <- investigate(x)
+        if (!is.null(prefd_covars_chr)) 
+            x <- renew(x, new_val_xx = prefd_covars_chr, type_1L_chr = "results", 
+                what_1L_chr = "prefd_covars")
+        x <- investigate(x)
+        x <- investigate(x)
+        x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$session_data_ls <- session_data_ls
     }
     return(x)
 })

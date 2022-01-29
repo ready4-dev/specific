@@ -116,3 +116,27 @@ methods::setMethod("renew", "SpecificProject", function (x, new_val_xx, type_1L_
         x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$prefd_covars_chr <- new_val_xx
     return(x)
 })
+#' 
+#' Renew (update) a ready4 framework module (or sub-module)
+#' @name renew-SpecificMixed
+#' @description renew method applied to SpecificMixed
+#' @param x An object of class SpecificMixed
+#' @param new_val_xx New value (an output object of multiple potential types), Default: NULL
+#' @param a_Ready4useRepos PARAM_DESCRIPTION
+#' @param type_1L_chr Type (a character vector of length one), Default: 'results'
+#' @param what_1L_chr What (a character vector of length one), Default: 'dv_ls'
+#' @return x (An object of class SpecificMixed)
+#' @rdname renew-methods
+#' @aliases renew,SpecificMixed-method
+#' @export 
+#' @importFrom ready4 renew
+methods::setMethod("renew", "SpecificMixed", function (x, new_val_xx = NULL, a_Ready4useRepos, type_1L_chr = "results", 
+    what_1L_chr = "dv_ls") 
+{
+    dv_ls <- list(dv_nm_1L_chr = procureSlot(a_Ready4useRepos, 
+        "dv_nm_1L_chr"), ds_url_1L_chr = procureSlot(a_Ready4useRepos, 
+        "dv_ds_nm_1L_chr"), parent_dv_dir_1L_chr = paste0(x@b_SpecificParameters@paths_ls$output_data_dir_1L_chr, 
+        "/H_Dataverse"))
+    x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$dv_ls <- dv_ls
+    return(x)
+})

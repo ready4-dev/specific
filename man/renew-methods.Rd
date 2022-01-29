@@ -7,6 +7,8 @@
 \alias{renew,specific_predictors-method}
 \alias{renew-SpecificProject}
 \alias{renew,SpecificProject-method}
+\alias{renew-SpecificMixed}
+\alias{renew,SpecificMixed-method}
 \title{Renew (update) a ready4 framework module (or sub-module)}
 \usage{
 renew.specific_models(
@@ -86,9 +88,17 @@ renew.specific_predictors(
 )
 
 \S4method{renew}{SpecificProject}(x, new_val_xx, type_1L_chr = "results", what_1L_chr = "prefd_mdls")
+
+\S4method{renew}{SpecificMixed}(
+  x,
+  new_val_xx = NULL,
+  a_Ready4useRepos,
+  type_1L_chr = "results",
+  what_1L_chr = "dv_ls"
+)
 }
 \arguments{
-\item{x}{An object of class SpecificProject}
+\item{x}{An object of class SpecificMixed}
 
 \item{short_name_chr}{Short name (a character vector), Default: 'NA'}
 
@@ -138,11 +148,13 @@ renew.specific_predictors(
 
 \item{covariate_lgl}{Covariate (a logical vector), Default: NA}
 
-\item{new_val_xx}{New value (an output object of multiple potential types)}
+\item{new_val_xx}{New value (an output object of multiple potential types), Default: NULL}
 
 \item{type_1L_chr}{Type (a character vector of length one), Default: 'results'}
 
-\item{what_1L_chr}{What (a character vector of length one), Default: 'prefd_mdls'}
+\item{what_1L_chr}{What (a character vector of length one), Default: 'dv_ls'}
+
+\item{a_Ready4useRepos}{PARAM_DESCRIPTION}
 }
 \value{
 x (An object)
@@ -150,6 +162,8 @@ x (An object)
 x (An object)
 
 x (An object of class SpecificProject)
+
+x (An object of class SpecificMixed)
 }
 \description{
 renew.specific_models() is a renew method that renews an instance of a class by updating it with new data. This method is implemented for the Candidate models lookup table The function is called for its side effects and does not return a value.
@@ -157,4 +171,6 @@ renew.specific_models() is a renew method that renews an instance of a class by 
 renew.specific_predictors() is a renew method that renews an instance of a class by updating it with new data. This method is implemented for the Candidate predictors lookup table The function is called for its side effects and does not return a value.
 
 renew method applied to SpecificProject
+
+renew method applied to SpecificMixed
 }

@@ -106,7 +106,8 @@ write_mdl_cmprsn <- function (scored_data_tb, ds_smry_ls, mdl_smry_ls, output_da
         new_dir_nm_1L_chr = "A_Candidate_Mdls_Cmprsn", mdl_types_lup = mdl_smry_ls$mdl_types_lup, 
         dictionary_tb = ds_smry_ls$dictionary_tb)
     mdl_smry_ls$prefd_mdl_types_chr <- make_prefd_mdls_vec(mdl_smry_ls$smry_of_sngl_predr_mdls_tb, 
-        choose_from_pfx_chr = mdl_smry_ls$choose_from_pfx_chr)
+        choose_from_pfx_chr = mdl_smry_ls$choose_from_pfx_chr, 
+        mdl_types_lup = mdl_smry_ls$mdl_types_lup)
     mdl_cmprsn_ls <- list(bl_tb = bl_tb, ds_smry_ls = ds_smry_ls, 
         mdl_smry_ls = mdl_smry_ls)
     return(mdl_cmprsn_ls)
