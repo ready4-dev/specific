@@ -27,6 +27,8 @@
 \item{new_dir_nm_1L_chr}{New directory name (a character vector of length one), Default: 'F_TS_Mdls'}
 }
 \value{
+X (Modelling project dataset, input parameters and predictor comparison results.)
+
 x (An object of class SpecificMixed)
 
 X (Modelling project dataset, input parameters and complete fixed models results.)

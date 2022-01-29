@@ -77,7 +77,8 @@ write_mdl_cmprsn <- function(scored_data_tb,
                                                                               mdl_types_lup = mdl_smry_ls$mdl_types_lup,
                                                                               dictionary_tb = ds_smry_ls$dictionary_tb)
   mdl_smry_ls$prefd_mdl_types_chr <- make_prefd_mdls_vec(mdl_smry_ls$smry_of_sngl_predr_mdls_tb,
-                                                         choose_from_pfx_chr = mdl_smry_ls$choose_from_pfx_chr)
+                                                         choose_from_pfx_chr = mdl_smry_ls$choose_from_pfx_chr,
+                                                         mdl_types_lup = mdl_smry_ls$mdl_types_lup)
   mdl_cmprsn_ls <- list(bl_tb = bl_tb,
                         ds_smry_ls = ds_smry_ls,
                         mdl_smry_ls = mdl_smry_ls)
@@ -1204,7 +1205,7 @@ write_ts_mdls_from_alg_outp <- function (outp_smry_ls, # rename lngl
                                          control_ls = NULL)
 {
   output_dir_1L_chr <- write_new_outp_dir(outp_smry_ls$path_to_write_to_1L_chr,
-                                                               new_dir_nm_1L_chr = new_dir_nm_1L_chr)
+                                          new_dir_nm_1L_chr = new_dir_nm_1L_chr)
 
     mdls_smry_tb <- write_ts_mdls(data_tb = outp_smry_ls$scored_data_tb,
         depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr, predr_vars_nms_ls = outp_smry_ls$predr_vars_nms_ls,

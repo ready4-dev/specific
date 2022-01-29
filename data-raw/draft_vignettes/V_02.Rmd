@@ -7,6 +7,51 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+## NEW GAME
+
+START FROM END OF V1
+
+## Specify metadata about the manuscript to be authored
+<!-- Move this to later -->
+```{r}
+A <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes",
+                          dv_ds_nm_1L_chr = "https://doi.org/10.7910/DVN/GW7ZKC")
+```
+```{r}
+Z <- ready4show::Ready4showSynopsis(authors_r3 = ready4show::authors_tb,
+                                    coi_1L_chr = "None declared.",
+                                    digits_int = c(3L,3L),
+                                    ethics_1L_chr = "The study was reviewed and granted approval by Awesome University's Human Research Ethics Committee (1111111.1).",
+                                    funding_1L_chr = "The study was funded by Generous Benefactor.",
+                                    institutes_r3 = ready4show::institutes_tb,
+                                    interval_chr = "three months",
+                                    keywords_chr = c("entirely","fake","do", "not","cite"),
+                                    outp_formats_chr = c("PDF","PDF"),
+                                    title_1L_chr = "A hypothetical study using fake data")
+```
+```{r}
+Z <- renewSlot(Z,
+               "correspondences_r3",
+               old_nms_chr = c("PHQ9", "GAD7"),
+               new_nms_chr = c("PHQ-9", "GAD-7"))
+```
+### Report
+
+### Share
+```{r}
+X <- renew_SpecificMixed(X,
+                         a_Ready4useRepos = A)
+```
+
+
+
+
+```{r}
+outp_smry_ls$
+```
+
+
+
 Note: **This vignette uses fake data** - it is for illustrative purposes only and should not be used to inform decision making.
 
 ```{r message=FALSE, warning=FALSE}
@@ -91,30 +136,7 @@ Y <- renewSlot(Y,
                covariate_lgl = F)
 ```
 
-## Specify metadata about the manuscript to be authored
-<!-- Move this to later -->
-```{r}
-Z <- ready4show::Ready4showSynopsis(authors_r3 = ready4show::authors_tb,
-                                    coi_1L_chr = "None declared.",
-                                    digits_int = c(3L,3L),
-                                    ethics_1L_chr = "The study was reviewed and granted approval by Awesome University's Human Research Ethics Committee (1111111.1).",
-                                    funding_1L_chr = "The study was funded by Generous Benefactor.",
-                                    institutes_r3 = ready4show::institutes_tb,
-                                    interval_chr = "three months",
-                                    keywords_chr = c("entirely","fake","do", "not","cite"),
-                                    outp_formats_chr = c("PDF","PDF"),
-                                    title_1L_chr = "A hypothetical study using fake data")
-```
-```{r}
-Z <- renewSlot(Z,
-               "correspondences_r3",
-               old_nms_chr = c("PHQ9", "GAD7"),
-               new_nms_chr = c("PHQ-9", "GAD-7"))
-```
-```{r}
-A <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes",
-                          dv_ds_nm_1L_chr = "https://doi.org/10.7910/DVN/GW7ZKC")
-```
+
 ```{r}
 # Y <- renew(Y,
 #            c("OLS_CLL","GLM_GSN_LOG"),

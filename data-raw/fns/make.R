@@ -1452,12 +1452,14 @@ make_prefd_mdls_vec <- function (smry_of_sngl_predr_mdls_tb,
     ordered_mdl_types_chr <- dplyr::inner_join(smry_of_sngl_predr_mdls_tb %>%
                                                    dplyr::select(Model) %>%
                                                  dplyr::rename(long_name_chr = Model),
-                                               mdl_types_lup) %>%
+                                               mdl_types_lup,
+                                               by = "long_name_chr") %>%
       dplyr::pull(short_name_chr)
-    prefd_mdls_chr <- purrr::map_chr(choose_from_pfx_chr, ~ordered_mdl_types_chr[startsWith(ordered_mdl_types_chr,
+    prefd_mdls_chr <- purrr::map_chr(choose_from_pfx_chr,
+                                     ~ordered_mdl_types_chr[startsWith(ordered_mdl_types_chr,
                                                                                             .x)][1])
     prefd_mdls_chr <- prefd_mdls_chr[order(prefd_mdls_chr %>% purrr::map_int(~which(ordered_mdl_types_chr==.x)))]
-    prefd_mdls_chr <- prefd_mdls_chr[-max((1:length(prefd_mdls_chr))[prefd_mdls_chr %>% purrr::map_lgl(~(startsWith(.x,"BET") | startsWith(.x,"GLM")))])]
+    #prefd_mdls_chr <- prefd_mdls_chr[-max((1:length(prefd_mdls_chr))[prefd_mdls_chr %>% purrr::map_lgl(~(startsWith(.x,"BET") | startsWith(.x,"GLM")))])]
     return(prefd_mdls_chr)
 }
 make_prmry_analysis_params_ls <- function(analysis_core_params_ls,

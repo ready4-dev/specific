@@ -86,7 +86,7 @@ investigate_SpecificPredictors <- function(x){
                                               bl_tb = x@c_SpecificResults@b_SpecificPrivate@private_outp_ls$bl_tb,
                                               ds_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$ds_smry_ls,
                                               mdl_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls,
-                                              output_data_dir_1L_chr = x@paths_chr[1],
+                                              output_data_dir_1L_chr = x@b_SpecificParameters@paths_ls$output_data_dir_1L_chr,
                                               seed_1L_int = x@b_SpecificParameters@seed_1L_int)
   x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1]
   x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
@@ -102,7 +102,7 @@ investigate_SpecificFixed <- function(x){
                                               bl_tb = x@c_SpecificResults@b_SpecificPrivate@private_outp_ls$bl_tb,
                                               ds_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$ds_smry_ls,
                                               mdl_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls,
-                                              output_data_dir_1L_chr = x@paths_chr[1],
+                                              output_data_dir_1L_chr = x@b_SpecificParameters@paths_ls$output_data_dir_1L_chr,
                                               seed_1L_int = x@b_SpecificParameters@seed_1L_int)
   x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1] # EDIT TO REMOVE INPUTS
   x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
