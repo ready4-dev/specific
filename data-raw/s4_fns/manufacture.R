@@ -1,4 +1,45 @@
-manufacture_SpecificModels <- function(x,
+manufacture_SpecificMixed <- function(x,
+                                      a_Ready4useRepos = NULL,
+                                      scndry_anlys_params_ls = NULL,
+                                      what_1L_chr = "input_params_ls"){
+  if(what_1L_chr == "input_params_ls"){
+    header_yaml_args_ls <- ready4show::make_header_yaml_args_ls(authors_tb = Z@authors_r3,
+                                                                institutes_tb = Z@institutes_r3,
+                                                                title_1L_chr = Z@title_1L_chr,
+                                                                keywords_chr = Z@keywords_chr)
+    maui_params_ls <- make_maui_params_ls(maui_domains_pfxs_1L_chr = X@b_SpecificParameters@itm_prefix_1L_chr,
+                                          maui_itm_short_nms_chr = X@b_SpecificParameters@itm_labels_chr,
+                                          maui_scoring_fn = NULL)
+    output_format_ls <- ready4show::make_output_format_ls(manuscript_outp_1L_chr = Z@outp_formats_chr[1],
+                                                          manuscript_digits_1L_int = Z@digits_int[1],
+                                                          supplementary_outp_1L_chr = ifelse(length(Z@outp_formats_chr)>1,Z@outp_formats_chr[2],Z@outp_formats_chr[1]),
+                                                          supplementary_digits_1L_int = ifelse(length(Z@digits_int)>1,Z@digits_int[2],Z@digits_int[1]))
+    # scndry_anlys_params_ls <- make_scndry_anlys_params(candidate_predrs_chr = c("SOFAS"),
+    #                                                    prefd_covars_chr = NA_character_)
+    object_xx <- make_input_params(X@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
+                                         control_ls = X@b_SpecificParameters@control_ls,
+                                         ds_descvs_ls = manufacture(X,
+                                                                    what_1L_chr = "ds_descvs_ls"),
+                                         dv_ds_nm_and_url_chr = c(a_Ready4useRepos@dv_nm_1L_chr,
+                                                                  a_Ready4useRepos@dv_ds_nm_1L_chr),
+                                         header_yaml_args_ls = header_yaml_args_ls,
+                                         maui_params_ls = maui_params_ls,
+                                         output_format_ls = output_format_ls,
+                                         predictors_lup = X@b_SpecificParameters@predictors_lup,
+                                         prefd_covars_chr = ifelse(is.null(procure(X,
+                                                                                   what = "prefd_covars")),
+                                                                   NA_character_,
+                                                                   procure(X,what = "prefd_covars")),
+                                         prefd_mdl_types_chr = procure(X,
+                                                                       what = "prefd_mdls")#,
+                                         scndry_anlys_params_ls = scndry_anlys_params_ls)#
+
+  }else{
+    object_xx <- methods::callNextMethod()
+  }
+  return(object_xx)
+}
+manufacture_SpecificProject <- function(x,
                                        what_1L_chr = "ds_descvs_ls"){
   if(what_1L_chr %in% c("ds_descvs_ls","ds_smry_ls"))
     object_xx <- make_ds_descvs_ls(candidate_predrs_chr =  x@b_SpecificParameters@candidate_predrs_chr,

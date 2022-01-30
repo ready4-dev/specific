@@ -425,6 +425,13 @@ z <- ready4::author(z)
 # usethis::use_dev_package("youthvars",
 #                          type = "Depends",
 #                          remote = "ready4-dev/youthvars")
+usethis::use_package("betareg",
+                     type = "Suggests")
+usethis::use_dev_package("cmdstanr",
+                         type = "Suggests",
+                         remote = "stan-dev/cmdstanr")
+usethis::use_package("rstan",
+                     type = "Suggests")
 usethis::use_dev_package("scorz",
                          type = "Suggests",
                          remote = "ready4-dev/scorz")
