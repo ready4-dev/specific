@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9043</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9048</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,21 +91,26 @@
 <p>The steps in this exploratory analysis workflow may need to be performed iteratively, both in order to identify the optimal model types, predictors and covariates to use and modify default values to ensure model convergence.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ready4-dev.github.io/ready4/" class="external-link">ready4</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ready4-dev.github.io/ready4show/" class="external-link">ready4show</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ready4-dev.github.io/ready4use/" class="external-link">ready4use</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ready4-dev.github.io/scorz/" class="external-link">scorz</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">betareg</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ready4-dev.github.io/specific/">specific</a></span><span class="op">)</span></code></pre></div>
 <div class="section level2">
 <h2 id="import-data">Import data<a class="anchor" aria-label="anchor" href="#import-data"></a>
 </h2>
-<p>We start by ingesting our data. As this example uses EQ-5D data, we import a <code>ScorzEuroQol5</code> object that was created using the steps described in <a href="https://ready4-dev.github.io/scorz/articles/V_02.html" class="external-link">this vignette from the scorz pacakge</a>.</p>
+<p>We start by ingesting our data. As this example uses EQ-5D data, we import a <code>ScorzEuroQol5</code> <a href="https://ready4-dev.github.io/ready4/articles/V_01.html" class="external-link">ready4 framework module</a> (created using the steps described in <a href="https://ready4-dev.github.io/scorz/articles/V_02.html" class="external-link">this vignette from the scorz pacakge</a>) into a <code>SpecificConverter</code> Module and then apply the <code>metamorphose</code> method to convert it into a <code>SpecificModel</code> module.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">ready4use</span><span class="fu">::</span><span class="fu"><a href="https://ready4-dev.github.io/ready4use/reference/Ready4useRepos-class.html" class="external-link">Ready4useRepos</a></span><span class="op">(</span>gh_repo_1L_chr <span class="op">=</span> <span class="st">"ready4-dev/scorz"</span>, 
-                               gh_tag_1L_chr <span class="op">=</span> <span class="st">"Documentation_0.0"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-    <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/ingest-methods.html" class="external-link">ingest</a></span><span class="op">(</span>fls_to_ingest_chr <span class="op">=</span> <span class="st">"ymh_ScorzEuroQol5"</span>,
-         metadata_1L_lgl <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></code></pre></div>
-<p>For the purpose of this analysis we only the <code>YouthvarsProfile</code> object included in <code>X</code> so extract this element using the <code>procureSlot</code> method.</p>
+<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpecificConverter-class.html">SpecificConverter</a></span><span class="op">(</span>a_ScorzProfile <span class="op">=</span> <span class="fu">ready4use</span><span class="fu">::</span><span class="fu"><a href="https://ready4-dev.github.io/ready4use/reference/Ready4useRepos-class.html" class="external-link">Ready4useRepos</a></span><span class="op">(</span>gh_repo_1L_chr <span class="op">=</span> <span class="st">"ready4-dev/scorz"</span>, 
+                                                                  gh_tag_1L_chr <span class="op">=</span> <span class="st">"Documentation_0.0"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+                         <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/ingest-methods.html" class="external-link">ingest</a></span><span class="op">(</span>fls_to_ingest_chr <span class="op">=</span> <span class="st">"ymh_ScorzEuroQol5"</span>,
+                                metadata_1L_lgl <span class="op">=</span> <span class="cn">F</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/metamorphose-methods.html" class="external-link">metamorphose</a></span><span class="op">(</span><span class="op">)</span> </code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="va">X</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/procureSlot-methods.html" class="external-link">procureSlot</a></span><span class="op">(</span><span class="st">"a_YouthvarsProfile"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] "SpecificModels"</span>
+<span class="co">## attr(,"package")</span>
+<span class="co">## [1] "specific"</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="inspect-data">Inspect data<a class="anchor" aria-label="anchor" href="#inspect-data"></a>
@@ -578,39 +583,40 @@ Not studying or working
 </td>
 </tr></tfoot>
 </table>
-<p>To learn more about the properties of <code>X</code> (which is a <code>YouthvarsSeries</code> child class of <code>YouthvarsProfile</code> object) and how it can be inspected, <a href="https://ready4-dev.github.io/youthvars/articles/V_02.html" class="external-link">read this vignette from the youthvars package</a>.</p>
-</div>
-<div class="section level2">
-<h2 id="create-specificmodels">Create SpecificModels<a class="anchor" aria-label="anchor" href="#create-specificmodels"></a>
-</h2>
-<p>To start with, we create a new instance of a <code>SpecificModels</code> object containing data we have just ingested.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpecificModels-class.html">SpecificModels</a></span><span class="op">(</span>a_YouthvarsProfile <span class="op">=</span> <span class="va">X</span><span class="op">)</span> </code></pre></div>
+<p>To source dataset of <code>X</code> is contained in the <code>a_YouthvarsProfile</code> slot and is a <code>YouthvarsSeries</code> module. For more information about methods that can be used to explore this dataset, <a href="https://ready4-dev.github.io/youthvars/articles/V_02.html" class="external-link">read this vignette from the youthvars package</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="specify-parameters">Specify parameters<a class="anchor" aria-label="anchor" href="#specify-parameters"></a>
 </h2>
-<p>In preparation for exploring our dataset, we need to declare a set of model parameters in a <code>SpecificParameters</code> object. This can be done in one step, or in sequential steps. In this example, we will proceed sequentially.</p>
+<p>In preparation for exploring our dataset, we need to declare a set of model parameters in a <code>b_SpecificParameters</code> slot of <code>X</code>. This can be done in one step, or in sequential steps. In this example, we will proceed sequentially.</p>
 <div class="section level3">
 <h3 id="dependent-variable">Dependent variable<a class="anchor" aria-label="anchor" href="#dependent-variable"></a>
 </h3>
-<p>The first parameter that we declare is the dependent variable (total EQ-5D utility score) for the models we will be exploring and its allowable range (-1 to 1).</p>
+<p>The dependent variable (total EQ-5D utility score) has already been specified when we imported the data from the <code>ScorzEuroQol5</code> module.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpecificParameters-class.html">SpecificParameters</a></span><span class="op">(</span>depnt_var_nm_1L_chr <span class="op">=</span> <span class="st">"eq5d_total_w"</span>,
-                        depnt_var_min_max_dbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/procureSlot-methods.html" class="external-link">procureSlot</a></span><span class="op">(</span><span class="va">X</span>,
+            <span class="st">"b_SpecificParameters@depnt_var_nm_1L_chr"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] "eq5d_total_w"</span></code></pre>
+<p>We can now add details of the allowable range of dependent variable values.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">X</span>,
+               <span class="st">"b_SpecificParameters@depnt_var_min_max_dbl"</span>,
+               <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="co"># Y &lt;- SpecificParameters(depnt_var_nm_1L_chr = "eq5d_total_w",</span>
+<span class="co">#                         depnt_var_min_max_dbl = c(-0.9999,0.9999))</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="candidate-predictors">Candidate predictors<a class="anchor" aria-label="anchor" href="#candidate-predictors"></a>
 </h3>
-<p>We add the names of candidate predictor variables to our <code>SpecificParameters</code> object.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">Y</span>,
-               <span class="st">"candidate_predrs_chr"</span>,
+<p>We can now specify the names of candidate predictor variables.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">X</span>,
+               <span class="st">"b_SpecificParameters@candidate_predrs_chr"</span>,
                new_val_xx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"K10_int"</span>,<span class="st">"Psych_well_int"</span><span class="op">)</span><span class="op">)</span> </code></pre></div>
 <p>We next add meta-data about each candidate predictor variable in the form of a <code>specific_predictors</code> object.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">Y</span>, 
-               <span class="st">"predictors_lup"</span>, 
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">X</span>, 
+               <span class="st">"b_SpecificParameters@predictors_lup"</span>, 
                short_name_chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"K10_int"</span>,<span class="st">"Psych_well_int"</span><span class="op">)</span>,
                long_name_chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Kessler Psychological Distress - 10 Item Total Score"</span>,
                                  <span class="st">"Overall Wellbeing Measure (Winefield et al. 2012)"</span><span class="op">)</span>,
@@ -621,11 +627,10 @@ Not studying or working
                class_fn_chr <span class="op">=</span> <span class="st">"as.integer"</span>,
                mdl_scaling_dbl <span class="op">=</span> <span class="fl">0.01</span>,
                covariate_lgl <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></code></pre></div>
-<p>The <code>specific_predictors</code> object that we have added to <code>Y</code> can be retrieved using the <code>procureSlot</code> method.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/procureSlot-methods.html" class="external-link">procureSlot</a></span><span class="op">(</span><span class="va">Y</span>,
-            <span class="st">"predictors_lup"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/exhibit-methods.html">exhibit.specific_predictors</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>The <code>specific_predictors</code> object that we have added to <code>X</code> can be inspected using the <code>exhibitSlot</code> method.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/exhibitSlot-methods.html" class="external-link">exhibitSlot</a></span><span class="op">(</span><span class="va">X</span>,
+            <span class="st">"b_SpecificParameters@predictors_lup"</span><span class="op">)</span></code></pre></div>
 <table class="table  lightable-paper lightable-hover" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;'>
 <thead><tr>
 <th style="text-align:left;">
@@ -727,24 +732,44 @@ FALSE
 <h3 id="covariates">Covariates<a class="anchor" aria-label="anchor" href="#covariates"></a>
 </h3>
 <p>We also specify the covariates that we aim to explore in conjunction with each candidate predictor.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">Y</span>, 
-               <span class="st">"candidate_covars_chr"</span>,
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">X</span>, 
+               <span class="st">"b_SpecificParameters@candidate_covars_chr"</span>,
                new_val_xx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d_sex_birth_s"</span>, <span class="st">"d_age"</span>,  <span class="st">"d_sexual_ori_s"</span>, <span class="st">"d_studying_working"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="descriptive-variables">Descriptive variables<a class="anchor" aria-label="anchor" href="#descriptive-variables"></a>
+</h3>
+<p>We also specify variables that we will use for generating descriptive statistics about the dataset.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">X</span>,
+               <span class="st">"b_SpecificParameters@descv_var_nms_chr"</span>,
+               <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d_age"</span>,<span class="st">"Gender"</span>,<span class="st">"d_relation_s"</span>,
+                 <span class="st">"d_sexual_ori_s"</span>, <span class="st">"Region"</span>, <span class="st">"d_studying_working"</span><span class="op">)</span><span class="op">)</span> </code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="temporal-variables">Temporal variables<a class="anchor" aria-label="anchor" href="#temporal-variables"></a>
+</h3>
+<p>The name of the dataset variable for data collection timepoint and all of its unique values were imported when converting the <code>ScorzEuroQol5</code> module.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/procureSlot-methods.html" class="external-link">procureSlot</a></span><span class="op">(</span><span class="va">X</span>,<span class="st">"a_YouthvarsProfile@timepoint_var_nm_1L_chr"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] "Timepoint"</span></code></pre>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/procureSlot-methods.html" class="external-link">procureSlot</a></span><span class="op">(</span><span class="va">X</span>,<span class="st">"a_YouthvarsProfile@timepoint_vals_chr"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] "BL"  "FUP"</span></code></pre>
+<p>However, we also need to specify the name of the variable that contains the datestamp for each dataset record.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">X</span>,
+               <span class="st">"b_SpecificParameters@msrmnt_date_var_nm_1L_chr"</span>,
+               <span class="st">"data_collection_dtm"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="candidate-models">Candidate models<a class="anchor" aria-label="anchor" href="#candidate-models"></a>
 </h3>
-<p>We now add details about the candidate models we will explore in the form of a <code>specific_models</code> object.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">Y</span>,
-               <span class="st">"candidate_mdls_lup"</span>, 
-               new_val_xx <span class="op">=</span> <span class="fu"><a href="../reference/get_cndt_mdls.html">get_cndt_mdls</a></span><span class="op">(</span>mdl_short_nms_chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS_NTF"</span>,<span class="st">"OLS_CLL"</span>,<span class="st">"GLM_GSN_LOG"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>The <code>specific_models</code> object that we have just added is reproduced below.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/procureSlot-methods.html" class="external-link">procureSlot</a></span><span class="op">(</span><span class="va">Y</span>,
-            <span class="st">"candidate_mdls_lup"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># </span>
-  <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/exhibit-methods.html" class="external-link">exhibit</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><code>X</code> was created with a default set of candidate models, stored as a <code>specific_models</code> sub-module, which can be inspected using the <code>exhibitSlot</code> method.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/exhibitSlot-methods.html" class="external-link">exhibitSlot</a></span><span class="op">(</span><span class="va">X</span>,
+            <span class="st">"b_SpecificParameters@candidate_mdls_lup"</span><span class="op">)</span></code></pre></div>
 <table class="table  lightable-paper lightable-hover" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;'>
 <caption>
 Model types lookup table
@@ -759,7 +784,7 @@ Name
 <th style="text-align:right;">
 Control
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 Familty
 </th>
 <th style="text-align:right;">
@@ -768,16 +793,16 @@ Function
 <th style="text-align:right;">
 Start
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 Predict
 </th>
 <th style="text-align:right;">
 Transformation
 </th>
-<th style="text-align:right;">
+<th style="text-align:left;">
 Binomial
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 Acronym (Fixed)
 </th>
 <th style="text-align:right;">
@@ -786,7 +811,7 @@ Acronymy (Mixed)
 <th style="text-align:right;">
 Type (Mixed)
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 With
 </th>
 </tr></thead>
@@ -801,7 +826,7 @@ Ordinary Least Squares (no transformation)
 <td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
 <td style="text-align:right;">
@@ -810,16 +835,16 @@ lm
 <td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
 <td style="text-align:right;">
 NTF
 </td>
-<td style="text-align:right;">
+<td style="text-align:left;">
 FALSE
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 OLS
 </td>
 <td style="text-align:right;">
@@ -828,8 +853,131 @@ LMM
 <td style="text-align:right;">
 linear mixed model
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 no transformation
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OLS_LOG
+</td>
+<td style="text-align:right;">
+Ordinary Least Squares (log transformation)
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+lm
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+LOG
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+OLS
+</td>
+<td style="text-align:right;">
+LMM
+</td>
+<td style="text-align:right;">
+linear mixed model
+</td>
+<td style="text-align:right;">
+log transformation
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OLS_LOGIT
+</td>
+<td style="text-align:right;">
+Ordinary Least Squares (logit transformation)
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+lm
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+LOGIT
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+OLS
+</td>
+<td style="text-align:right;">
+LMM
+</td>
+<td style="text-align:right;">
+linear mixed model
+</td>
+<td style="text-align:right;">
+logit transformation
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OLS_LOGLOG
+</td>
+<td style="text-align:right;">
+Ordinary Least Squares (log log transformation)
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+lm
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+LOGLOG
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+OLS
+</td>
+<td style="text-align:right;">
+LMM
+</td>
+<td style="text-align:right;">
+linear mixed model
+</td>
+<td style="text-align:right;">
+log log transformation
 </td>
 </tr>
 <tr>
@@ -842,7 +990,7 @@ Ordinary Least Squares (complementary log log transformation)
 <td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
 <td style="text-align:right;">
@@ -851,16 +999,16 @@ lm
 <td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
 <td style="text-align:right;">
 CLL
 </td>
-<td style="text-align:right;">
+<td style="text-align:left;">
 FALSE
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 OLS
 </td>
 <td style="text-align:right;">
@@ -869,7 +1017,7 @@ LMM
 <td style="text-align:right;">
 linear mixed model
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 complementary log log transformation
 </td>
 </tr>
@@ -883,7 +1031,7 @@ Generalised Linear Model with Gaussian distribution and log link
 <td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 gaussian(log)
 </td>
 <td style="text-align:right;">
@@ -892,16 +1040,16 @@ glm
 <td style="text-align:right;">
 -0.1,-0.1
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 response
 </td>
 <td style="text-align:right;">
 NTF
 </td>
-<td style="text-align:right;">
+<td style="text-align:left;">
 FALSE
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 GLM
 </td>
 <td style="text-align:right;">
@@ -910,8 +1058,90 @@ GLMM
 <td style="text-align:right;">
 generalised linear mixed model
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 Gaussian distribution and log link
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BET_LGT
+</td>
+<td style="text-align:right;">
+Beta Regression Model with Binomial distribution and logit link
+</td>
+<td style="text-align:right;">
+betareg::betareg.control
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+betareg::betareg
+</td>
+<td style="text-align:right;">
+-0.5,-0.1,3
+</td>
+<td style="text-align:right;">
+response
+</td>
+<td style="text-align:right;">
+NTF
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+GLM
+</td>
+<td style="text-align:right;">
+GLMM
+</td>
+<td style="text-align:right;">
+generalised linear mixed model
+</td>
+<td style="text-align:right;">
+Binomial distribution and logit link
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BET_CLL
+</td>
+<td style="text-align:right;">
+Beta Regression Model with Binomial distribution and complementary log log link
+</td>
+<td style="text-align:right;">
+betareg::betareg.control
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+betareg::betareg
+</td>
+<td style="text-align:right;">
+-0.5,-0.1,3
+</td>
+<td style="text-align:right;">
+response
+</td>
+<td style="text-align:right;">
+NTF
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+GLM
+</td>
+<td style="text-align:right;">
+GLMM
+</td>
+<td style="text-align:right;">
+generalised linear mixed model
+</td>
+<td style="text-align:right;">
+Binomial distribution and complementary log log link
 </td>
 </tr>
 </tbody>
@@ -921,50 +1151,72 @@ Gaussian distribution and log link
 </td>
 </tr></tfoot>
 </table>
+<p>We can choose to select just a subset of these to explore using the <code>renewSlot</code> method. As this is an illustrative example, we have restricted the models we will explore to just four types, passing the relevant row numbers to the <code>slice_idxs_int</code> argument.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">X</span>,
+               <span class="st">"b_SpecificParameters@candidate_mdls_lup"</span>,
+               slice_idxs_int <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1L</span>,<span class="fl">5L</span>,<span class="fl">7L</span>,<span class="fl">8L</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="other-parameters">Other parameters<a class="anchor" aria-label="anchor" href="#other-parameters"></a>
 </h3>
-<p>Depending on the type of analysis we plan on undertaking, we can also specify parameters such as the number of folds to use in cross validation and the maximum number of model runs to allow.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">Y</span>,
-               <span class="st">"folds_1L_int"</span>,
-               new_val_xx <span class="op">=</span> <span class="fl">10L</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="st">"max_mdl_runs_1L_int"</span>,
-            new_val_xx <span class="op">=</span> <span class="fl">300L</span><span class="op">)</span></code></pre></div>
-<p>We can also specify a seed to ensure reproducibility of results.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">Y</span>,
-               <span class="st">"seed_1L_int"</span>,
-               new_val_xx <span class="op">=</span> <span class="fl">1234L</span><span class="op">)</span></code></pre></div>
-<p>Finally, we add <code>Y</code> (model parameters) to <code>X</code> (the <code>SpecificModels</code>).</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">X</span>,
-               <span class="st">"b_SpecificParameters"</span>,
-               new_val_xx <span class="op">=</span> <span class="va">Y</span><span class="op">)</span></code></pre></div>
+<p>Depending on the type of analysis we plan on undertaking, we can also specify parameters such as the number of folds to use in cross validation, the maximum number of model runs to allow and a seed to ensure reproducibility of results. In this case we are going to use the default values generated when we first created <code>X</code>.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/procureSlot-methods.html" class="external-link">procureSlot</a></span><span class="op">(</span><span class="va">X</span>,
+            <span class="st">"b_SpecificParameters@folds_1L_int"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] 10</span></code></pre>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/procureSlot-methods.html" class="external-link">procureSlot</a></span><span class="op">(</span><span class="va">X</span>,
+            <span class="st">"b_SpecificParameters@max_mdl_runs_1L_int"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] 300</span></code></pre>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/procureSlot-methods.html" class="external-link">procureSlot</a></span><span class="op">(</span><span class="va">X</span>,
+            <span class="st">"b_SpecificParameters@seed_1L_int"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] 1234</span></code></pre>
 </div>
 </div>
 <div class="section level2">
 <h2 id="model-testing">Model testing<a class="anchor" aria-label="anchor" href="#model-testing"></a>
 </h2>
+<p>Before we start to use the data stored in <code>X</code> to undertake modelling, we must first validate that it contains all necessary (and internally consistent) data by using the <code>ratify</code> method.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/ratify-methods.html" class="external-link">ratify</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></code></pre></div>
 <div class="section level3">
 <h3 id="set-up-workspace">Set-up workspace<a class="anchor" aria-label="anchor" href="#set-up-workspace"></a>
 </h3>
 <p>We add details of the directory to which we will write all output. In this example we create a temporary directory (<code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir()</a></code>), but in practice this would be an existing directory on your local machine.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">X</span>,
                <span class="st">"paths_chr"</span>,
-               new_val_xx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+               <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>It can be useful to save fake data (useful for demonstrating the generalisability and replicability of an analysis) and real data (required for write-up and reproducibility) is distinctly labelled directories. By default, <code>X</code> is created with a flag to save all output in a sub-directory “Real”. As we are using fake data, we can override this value.</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">X</span>,
+               <span class="st">"b_SpecificParameters@fake_1L_lgl"</span>,
+               <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<p>We can now write a number of sub-directories to our specified output directory.</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/author-methods.html" class="external-link">author</a></span><span class="op">(</span><span class="va">X</span>,
+            what_1L_chr <span class="op">=</span> <span class="st">"workspace"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="model-comparison">Model comparison<a class="anchor" aria-label="anchor" href="#model-comparison"></a>
+<h3 id="descriptives">Descriptives<a class="anchor" aria-label="anchor" href="#descriptives"></a>
 </h3>
-<p>The <code>investigate</code> method will compare the candidate models we have specified in the <code>SpecificModels</code> object <code>X</code>. In so doing it will transform <code>X</code> into a <code>SpecificPredictors</code> object.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<p>The first set of outputs we write to our output directories is a set of descriptive tables and plots.</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/author-methods.html" class="external-link">author</a></span><span class="op">(</span><span class="va">X</span>,
+            what_1L_chr <span class="op">=</span> <span class="st">"descriptives"</span>,
+            digits_1L_int <span class="op">=</span> <span class="fl">3L</span><span class="op">)</span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="model-comparisons">Model comparisons<a class="anchor" aria-label="anchor" href="#model-comparisons"></a>
+</h3>
+<p>The <code>investigate</code> method can now be used to compare the candidate models we have specified earlier. In so doing it will transform <code>X</code> into a <code>SpecificPredictors</code> object.</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/investigate-methods.html" class="external-link">investigate</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></code></pre></div>
 <p>The <code>investigate</code> method will write each model to be tested to a new sub-directory of our output directory.</p>
 <p>The <code>investigate</code> method also outputs a table summarising the performance of each of the candidate models.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/exhibit-methods.html" class="external-link">exhibit</a></span><span class="op">(</span><span class="va">X</span>,
         what_1L_chr <span class="op">=</span> <span class="st">"mdl_cmprsn"</span>,
         type_1L_chr <span class="op">=</span> <span class="st">"results"</span><span class="op">)</span></code></pre></div>
@@ -997,21 +1249,67 @@ R-Squared
 <th style="text-align:right;">
 RMSE
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 MAE
 </th>
-<th style="text-align:right;">
+<th style="text-align:left;">
 R-Squared
 </th>
 <th style="text-align:right;">
 RMSE
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 MAE
 </th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+Beta Regression Model with Binomial distribution and logit link
+</td>
+<td style="text-align:right;">
+0.4256336
+</td>
+<td style="text-align:right;">
+0.0750881
+</td>
+<td style="text-align:right;">
+0.0592085
+</td>
+<td style="text-align:left;">
+0.4065157
+</td>
+<td style="text-align:right;">
+0.0749468
+</td>
+<td style="text-align:right;">
+0.0592747
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Beta Regression Model with Binomial distribution and complementary log log link
+</td>
+<td style="text-align:right;">
+0.4119537
+</td>
+<td style="text-align:right;">
+0.0759786
+</td>
+<td style="text-align:right;">
+0.0598996
+</td>
+<td style="text-align:left;">
+0.3938732
+</td>
+<td style="text-align:right;">
+0.0758661
+</td>
+<td style="text-align:right;">
+0.0599625
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 Ordinary Least Squares (no transformation)
@@ -1022,16 +1320,16 @@ Ordinary Least Squares (no transformation)
 <td style="text-align:right;">
 0.0762376
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 0.0599796
 </td>
-<td style="text-align:right;">
+<td style="text-align:left;">
 0.3911325
 </td>
 <td style="text-align:right;">
 0.0761514
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 0.0600527
 </td>
 </tr>
@@ -1045,40 +1343,17 @@ Ordinary Least Squares (complementary log log transformation)
 <td style="text-align:right;">
 0.0767730
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 0.0605442
 </td>
-<td style="text-align:right;">
+<td style="text-align:left;">
 0.3803300
 </td>
 <td style="text-align:right;">
 0.0766537
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 0.0605794
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Generalised Linear Model with Gaussian distribution and log link
-</td>
-<td style="text-align:right;">
-0.3887797
-</td>
-<td style="text-align:right;">
-0.0774636
-</td>
-<td style="text-align:left;">
-0.0605710
-</td>
-<td style="text-align:right;">
-0.3739220
-</td>
-<td style="text-align:right;">
-0.0773766
-</td>
-<td style="text-align:left;">
-0.0606410
 </td>
 </tr>
 </tbody>
@@ -1089,14 +1364,14 @@ Generalised Linear Model with Gaussian distribution and log link
 </tr></tfoot>
 </table>
 <p>We can now identify the highest performing model in each category of candidate model based on the testing R<sup>2</sup> statistic.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/procure-methods.html" class="external-link">procure</a></span><span class="op">(</span><span class="va">X</span>,
         what_1L_chr <span class="op">=</span> <span class="st">"prefd_mdls"</span><span class="op">)</span> <span class="co"># Fix for NA_ returns (one option within ctg)</span></code></pre></div>
-<pre><code><span class="co">## [1] "OLS_NTF"</span></code></pre>
+<pre><code><span class="co">## [1] "BET_LGT" "OLS_NTF"</span></code></pre>
 <p>We can override these automated selections and instead incorporate other considerations (possibly based on judgments informed by visual inspection of the plots and the desirability of constraining predictions to a maximum value of one). We do this in the following command, specifying new preferred model types, in descending order of preference.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renew-methods.html" class="external-link">renew</a></span><span class="op">(</span><span class="va">X</span>,
-           new_val_xx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OLS_CLL"</span>,<span class="st">"GLM_GSN_LOG"</span><span class="op">)</span>,
+           new_val_xx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BET_LGT"</span>, <span class="st">"OLS_CLL"</span><span class="op">)</span>,
            type_1L_chr <span class="op">=</span> <span class="st">"results"</span>,
            what_1L_chr <span class="op">=</span> <span class="st">"prefd_mdls"</span><span class="op">)</span></code></pre></div>
 </div>
@@ -1104,10 +1379,10 @@ Generalised Linear Model with Gaussian distribution and log link
 <h3 id="use-most-preferred-model-to-compare-all-candidate-predictors">Use most preferred model to compare all candidate predictors<a class="anchor" aria-label="anchor" href="#use-most-preferred-model-to-compare-all-candidate-predictors"></a>
 </h3>
 <p>We can now compare all of our candidate predictors (with and without candidate covariates) using the most preferred model type.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/investigate-methods.html" class="external-link">investigate</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></code></pre></div>
-<p>Now, we compare the performance of single predictor models of our preferred model type (in our case, a Ordinary Least Squares (complementary log log transformation)) for each candidate predictor. The last call to the <code class="sourceCode r">investigate</code> saved the tested models along with model plots in a sub-directory of our output directory. These results are also viewable as a table.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<p>Now, we compare the performance of single predictor models of our preferred model type (in our case, a Beta Regression Model with Binomial distribution and logit link) for each candidate predictor. The last call to the <code class="sourceCode r">investigate</code> saved the tested models along with model plots in a sub-directory of our output directory. These results are also viewable as a table.</p>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/exhibit-methods.html" class="external-link">exhibit</a></span><span class="op">(</span><span class="va">X</span>,
         what_1L_chr <span class="op">=</span> <span class="st">"predr_cmprsn"</span>,
         type_1L_chr <span class="op">=</span> <span class="st">"results"</span><span class="op">)</span></code></pre></div>
@@ -1156,8 +1431,8 @@ Psych_well_int
 </td>
 </tr></tfoot>
 </table>
-<p>The call to the <code class="sourceCode r">investigate</code> method also saved single predictor R model objects (one for each candidate predictors) along with the two plots for each model in a sub-directory of our output directory. The performance of each single predictor model can also be summarised in a table.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<p>The most recent call to the <code class="sourceCode r">investigate</code> method also saved single predictor R model objects (one for each candidate predictors) along with the two plots for each model in a sub-directory of our output directory. The performance of each single predictor model can also be summarised in a table.</p>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/exhibit-methods.html" class="external-link">exhibit</a></span><span class="op">(</span><span class="va">X</span>,
         type_1L_chr <span class="op">=</span> <span class="st">"results"</span>,
         what_1L_chr <span class="op">=</span> <span class="st">"fxd_sngl_cmprsn"</span><span class="op">)</span></code></pre></div>
@@ -1210,22 +1485,22 @@ MAE
 K10_int
 </td>
 <td style="text-align:right;">
-0.3995892
+0.4256336
 </td>
 <td style="text-align:left;">
-0.0767730
+0.0750881
 </td>
 <td style="text-align:right;">
-0.0605442
+0.0592085
 </td>
 <td style="text-align:left;">
-0.3803300
+0.4065157
 </td>
 <td style="text-align:right;">
-0.0766537
+0.0749468
 </td>
 <td style="text-align:left;">
-0.0605794
+0.0592747
 </td>
 </tr>
 <tr>
@@ -1233,22 +1508,22 @@ K10_int
 Psych_well_int
 </td>
 <td style="text-align:right;">
-0.1262770
+0.1511023
 </td>
 <td style="text-align:left;">
-0.0926204
+0.0912945
 </td>
 <td style="text-align:right;">
-0.0706209
+0.0702132
 </td>
 <td style="text-align:left;">
-0.1091659
+0.1333430
 </td>
 <td style="text-align:right;">
-0.0927504
+0.0914724
 </td>
 <td style="text-align:left;">
-0.0707420
+0.0703524
 </td>
 </tr>
 </tbody>
@@ -1259,18 +1534,18 @@ Psych_well_int
 </tr></tfoot>
 </table>
 <p>Updated versions of each of the models in the previous step (this time with covariates added) are saved to a new subdirectory of the output directory and we can summarise the performance of each of the updated models, along with all signficant model terms, in a table.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/exhibit-methods.html" class="external-link">exhibit</a></span><span class="op">(</span><span class="va">X</span>,
         type_1L_chr <span class="op">=</span> <span class="st">"results"</span>,
         what_1L_chr <span class="op">=</span> <span class="st">"fxd_full_cmprsn"</span><span class="op">)</span></code></pre></div>
 <p>We can now identify which, if any, of the candidate covariates we previously specified are significant predictors in any of the models.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/procure-methods.html" class="external-link">procure</a></span><span class="op">(</span><span class="va">X</span>,
         type_1L_chr <span class="op">=</span> <span class="st">"results"</span>,
         what_1L_chr <span class="op">=</span> <span class="st">"signt_covars"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] NA</span></code></pre>
 <p>We can override the covariates to select, potentially because we want to select only covariates that are significant for all or most of the models. However, in the below example we have opted not to do so and continue to use no covariates as selected by the algorithm in the previous step.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># X &lt;- renew(X,</span>
 <span class="co">#             new_val_xx = c("COVARIATE OF YOUR CHOICE", "ANOTHER COVARIATE"),</span>
 <span class="co">#                                               type_1L_chr = "results",</span>
@@ -1280,9 +1555,9 @@ Psych_well_int
 <h3 id="test-preferred-model-with-preferred-covariates-for-each-candidate-predictor">Test preferred model with preferred covariates for each candidate predictor<a class="anchor" aria-label="anchor" href="#test-preferred-model-with-preferred-covariates-for-each-candidate-predictor"></a>
 </h3>
 <p>We now conclude our model testing by rerunning the previous step, except confining our covariates to those we prefer.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/investigate-methods.html" class="external-link">investigate</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></code></pre></div>
-<p>The previous call to the <code class="sourceCode r">write_mdls_with_covars_cmprsn</code> function saves the tested models along with the two plots for each model in the “E_Predrs_W_Covars_Sngl_Mdl_Cmprsn” sub-directory of “Output”.</p>
+<p>The previous call to the <code class="sourceCode r">write_mdls_with_covars_cmprsn</code> function saves the tested models along with two plots for each model in the “E_Predrs_W_Covars_Sngl_Mdl_Cmprsn” sub-directory of “Output”.</p>
 </div>
 </div>
 <div class="section level2">
@@ -1292,24 +1567,28 @@ Psych_well_int
 <div class="section level3">
 <h3 id="longitudinal-mixed-modelling">Longitudinal mixed modelling<a class="anchor" aria-label="anchor" href="#longitudinal-mixed-modelling"></a>
 </h3>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">Y</span>,
-             slot_nm_1L_chr <span class="op">=</span> <span class="st">"iters_1L_int"</span>,
-             new_val_xx <span class="op">=</span> <span class="fl">4000L</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">Y</span>,
-             slot_nm_1L_chr <span class="op">=</span> <span class="st">"control_ls"</span>,
-             new_val_xx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>adapt_delta <span class="op">=</span> <span class="fl">0.99</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">Y</span>,
-               slot_nm_1L_chr <span class="op">=</span> <span class="st">"depnt_var_min_max_dbl"</span>,
-               new_val_xx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<p>Prior to undertaking longitudinal mixed modelling, we need to check the appropriateness of the default values for modelling parameters that are stored in <code>X</code>. These include the number of model iterations, and any custom control parameters and priors (by default, empty lists).</p>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/procureSlot-methods.html" class="external-link">procureSlot</a></span><span class="op">(</span><span class="va">X</span>,
+            <span class="st">"b_SpecificParameters@iters_1L_int"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] 4000</span></code></pre>
+<p>In many cases there will be no need to specify any custom control parameters or priors and using the defaults may speed up execution.</p>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/procureSlot-methods.html" class="external-link">procureSlot</a></span><span class="op">(</span><span class="va">X</span>,
+            <span class="st">"b_SpecificParameters@control_ls"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [[1]]</span>
+<span class="co">## list()</span></code></pre>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/procureSlot-methods.html" class="external-link">procureSlot</a></span><span class="op">(</span><span class="va">X</span>,
+            <span class="st">"b_SpecificParameters@prior_ls"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [[1]]</span>
+<span class="co">## list()</span></code></pre>
+<p>However, in this example using the default control parameters would result in warning messages suggesting a change to the adapt_delta control value (default = 0.8). Modifying the <code>adapt_delta</code> control parameter value can address this issue.</p>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/renewSlot-methods.html" class="external-link">renewSlot</a></span><span class="op">(</span><span class="va">X</span>,
-               slot_nm_1L_chr <span class="op">=</span> <span class="st">"b_SpecificParameters"</span>,
-               <span class="va">Y</span><span class="op">)</span></code></pre></div>
-<p>Next we create longitudinal and mixed versions of each of the models we specified in the previous step. Note, that in many cases both the <code>prior_ls</code> and <code>control_ls</code> arguments can be set to <code>NULL</code> (which may speed up execution). However, in this example doing so would result in warning messages suggesting a change to the adapt_delta control value (default = 0.8). We have therefore passed a value to the <code>control_ls</code> argument that addresses this issue.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+             slot_nm_1L_chr <span class="op">=</span> <span class="st">"b_SpecificParameters@control_ls"</span>,
+             new_val_xx <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>adapt_delta <span class="op">=</span> <span class="fl">0.99</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/investigate-methods.html" class="external-link">investigate</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></code></pre></div>
 <p>The last call to <code class="sourceCode r">investigate</code> function wrote the models it tests to a sub-directory of the output directory along with plots for each model.</p>
 </div>
@@ -1318,21 +1597,12 @@ Psych_well_int
 <h2 id="purge-dataset-copies">Purge dataset copies<a class="anchor" aria-label="anchor" href="#purge-dataset-copies"></a>
 </h2>
 <p>Because the files created in analysis are large, multiple objects containing copies of the source dataset have been saved to our output directory during the analysis process. We therefore need to delete all of these copies using the <code>author</code> method.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/author-methods.html" class="external-link">author</a></span><span class="op">(</span><span class="va">X</span>,
        type_1L_chr <span class="op">=</span> <span class="st">"purge_write"</span><span class="op">)</span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="share-output">Share output<a class="anchor" aria-label="anchor" href="#share-output"></a>
-</h2>
-<p>We can now publicly share our scored dataset and its associated metadata, using <code>Ready4useRepos</code> and its <code>share</code> method <a href="https://ready4-dev.github.io/ready4use/articles/V_01.html" class="external-link">as described in a vignette from the ready4use package</a>.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Z</span> <span class="op">&lt;-</span> <span class="fu">ready4use</span><span class="fu">::</span><span class="fu"><a href="https://ready4-dev.github.io/ready4use/reference/Ready4useRepos-class.html" class="external-link">Ready4useRepos</a></span><span class="op">(</span>gh_repo_1L_chr <span class="op">=</span> <span class="st">"ready4-dev/specific"</span>, <span class="co"># Replace with details of your repo.</span>
-                               gh_tag_1L_chr <span class="op">=</span> <span class="st">"Documentation_0.0"</span><span class="op">)</span> <span class="co"># You must have write permissions.</span>
-<span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/share-methods.html" class="external-link">share</a></span><span class="op">(</span><span class="va">X</span>,
-      fl_nm_1L_chr <span class="op">=</span> <span class="st">"eq5d_ttu_SpecificMixed"</span>,
-      repos_Ready4useRepos <span class="op">=</span> <span class="va">Z</span><span class="op">)</span></code></pre></div>
-<p><code>Y</code> is now available for download as the file <code>ymh_ScorzAqol6Adol.RDS</code> from the <a href="https://github.com/ready4-dev/scorz/releases/tag/Documentation_0.0" class="external-link">“Documentation_0.0” release of the scorz package</a>.</p>
+<!-- ## Share output -->
+<!-- We can now publicly share our dataset and its associated metadata, using `Ready4useRepos` and its `share` method [as described in a vignette from the ready4use package](https://ready4-dev.github.io/ready4use/articles/V_01.html). -->
+<p>A copy of the module <code>X</code> is available for download as the file <code>ymh_ScorzAqol6Adol.RDS</code> from the <a href="https://github.com/ready4-dev/scorz/releases/tag/Documentation_0.0" class="external-link">“Documentation_0.0” release of the scorz package</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

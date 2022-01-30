@@ -12,7 +12,7 @@ author method applied to SpecificProject"><meta property="og:image" content="htt
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9043</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9048</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,8 @@ author method applied to SpecificProject"><meta property="og:image" content="htt
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S4 method for SpecificModels</span>
 <span class="fu">author</span><span class="op">(</span>
   <span class="va">x</span>,
-  what_1L_chr <span class="op">=</span> <span class="st">"workspace"</span>,
+  prefd_mdl_types_chr <span class="op">=</span> <span class="cn">NULL</span>,
+  what_1L_chr <span class="op">=</span> <span class="st">"all"</span>,
   digits_1L_int <span class="op">=</span> <span class="fl">3L</span>,
   reference_1L_int <span class="op">=</span> <span class="cn">NULL</span>
 <span class="op">)</span>
@@ -82,6 +83,8 @@ author method applied to SpecificProject"><meta property="og:image" content="htt
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
 <dd><p>An object of class SpecificProject</p></dd>
+<dt>prefd_mdl_types_chr</dt>
+<dd><p>Preferred model types (a character vector), Default: NULL</p></dd>
 <dt>what_1L_chr</dt>
 <dd><p>What (a character vector of length one), Default: 'public'</p></dd>
 <dt>digits_1L_int</dt>
