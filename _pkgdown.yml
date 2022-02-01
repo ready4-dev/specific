@@ -138,7 +138,8 @@ reference:
   - investigate-SpecificMixed
   - investigate-SpecificModels
   - investigate-SpecificPredictors
-  - manufacture-SpecificModels
+  - manufacture-SpecificMixed
+  - manufacture-SpecificProject
   - metamorphose-SpecificConverter
   - procure-SpecificProject
   - ratify-SpecificModels

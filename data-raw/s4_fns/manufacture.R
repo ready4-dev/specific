@@ -31,7 +31,7 @@ manufacture_SpecificMixed <- function(x,
                                                                    NA_character_,
                                                                    procure(X,what = "prefd_covars")),
                                          prefd_mdl_types_chr = procure(X,
-                                                                       what = "prefd_mdls")#,
+                                                                       what = "prefd_mdls"),
                                          scndry_anlys_params_ls = scndry_anlys_params_ls)#
 
   }else{

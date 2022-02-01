@@ -68,8 +68,6 @@ We can now add details of the allowable range of dependent variable values.
 X <- renewSlot(X,
                "b_SpecificParameters@depnt_var_min_max_dbl",
                c(-1,1))
-# Y <- SpecificParameters(depnt_var_nm_1L_chr = "eq5d_total_w",
-#                         depnt_var_min_max_dbl = c(-0.9999,0.9999))
 ```
 
 ### Candidate predictors
