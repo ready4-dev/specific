@@ -379,4 +379,4 @@ share(X,
 
 ```
 
-A copy of the module `X` is available for download as the file `ymh_ScorzAqol6Adol.RDS` from the ["Documentation_0.0" release of the scorz package](https://github.com/ready4-dev/scorz/releases/tag/Documentation_0.0).
+A copy of the module `X` is available for download as the file `eq5d_ttu_SpecificMixed.RDS` from the ["Documentation_0.0" release of the specific package](https://github.com/ready4-dev/specific/releases/tag/Documentation_0.0).
