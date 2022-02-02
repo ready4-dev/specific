@@ -142,6 +142,7 @@ reference:
   - manufacture-SpecificMixed
   - manufacture-SpecificProject
   - metamorphose-SpecificConverter
+  - metamorphose-SpecificMixed
   - procure-SpecificProject
   - ratify-SpecificModels
   - renew-SpecificMixed

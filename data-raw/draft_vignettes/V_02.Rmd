@@ -56,23 +56,15 @@ Z <- Z %>% #
             old_nms_chr = c("PHQ9", "GAD7"),
             new_nms_chr = c("PHQ-9", "GAD-7"))
 ```
-
 ### Report
 
-
 ```{r}
-authorData_Ready4showSynopsis(Z,
+authorData(Z,
            tmpl_url_1L_chr = "https://github.com/ready4-dev/ttu_mdl_ctlg",
-           tmpl_version_1_L_chr = "0.0.9.1")
+           tmpl_version_1_L_chr = "0.0.9.2")
 ```
 ```{r}
 authorReport(Z)
-# Make child class of Z that includes results
-# Add reference to results slot of X/Z in template
-# Change relative paths
-# Trial relocation of child RMD
-# Remove output.yml from template
-# 
 ```
 
 ### XXXXX
