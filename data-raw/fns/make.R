@@ -125,9 +125,14 @@ make_brms_mdl_print_ls <- function (mdl_ls, label_stub_1L_chr, caption_1L_chr, o
 {
     smry_mdl_ls <- summary(mdl_ls, digits = 4)
     mdl_smry_chr <- smry_mdl_ls %>% utils::capture.output()
-    idx_dbl <- c("Formula: ", "Samples: ", "Group-Level Effects: ",
-                 "Population-Level Effects: ", "Family Specific Parameters: ",
-                 "Samples were drawn using ") %>% purrr::map_dbl(~mdl_smry_chr %>%
+    idx_dbl <- c("Formula: ",
+                 "  Draws:",#"Samples: ",
+                 "Group-Level Effects: ",
+                 "Population-Level Effects: ",
+                 "Family Specific Parameters: ",
+                 "Draws were sampled using "#"Samples were drawn using "
+                 ) %>%
+      purrr::map_dbl(~mdl_smry_chr %>%
                                                                      startsWith(.x) %>% which())
     data_tb <- make_brms_mdl_smry_tbl(smry_mdl_ls, grp_1L_chr = mdl_smry_chr[idx_dbl[3]],
                                       popl_1L_chr = mdl_smry_chr[idx_dbl[4]], fam_1L_chr = mdl_smry_chr[idx_dbl[5]])
