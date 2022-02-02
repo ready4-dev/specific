@@ -21,33 +21,9 @@ X <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/specific",
 ```
 
 ## Specify metadata about the manuscript to be authored
-<!-- Move this to later -->
 ```{r}
-A <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes",
-                               dv_ds_nm_1L_chr = "https://doi.org/10.7910/DVN/GW7ZKC")
-```
-```{r}
-Z <- ready4show::Ready4showSynopsis(authors_r3 = ready4show::authors_tb,
-                                    coi_1L_chr = "None declared.",
-                                    digits_int = c(3L,3L),
-                                    ethics_1L_chr = "The study was reviewed and granted approval by Awesome University's Human Research Ethics Committee (1111111.1).",
-                                    funding_1L_chr = "The study was funded by Generous Benefactor.",
-                                    institutes_r3 = ready4show::institutes_tb,
-                                    interval_chr = "three months",
-                                    keywords_chr = c("entirely","fake","do", "not","cite"),
-                                    outp_formats_chr = c("PDF","PDF"),
-                                    title_1L_chr = "A hypothetical study using fake data")
-```
-```{r}
-Z <- renewSlot(Z,
-               "correspondences_r3",
-               old_nms_chr = c("PHQ9", "GAD7"),
-               new_nms_chr = c("PHQ-9", "GAD-7"))
-```
-
-### Report
-
-```{r}
+# Metamorphose SpecificMixed
+Z <- SpecificSynopsis(b_SpecificResults = X@c_SpecificResults)
 Z <- renewSlot(Z,
                "a_Ready4showPaths@outp_data_dir_1L_chr",
                X@b_SpecificParameters@paths_ls$output_data_dir_1L_chr %>% stringi::stri_replace_last_regex("/Output",""))#X@paths_chr
@@ -62,6 +38,28 @@ Z <- renewSlot(Z,
 # procureSlot(Z,
 #             "a_Ready4showPaths@ms_dir_1L_chr")
 ```
+<!-- Move this to later -->
+```{r}
+Z <- Z %>% # 
+  renewSlot("authors_r3", ready4show::authors_tb) %>%
+  renewSlot("coi_1L_chr", "None declared") %>%
+  renewSlot("digits_int", c(3L,3L)) %>%
+  renewSlot("ethics_1L_chr", 
+            "The study was reviewed and granted approval by Awesome University's Human Research Ethics Committee (1111111.1).") %>%
+  renewSlot("funding_1L_chr", "The study was funded by Generous Benefactor.") %>%
+  renewSlot("institutes_r3", ready4show::institutes_tb) %>%
+  renewSlot("interval_chr", "three months") %>%
+  renewSlot("keywords_chr", c("entirely","fake","do", "not","cite")) %>%
+  renewSlot("outp_formats_chr", c("PDF","PDF")) %>%
+  renewSlot("title_1L_chr", "A hypothetical study using fake data") %>%
+  renewSlot("correspondences_r3",
+            old_nms_chr = c("PHQ9", "GAD7"),
+            new_nms_chr = c("PHQ-9", "GAD-7"))
+```
+
+### Report
+
+
 ```{r}
 authorData_Ready4showSynopsis(Z,
            tmpl_url_1L_chr = "https://github.com/ready4-dev/ttu_mdl_ctlg",
@@ -91,6 +89,11 @@ input_params_ls <- write_mdl_smry_rprt(input_params_ls,
 ```
 
 ### Share
+
+```{r}
+A <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes",
+                               dv_ds_nm_1L_chr = "https://doi.org/10.7910/DVN/GW7ZKC")
+```
 ```{r}
 X <- renew_SpecificMixed(X,
                          a_Ready4useRepos = A)

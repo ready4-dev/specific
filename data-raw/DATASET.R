@@ -294,6 +294,15 @@ ready4class::make_pt_ready4class_constructor(make_s3_lgl = FALSE,
                                              parent_class_chr = "Ready4Module")
 )
 y <- y %>%
+  dplyr::bind_rows(y,
+    ready4class::make_pt_ready4class_constructor(make_s3_lgl = FALSE,
+                                                 name_stub_chr = "Synopsis",
+                                                 slots_ls = list("b_SpecificResults") %>% list(),
+                                                 pt_ls = list("SpecificResults") %>% list(),
+                                                 class_desc_chr = "Results and manuscript metadata.",
+                                                 parent_class_chr = "Ready4showSynopsis",
+                                                 inc_clss_ls = list("SpecificResults") %>% list()))
+y <- y %>%
   dplyr::bind_rows(tibble::tribble(
     ~ make_s3_lgl, ~ name_stub_chr, ~ pt_ls, ~ pt_chkr_pfx_ls, ~ pt_ns_ls, ~ vals_ls, ~ allowed_vals_ls, ~ min_max_vals_ls, ~ start_end_vals_ls, ~ class_desc_chr, ~ parent_class_chr, ~ slots_ls, ~ meaningful_nms_ls, ~ inc_clss_ls, ~ asserts_ls,
     TRUE, "predictors", list("tibble"), list("is_"), list("tibble"), list(short_name_chr = "character(0)",

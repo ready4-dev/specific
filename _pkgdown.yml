@@ -37,6 +37,7 @@ reference:
   - SpecificFixed
   - SpecificMixed
   - SpecificConverter
+  - SpecificSynopsis
 - title: "Functions"
 - contents:
   - get_background_text
