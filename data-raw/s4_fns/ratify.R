@@ -1,6 +1,7 @@
 ratify_SpecificModels <- function(x,
                                   class_fn_1L_chr = "as.numeric",
-                                  prototype_lup = NULL){
+                                  prototype_lup = NULL,
+                                  scndry_anlys_params_ls = NULL){
   x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb <- x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb %>%
     youthvars::add_interval_var(id_var_nm_1L_chr = x@a_YouthvarsProfile@id_var_nm_1L_chr,
                                 msrmnt_date_var_nm_1L_chr = ifelse(!is.na(x@b_SpecificParameters@msrmnt_date_var_nm_1L_chr),
@@ -32,6 +33,11 @@ ratify_SpecificModels <- function(x,
                                  depnt_var_nm_1L_chr = x@b_SpecificParameters@depnt_var_nm_1L_chr,
                                  prototype_lup = prototype_lup,
                                  class_fn_1L_chr = class_fn_1L_chr)
+  ## Pick up here
+  input_params_ls <- manufacture(x,
+                                 what_1L_chr = "input_params_ls",
+                                 scndry_anlys_params_ls = scndry_anlys_params_ls)
+  ## Update values of x with values from input_params_ls
   return(x)
 
 }
