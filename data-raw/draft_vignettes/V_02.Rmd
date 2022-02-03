@@ -76,13 +76,10 @@ input_params_ls <- write_mdl_smry_rprt(input_params_ls,
 
 ### Share
 
-
 ```{r}
 X <- renew_SpecificMixed(X,
                          a_Ready4useRepos = A)
 ```
-
-
 
 
 ```{r}
