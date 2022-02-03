@@ -80,18 +80,20 @@ write_box_cox_tfmn <- function (data_tb, predr_var_nm_1L_chr, path_to_write_to_1
 #' @param ds_smry_ls Dataset summary (a list)
 #' @param mdl_smry_ls Model summary (a list)
 #' @param output_data_dir_1L_chr Output data directory (a character vector of length one)
+#' @param depnt_var_max_val_1L_dbl Dependent variable maximum value (a double vector of length one), Default: 0.99
 #' @param seed_1L_int Seed (an integer vector of length one), Default: 1234
 #' @return Model comparison (a list)
 #' @rdname write_mdl_cmprsn
 #' @export 
 #' @importFrom youthvars transform_ds_for_tstng
 write_mdl_cmprsn <- function (scored_data_tb, ds_smry_ls, mdl_smry_ls, output_data_dir_1L_chr, 
-    seed_1L_int = 1234) 
+    depnt_var_max_val_1L_dbl = 0.99, seed_1L_int = 1234) 
 {
     bl_tb <- youthvars::transform_ds_for_tstng(scored_data_tb, 
         depnt_var_nm_1L_chr = ds_smry_ls$depnt_var_nm_1L_chr, 
         candidate_predrs_chr = ds_smry_ls$candidate_predrs_chr, 
-        depnt_var_max_val_1L_dbl = 0.999, round_var_nm_1L_chr = ds_smry_ls$round_var_nm_1L_chr, 
+        depnt_var_max_val_1L_dbl = depnt_var_max_val_1L_dbl, 
+        round_var_nm_1L_chr = ds_smry_ls$round_var_nm_1L_chr, 
         round_val_1L_chr = ds_smry_ls$round_bl_val_1L_chr)
     ds_smry_ls$candidate_predrs_chr <- reorder_cndt_predrs_chr(ds_smry_ls$candidate_predrs_chr, 
         data_tb = bl_tb, depnt_var_nm_1L_chr = ds_smry_ls$depnt_var_nm_1L_chr)

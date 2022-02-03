@@ -37,7 +37,25 @@ ratify_SpecificModels <- function(x,
   input_params_ls <- manufacture(x,
                                  what_1L_chr = "input_params_ls",
                                  scndry_anlys_params_ls = scndry_anlys_params_ls)
-  ## Update values of x with values from input_params_ls
+  x <- renewSlot(x,
+                 "a_YouthvarsProfile@a_Ready4useDyad@ds_tb",
+                 input_params_ls$params_ls$ds_tb) %>%
+    renewSlot("a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3",
+              input_params_ls$params_ls$ds_descvs_ls$dictionary_tb) %>%
+    renewSlot("b_SpecificParameters@candidate_covars_chr",
+              input_params_ls$params_ls$candidate_covar_nms_chr) %>%
+    renewSlot("b_SpecificParameters@descv_var_nms_chr",
+              input_params_ls$params_ls$ds_descvs_ls$cohort_descv_var_nms_chr) %>%
+    renewSlot("b_SpecificParameters@candidate_predrs_chr",
+              input_params_ls$params_ls$ds_descvs_ls$candidate_predrs_chr) %>%
+    renewSlot("b_SpecificParameters@predictors_lup",
+              input_params_ls$params_ls$predictors_lup) %>%
+    renewSlot("b_SpecificParameters@depnt_var_nm_1L_chr",
+              input_params_ls$params_ls$ds_descvs_ls$utl_wtd_var_nm_1L_chr) %>%
+    renewSlot("c_SpecificResults@a_SpecificShareable@shareable_outp_ls",
+              list(rename_lup = input_params_ls$rename_lup))
+  #X@b_SpecificParameters@depnt_var_nm_1L_chr
+  #X@b_SpecificParameters@predictors_lup
   return(x)
 
 }

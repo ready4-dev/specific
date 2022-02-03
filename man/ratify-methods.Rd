@@ -5,7 +5,12 @@
 \alias{ratify,SpecificModels-method}
 \title{Ratify (validate) a ready4 framework module (or sub-module)}
 \usage{
-\S4method{ratify}{SpecificModels}(x, class_fn_1L_chr = "as.numeric", prototype_lup = NULL)
+\S4method{ratify}{SpecificModels}(
+  x,
+  class_fn_1L_chr = "as.numeric",
+  prototype_lup = NULL,
+  scndry_anlys_params_ls = NULL
+)
 }
 \arguments{
 \item{x}{An object of class SpecificModels}
@@ -13,6 +18,8 @@
 \item{class_fn_1L_chr}{Class function (a character vector of length one), Default: 'as.numeric'}
 
 \item{prototype_lup}{Prototype (a lookup table), Default: NULL}
+
+\item{scndry_anlys_params_ls}{Secondary analysis parameters (a list), Default: NULL}
 }
 \value{
 x (An object of class SpecificModels)

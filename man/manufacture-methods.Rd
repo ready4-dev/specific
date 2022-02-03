@@ -7,7 +7,7 @@
 \alias{manufacture,SpecificSynopsis-method}
 \title{Manufacture a (non ready4 framework) object}
 \usage{
-\S4method{manufacture}{SpecificProject}(x, what_1L_chr = "ds_descvs_ls")
+\S4method{manufacture}{SpecificProject}(x, what_1L_chr = "ds_descvs_ls", scndry_anlys_params_ls = NULL)
 
 \S4method{manufacture}{SpecificSynopsis}(
   x,
@@ -22,11 +22,11 @@
 
 \item{what_1L_chr}{What (a character vector of length one), Default: 'input_params_ls'}
 
+\item{scndry_anlys_params_ls}{Secondary analysis parameters (a list), Default: NULL}
+
 \item{y_SpecificMixed}{PARAM_DESCRIPTION}
 
 \item{z_Ready4useRepos}{PARAM_DESCRIPTION, Default: NULL}
-
-\item{scndry_anlys_params_ls}{Secondary analysis parameters (a list), Default: NULL}
 }
 \value{
 Object (an output object of multiple potential types)

@@ -9,6 +9,7 @@ write_mdl_cmprsn(
   ds_smry_ls,
   mdl_smry_ls,
   output_data_dir_1L_chr,
+  depnt_var_max_val_1L_dbl = 0.99,
   seed_1L_int = 1234
 )
 }
@@ -20,6 +21,8 @@ write_mdl_cmprsn(
 \item{mdl_smry_ls}{Model summary (a list)}
 
 \item{output_data_dir_1L_chr}{Output data directory (a character vector of length one)}
+
+\item{depnt_var_max_val_1L_dbl}{Dependent variable maximum value (a double vector of length one), Default: 0.99}
 
 \item{seed_1L_int}{Seed (an integer vector of length one), Default: 1234}
 }

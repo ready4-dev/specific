@@ -52,11 +52,12 @@ write_mdl_cmprsn <- function(scored_data_tb,
                               ds_smry_ls,
                               mdl_smry_ls,
                               output_data_dir_1L_chr,
+                             depnt_var_max_val_1L_dbl = 0.99,
                               seed_1L_int = 1234){
   bl_tb <- youthvars::transform_ds_for_tstng(scored_data_tb,
                                   depnt_var_nm_1L_chr = ds_smry_ls$depnt_var_nm_1L_chr,
                                   candidate_predrs_chr = ds_smry_ls$candidate_predrs_chr,
-                                  depnt_var_max_val_1L_dbl = 0.999,
+                                  depnt_var_max_val_1L_dbl = depnt_var_max_val_1L_dbl,
                                   round_var_nm_1L_chr = ds_smry_ls$round_var_nm_1L_chr,
                                   round_val_1L_chr = ds_smry_ls$round_bl_val_1L_chr)
   ds_smry_ls$candidate_predrs_chr <- reorder_cndt_predrs_chr(ds_smry_ls$candidate_predrs_chr,

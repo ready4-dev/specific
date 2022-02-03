@@ -3,19 +3,23 @@
 #' @name investigate-SpecificModels
 #' @description investigate method applied to SpecificModels
 #' @param x An object of class SpecificModels
+#' @param depnt_var_max_val_1L_dbl Dependent variable maximum value (a double vector of length one), Default: Inf
 #' @return X (Modelling project dataset, input parameters and predictor comparison results.)
 #' @rdname investigate-methods
 #' @aliases investigate,SpecificModels-method
 #' @export 
 #' @importFrom ready4 investigate
-methods::setMethod("investigate", "SpecificModels", function (x) 
+methods::setMethod("investigate", "SpecificModels", function (x, depnt_var_max_val_1L_dbl = Inf) 
 {
     results_ls <- write_mdl_cmprsn(scored_data_tb = x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
         ds_smry_ls = manufacture(x, what_1L_chr = "ds_smry_ls"), 
         mdl_smry_ls = manufacture(x, what_1L_chr = "mdl_smry_ls"), 
         output_data_dir_1L_chr = x@b_SpecificParameters@paths_ls$output_data_dir_1L_chr, 
+        depnt_var_max_val_1L_dbl = depnt_var_max_val_1L_dbl, 
         seed_1L_int = x@b_SpecificParameters@seed_1L_int)
-    x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1]
+    rename_lup <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$rename_lup
+    x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- append(results_ls[-1], 
+        list(rename_lup = rename_lup))
     x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
     x_SpecificPredictors <- SpecificPredictors(a_YouthvarsProfile = x@a_YouthvarsProfile, 
         b_SpecificParameters = x@b_SpecificParameters, c_SpecificResults = x@c_SpecificResults, 
@@ -55,7 +59,9 @@ methods::setMethod("investigate", "SpecificMixed", function (x, backend_1L_chr =
         backend_1L_chr = backend_1L_chr, new_dir_nm_1L_chr = new_dir_nm_1L_chr, 
         iters_1L_int = x@b_SpecificParameters@iters_1L_int, prior_ls = prior_ls, 
         control_ls = control_ls)
-    x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1]
+    rename_lup <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$rename_lup
+    x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- append(results_ls[-1], 
+        list(rename_lup = rename_lup))
     x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
     return(x)
 })
@@ -77,7 +83,9 @@ methods::setMethod("investigate", "SpecificPredictors", function (x)
         mdl_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls, 
         output_data_dir_1L_chr = x@b_SpecificParameters@paths_ls$output_data_dir_1L_chr, 
         seed_1L_int = x@b_SpecificParameters@seed_1L_int)
-    x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1]
+    rename_lup <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$rename_lup
+    x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- append(results_ls[-1], 
+        list(rename_lup = rename_lup))
     x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
     x_SpecificFixed <- SpecificFixed(a_YouthvarsProfile = x@a_YouthvarsProfile, 
         b_SpecificParameters = x@b_SpecificParameters, c_SpecificResults = x@c_SpecificResults, 
@@ -102,7 +110,9 @@ methods::setMethod("investigate", "SpecificFixed", function (x)
         mdl_smry_ls = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls, 
         output_data_dir_1L_chr = x@b_SpecificParameters@paths_ls$output_data_dir_1L_chr, 
         seed_1L_int = x@b_SpecificParameters@seed_1L_int)
-    x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- results_ls[-1]
+    rename_lup <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$rename_lup
+    x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- append(results_ls[-1], 
+        list(rename_lup = rename_lup))
     x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
     x_SpecificMixed <- SpecificMixed(a_YouthvarsProfile = x@a_YouthvarsProfile, 
         b_SpecificParameters = x@b_SpecificParameters, c_SpecificResults = x@c_SpecificResults, 

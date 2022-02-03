@@ -178,7 +178,7 @@ procureSlot(X,
 
 ## Model testing
 
-Before we start to use the data stored in `X` to undertake modelling, we must first validate that it contains all necessary (and internally consistent) data by using the `ratify` method.
+Before we start to use the data stored in `X` to undertake modelling, we must first validate that it contains all necessary (and internally consistent) data by using the `ratify` method. The call to `ratify` will update any variable names that are likely to cause problems when generating reports (e.g. through inclusion of characters like "_" in the variable name that can cause problems when rendering LaTeX documents).
 
 ```{r}
 X <- ratify(X)
@@ -224,7 +224,8 @@ X <- author(X,
 The `investigate` method can now be used to compare the candidate models we have specified earlier. In so doing it will transform `X` into a `SpecificPredictors` object.
 
 ```{r results='hide', message=FALSE, warning=FALSE}
-X <- investigate(X)
+X <- investigate(X,
+                 depnt_var_max_val_1L_dbl = 0.99)
 ```
 
 The `investigate` method will write each model to be tested to a new sub-directory of our output directory. 

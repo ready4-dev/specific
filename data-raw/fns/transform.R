@@ -248,7 +248,8 @@ transform_nms_in_mdl_tbl <- function(mdl_tbl_tb,
 }
 transform_params_ls_to_valid <- function(params_ls,
                                          scndry_analysis_extra_vars_chr = NA_character_){
-  target_var_nms_chr <- c(params_ls$ds_descvs_ls$candidate_predrs_chr,
+  target_var_nms_chr <- c(params_ls$ds_descvs_ls$utl_wtd_var_nm_1L_chr,
+                          params_ls$ds_descvs_ls$candidate_predrs_chr,
                           params_ls$candidate_covar_nms_chr,
                           scndry_analysis_extra_vars_chr) %>%
     purrr::discard(is.na) %>%
@@ -286,7 +287,7 @@ transform_params_ls_from_lup <- function(params_ls,
                                                   match_var_nm_1L_chr = "old_nms_chr",
                                                   target_var_nm_1L_chr = "new_nms_chr",
                                                   evaluate_1L_lgl = F)))
-    params_ls$ds_descvs_ls$descv_var_nms_chr <- params_ls$ds_descvs_ls$descv_var_nms_chr %>%
+    params_ls$ds_descvs_ls$cohort_descv_var_nms_chr <- params_ls$ds_descvs_ls$cohort_descv_var_nms_chr %>%
       purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
                              .x,
                              ready4::get_from_lup_obj(rename_lup,
@@ -294,6 +295,14 @@ transform_params_ls_from_lup <- function(params_ls,
                                                   match_var_nm_1L_chr = "old_nms_chr",
                                                   target_var_nm_1L_chr = "new_nms_chr",
                                                   evaluate_1L_lgl = F)))
+    params_ls$ds_descvs_ls$utl_wtd_var_nm_1L_chr <- params_ls$ds_descvs_ls$utl_wtd_var_nm_1L_chr %>%
+      purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
+                             .x,
+                             ready4::get_from_lup_obj(rename_lup,
+                                                      match_value_xx = .x,
+                                                      match_var_nm_1L_chr = "old_nms_chr",
+                                                      target_var_nm_1L_chr = "new_nms_chr",
+                                                      evaluate_1L_lgl = F)))
   }
   if(!is.null(params_ls$predictors_lup)){
     params_ls$predictors_lup$short_name_chr <-  params_ls$predictors_lup$short_name_chr %>%

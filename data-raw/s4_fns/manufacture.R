@@ -34,7 +34,8 @@ manufacture_SpecificSynopsis <- function(x,
                                                                            what = "prefd_covars")),
                                          prefd_mdl_types_chr = procure(y_SpecificMixed,
                                                                        what = "prefd_mdls"),
-                                         scndry_anlys_params_ls = scndry_anlys_params_ls)#
+                                         scndry_anlys_params_ls = scndry_anlys_params_ls,
+                                   write_new_dir_1L_lgl = F)#
 
   }else{
     object_xx <- methods::callNextMethod()
@@ -116,7 +117,8 @@ manufacture_SpecificProject <- function(x,
                                    prefd_covars_chr = prefd_covars_chr,
                                    prefd_mdl_types_chr = procure(x,
                                                                  what = "prefd_mdls"),
-                                   scndry_anlys_params_ls = scndry_anlys_params_ls)#
+                                   scndry_anlys_params_ls = scndry_anlys_params_ls,
+                                   write_new_dir_1L_lgl = F)#
 
   }
   return(object_xx)
