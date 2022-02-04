@@ -11,6 +11,7 @@ make_results_ls_spine(
   study_descs_ls,
   fn_ls = NULL,
   include_idx_int = NULL,
+  outp_smry_ls = NULL,
   var_nm_change_lup = NULL
 )
 }
@@ -26,6 +27,8 @@ make_results_ls_spine(
 \item{fn_ls}{Function list (a list of functions), Default: NULL}
 
 \item{include_idx_int}{Include index (an integer vector), Default: NULL}
+
+\item{outp_smry_ls}{Output summary (a list), Default: NULL}
 
 \item{var_nm_change_lup}{Variable name change (a lookup table), Default: NULL}
 }

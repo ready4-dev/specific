@@ -19,6 +19,25 @@ X <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/specific",
                          ingest(fls_to_ingest_chr = "eq5d_ttu_SpecificMixed",
                                 metadata_1L_lgl = F)
 ```
+```{r}
+# Fix for Shared X
+X@paths_chr <- X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$path_to_write_to_1L_chr
+private_res_ls <- procureSlot(X,
+                              "c_SpecificResults@b_SpecificPrivate@private_outp_ls")
+if(identical(private_res_ls,
+             list(list()))){
+  private_res_ls <- list(scored_data_tb = X@a_YouthvarsProfile@a_Ready4useDyad@ds_tb)
+  X <- renewSlot(X,
+                 "c_SpecificResults@b_SpecificPrivate@private_outp_ls",
+                 private_res_ls)
+}
+```
+
+```{r}
+# ENSURE MOST UP TO DATE RESULTS SAVED LOCALLY
+# GENERATE SYNTH MODELS
+X <- authorData_SpecificMixed(X)
+``` 
 
 ## Specify metadata about the manuscript to be authored
 ```{r}
@@ -42,12 +61,8 @@ Z <- Z %>% #
             old_nms_chr = c("PHQ9", "GAD7"),
             new_nms_chr = c("PHQ-9", "GAD-7"))
 ```
-### Report
 
-```{r}
-# ENSURE MOST UP TO DATE RESULTS SAVED LOCALLY
-# GENERATE SYNTH MODELS
-```
+### Report
 
 ```{r}
 authorData(Z,
@@ -58,10 +73,13 @@ authorData(Z,
 ```{r}
 Z@a_Ready4showPaths@ms_mkdn_dir_1L_chr <- "Catalogue"
 Z@a_Ready4showPaths@ms_dir_1L_chr <- "Catalogue"
-Z@fl_nm_1L_chr <- "Catalogue"
+Z@fl_nm_1L_chr <- "AAA_TTU_MDL_CTG"
+Z@rmd_fl_nms_ls <- ready4show::make_rmd_fl_nms_ls(pdf_fl_nm_1L_chr = "Main_PDF",
+                                                  word_fl_nm_1L_chr = "Main_Word")
 ```
 
 ```{r}
+# Need to modify PDF, Word and HTML parents with G_Shareable/Models
 authorReport(Z)
 ```
 ```{r}
@@ -81,20 +99,40 @@ authorData(Z,
            tmpl_url_1L_chr = "https://github.com/ready4-dev/ttu_lng_ss",
            tmpl_version_1_L_chr = "0.5")
 ```
-
-
-### XXXXX
 ```{r}
 A <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes",
                                dv_ds_nm_1L_chr = "https://doi.org/10.7910/DVN/GW7ZKC")
 ```
 ```{r}
 ## MANUFACTURE_SpecificMixed
-input_params_ls <- manufacture(X, ## FIX
-                               a_Ready4useRepos = A,
+# Ratify??
+input_params_ls <- manufacture(Z, 
+                               y_SpecificMixed = X,
+                               z_Ready4useRepos = A,
                                scndry_anlys_params_ls = NULL,
                                what_1L_chr = "input_params_ls")
+results_ls <- make_results_ls(dv_ds_nm_and_url_chr = input_params_ls$path_params_ls$dv_ds_nm_and_url_chr,
+                              outp_smry_ls = Z@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
+                                  output_format_ls = input_params_ls$output_format_ls,
+                                  params_ls_ls = input_params_ls,
+                                  path_params_ls = list(paths_ls = list(output_data_dir_1L_chr = paste0(Z@a_Ready4showPaths@outp_data_dir_1L_chr,"/Output"))),#input_params_ls$path_params_ls,
+                                  study_descs_ls = input_params_ls$study_descs_ls,
+                                  var_nm_change_lup = input_params_ls$study_descs_ls$var_nm_change_lup,
+                                  version_1L_chr = "0.5")
 ```
+```{r}
+outp_smry_ls <- append(Z@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
+       list(results_ls = results_ls))
+Z <- renewSlot(Z,
+               "b_SpecificResults@a_SpecificShareable@shareable_outp_ls",
+               outp_smry_ls)
+```
+```{r}
+# Need to update template RMDs
+authorReport(Z)
+```
+### XXXXX
+
 ```{r}
 input_params_ls <- write_mdl_smry_rprt(input_params_ls,
                                        use_shareable_mdls_1L_lgl = T)

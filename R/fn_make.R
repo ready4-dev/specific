@@ -1714,6 +1714,7 @@ make_ranked_predrs_ls <- function (descv_tbls_ls, old_nms_chr = NULL, new_nms_ch
 #' @param include_idx_int Include index (an integer vector), Default: NULL
 #' @param var_nm_change_lup Variable name change (a lookup table), Default: NULL
 #' @param ctgl_vars_regrouping_ls Categorical variables regrouping (a list), Default: NULL
+#' @param outp_smry_ls Output summary (a list), Default: NULL
 #' @param sig_covars_some_predrs_mdls_tb Sig covariates some predictors models (a tibble), Default: NULL
 #' @param sig_thresh_covars_1L_chr Sig thresh covariates (a character vector of length one), Default: NULL
 #' @param version_1L_chr Version (a character vector of length one), Default: NULL
@@ -1730,14 +1731,14 @@ make_results_ls <- function (spine_of_results_ls = NULL, abstract_args_ls = NULL
     dv_ds_nm_and_url_chr = NULL, output_format_ls = NULL, params_ls_ls = NULL, 
     path_params_ls = NULL, study_descs_ls = NULL, fn_ls = NULL, 
     include_idx_int = NULL, var_nm_change_lup = NULL, ctgl_vars_regrouping_ls = NULL, 
-    sig_covars_some_predrs_mdls_tb = NULL, sig_thresh_covars_1L_chr = NULL, 
-    version_1L_chr = NULL) 
+    outp_smry_ls = NULL, sig_covars_some_predrs_mdls_tb = NULL, 
+    sig_thresh_covars_1L_chr = NULL, version_1L_chr = NULL) 
 {
     if (is.null(spine_of_results_ls)) {
         spine_of_results_ls <- make_results_ls_spine(output_format_ls = output_format_ls, 
             params_ls_ls = params_ls_ls, path_params_ls = path_params_ls, 
             study_descs_ls = study_descs_ls, fn_ls = fn_ls, include_idx_int = include_idx_int, 
-            var_nm_change_lup = var_nm_change_lup)
+            outp_smry_ls = outp_smry_ls, var_nm_change_lup = var_nm_change_lup)
     }
     mdls_smry_tbls_ls <- make_mdls_smry_tbls_ls(spine_of_results_ls$outp_smry_ls, 
         nbr_of_digits_1L_int = spine_of_results_ls$nbr_of_digits_1L_int)
@@ -1819,6 +1820,7 @@ make_results_ls <- function (spine_of_results_ls = NULL, abstract_args_ls = NULL
 #' @param study_descs_ls Study descriptions (a list)
 #' @param fn_ls Function list (a list of functions), Default: NULL
 #' @param include_idx_int Include index (an integer vector), Default: NULL
+#' @param outp_smry_ls Output summary (a list), Default: NULL
 #' @param var_nm_change_lup Variable name change (a lookup table), Default: NULL
 #' @return Spine of results (a list)
 #' @rdname make_results_ls_spine
@@ -1828,14 +1830,17 @@ make_results_ls <- function (spine_of_results_ls = NULL, abstract_args_ls = NULL
 #' @importFrom stats setNames
 #' @keywords internal
 make_results_ls_spine <- function (output_format_ls = NULL, params_ls_ls = NULL, path_params_ls = NULL, 
-    study_descs_ls, fn_ls = NULL, include_idx_int = NULL, var_nm_change_lup = NULL) 
+    study_descs_ls, fn_ls = NULL, include_idx_int = NULL, outp_smry_ls = NULL, 
+    var_nm_change_lup = NULL) 
 {
     output_data_dir_1L_chr <- path_params_ls$paths_ls$output_data_dir_1L_chr
     nbr_of_digits_1L_int <- output_format_ls$manuscript_digits_1L_int
     if (is.null(var_nm_change_lup)) {
         var_nm_change_lup <- list(old_nms_chr = NULL, new_nms_chr = NULL)
     }
-    outp_smry_ls <- readRDS(paste0(output_data_dir_1L_chr, "/I_ALL_OUTPUT_.RDS"))
+    if (is.null(outp_smry_ls)) 
+        outp_smry_ls <- readRDS(paste0(output_data_dir_1L_chr, 
+            "/I_ALL_OUTPUT_.RDS"))
     mdl_ingredients_ls <- readRDS(paste0(output_data_dir_1L_chr, 
         "/G_Shareable/Ingredients/mdl_ingredients.RDS"))
     if (!is.null(params_ls_ls)) {

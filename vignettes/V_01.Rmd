@@ -357,9 +357,15 @@ X <- investigate(X)
 
 The last call to `investigate`{.R} function wrote the models it tests to a sub-directory of the output directory along with plots for each model. 
 
-## Purge dataset copies
+## Create shareable outputs
+The model objects created by the preceding analysis are not suitable for sharing as they contain duplicates of the source dataset. To create model objects that can be shared (where dataset copies are replaced with fake data) use the `authorData` method.
 
-Because the files created in analysis are large, multiple objects containing copies of the source dataset have been saved to our output directory during the analysis process. We therefore need to delete all of these copies using the `author` method.
+```{r eval = F}
+X <- authorData(X)
+```
+
+## Purge dataset copies
+For the purposes of efficient computation, multiple objects containing copies of the source dataset were saved to our output directory during the analysis process. We therefore need to delete all of these copies by supplying "purge_write" to the `type_1L_chr` argument of the `author` method.
 
 ```{r eval=F}
 author(X,

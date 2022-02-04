@@ -1561,6 +1561,7 @@ make_results_ls <- function(spine_of_results_ls = NULL, # CORE OF S4 Classes - r
                             include_idx_int = NULL,
                             var_nm_change_lup = NULL,
                             ctgl_vars_regrouping_ls = NULL,
+                            outp_smry_ls = NULL,
                             sig_covars_some_predrs_mdls_tb = NULL,
                             sig_thresh_covars_1L_chr = NULL,
                             version_1L_chr = NULL){
@@ -1571,6 +1572,7 @@ make_results_ls <- function(spine_of_results_ls = NULL, # CORE OF S4 Classes - r
                                                  study_descs_ls = study_descs_ls,
                                                  fn_ls = fn_ls,
                                                  include_idx_int = include_idx_int,
+                                                 outp_smry_ls = outp_smry_ls,
                                                  var_nm_change_lup = var_nm_change_lup)
   }
   mdls_smry_tbls_ls <- make_mdls_smry_tbls_ls(spine_of_results_ls$outp_smry_ls,
@@ -1674,6 +1676,7 @@ make_results_ls_spine <-  function(output_format_ls = NULL,
                                    study_descs_ls,
                                    fn_ls = NULL,
                                    include_idx_int = NULL,
+                                   outp_smry_ls = NULL,
                                    var_nm_change_lup = NULL){
 
   output_data_dir_1L_chr <- path_params_ls$paths_ls$output_data_dir_1L_chr
@@ -1682,7 +1685,8 @@ make_results_ls_spine <-  function(output_format_ls = NULL,
     var_nm_change_lup <- list(old_nms_chr = NULL,
                               new_nms_chr = NULL)
   }
-  outp_smry_ls <- readRDS(paste0(output_data_dir_1L_chr,"/I_ALL_OUTPUT_.RDS"))
+  if(is.null(outp_smry_ls))
+    outp_smry_ls <- readRDS(paste0(output_data_dir_1L_chr,"/I_ALL_OUTPUT_.RDS"))
   mdl_ingredients_ls <- readRDS(paste0(output_data_dir_1L_chr,
                                        "/G_Shareable/Ingredients/mdl_ingredients.RDS"))
   if(!is.null(params_ls_ls)){

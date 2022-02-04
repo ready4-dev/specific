@@ -149,3 +149,4 @@
 ^data-raw/s4_fns/metamorphose\.R$
 ^data-raw/draft_vignettes/aaaaaaaaaa\.txt$
 ^data-raw/draft_vignettes/WIP\.R$
+^data-raw/s4_fns/authorData\.R$

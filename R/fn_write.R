@@ -526,6 +526,33 @@ write_mdl_type_sngl_outps <- function (data_tb, folds_1L_int = 10, depnt_var_nm_
         ".RDS"))
     return(smry_of_one_predr_mdl_tb)
 }
+#' Write models to dataverse
+#' @description write_mdls_to_dv() is a Write function that writes a file to a specified local directory. Specifically, this function implements an algorithm to write models to dataverse. The function returns Output summary (a list).
+#' @param outp_smry_ls Output summary (a list)
+#' @param new_dir_nm_1L_chr New directory name (a character vector of length one), Default: 'G_Shareable'
+#' @param shareable_title_detail_1L_chr Shareable title detail (a character vector of length one), Default: ''
+#' @param output_dir_chr Output directory (a character vector), Default: 'NA'
+#' @return Output summary (a list)
+#' @rdname write_mdls_to_dv
+#' @export 
+#' @keywords internal
+write_mdls_to_dv <- function (outp_smry_ls, new_dir_nm_1L_chr = "G_Shareable", shareable_title_detail_1L_chr = "", 
+    output_dir_chr = NA_character_) 
+{
+    if (is.na(output_dir_chr)) 
+        output_dir_chr <- write_shareable_dir(outp_smry_ls = outp_smry_ls, 
+            new_dir_nm_1L_chr = new_dir_nm_1L_chr)
+    if (!is.null(outp_smry_ls$dv_ls)) {
+        write_shareable_mdls_to_dv(outp_smry_ls, new_dir_nm_1L_chr = new_dir_nm_1L_chr, 
+            share_ingredients_1L_lgl = T, output_dir_chr = output_dir_chr)
+        if (write_mdls_to_dv_1L_lgl) {
+            outp_smry_ls$shareable_mdls_tb <- write_shareable_mdls_to_dv(outp_smry_ls, 
+                new_dir_nm_1L_chr = new_dir_nm_1L_chr, shareable_title_detail_1L_chr = shareable_title_detail_1L_chr, 
+                share_ingredients_1L_lgl = F, output_dir_chr = output_dir_chr)
+        }
+    }
+    return(outp_smry_ls)
+}
 #' Write models with covariates comparison
 #' @description write_mdls_with_covars_cmprsn() is a Write function that writes a file to a specified local directory. Specifically, this function implements an algorithm to write models with covariates comparison. The function returns Output summary (a list).
 #' @param scored_data_tb Scored data (a tibble)
@@ -957,15 +984,9 @@ write_shareable_mdls <- function (outp_smry_ls, new_dir_nm_1L_chr = "G_Shareable
             outp_smry_ls$utl_min_val_1L_dbl, -1))
     saveRDS(ingredients_ls, paste0(output_dir_chr[2], "/mdl_ingredients", 
         ".RDS"))
-    if (!is.null(outp_smry_ls$dv_ls)) {
-        write_shareable_mdls_to_dv(outp_smry_ls, new_dir_nm_1L_chr = new_dir_nm_1L_chr, 
-            share_ingredients_1L_lgl = T, output_dir_chr = output_dir_chr)
-        if (write_mdls_to_dv_1L_lgl) {
-            outp_smry_ls$shareable_mdls_tb <- write_shareable_mdls_to_dv(outp_smry_ls, 
-                new_dir_nm_1L_chr = new_dir_nm_1L_chr, shareable_title_detail_1L_chr = shareable_title_detail_1L_chr, 
-                share_ingredients_1L_lgl = F, output_dir_chr = output_dir_chr)
-        }
-    }
+    write_mdls_to_dv(outp_smry_ls, new_dir_nm_1L_chr = new_dir_nm_1L_chr, 
+        shareable_title_detail_1L_chr = shareable_title_detail_1L_chr, 
+        output_dir_chr = output_dir_chr)
     return(outp_smry_ls)
 }
 #' Write shareable models to dataverse

@@ -477,6 +477,28 @@ write_mdl_type_sngl_outps <- function (data_tb, folds_1L_int = 10, depnt_var_nm_
         ".RDS"))
     return(smry_of_one_predr_mdl_tb)
 }
+write_mdls_to_dv <- function(outp_smry_ls,
+                             new_dir_nm_1L_chr = "G_Shareable",
+                             shareable_title_detail_1L_chr = "",
+                             output_dir_chr = NA_character_){
+  if(is.na(output_dir_chr))
+    output_dir_chr <- write_shareable_dir(outp_smry_ls = outp_smry_ls,
+                                          new_dir_nm_1L_chr = new_dir_nm_1L_chr)
+  if (!is.null(outp_smry_ls$dv_ls)) {
+    write_shareable_mdls_to_dv(outp_smry_ls,
+                               new_dir_nm_1L_chr = new_dir_nm_1L_chr,
+                               share_ingredients_1L_lgl = T,
+                               output_dir_chr = output_dir_chr)
+    if(write_mdls_to_dv_1L_lgl){
+      outp_smry_ls$shareable_mdls_tb <- write_shareable_mdls_to_dv(outp_smry_ls,
+                                                                   new_dir_nm_1L_chr = new_dir_nm_1L_chr,
+                                                                   shareable_title_detail_1L_chr = shareable_title_detail_1L_chr,
+                                                                   share_ingredients_1L_lgl = F,
+                                                                   output_dir_chr = output_dir_chr)
+    }
+  }
+  return(outp_smry_ls)
+}
 write_new_outp_dir <- function(path_to_write_to_1L_chr,# move to ready4show
                                new_dir_nm_1L_chr){
   output_dir_1L_chr <- paste0(path_to_write_to_1L_chr,"/",new_dir_nm_1L_chr)
@@ -852,20 +874,24 @@ write_shareable_mdls <- function (outp_smry_ls,
                                                        -1))
     saveRDS(ingredients_ls, paste0(output_dir_chr[2], "/mdl_ingredients",
                                    ".RDS"))
-    if (!is.null(outp_smry_ls$dv_ls)) {
-      write_shareable_mdls_to_dv(outp_smry_ls,
-                                 new_dir_nm_1L_chr = new_dir_nm_1L_chr,
-                                 share_ingredients_1L_lgl = T,
-                                 output_dir_chr = output_dir_chr)
-      if(write_mdls_to_dv_1L_lgl){
-        outp_smry_ls$shareable_mdls_tb <- write_shareable_mdls_to_dv(outp_smry_ls,
-                                                                     new_dir_nm_1L_chr = new_dir_nm_1L_chr,
-                                                                     shareable_title_detail_1L_chr = shareable_title_detail_1L_chr,
-                                                                     share_ingredients_1L_lgl = F,
-                                                                     output_dir_chr = output_dir_chr)
-      }
-
-    }
+    write_mdls_to_dv(outp_smry_ls,
+                     new_dir_nm_1L_chr = new_dir_nm_1L_chr,
+                     shareable_title_detail_1L_chr = shareable_title_detail_1L_chr,
+                     output_dir_chr = output_dir_chr)
+    # if (!is.null(outp_smry_ls$dv_ls)) {
+    #   write_shareable_mdls_to_dv(outp_smry_ls,
+    #                              new_dir_nm_1L_chr = new_dir_nm_1L_chr,
+    #                              share_ingredients_1L_lgl = T,
+    #                              output_dir_chr = output_dir_chr)
+    #   if(write_mdls_to_dv_1L_lgl){
+    #     outp_smry_ls$shareable_mdls_tb <- write_shareable_mdls_to_dv(outp_smry_ls,
+    #                                                                  new_dir_nm_1L_chr = new_dir_nm_1L_chr,
+    #                                                                  shareable_title_detail_1L_chr = shareable_title_detail_1L_chr,
+    #                                                                  share_ingredients_1L_lgl = F,
+    #                                                                  output_dir_chr = output_dir_chr)
+    #   }
+    #
+    # }
    # outp_smry_ls$shareable_mdls_tb <- shareable_mdls_tb
     return(outp_smry_ls)
 }

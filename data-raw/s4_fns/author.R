@@ -65,7 +65,6 @@ author_SpecificModels <- function(x,
   }else{
     methods::callNextMethod()
   }
-
   return(x)
 }
 author_SpecificProject <- function(x,
