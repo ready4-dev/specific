@@ -23,10 +23,6 @@ X <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/specific",
 ## Specify metadata about the manuscript to be authored
 ```{r}
 Z <- metamorphose(X)
-# procureSlot(Z,
-#             "a_Ready4showPaths@ms_mkdn_dir_1L_chr")
-# procureSlot(Z,
-#             "a_Ready4showPaths@ms_dir_1L_chr")
 ```
 <!-- Move this to later -->
 ```{r}
@@ -49,13 +45,43 @@ Z <- Z %>% #
 ### Report
 
 ```{r}
+# ENSURE MOST UP TO DATE RESULTS SAVED LOCALLY
+# GENERATE SYNTH MODELS
+```
+
+```{r}
 authorData(Z,
            tmpl_url_1L_chr = "https://github.com/ready4-dev/ttu_mdl_ctlg",
-           tmpl_version_1_L_chr = "0.0.9.2")
+           tmpl_version_1_L_chr = "0.0.9.2",
+           what_1L_chr = "Catalogue")
 ```
+```{r}
+Z@a_Ready4showPaths@ms_mkdn_dir_1L_chr <- "Catalogue"
+Z@a_Ready4showPaths@ms_dir_1L_chr <- "Catalogue"
+Z@fl_nm_1L_chr <- "Catalogue"
+```
+
 ```{r}
 authorReport(Z)
 ```
+```{r}
+# UPDATE MS PROGRAM
+# UPDATE AUTHORREPORT MTHD
+# AUTHOR MS WITH RESET VALUES FOR DIR AND FL NM
+# PURGE DS COPIES
+```
+
+```{r}
+Z@a_Ready4showPaths@ms_mkdn_dir_1L_chr <- "Manuscript"
+Z@a_Ready4showPaths@ms_dir_1L_chr <- "Manuscript"
+Z@fl_nm_1L_chr <- "Manuscript"
+```
+```{r}
+authorData(Z,
+           tmpl_url_1L_chr = "https://github.com/ready4-dev/ttu_lng_ss",
+           tmpl_version_1_L_chr = "0.5")
+```
+
 
 ### XXXXX
 ```{r}

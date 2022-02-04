@@ -24,11 +24,6 @@ investigate_SpecificMixed <- function(x,
   x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- append(results_ls[-1],
                                                                       list(rename_lup = rename_lup)) # EDIT TO REMOVE INPUTS
   x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
-  # x_SpecificMixed <- SpecificMixed(a_YouthvarsProfile = x@a_YouthvarsProfile,
-  #                                  b_SpecificParameters = x@b_SpecificParameters,
-  #                                  c_SpecificResults = x@c_SpecificResults,
-  #                                  paths_chr = x@paths_chr,
-  #                                  dissemination_1L_chr = x@dissemination_1L_chr)
   return(x)
 }
 investigate_SpecificModels <- function(x,

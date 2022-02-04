@@ -893,9 +893,12 @@ write_shareable_mdls_to_dv <- function (outp_smry_ls,
                                                                           3)], paths_are_rltv_1L_lgl = F,inc_fl_types_chr = ".RDS")
   if(!share_ingredients_1L_lgl){
     ds_ls <- dataverse::get_dataset(outp_smry_ls$dv_ls$ds_url_1L_chr)
-    shareable_mdls_tb <- shareable_mdls_tb %>% dplyr::mutate(dv_nm_chr = outp_smry_ls$dv_ls$dv_nm_1L_chr,
-                                                             fl_ids_int = ds_obj_nm_chr %>% purrr::map_int(~ready4::get_fl_id_from_dv_ls(ds_ls,
-                                                                                                                                            fl_nm_1L_chr = paste0(.x, ".RDS")) %>% as.integer()))
+    shareable_mdls_tb <- shareable_mdls_tb %>%
+      dplyr::mutate(dv_nm_chr = outp_smry_ls$dv_ls$dv_nm_1L_chr,
+                    fl_ids_int = ds_obj_nm_chr %>%
+                      purrr::map_int(~ready4::get_fl_id_from_dv_ls(ds_ls,
+                                                                   fl_nm_1L_chr = paste0(.x, ".RDS")) %>%
+                                       as.integer()))
 
   }
     return(shareable_mdls_tb)
