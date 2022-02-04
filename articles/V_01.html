@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9058</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9059</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1593,10 +1593,17 @@ Psychwell
 </div>
 </div>
 <div class="section level2">
+<h2 id="create-shareable-outputs">Create shareable outputs<a class="anchor" aria-label="anchor" href="#create-shareable-outputs"></a>
+</h2>
+<p>The model objects created by the preceding analysis are not suitable for sharing as they contain duplicates of the source dataset. To create model objects that can be shared (where dataset copies are replaced with fake data) use the <code>authorData</code> method.</p>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/authorData-methods.html" class="external-link">authorData</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></code></pre></div>
+</div>
+<div class="section level2">
 <h2 id="purge-dataset-copies">Purge dataset copies<a class="anchor" aria-label="anchor" href="#purge-dataset-copies"></a>
 </h2>
-<p>Because the files created in analysis are large, multiple objects containing copies of the source dataset have been saved to our output directory during the analysis process. We therefore need to delete all of these copies using the <code>author</code> method.</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<p>For the purposes of efficient computation, multiple objects containing copies of the source dataset were saved to our output directory during the analysis process. We therefore need to delete all of these copies by supplying “purge_write” to the <code>type_1L_chr</code> argument of the <code>author</code> method.</p>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/author-methods.html" class="external-link">author</a></span><span class="op">(</span><span class="va">X</span>,
        type_1L_chr <span class="op">=</span> <span class="st">"purge_write"</span><span class="op">)</span></code></pre></div>
 <!-- ## Share output -->

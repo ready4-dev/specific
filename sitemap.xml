@@ -79,6 +79,9 @@
     <loc>https://ready4-dev.github.io/specific/reference/author-methods.html</loc>
   </url>
   <url>
+    <loc>https://ready4-dev.github.io/specific/reference/authorData-methods.html</loc>
+  </url>
+  <url>
     <loc>https://ready4-dev.github.io/specific/reference/calculate_depnt_var_tfmn.html</loc>
   </url>
   <url>
@@ -626,6 +629,9 @@
   </url>
   <url>
     <loc>https://ready4-dev.github.io/specific/reference/write_mdl_type_sngl_outps.html</loc>
+  </url>
+  <url>
+    <loc>https://ready4-dev.github.io/specific/reference/write_mdls_to_dv.html</loc>
   </url>
   <url>
     <loc>https://ready4-dev.github.io/specific/reference/write_mdls_with_covars_cmprsn.html</loc>
