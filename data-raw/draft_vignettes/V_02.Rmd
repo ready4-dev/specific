@@ -12,6 +12,13 @@ vignette: >
 library(ready4)
 library(specific)
 ```
+```{r}
+# Y <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz", 
+#                                                                   gh_tag_1L_chr = "Documentation_0.0") %>%
+#                          ingest(fls_to_ingest_chr = "ymh_ScorzEuroQol5",
+#                                 metadata_1L_lgl = F)
+```
+
 
 ```{r}
 X <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/specific", 
@@ -35,8 +42,7 @@ if(identical(private_res_ls,
 
 ```{r}
 # ENSURE MOST UP TO DATE RESULTS SAVED LOCALLY
-# GENERATE SYNTH MODELS
-X <- authorData_SpecificMixed(X)
+X <- authorData(X)
 ``` 
 
 ## Specify metadata about the manuscript to be authored
@@ -67,20 +73,22 @@ Z <- Z %>% #
 ```{r}
 authorData(Z,
            tmpl_url_1L_chr = "https://github.com/ready4-dev/ttu_mdl_ctlg",
-           tmpl_version_1_L_chr = "0.0.9.2",
+           tmpl_version_1_L_chr = "0.0.9.3",
            what_1L_chr = "Catalogue")
 ```
 ```{r}
-Z@a_Ready4showPaths@ms_mkdn_dir_1L_chr <- "Catalogue"
-Z@a_Ready4showPaths@ms_dir_1L_chr <- "Catalogue"
-Z@fl_nm_1L_chr <- "AAA_TTU_MDL_CTG"
-Z@rmd_fl_nms_ls <- ready4show::make_rmd_fl_nms_ls(pdf_fl_nm_1L_chr = "Main_PDF",
-                                                  word_fl_nm_1L_chr = "Main_Word")
+# Z@a_Ready4showPaths@ms_mkdn_dir_1L_chr <- "Catalogue"
+# Z@a_Ready4showPaths@ms_dir_1L_chr <- "Catalogue"
+# Z@fl_nm_1L_chr <- "AAA_TTU_MDL_CTG"
+# Z@rmd_fl_nms_ls <- ready4show::make_rmd_fl_nms_ls(pdf_fl_nm_1L_chr = "Main_PDF",
+#                                                   word_fl_nm_1L_chr = "Main_Word")
 ```
 
 ```{r}
 # Need to modify PDF, Word and HTML parents with G_Shareable/Models
-authorReport(Z)
+authorReport(Z,
+             fl_nm_1L_chr = "AAA_TTU_MDL_CTG",
+             what_1L_chr = "Catalogue")
 ```
 ```{r}
 # UPDATE MS PROGRAM
