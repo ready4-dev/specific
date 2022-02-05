@@ -16,7 +16,7 @@ investigate method applied to SpecificFixed"><meta property="og:image" content="
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9060</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9061</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,7 @@ investigate method applied to SpecificFixed"><meta property="og:image" content="
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S4 method for SpecificModels</span>
-<span class="fu">investigate</span><span class="op">(</span><span class="va">x</span>, depnt_var_max_val_1L_dbl <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span>
+<span class="fu">investigate</span><span class="op">(</span><span class="va">x</span>, depnt_var_max_val_1L_dbl <span class="op">=</span> <span class="cn">Inf</span>, session_ls <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
 
 <span class="co"># S4 method for SpecificMixed</span>
 <span class="fu">investigate</span><span class="op">(</span><span class="va">x</span>, backend_1L_chr <span class="op">=</span> <span class="st">"cmdstanr"</span>, new_dir_nm_1L_chr <span class="op">=</span> <span class="st">"F_TS_Mdls"</span><span class="op">)</span>
@@ -85,6 +85,8 @@ investigate method applied to SpecificFixed"><meta property="og:image" content="
 <dd><p>An object of class SpecificFixed</p></dd>
 <dt>depnt_var_max_val_1L_dbl</dt>
 <dd><p>Dependent variable maximum value (a double vector of length one), Default: Inf</p></dd>
+<dt>session_ls</dt>
+<dd><p>Session (a list), Default: NULL</p></dd>
 <dt>backend_1L_chr</dt>
 <dd><p>Backend (a character vector of length one), Default: 'cmdstanr'</p></dd>
 <dt>new_dir_nm_1L_chr</dt>
