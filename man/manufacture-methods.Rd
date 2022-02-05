@@ -15,7 +15,7 @@
   z_Ready4useRepos = NULL,
   depnt_var_nms_chr = NA_character_,
   scndry_anlys_params_ls = NULL,
-  version_1L_chr = "0.5",
+  version_1L_chr = "0.6",
   what_1L_chr = "input_params_ls"
 )
 }
@@ -32,7 +32,7 @@
 
 \item{depnt_var_nms_chr}{Dependent variable names (a character vector), Default: 'NA'}
 
-\item{version_1L_chr}{Version (a character vector of length one), Default: '0.5'}
+\item{version_1L_chr}{Version (a character vector of length one), Default: '0.6'}
 }
 \value{
 Object (an output object of multiple potential types)

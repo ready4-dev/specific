@@ -94,7 +94,7 @@ methods::setMethod("manufacture", "SpecificProject", function (x, what_1L_chr = 
 #' @param z_Ready4useRepos PARAM_DESCRIPTION, Default: NULL
 #' @param depnt_var_nms_chr Dependent variable names (a character vector), Default: 'NA'
 #' @param scndry_anlys_params_ls Secondary analysis parameters (a list), Default: NULL
-#' @param version_1L_chr Version (a character vector of length one), Default: '0.5'
+#' @param version_1L_chr Version (a character vector of length one), Default: '0.6'
 #' @param what_1L_chr What (a character vector of length one), Default: 'input_params_ls'
 #' @return Object (an output object of multiple potential types)
 #' @rdname manufacture-methods
@@ -104,7 +104,7 @@ methods::setMethod("manufacture", "SpecificProject", function (x, what_1L_chr = 
 #' @importFrom ready4 get_from_lup_obj manufacture
 #' @importFrom methods callNextMethod
 methods::setMethod("manufacture", "SpecificSynopsis", function (x, y_SpecificMixed, z_Ready4useRepos = NULL, depnt_var_nms_chr = NA_character_, 
-    scndry_anlys_params_ls = NULL, version_1L_chr = "0.5", what_1L_chr = "input_params_ls") 
+    scndry_anlys_params_ls = NULL, version_1L_chr = "0.6", what_1L_chr = "input_params_ls") 
 {
     if (what_1L_chr %in% c("input_params_ls", "results_ls")) {
         header_yaml_args_ls <- ready4show::make_header_yaml_args_ls(authors_tb = x@authors_r3, 
@@ -146,7 +146,7 @@ methods::setMethod("manufacture", "SpecificSynopsis", function (x, y_SpecificMix
                 outp_smry_ls = x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls, 
                 output_format_ls = object_xx$output_format_ls, 
                 params_ls_ls = object_xx, path_params_ls = list(paths_ls = list(output_data_dir_1L_chr = paste0(x@a_Ready4showPaths@outp_data_dir_1L_chr, 
-                  "/Output"))), study_descs_ls = object_xxstudy_descs_ls, 
+                  "/Output"))), study_descs_ls = object_xx$study_descs_ls, 
                 var_nm_change_lup = object_xx$study_descs_ls$var_nm_change_lup, 
                 version_1L_chr = version_1L_chr)
         }

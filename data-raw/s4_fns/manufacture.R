@@ -3,7 +3,7 @@ manufacture_SpecificSynopsis <- function(x,
                                          z_Ready4useRepos = NULL,
                                          depnt_var_nms_chr = NA_character_,
                                          scndry_anlys_params_ls = NULL,
-                                         version_1L_chr = "0.5",
+                                         version_1L_chr = "0.6",
                                          what_1L_chr = "input_params_ls"){
   if(what_1L_chr %in% c("input_params_ls","results_ls")){
     header_yaml_args_ls <- ready4show::make_header_yaml_args_ls(authors_tb = x@authors_r3,
@@ -61,7 +61,7 @@ manufacture_SpecificSynopsis <- function(x,
                                     output_format_ls = object_xx$output_format_ls,
                                     params_ls_ls = object_xx,
                                     path_params_ls = list(paths_ls = list(output_data_dir_1L_chr = paste0(x@a_Ready4showPaths@outp_data_dir_1L_chr,"/Output"))),
-                                    study_descs_ls = object_xxstudy_descs_ls,
+                                    study_descs_ls = object_xx$study_descs_ls,
                                     var_nm_change_lup = object_xx$study_descs_ls$var_nm_change_lup,
                                     version_1L_chr = version_1L_chr)
 
