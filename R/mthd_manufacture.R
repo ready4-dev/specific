@@ -9,6 +9,7 @@
 #' @rdname manufacture-methods
 #' @aliases manufacture,SpecificProject-method
 #' @export 
+#' @importFrom dplyr pull
 #' @importFrom ready4show make_header_yaml_args_ls make_output_format_ls
 #' @importFrom ready4 manufacture
 methods::setMethod("manufacture", "SpecificProject", function (x, what_1L_chr = "ds_descvs_ls", scndry_anlys_params_ls = NULL) 
@@ -26,6 +27,9 @@ methods::setMethod("manufacture", "SpecificProject", function (x, what_1L_chr = 
             utl_wtd_var_nm_1L_chr = x@b_SpecificParameters@depnt_var_nm_1L_chr, 
             maui_item_pfx_1L_chr = x@b_SpecificParameters@itm_prefix_1L_chr, 
             utl_unwtd_var_nm_1L_chr = x@b_SpecificParameters@total_unwtd_var_nm_1L_chr)
+        ds_descvs_ls$nbr_obs_in_raw_ds_1L_dbl <- nrow(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb)
+        ds_descvs_ls$nbr_participants_1L_int <- length(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb %>% 
+            dplyr::pull(ds_descvs_ls$id_var_nm_1L_chr) %>% unique())
         object_xx <- ds_descvs_ls
     }
     if (what_1L_chr %in% c("ds_smry_ls", "input_params_ls")) {
@@ -88,19 +92,21 @@ methods::setMethod("manufacture", "SpecificProject", function (x, what_1L_chr = 
 #' @param x An object of class SpecificSynopsis
 #' @param y_SpecificMixed PARAM_DESCRIPTION
 #' @param z_Ready4useRepos PARAM_DESCRIPTION, Default: NULL
+#' @param depnt_var_nms_chr Dependent variable names (a character vector), Default: 'NA'
 #' @param scndry_anlys_params_ls Secondary analysis parameters (a list), Default: NULL
+#' @param version_1L_chr Version (a character vector of length one), Default: '0.5'
 #' @param what_1L_chr What (a character vector of length one), Default: 'input_params_ls'
 #' @return Object (an output object of multiple potential types)
 #' @rdname manufacture-methods
 #' @aliases manufacture,SpecificSynopsis-method
 #' @export 
 #' @importFrom ready4show make_header_yaml_args_ls make_output_format_ls
+#' @importFrom ready4 get_from_lup_obj manufacture
 #' @importFrom methods callNextMethod
-#' @importFrom ready4 manufacture
-methods::setMethod("manufacture", "SpecificSynopsis", function (x, y_SpecificMixed, z_Ready4useRepos = NULL, scndry_anlys_params_ls = NULL, 
-    what_1L_chr = "input_params_ls") 
+methods::setMethod("manufacture", "SpecificSynopsis", function (x, y_SpecificMixed, z_Ready4useRepos = NULL, depnt_var_nms_chr = NA_character_, 
+    scndry_anlys_params_ls = NULL, version_1L_chr = "0.5", what_1L_chr = "input_params_ls") 
 {
-    if (what_1L_chr == "input_params_ls") {
+    if (what_1L_chr %in% c("input_params_ls", "results_ls")) {
         header_yaml_args_ls <- ready4show::make_header_yaml_args_ls(authors_tb = x@authors_r3, 
             institutes_tb = x@institutes_r3, title_1L_chr = x@title_1L_chr, 
             keywords_chr = x@keywords_chr)
@@ -124,6 +130,26 @@ methods::setMethod("manufacture", "SpecificSynopsis", function (x, y_SpecificMix
                 what = "prefd_covars")), prefd_mdl_types_chr = procure(y_SpecificMixed, 
                 what = "prefd_mdls"), scndry_anlys_params_ls = scndry_anlys_params_ls, 
             write_new_dir_1L_lgl = F)
+        if (is.na(depnt_var_nms_chr[1])) 
+            depnt_var_nms_chr <- c(y_SpecificMixed@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3 %>% 
+                ready4::get_from_lup_obj(match_value_xx = y_SpecificMixed@b_SpecificParameters@depnt_var_nm_1L_chr, 
+                  match_var_nm_1L_chr = "var_nm_chr", target_var_nm_1L_chr = "var_desc_chr"), 
+                y_SpecificMixed@b_SpecificParameters@depnt_var_nm_1L_chr)
+        object_xx$short_and_long_nm <- depnt_var_nms_chr
+        object_xx <- object_xx %>% make_study_descs_ls(time_btwn_bl_and_fup_1L_chr = x@interval_chr, 
+            background_1L_chr = x@background_1L_chr, coi_1L_chr = x@coi_1L_chr, 
+            conclusion_1L_chr = x@conclusion_1L_chr, ethics_1L_chr = x@ethics_1L_chr, 
+            funding_1L_chr = x@funding_1L_chr, sample_desc_1L_chr = x@sample_desc_1L_chr, 
+            var_nm_change_lup = x@correspondences_r3)
+        if (what_1L_chr == "results_ls") {
+            object_xx <- make_results_ls(dv_ds_nm_and_url_chr = object_xx$path_params_ls$dv_ds_nm_and_url_chr, 
+                outp_smry_ls = x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls, 
+                output_format_ls = object_xx$output_format_ls, 
+                params_ls_ls = object_xx, path_params_ls = list(paths_ls = list(output_data_dir_1L_chr = paste0(x@a_Ready4showPaths@outp_data_dir_1L_chr, 
+                  "/Output"))), study_descs_ls = object_xxstudy_descs_ls, 
+                var_nm_change_lup = object_xx$study_descs_ls$var_nm_change_lup, 
+                version_1L_chr = version_1L_chr)
+        }
     }
     else {
         object_xx <- methods::callNextMethod()

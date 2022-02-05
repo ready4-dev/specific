@@ -273,10 +273,12 @@ make_cohort_ls <- function(descv_tbls_ls,
   numeric_vars_chr <- descv_tbls_ls$cohort_desc_tb %>% dplyr::filter(label ==
                                                                        "Median (Q1, Q3)") %>% dplyr::pull(variable)
   ctgl_vars_chr <- unique(descv_tbls_ls$cohort_desc_tb$variable[!descv_tbls_ls$cohort_desc_tb$variable %in% numeric_vars_chr])
-  nbr_by_round_dbl <- paste0(descv_tbls_ls$ds_descvs_ls$round_vals_chr,"_val_1_dbl") %>% purrr::map_dbl(~descv_tbls_ls$cohort_desc_tb %>%
-                                                                                         dplyr::filter(variable == ctgl_vars_chr[1]) %>%
-                                                                                         dplyr::pull(.x) %>%
-                                                                                         as.numeric() %>% purrr::map_dbl(~.x[[1]]) %>% sum())
+  nbr_by_round_dbl <- paste0(descv_tbls_ls$ds_descvs_ls$round_vals_chr,"_val_1_dbl") %>%
+    purrr::map_dbl(~descv_tbls_ls$cohort_desc_tb %>%
+                     dplyr::filter(variable == ctgl_vars_chr[1]) %>%
+                     dplyr::pull(.x) %>%
+                     purrr::discard(~.x=="") %>%
+                     as.numeric() %>% purrr::map_dbl(~.x[[1]]) %>% sum())
   numeric_vars_smry_ls <- numeric_vars_chr %>%
     purrr::map(~{
       var_smry_tb <- descv_tbls_ls$cohort_desc_tb %>%
@@ -412,30 +414,37 @@ make_covariates_text <- function(results_ls){ # Generalise from utility
           purrr::flatten_chr()
         mdls_ls <- unduplicated_ls
       }else{
-        signft_covars_chr <- names(mdls_with_signft_covars_ls) %>%
-          purrr::map_chr(~paste0(transform_names(.x,
-                                                 rename_lup = results_ls$var_nm_change_lup),
-                                 " was a significant covariate *(p<0.01)* in the "))
-        mdls_ls <- mdls_with_signft_covars_ls
+        if(!is.na(names(mdls_with_signft_covars_ls)[1])){
+          signft_covars_chr <- names(mdls_with_signft_covars_ls) %>%
+            purrr::map_chr(~paste0(transform_names(.x,
+                                                   rename_lup = results_ls$var_nm_change_lup),
+                                   " was a significant covariate *(p<0.01)* in the "))
+          mdls_ls <- mdls_with_signft_covars_ls
+        }else{
+          signft_covars_chr <- ""
+          mdls_ls <- NULL
+        }
       }
-      nbr_predrs_1L_int <- get_nbr_of_predrs(results_ls, as_words_1L_lgl = F)
-      sig_for_some_int <- which(mdls_ls %>% purrr::map_lgl(~length(.x) != nbr_predrs_1L_int)) %>% unname()
-      if(!identical(sig_for_some_int, integer(0))){
-        mdl_ls <- mdl_ls[sig_for_some_int]
-        signft_covars_chr <- signft_covars_chr[sig_for_some_int]
-        text_1L_chr <- paste0(text_1L_chr,
-                              " ",
-                              mdls_ls %>% purrr::map_chr(~ .x %>%
-                                                           purrr::map_chr(~ transform_names(.x,
-                                                                                            rename_lup = results_ls$var_nm_change_lup)) %>%
-                                                           paste0(collapse = ", ") %>%
-                                                           stringi::stri_replace_last(fixed = ",", " and")) %>%
-                                purrr::map2_chr(signft_covars_chr,
-                                                ~ paste0(.y,
-                                                         .x,
-                                                         " model",
-                                                         ifelse(stringr::str_detect(.x," and "),"s. ",". "))) %>%
-                                paste0(collapse = ""))
+      if(!is.null(mdls_ls)){
+        nbr_predrs_1L_int <- get_nbr_of_predrs(results_ls, as_words_1L_lgl = F)
+        sig_for_some_int <- which(mdls_ls %>% purrr::map_lgl(~length(.x) != nbr_predrs_1L_int)) %>% unname()
+        if(!identical(sig_for_some_int, integer(0))){
+          mdls_ls <- mdls_ls[sig_for_some_int] # CHANGED From mdl_ls
+          signft_covars_chr <- signft_covars_chr[sig_for_some_int]
+          text_1L_chr <- paste0(text_1L_chr,
+                                " ",
+                                mdls_ls %>% purrr::map_chr(~ .x %>%
+                                                             purrr::map_chr(~ transform_names(.x,
+                                                                                              rename_lup = results_ls$var_nm_change_lup)) %>%
+                                                             paste0(collapse = ", ") %>%
+                                                             stringi::stri_replace_last(fixed = ",", " and")) %>%
+                                  purrr::map2_chr(signft_covars_chr,
+                                                  ~ paste0(.y,
+                                                           .x,
+                                                           " model",
+                                                           ifelse(stringr::str_detect(.x," and "),"s. ",". "))) %>%
+                                  paste0(collapse = ""))
+        }
       }
     }
   }else{

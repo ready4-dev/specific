@@ -12,6 +12,7 @@ vignette: >
 library(ready4)
 library(specific)
 ```
+
 ```{r}
 # Y <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz", 
 #                                                                   gh_tag_1L_chr = "Documentation_0.0") %>%
@@ -44,6 +45,9 @@ if(identical(private_res_ls,
 # ENSURE MOST UP TO DATE RESULTS SAVED LOCALLY
 X <- authorData(X)
 ``` 
+```{r}
+X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$session_data_ls <- session_data_ls
+```
 
 ## Specify metadata about the manuscript to be authored
 ```{r}
@@ -80,8 +84,6 @@ authorData(Z,
 # Z@a_Ready4showPaths@ms_mkdn_dir_1L_chr <- "Catalogue"
 # Z@a_Ready4showPaths@ms_dir_1L_chr <- "Catalogue"
 # Z@fl_nm_1L_chr <- "AAA_TTU_MDL_CTG"
-# Z@rmd_fl_nms_ls <- ready4show::make_rmd_fl_nms_ls(pdf_fl_nm_1L_chr = "Main_PDF",
-#                                                   word_fl_nm_1L_chr = "Main_Word")
 ```
 
 ```{r}
@@ -98,9 +100,13 @@ authorReport(Z,
 ```
 
 ```{r}
-Z@a_Ready4showPaths@ms_mkdn_dir_1L_chr <- "Manuscript"
-Z@a_Ready4showPaths@ms_dir_1L_chr <- "Manuscript"
-Z@fl_nm_1L_chr <- "Manuscript"
+# Z@a_Ready4showPaths@ms_mkdn_dir_1L_chr <- "Manuscript"
+# Z@a_Ready4showPaths@ms_dir_1L_chr <- "Manuscript"
+# Z@fl_nm_1L_chr <- "Manuscript"
+Z <- renewSlot(Z,
+               "rmd_fl_nms_ls",
+               ready4show::make_rmd_fl_nms_ls(pdf_fl_nm_1L_chr = "Main_PDF",
+                                                  word_fl_nm_1L_chr = "Main_Word"))
 ```
 ```{r}
 authorData(Z,
@@ -114,11 +120,13 @@ A <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes",
 ```{r}
 ## MANUFACTURE_SpecificMixed
 # Ratify??
-input_params_ls <- manufacture(Z, 
-                               y_SpecificMixed = X,
-                               z_Ready4useRepos = A,
+input_params_ls <- manufacture_SpecificSynopsis(Z, 
+                               y_SpecificMixed = X, # Add to Z
+                               z_Ready4useRepos = A, # Add to Z
+                               depnt_var_nms_chr = c("EuroQol Five Dimension",
+                                                     "EQ5D"),
                                scndry_anlys_params_ls = NULL,
-                               what_1L_chr = "input_params_ls")
+                               what_1L_chr = "input_params_ls") 
 results_ls <- make_results_ls(dv_ds_nm_and_url_chr = input_params_ls$path_params_ls$dv_ds_nm_and_url_chr,
                               outp_smry_ls = Z@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
                                   output_format_ls = input_params_ls$output_format_ls,
@@ -129,8 +137,19 @@ results_ls <- make_results_ls(dv_ds_nm_and_url_chr = input_params_ls$path_params
                                   version_1L_chr = "0.5")
 ```
 ```{r}
+# print_corls_tbl
+# make_dnsty_and_sctr_plt_title
+results_ls
+ds_descvs_ls$nbr_obs_in_raw_ds_1L_dbl <- nrow(data_tb)
+ds_descvs_ls$nbr_participants_1L_int <- length(data_tb %>% 
+                                                 dplyr::pull(ds_descvs_ls$id_var_nm_1L_chr) %>%
+                                                 unique())
+```
+
+```{r}
 outp_smry_ls <- append(Z@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
        list(results_ls = results_ls))
+# outp_smry_ls$results_ls <- results_ls
 Z <- renewSlot(Z,
                "b_SpecificResults@a_SpecificShareable@shareable_outp_ls",
                outp_smry_ls)

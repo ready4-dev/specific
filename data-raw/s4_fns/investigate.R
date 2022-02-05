@@ -21,13 +21,16 @@ investigate_SpecificMixed <- function(x,
                                             prior_ls = prior_ls,
                                             control_ls = control_ls)
   rename_lup <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$rename_lup
+  session_ls <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$session_ls
   x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- append(results_ls[-1],
-                                                                      list(rename_lup = rename_lup)) # EDIT TO REMOVE INPUTS
+                                                                      list(rename_lup = rename_lup,
+                                                                           session_ls = session_ls)) # EDIT TO REMOVE INPUTS
   x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
   return(x)
 }
 investigate_SpecificModels <- function(x,
-                                       depnt_var_max_val_1L_dbl = Inf){
+                                       depnt_var_max_val_1L_dbl = Inf,
+                                       session_ls = NULL){
     results_ls <- write_mdl_cmprsn(scored_data_tb = x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
                      ds_smry_ls = manufacture(x,
                                               what_1L_chr = "ds_smry_ls"),
@@ -38,7 +41,8 @@ investigate_SpecificModels <- function(x,
                      seed_1L_int = x@b_SpecificParameters@seed_1L_int)
     rename_lup <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$rename_lup
     x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- append(results_ls[-1],
-                                                                        list(rename_lup = rename_lup))
+                                                                        list(rename_lup = rename_lup,
+                                                                             session_ls = session_ls))
     x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
 
     x_SpecificPredictors <- SpecificPredictors(a_YouthvarsProfile = x@a_YouthvarsProfile,
@@ -57,8 +61,10 @@ investigate_SpecificPredictors <- function(x){
                                               output_data_dir_1L_chr = x@b_SpecificParameters@paths_ls$output_data_dir_1L_chr,
                                               seed_1L_int = x@b_SpecificParameters@seed_1L_int)
   rename_lup <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$rename_lup
+  session_ls <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$session_ls
   x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- append(results_ls[-1],
-                                                                      list(rename_lup = rename_lup))
+                                                                      list(rename_lup = rename_lup,
+                                                                           session_ls = session_ls))
   x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
   x_SpecificFixed <- SpecificFixed(a_YouthvarsProfile = x@a_YouthvarsProfile,
                                    b_SpecificParameters = x@b_SpecificParameters,
@@ -75,8 +81,10 @@ investigate_SpecificFixed <- function(x){
                                               output_data_dir_1L_chr = x@b_SpecificParameters@paths_ls$output_data_dir_1L_chr,
                                               seed_1L_int = x@b_SpecificParameters@seed_1L_int)
   rename_lup <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$rename_lup
+  session_ls <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$session_ls
   x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- append(results_ls[-1],
-                                                                      list(rename_lup = rename_lup)) # EDIT TO REMOVE INPUTS
+                                                                      list(rename_lup = rename_lup,
+                                                                           session_ls = session_ls)) # EDIT TO REMOVE INPUTS
   x@c_SpecificResults@b_SpecificPrivate@private_outp_ls <- results_ls[1]
   x_SpecificMixed <- SpecificMixed(a_YouthvarsProfile = x@a_YouthvarsProfile,
                                    b_SpecificParameters = x@b_SpecificParameters,

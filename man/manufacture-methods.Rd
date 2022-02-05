@@ -13,7 +13,9 @@
   x,
   y_SpecificMixed,
   z_Ready4useRepos = NULL,
+  depnt_var_nms_chr = NA_character_,
   scndry_anlys_params_ls = NULL,
+  version_1L_chr = "0.5",
   what_1L_chr = "input_params_ls"
 )
 }
@@ -27,6 +29,10 @@
 \item{y_SpecificMixed}{PARAM_DESCRIPTION}
 
 \item{z_Ready4useRepos}{PARAM_DESCRIPTION, Default: NULL}
+
+\item{depnt_var_nms_chr}{Dependent variable names (a character vector), Default: 'NA'}
+
+\item{version_1L_chr}{Version (a character vector of length one), Default: '0.5'}
 }
 \value{
 Object (an output object of multiple potential types)

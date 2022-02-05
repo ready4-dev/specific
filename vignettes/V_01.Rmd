@@ -225,7 +225,12 @@ The `investigate` method can now be used to compare the candidate models we have
 
 ```{r results='hide', message=FALSE, warning=FALSE}
 X <- investigate(X,
-                 depnt_var_max_val_1L_dbl = 0.99)
+                 depnt_var_max_val_1L_dbl = 0.99,
+                 session_ls = sessionInfo())
+```
+
+```{r}
+class(X)
 ```
 
 The `investigate` method will write each model to be tested to a new sub-directory of our output directory. 
@@ -270,7 +275,9 @@ We can now compare all of our candidate predictors (with and without candidate c
 ```{r message=FALSE, results='hide', warning=FALSE}
 X <- investigate(X)
 ```
-
+```{r}
+class(X)
+```
 Now, we compare the performance of single predictor models of our preferred model type (in our case, a `r X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$mdl_types_lup %>% ready4::get_from_lup_obj(target_var_nm_1L_chr = "long_name_chr",match_value_xx = X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$prefd_mdl_types_chr[1], match_var_nm_1L_chr = "short_name_chr", evaluate_1L_lgl = F)`) for each candidate predictor. The last call to the `investigate`{.R} saved the tested models along with model plots in a sub-directory of our output directory. These results are also viewable as a table.
 
 
@@ -318,6 +325,9 @@ We now conclude our model testing by rerunning the previous step, except confini
 ```{r message=FALSE, results='hide', warning=FALSE, fig.show ='hide'}
 X <- investigate(X)
 ```
+```{r}
+class(X)
+```
 
 The previous call to the `write_mdls_with_covars_cmprsn`{.R} function saves the tested models along with two plots for each model in the "E_Predrs_W_Covars_Sngl_Mdl_Cmprsn" sub-directory of "Output". 
 
@@ -353,6 +363,9 @@ X <- renewSlot(X,
 
 ```{r eval = F}
 X <- investigate(X)
+```
+```{r}
+class(X)
 ```
 
 The last call to `investigate`{.R} function wrote the models it tests to a sub-directory of the output directory along with plots for each model. 
