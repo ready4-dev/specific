@@ -1326,8 +1326,6 @@ make_nbr_included_text <- function(results_ls){
          results_ls$study_descs_ls$health_utl_nm_1L_chr,
          " data")
 }
-
-
 make_paths_to_ss_plts_ls <- function(output_data_dir_1L_chr,
                                      outp_smry_ls,
                                      additional_paths_chr = "/dens_and_sctr.png"){
@@ -1337,6 +1335,114 @@ make_paths_to_ss_plts_ls <- function(output_data_dir_1L_chr,
                              density = paste0(output_data_dir_1L_chr,"/",outp_smry_ls$file_paths_chr[outp_smry_ls$file_paths_chr %>% purrr::map_lgl(~stringr::str_detect(.x,"A_TFMN_CMPRSN_DNSTY"))]),#paste0(output_data_dir_1L_chr,"/A_TFMN_CMPRSN_DNSTY.png"), #Update
                              importance = paste0(output_data_dir_1L_chr,"/",outp_smry_ls$file_paths_chr[outp_smry_ls$file_paths_chr %>% purrr::map_lgl(~stringr::str_detect(.x,"B_PRED_CMPRSN_BORUTA_VAR_IMP"))]))
   return(paths_to_ss_plts_ls)
+}
+make_plot_fn_and_args_ls <- function(type_1L_chr,
+                                     depnt_var_desc_1L_chr,
+                                     brms_mdl = NULL,
+                                     depnt_var_nm_1L_chr  = NULL,
+                                     predn_type_1L_chr = NULL,
+                                     round_var_nm_1L_chr = NULL,
+                                     sd_dbl = NA_real_,
+                                     seed_1L_dbl = 23456,
+                                     sfx_1L_chr = " from table",
+                                     table_predn_mdl = NULL,
+                                     tfmn_1L_chr = "NTF",
+                                     tfd_data_tb = NULL,
+                                     utl_min_val_1L_dbl = -1){
+  if(!is.null(brms_mdl)){
+    set.seed(seed_1L_dbl)
+    tfd_data_tb <- brms_mdl$data
+    depnt_var_nm_1L_chr <- names(tfd_data_tb)[1]
+    tfd_data_tb <- transform_ds_for_all_cmprsn_plts(tfd_data_tb = tfd_data_tb,
+                                                    model_mdl = brms_mdl,
+                                                    depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
+                                                    is_brms_mdl_1L_lgl = inherits(brms_mdl,"brmsfit"),
+                                                    predn_type_1L_chr = predn_type_1L_chr,
+                                                    sd_dbl = NA_real_,
+                                                    sfx_1L_chr = ifelse(!is.null(table_predn_mdl),
+                                                                        " from brmsfit",
+                                                                        sfx_1L_chr),
+                                                    tfmn_1L_chr = tfmn_1L_chr,
+                                                    utl_min_val_1L_dbl = utl_min_val_1L_dbl)
+    if(!is.null(table_predn_mdl)){
+      tfd_data_tb <- transform_ds_for_all_cmprsn_plts(tfd_data_tb = tfd_data_tb,
+                                                      model_mdl = table_predn_mdl,
+                                                      depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
+                                                      is_brms_mdl_1L_lgl = F,
+                                                      predn_type_1L_chr = predn_type_1L_chr,
+                                                      sd_dbl = sd_dbl,
+                                                      sfx_1L_chr = ifelse(!is.null(brms_mdl),
+                                                                          " from table",
+                                                                          sfx_1L_chr),
+                                                      tfmn_1L_chr = tfmn_1L_chr,
+                                                      utl_min_val_1L_dbl = utl_min_val_1L_dbl)
+    }
+  }
+  ref_idx_1L_int <- which(type_1L_chr == c("coefs", "hetg",
+                                           "dnst", "sctr_plt",
+                                           "sim_dnst", "sim_sctr",
+                                           "cnstrd_dnst", "cnstrd_sctr_plt",
+                                           "cnstrd_sim_dnst", "cnstrd_sim_sctr"))
+
+  if (ref_idx_1L_int %in% c(3,5,7,9)) {
+    plt_fn <- plot_obsd_predd_dnst
+    fn_args_ls <- list(tfd_data_tb = tfd_data_tb,
+                       depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
+                       depnt_var_desc_1L_chr = depnt_var_desc_1L_chr,
+                       predd_val_var_nm_1L_chr = ifelse(ref_idx_1L_int %in% c(3,7),
+                                                        transform_predd_var_nm("Predicted",
+                                                                               sfx_1L_chr = ifelse(!is.null(table_predn_mdl),
+                                                                                                   " from brmsfit",
+                                                                                                   sfx_1L_chr),
+                                                                               utl_min_val_1L_dbl = ifelse(ref_idx_1L_int == 3, ####
+                                                                                                           NA_real_,
+                                                                                                           utl_min_val_1L_dbl)),
+                                                        transform_predd_var_nm("Simulated",
+                                                                               sfx_1L_chr = ifelse(!is.null(table_predn_mdl),
+                                                                                                   " from brmsfit",
+                                                                                                   sfx_1L_chr),
+                                                                               utl_min_val_1L_dbl = ifelse(ref_idx_1L_int == 5,
+                                                                                                           NA_real_,
+                                                                                                           utl_min_val_1L_dbl))),
+                       cmprsn_predd_var_nm_1L_chr = ifelse(is.null(table_predn_mdl),
+                                                           NA_character_,
+                                                           ifelse(ref_idx_1L_int %in% c(3,7), ##
+                                                                  transform_predd_var_nm("Predicted",
+                                                                                         sfx_1L_chr = " from table",
+                                                                                         utl_min_val_1L_dbl = ifelse(ref_idx_1L_int == 3, ##
+                                                                                                                     NA_real_,
+                                                                                                                     utl_min_val_1L_dbl)),
+                                                                  transform_predd_var_nm("Simulated",
+                                                                                         sfx_1L_chr =" from table",
+                                                                                         utl_min_val_1L_dbl = ifelse(ref_idx_1L_int == 5, ##
+                                                                                                                     NA_real_,
+                                                                                                                     utl_min_val_1L_dbl)))))
+  }else{
+    plt_fn <- plot_obsd_predd_sctr_cmprsn
+    fn_args_ls <- list(tfd_data_tb = tfd_data_tb,
+                       depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
+                       depnt_var_desc_1L_chr = depnt_var_desc_1L_chr,
+                       round_var_nm_1L_chr = round_var_nm_1L_chr,
+                       predd_val_var_nm_1L_chr = ifelse(ref_idx_1L_int %in% c(4,8),
+                                                        transform_predd_var_nm("Predicted",
+                                                                               sfx_1L_chr = ifelse(!is.null(table_predn_mdl),
+                                                                                                   " from brmsfit",
+                                                                                                   sfx_1L_chr),
+                                                                               utl_min_val_1L_dbl = ifelse(ref_idx_1L_int == 4,
+                                                                                                           NA_real_,
+                                                                                                           utl_min_val_1L_dbl)),
+                                                        transform_predd_var_nm("Simulated",
+                                                                               sfx_1L_chr = ifelse(!is.null(table_predn_mdl),
+                                                                                                   " from brmsfit",
+                                                                                                   sfx_1L_chr),
+                                                                               utl_min_val_1L_dbl = ifelse(ref_idx_1L_int == 6,
+                                                                                                           NA_real_,
+                                                                                                           utl_min_val_1L_dbl))),
+                       args_ls = args_ls)
+  }
+  plot_fn_and_args_ls <- list(plt_fn = plt_fn,
+                              fn_args_ls = fn_args_ls)
+  return(plot_fn_and_args_ls)
 }
 make_predr_ctgs_ls <- function(outp_smry_ls,
                                include_idx_int = NULL){

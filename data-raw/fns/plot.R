@@ -1,6 +1,6 @@
 plot_auto_lm <- function (mdl, which_dbl = 1:6, ncol_1L_int = 3L, label_size_1L_int = 3)
 {
-  pacman::p_load(char = "ggfortify")
+  #pacman::p_load(char = "ggfortify")
     plt <- ggplot2::autoplot(mdl, which = which_dbl, ncol = ncol_1L_int,
         label.size = label_size_1L_int)
     if (6 %in% which_dbl)
