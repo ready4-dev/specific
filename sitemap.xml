@@ -94,6 +94,9 @@
     <loc>https://ready4-dev.github.io/specific/reference/deprecated.html</loc>
   </url>
   <url>
+    <loc>https://ready4-dev.github.io/specific/reference/enhance-methods.html</loc>
+  </url>
+  <url>
     <loc>https://ready4-dev.github.io/specific/reference/exhibit-methods.html</loc>
   </url>
   <url>
@@ -101,6 +104,9 @@
   </url>
   <url>
     <loc>https://ready4-dev.github.io/specific/reference/get_background_text.html</loc>
+  </url>
+  <url>
+    <loc>https://ready4-dev.github.io/specific/reference/get_brms_mdl.html</loc>
   </url>
   <url>
     <loc>https://ready4-dev.github.io/specific/reference/get_cndt_mdls.html</loc>
@@ -202,6 +208,9 @@
     <loc>https://ready4-dev.github.io/specific/reference/make_bl_fup_add_to_row_ls.html</loc>
   </url>
   <url>
+    <loc>https://ready4-dev.github.io/specific/reference/make_brms_mdl_plt.html</loc>
+  </url>
+  <url>
     <loc>https://ready4-dev.github.io/specific/reference/make_brms_mdl_print_ls.html</loc>
   </url>
   <url>
@@ -260,6 +269,9 @@
   </url>
   <url>
     <loc>https://ready4-dev.github.io/specific/reference/make_hlth_utl_and_predrs_ls.html</loc>
+  </url>
+  <url>
+    <loc>https://ready4-dev.github.io/specific/reference/make_incld_mdl_paths.html</loc>
   </url>
   <url>
     <loc>https://ready4-dev.github.io/specific/reference/make_indpnt_predrs_lngl_tbl_title.html</loc>
@@ -328,6 +340,9 @@
     <loc>https://ready4-dev.github.io/specific/reference/make_paths_to_ss_plts_ls.html</loc>
   </url>
   <url>
+    <loc>https://ready4-dev.github.io/specific/reference/make_plot_fn_and_args_ls.html</loc>
+  </url>
+  <url>
     <loc>https://ready4-dev.github.io/specific/reference/make_predn_ds_with_one_predr.html</loc>
   </url>
   <url>
@@ -362,6 +377,9 @@
   </url>
   <url>
     <loc>https://ready4-dev.github.io/specific/reference/make_results_ls_spine.html</loc>
+  </url>
+  <url>
+    <loc>https://ready4-dev.github.io/specific/reference/make_scaling_fctr_dbl.html</loc>
   </url>
   <url>
     <loc>https://ready4-dev.github.io/specific/reference/make_scaling_text.html</loc>
