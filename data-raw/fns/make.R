@@ -134,7 +134,7 @@ make_brms_mdl_plt <- function(outp_smry_ls,
   sfx_1L_chr <- " from brmsfit"
   mdl_types_lup <- outp_smry_ls$mdl_types_lup
   if(is.null(brms_mdl)){
-    incld_mdl_paths_chr <- make_incld_mld_paths(outp_smry_ls)
+    incld_mdl_paths_chr <- make_incld_mdl_paths(outp_smry_ls)
     brms_mdl <- readRDS(paste0(outp_smry_ls$path_to_write_to_1L_chr,"/",
                                incld_mdl_paths_chr[incld_mdl_paths_chr %>% endsWith(paste0(mdl_nm_1L_chr,".RDS"))]))
 
@@ -276,7 +276,7 @@ make_cmpst_sctr_and_dnst_plt <- function(outp_smry_ls,
                                          label_x_1L_dbl = 0.1,
                                          label_y_1L_dbl = 0.9,
                                          label_size_1L_dbl = 22,
-                                         mdl_idcs_int = 1:2,
+                                         mdl_idxs_int = 1:2,
                                          use_png_fls_1L_lgl = T){
   if(use_png_fls_1L_lgl){
     filtered_paths_chr <- outp_smry_ls$file_paths_chr %>% purrr::discard(~endsWith(.x,"_sim_sctr.png")|endsWith(.x,"_sim_dnst.png")|endsWith(.x,"_cnstrd_sctr_plt.png")|endsWith(.x,"_cnstrd_dnst.png"))
@@ -292,7 +292,7 @@ make_cmpst_sctr_and_dnst_plt <- function(outp_smry_ls,
   }else{
     plot_ls <- outp_smry_ls$mdl_nms_ls %>%
       purrr::flatten_chr() %>%
-      `[`(mdl_idcs_int) %>%
+      `[`(mdl_idxs_int) %>%
       purrr::map(~{
         mdl_nm_1L_chr <- .x
         brms_mdl <- get_brms_mdl(outp_smry_ls,
@@ -908,7 +908,7 @@ make_hlth_utl_and_predrs_ls <- function(outp_smry_ls, # Generalise from HU
   return(hlth_utl_and_predrs_ls)
 
 }
-make_incld_mld_paths <- function(outp_smry_ls){
+make_incld_mdl_paths <- function(outp_smry_ls){
   incld_mdl_paths_chr <- outp_smry_ls$file_paths_chr %>%
     purrr::map_chr(~{
       file_path_1L_chr <- .x
@@ -924,8 +924,8 @@ make_incld_mld_paths <- function(outp_smry_ls){
   incld_mdl_paths_chr <- incld_mdl_paths_chr[!is.na(incld_mdl_paths_chr)]
   ranked_mdl_nms_chr <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr()
   sorted_mdl_nms_chr <- sort(ranked_mdl_nms_chr)
-  rank_idcs_int <- purrr::map_int(sorted_mdl_nms_chr,~which(ranked_mdl_nms_chr==.x))
-  incld_mdl_paths_chr <- incld_mdl_paths_chr[order(rank_idcs_int)]
+  rank_idxs_int <- purrr::map_int(sorted_mdl_nms_chr,~which(ranked_mdl_nms_chr==.x))
+  incld_mdl_paths_chr <- incld_mdl_paths_chr[order(rank_idxs_int)]
   return(incld_mdl_paths_chr)
 }
 make_indpnt_predrs_lngl_tbls_ref <- function(params_ls){

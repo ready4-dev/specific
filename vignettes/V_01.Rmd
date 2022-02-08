@@ -242,7 +242,7 @@ plt_nms_chr <- paste0("Plot ",1:5) # Make fn
 ```{r, eval = F, fig.cap=plt_nms_chr, out.width = "400px", echo=FALSE, message=F}
 # Also written to that sub-directory are a number of plots for each model, that can be inspected using the `depict` method.
 depict(X,
-       mdl_idcs_int = 2)
+       mdl_idxs_int = 2)
 ```
 
 The `investigate` method also outputs a table summarising the performance of each of the candidate models.

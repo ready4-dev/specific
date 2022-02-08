@@ -14,6 +14,7 @@
   y_SpecificMixed,
   z_Ready4useRepos = NULL,
   depnt_var_nms_chr = NA_character_,
+  make_cmpst_plt_1L_lgl = F,
   scndry_anlys_params_ls = NULL,
   version_1L_chr = "0.6",
   what_1L_chr = "input_params_ls"
@@ -31,6 +32,8 @@
 \item{z_Ready4useRepos}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{depnt_var_nms_chr}{Dependent variable names (a character vector), Default: 'NA'}
+
+\item{make_cmpst_plt_1L_lgl}{Make composite plot (a logical vector of length one), Default: F}
 
 \item{version_1L_chr}{Version (a character vector of length one), Default: '0.6'}
 }

@@ -11,7 +11,7 @@ plt_nms_chr <- paste0("Plot ",1) # Make fn
 
 ```{r, eval=F, echo=FALSE fig.cap=plt_nms_chr, out.width = "400px", message=F}
 depict(x,
-       mdl_idcs_int = 1,
+       mdl_idxs_int = 1,
        plt_indcs_int = 1)
 ```
 

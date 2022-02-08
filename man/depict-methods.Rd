@@ -7,7 +7,7 @@
 \usage{
 \S4method{depict}{SpecificProject}(
   x,
-  mdl_idcs_int = NULL,
+  mdl_idxs_int = NULL,
   output_type_1L_chr = "HTML",
   plt_indcs_int = NULL
 )
@@ -15,7 +15,7 @@
 \arguments{
 \item{x}{An object of class SpecificProject}
 
-\item{mdl_idcs_int}{Model idcs (an integer vector), Default: NULL}
+\item{mdl_idxs_int}{Model indices (an integer vector), Default: NULL}
 
 \item{output_type_1L_chr}{Output type (a character vector of length one), Default: 'HTML'}
 

@@ -6,20 +6,28 @@
 \usage{
 make_cmpst_sctr_and_dnst_plt(
   outp_smry_ls,
-  output_data_dir_1L_chr,
-  predr_var_nms_chr,
+  output_data_dir_1L_chr = NA_character_,
+  predr_var_nms_chr = NA_character_,
+  base_size_1L_dbl = 16,
+  correspondences_lup = NULL,
   labels_chr = c("A", "B", "C", "D"),
   label_x_1L_dbl = 0.1,
   label_y_1L_dbl = 0.9,
-  label_size_1L_dbl = 22
+  label_size_1L_dbl = 22,
+  mdl_idxs_int = 1:2,
+  use_png_fls_1L_lgl = T
 )
 }
 \arguments{
 \item{outp_smry_ls}{Output summary (a list)}
 
-\item{output_data_dir_1L_chr}{Output data directory (a character vector of length one)}
+\item{output_data_dir_1L_chr}{Output data directory (a character vector of length one), Default: 'NA'}
 
-\item{predr_var_nms_chr}{Predictor variable names (a character vector)}
+\item{predr_var_nms_chr}{Predictor variable names (a character vector), Default: 'NA'}
+
+\item{base_size_1L_dbl}{Base size (a double vector of length one), Default: 16}
+
+\item{correspondences_lup}{Correspondences (a lookup table), Default: NULL}
 
 \item{labels_chr}{Labels (a character vector), Default: c("A", "B", "C", "D")}
 
@@ -28,7 +36,14 @@ make_cmpst_sctr_and_dnst_plt(
 \item{label_y_1L_dbl}{Label y (a double vector of length one), Default: 0.9}
 
 \item{label_size_1L_dbl}{Label size (a double vector of length one), Default: 22}
+
+\item{mdl_idxs_int}{Model indices (an integer vector), Default: 1:2}
+
+\item{use_png_fls_1L_lgl}{Use png files (a logical vector of length one), Default: T}
+}
+\value{
+Composite (a plot)
 }
 \description{
-make_cmpst_sctr_and_dnst_plt() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make composite scatter and density plot. The function is called for its side effects and does not return a value.
+make_cmpst_sctr_and_dnst_plt() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make composite scatter and density plot. The function returns Composite (a plot).
 }

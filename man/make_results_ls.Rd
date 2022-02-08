@@ -16,6 +16,7 @@ make_results_ls(
   include_idx_int = NULL,
   var_nm_change_lup = NULL,
   ctgl_vars_regrouping_ls = NULL,
+  make_cmpst_plt_1L_lgl = T,
   outp_smry_ls = NULL,
   sig_covars_some_predrs_mdls_tb = NULL,
   sig_thresh_covars_1L_chr = NULL,
@@ -44,6 +45,8 @@ make_results_ls(
 \item{var_nm_change_lup}{Variable name change (a lookup table), Default: NULL}
 
 \item{ctgl_vars_regrouping_ls}{Categorical variables regrouping (a list), Default: NULL}
+
+\item{make_cmpst_plt_1L_lgl}{Make composite plot (a logical vector of length one), Default: T}
 
 \item{outp_smry_ls}{Output summary (a list), Default: NULL}
 

@@ -10,7 +10,11 @@ plot_obsd_predd_sctr_cmprsn(
   depnt_var_desc_1L_chr = "Total weighted utility score",
   round_var_nm_1L_chr = "round",
   args_ls = NULL,
-  predd_val_var_nm_1L_chr = "Predicted"
+  base_size_1L_dbl = 11,
+  correspondences_lup = NULL,
+  predd_val_var_nm_1L_chr = "Predicted",
+  x_lbl_1L_chr = NA_character_,
+  y_lbl_1L_chr = NA_character_
 )
 }
 \arguments{
@@ -24,7 +28,15 @@ plot_obsd_predd_sctr_cmprsn(
 
 \item{args_ls}{Arguments (a list), Default: NULL}
 
+\item{base_size_1L_dbl}{Base size (a double vector of length one), Default: 11}
+
+\item{correspondences_lup}{Correspondences (a lookup table), Default: NULL}
+
 \item{predd_val_var_nm_1L_chr}{Predicted value variable name (a character vector of length one), Default: 'Predicted'}
+
+\item{x_lbl_1L_chr}{X label (a character vector of length one), Default: 'NA'}
+
+\item{y_lbl_1L_chr}{Y label (a character vector of length one), Default: 'NA'}
 }
 \description{
 plot_obsd_predd_sctr_cmprsn() is a Plot function that plots data Specifically, this function implements an algorithm to plot observed predicted scatter comparison. The function is called for its side effects and does not return a value.

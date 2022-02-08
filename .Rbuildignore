@@ -150,3 +150,5 @@
 ^data-raw/draft_vignettes/aaaaaaaaaa\.txt$
 ^data-raw/draft_vignettes/WIP\.R$
 ^data-raw/s4_fns/authorData\.R$
+^data-raw/draft_vignettes/MORE_WIP\.R$
+^data-raw/s4_fns/enhance\.R$

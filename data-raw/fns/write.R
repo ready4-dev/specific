@@ -744,9 +744,9 @@ write_shareable_mdls <- function (outp_smry_ls,
   # incld_mdl_paths_chr <- incld_mdl_paths_chr[!is.na(incld_mdl_paths_chr)]
   # ranked_mdl_nms_chr <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr()
   # sorted_mdl_nms_chr <- sort(ranked_mdl_nms_chr)
-  # rank_idcs_int <- purrr::map_int(sorted_mdl_nms_chr,~which(ranked_mdl_nms_chr==.x))
-  # incld_mdl_paths_chr <- incld_mdl_paths_chr[order(rank_idcs_int)]
-  incld_mdl_paths_chr <- make_incld_mld_paths(outp_smry_ls)
+  # rank_idxs_int <- purrr::map_int(sorted_mdl_nms_chr,~which(ranked_mdl_nms_chr==.x))
+  # incld_mdl_paths_chr <- incld_mdl_paths_chr[order(rank_idxs_int)]
+  incld_mdl_paths_chr <- make_incld_mdl_paths(outp_smry_ls)
   fake_ds_tb <- make_fake_ts_data(outp_smry_ls, depnt_vars_are_NA_1L_lgl = F)
   mdl_types_lup <- outp_smry_ls$mdl_types_lup
     shareable_mdls_ls <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr() %>%

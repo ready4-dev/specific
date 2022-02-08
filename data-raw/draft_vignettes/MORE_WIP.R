@@ -12,7 +12,7 @@ cmpst_plt <- make_cmpst_sctr_and_dnst_plt(outp_smry_ls,
                                           label_x_1L_dbl = 0,
                                           label_y_1L_dbl = 0,
                                           label_size_1L_dbl = 30,
-                                          mdl_idcs_int = 1:2,
+                                          mdl_idxs_int = 1:2,
                                           use_png_fls_1L_lgl = F)
 ##
 cowplot::save_plot(paste0(outp_smry_ls$path_to_write_to_1L_chr,

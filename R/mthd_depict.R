@@ -3,7 +3,7 @@
 #' @name depict-SpecificProject
 #' @description depict method applied to SpecificProject
 #' @param x An object of class SpecificProject
-#' @param mdl_idcs_int Model idcs (an integer vector), Default: NULL
+#' @param mdl_idxs_int Model indices (an integer vector), Default: NULL
 #' @param output_type_1L_chr Output type (a character vector of length one), Default: 'HTML'
 #' @param plt_indcs_int Plot indcs (an integer vector), Default: NULL
 #' @return NULL
@@ -13,18 +13,18 @@
 #' @importFrom purrr map_lgl map map_int discard
 #' @importFrom knitr include_graphics
 #' @importFrom ready4 depict
-methods::setMethod("depict", "SpecificProject", function (x, mdl_idcs_int = NULL, output_type_1L_chr = "HTML", 
+methods::setMethod("depict", "SpecificProject", function (x, mdl_idxs_int = NULL, output_type_1L_chr = "HTML", 
     plt_indcs_int = NULL) 
 {
-    if (is.null(mdl_idcs_int)) {
-        mdl_idcs_int <- 1
+    if (is.null(mdl_idxs_int)) {
+        mdl_idxs_int <- 1
     }
     if (is.null(plt_indcs_int)) 
         plt_indcs_int <- 1:5
     predr_var_nm_1L_chr <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$predr_var_nm_1L_chr
     plt_paths_chr <- list.files(x@paths_chr, recursive = T)[list.files(x@paths_chr, 
         recursive = T) %>% purrr::map_lgl(~endsWith(.x, ".png"))]
-    plt_paths_ls <- x@b_SpecificParameters@candidate_mdls_lup$short_name_chr[mdl_idcs_int] %>% 
+    plt_paths_ls <- x@b_SpecificParameters@candidate_mdls_lup$short_name_chr[mdl_idxs_int] %>% 
         purrr::map(~{
             pfx_1L_chr <- paste0("A_Candidate_Mdls_Cmprsn/A_RT_", 
                 predr_var_nm_1L_chr, "_", .x)

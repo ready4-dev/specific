@@ -128,6 +128,61 @@ make_bl_fup_add_to_row_ls <- function (df, n_at_bl_1L_int, n_at_fup_1L_int)
             n_at_fup_1L_int, ")}} \\\\\n")), paste("\\bottomrule \n")))
     return(add_to_row_ls)
 }
+#' Make bayesian regression models model plot
+#' @description make_brms_mdl_plt() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make bayesian regression models model plot. The function returns Plot (a plot).
+#' @param outp_smry_ls Output summary (a list)
+#' @param depnt_var_desc_1L_chr Dependent variable description (a character vector of length one)
+#' @param mdl_nm_1L_chr Model name (a character vector of length one)
+#' @param type_1L_chr Type (a character vector of length one)
+#' @param base_size_1L_dbl Base size (a double vector of length one), Default: 8
+#' @param brms_mdl Bayesian regression models (a model), Default: NULL
+#' @param correspondences_lup Correspondences (a lookup table), Default: NULL
+#' @param new_var_nm_1L_chr New variable name (a character vector of length one), Default: 'Predicted'
+#' @param predn_type_1L_chr Prediction type (a character vector of length one), Default: NULL
+#' @param x_lbl_1L_chr X label (a character vector of length one), Default: 'NA'
+#' @param y_lbl_1L_chr Y label (a character vector of length one), Default: 'NA'
+#' @return Plot (a plot)
+#' @rdname make_brms_mdl_plt
+#' @export 
+#' @importFrom ready4 get_from_lup_obj
+#' @importFrom purrr flatten_chr
+#' @importFrom rlang exec
+#' @keywords internal
+make_brms_mdl_plt <- function (outp_smry_ls, depnt_var_desc_1L_chr, mdl_nm_1L_chr, 
+    type_1L_chr, base_size_1L_dbl = 8, brms_mdl = NULL, correspondences_lup = NULL, 
+    new_var_nm_1L_chr = "Predicted", predn_type_1L_chr = NULL, 
+    x_lbl_1L_chr = NA_character_, y_lbl_1L_chr = NA_character_) 
+{
+    sfx_1L_chr <- " from brmsfit"
+    mdl_types_lup <- outp_smry_ls$mdl_types_lup
+    if (is.null(brms_mdl)) {
+        incld_mdl_paths_chr <- make_incld_mdl_paths(outp_smry_ls)
+        brms_mdl <- readRDS(paste0(outp_smry_ls$path_to_write_to_1L_chr, 
+            "/", incld_mdl_paths_chr[incld_mdl_paths_chr %>% 
+                endsWith(paste0(mdl_nm_1L_chr, ".RDS"))]))
+    }
+    mdl_type_1L_chr <- get_mdl_type_from_nm(mdl_nm_1L_chr, mdl_types_lup = mdl_types_lup)
+    tfmn_1L_chr <- ready4::get_from_lup_obj(mdl_types_lup, match_value_xx = mdl_type_1L_chr, 
+        match_var_nm_1L_chr = "short_name_chr", target_var_nm_1L_chr = "tfmn_chr", 
+        evaluate_1L_lgl = F)
+    plot_fn_and_args_ls <- make_plot_fn_and_args_ls(brms_mdl = brms_mdl, 
+        tfd_data_tb = outp_smry_ls$scored_data_tb %>% transform_tb_to_mdl_inp(depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr, 
+            predr_vars_nms_chr = outp_smry_ls$predr_vars_nms_ls %>% 
+                purrr::flatten_chr() %>% unique(), id_var_nm_1L_chr = outp_smry_ls$id_var_nm_1L_chr, 
+            round_var_nm_1L_chr = outp_smry_ls$round_var_nm_1L_chr, 
+            round_bl_val_1L_chr = outp_smry_ls$round_bl_val_1L_chr, 
+            scaling_fctr_dbl = make_scaling_fctr_dbl(outp_smry_ls)), 
+        base_size_1L_dbl = base_size_1L_dbl, correspondences_lup = correspondences_lup, 
+        depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr, 
+        depnt_var_desc_1L_chr = depnt_var_desc_1L_chr, new_var_nm_1L_chr = new_var_nm_1L_chr, 
+        predn_type_1L_chr = predn_type_1L_chr, round_var_nm_1L_chr = outp_smry_ls$round_var_nm_1L_chr, 
+        sd_dbl = NA_real_, sfx_1L_chr = sfx_1L_chr, tfmn_1L_chr = tfmn_1L_chr, 
+        type_1L_chr = type_1L_chr, utl_min_val_1L_dbl = ifelse(!is.null(outp_smry_ls$utl_min_val_1L_dbl), 
+            outp_smry_ls$utl_min_val_1L_dbl, -1), x_lbl_1L_chr = x_lbl_1L_chr, 
+        y_lbl_1L_chr = y_lbl_1L_chr)
+    plt <- rlang::exec(plot_fn_and_args_ls$plt_fn, !!!plot_fn_and_args_ls$fn_args_ls)
+    return(plt)
+}
 #' Make bayesian regression models model print list
 #' @description make_brms_mdl_print_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make bayesian regression models model print list. The function returns Bayesian regression models model print (a list).
 #' @param mdl_ls Model list (a list of models)
@@ -242,43 +297,71 @@ make_brms_mdl_smry_tbl <- function (smry_mdl_ls, grp_1L_chr, popl_1L_chr, fam_1L
     return(brms_mdl_smry_tb)
 }
 #' Make composite scatter and density plot
-#' @description make_cmpst_sctr_and_dnst_plt() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make composite scatter and density plot. The function is called for its side effects and does not return a value.
+#' @description make_cmpst_sctr_and_dnst_plt() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make composite scatter and density plot. The function returns Composite (a plot).
 #' @param outp_smry_ls Output summary (a list)
-#' @param output_data_dir_1L_chr Output data directory (a character vector of length one)
-#' @param predr_var_nms_chr Predictor variable names (a character vector)
+#' @param output_data_dir_1L_chr Output data directory (a character vector of length one), Default: 'NA'
+#' @param predr_var_nms_chr Predictor variable names (a character vector), Default: 'NA'
+#' @param base_size_1L_dbl Base size (a double vector of length one), Default: 16
+#' @param correspondences_lup Correspondences (a lookup table), Default: NULL
 #' @param labels_chr Labels (a character vector), Default: c("A", "B", "C", "D")
 #' @param label_x_1L_dbl Label x (a double vector of length one), Default: 0.1
 #' @param label_y_1L_dbl Label y (a double vector of length one), Default: 0.9
 #' @param label_size_1L_dbl Label size (a double vector of length one), Default: 22
-#' @return NULL
+#' @param mdl_idxs_int Model indices (an integer vector), Default: 1:2
+#' @param use_png_fls_1L_lgl Use png files (a logical vector of length one), Default: T
+#' @return Composite (a plot)
 #' @rdname make_cmpst_sctr_and_dnst_plt
 #' @export 
-#' @importFrom purrr discard map_lgl map_chr map flatten_chr
+#' @importFrom purrr discard map_lgl map_chr map flatten_chr flatten
 #' @importFrom stringr str_detect str_remove
 #' @importFrom DescTools SplitPath
 #' @importFrom cowplot ggdraw draw_image plot_grid
-make_cmpst_sctr_and_dnst_plt <- function (outp_smry_ls, output_data_dir_1L_chr, predr_var_nms_chr, 
-    labels_chr = c("A", "B", "C", "D"), label_x_1L_dbl = 0.1, 
-    label_y_1L_dbl = 0.9, label_size_1L_dbl = 22) 
+make_cmpst_sctr_and_dnst_plt <- function (outp_smry_ls, output_data_dir_1L_chr = NA_character_, 
+    predr_var_nms_chr = NA_character_, base_size_1L_dbl = 16, 
+    correspondences_lup = NULL, labels_chr = c("A", "B", "C", 
+        "D"), label_x_1L_dbl = 0.1, label_y_1L_dbl = 0.9, label_size_1L_dbl = 22, 
+    mdl_idxs_int = 1:2, use_png_fls_1L_lgl = T) 
 {
-    filtered_paths_chr <- outp_smry_ls$file_paths_chr %>% purrr::discard(~endsWith(.x, 
-        "_sim_sctr.png") | endsWith(.x, "_sim_dnst.png") | endsWith(.x, 
-        "_cnstrd_sctr_plt.png") | endsWith(.x, "_cnstrd_dnst.png"))
-    filtered_paths_chr <- paste0(output_data_dir_1L_chr, "/", 
-        filtered_paths_chr[filtered_paths_chr %>% purrr::map_lgl(~stringr::str_detect(.x, 
-            paste0(predr_var_nms_chr, "_1")) & (stringr::str_detect(.x, 
-            "_dnst.png") | stringr::str_detect(.x, "_sctr_plt.png")))])
-    mdl_types_chr <- filtered_paths_chr %>% purrr::map_chr(~DescTools::SplitPath(.x)$filename %>% 
-        stringr::str_remove("_dnst") %>% stringr::str_remove("_sctr_plt") %>% 
-        get_mdl_type_from_nm())
-    ordered_paths_chr <- outp_smry_ls$prefd_mdl_types_chr %>% 
-        purrr::map(~filtered_paths_chr[which(mdl_types_chr == 
-            .x)]) %>% purrr::flatten_chr()
-    plot_ls <- ordered_paths_chr %>% purrr::map(~cowplot::ggdraw() + 
-        cowplot::draw_image(.x))
+    if (use_png_fls_1L_lgl) {
+        filtered_paths_chr <- outp_smry_ls$file_paths_chr %>% 
+            purrr::discard(~endsWith(.x, "_sim_sctr.png") | endsWith(.x, 
+                "_sim_dnst.png") | endsWith(.x, "_cnstrd_sctr_plt.png") | 
+                endsWith(.x, "_cnstrd_dnst.png"))
+        filtered_paths_chr <- paste0(output_data_dir_1L_chr, 
+            "/", filtered_paths_chr[filtered_paths_chr %>% purrr::map_lgl(~stringr::str_detect(.x, 
+                paste0(predr_var_nms_chr, "_1")) & (stringr::str_detect(.x, 
+                "_dnst.png") | stringr::str_detect(.x, "_sctr_plt.png")))])
+        mdl_types_chr <- filtered_paths_chr %>% purrr::map_chr(~DescTools::SplitPath(.x)$filename %>% 
+            stringr::str_remove("_dnst") %>% stringr::str_remove("_sctr_plt") %>% 
+            get_mdl_type_from_nm())
+        ordered_paths_chr <- outp_smry_ls$prefd_mdl_types_chr %>% 
+            purrr::map(~filtered_paths_chr[which(mdl_types_chr == 
+                .x)]) %>% purrr::flatten_chr()
+        plot_ls <- ordered_paths_chr %>% purrr::map(~cowplot::ggdraw() + 
+            cowplot::draw_image(.x))
+    }
+    else {
+        plot_ls <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr() %>% 
+            mdl_idxs_int[] %>% purrr::map(~{
+            mdl_nm_1L_chr <- .x
+            brms_mdl <- get_brms_mdl(outp_smry_ls, mdl_nm_1L_chr = mdl_nm_1L_chr)
+            depnt_var_desc_1L_chr <- get_hlth_utl_nm(outp_smry_ls$results_ls, 
+                short_nm_1L_lgl = T)
+            purrr::map(c("dnst", "sctr_plt"), ~{
+                make_brms_mdl_plt(outp_smry_ls, base_size_1L_dbl = base_size_1L_dbl, 
+                  brms_mdl = brms_mdl, correspondences_lup = correspondences_lup, 
+                  depnt_var_desc_1L_chr = depnt_var_desc_1L_chr, 
+                  mdl_nm_1L_chr = mdl_nm_1L_chr, type_1L_chr = .x, 
+                  predn_type_1L_chr = NULL, x_lbl_1L_chr = paste0("Observed ", 
+                    depnt_var_desc_1L_chr), y_lbl_1L_chr = paste0("Predicted ", 
+                    depnt_var_desc_1L_chr))
+            })
+        }) %>% purrr::flatten()
+    }
     composite_plt <- cowplot::plot_grid(plot_ls[[1]], plot_ls[[2]], 
         plot_ls[[3]], plot_ls[[4]], nrow = 2, labels = labels_chr, 
         label_x = label_x_1L_dbl, label_y = label_y_1L_dbl, label_size = label_size_1L_dbl)
+    return(composite_plt)
 }
 #' Make candidate predictor text
 #' @description make_cndt_predr_text() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make candidate predictor text. The function returns Text (a character vector of length one).
@@ -799,6 +882,40 @@ make_hlth_utl_and_predrs_ls <- function (outp_smry_ls, descv_tbls_ls, nbr_of_dig
         predrs_nartv_seq_chr = ranked_predrs_ls$unranked_predrs_chr, 
         cor_seq_dscdng_chr = ranked_predrs_ls$ranked_predrs_chr)
     return(hlth_utl_and_predrs_ls)
+}
+#' Make included model paths
+#' @description make_incld_mdl_paths() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make included model paths. The function returns Included model paths (a character vector).
+#' @param outp_smry_ls Output summary (a list)
+#' @return Included model paths (a character vector)
+#' @rdname make_incld_mdl_paths
+#' @export 
+#' @importFrom purrr map_chr flatten_chr map map_lgl map_int
+#' @importFrom stringr str_locate
+#' @keywords internal
+make_incld_mdl_paths <- function (outp_smry_ls) 
+{
+    incld_mdl_paths_chr <- outp_smry_ls$file_paths_chr %>% purrr::map_chr(~{
+        file_path_1L_chr <- .x
+        mdl_fl_nms_chr <- paste0(outp_smry_ls$mdl_nms_ls %>% 
+            purrr::flatten_chr(), ".RDS")
+        mdl_fl_nms_locn_ls <- mdl_fl_nms_chr %>% purrr::map(~stringr::str_locate(file_path_1L_chr, 
+            .x))
+        match_lgl <- mdl_fl_nms_locn_ls %>% purrr::map_lgl(~!(is.na(.x[[1, 
+            1]]) | is.na(.x[[1, 2]])))
+        if (any(match_lgl)) {
+            file_path_1L_chr
+        }
+        else {
+            NA_character_
+        }
+    })
+    incld_mdl_paths_chr <- incld_mdl_paths_chr[!is.na(incld_mdl_paths_chr)]
+    ranked_mdl_nms_chr <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr()
+    sorted_mdl_nms_chr <- sort(ranked_mdl_nms_chr)
+    rank_idxs_int <- purrr::map_int(sorted_mdl_nms_chr, ~which(ranked_mdl_nms_chr == 
+        .x))
+    incld_mdl_paths_chr <- incld_mdl_paths_chr[order(rank_idxs_int)]
+    return(incld_mdl_paths_chr)
 }
 #' Make independent predictors longitudinal table title
 #' @description make_indpnt_predrs_lngl_tbl_title() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make independent predictors longitudinal table title. The function returns Title (a character vector of length one).
@@ -1428,6 +1545,96 @@ make_paths_to_ss_plts_ls <- function (output_data_dir_1L_chr, outp_smry_ls, addi
             purrr::map_lgl(~stringr::str_detect(.x, "B_PRED_CMPRSN_BORUTA_VAR_IMP"))]))
     return(paths_to_ss_plts_ls)
 }
+#' Make plot function and arguments list
+#' @description make_plot_fn_and_args_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make plot function and arguments list. The function returns Plot function and arguments (a list).
+#' @param type_1L_chr Type (a character vector of length one)
+#' @param depnt_var_desc_1L_chr Dependent variable description (a character vector of length one)
+#' @param args_ls Arguments (a list), Default: NULL
+#' @param base_size_1L_dbl Base size (a double vector of length one), Default: 11
+#' @param brms_mdl Bayesian regression models (a model), Default: NULL
+#' @param correspondences_lup Correspondences (a lookup table), Default: NULL
+#' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: NULL
+#' @param new_var_nm_1L_chr New variable name (a character vector of length one), Default: 'NA'
+#' @param predn_type_1L_chr Prediction type (a character vector of length one), Default: NULL
+#' @param round_var_nm_1L_chr Round variable name (a character vector of length one), Default: NULL
+#' @param sd_dbl Standard deviation (a double vector), Default: NA
+#' @param seed_1L_dbl Seed (a double vector of length one), Default: 23456
+#' @param sfx_1L_chr Suffix (a character vector of length one), Default: ' from table'
+#' @param table_predn_mdl Table prediction (a model), Default: NULL
+#' @param tfmn_1L_chr Transformation (a character vector of length one), Default: 'NTF'
+#' @param tfd_data_tb Transformed data (a tibble), Default: NULL
+#' @param utl_min_val_1L_dbl Utility minimum value (a double vector of length one), Default: -1
+#' @param x_lbl_1L_chr X label (a character vector of length one), Default: 'NA'
+#' @param y_lbl_1L_chr Y label (a character vector of length one), Default: 'NA'
+#' @return Plot function and arguments (a list)
+#' @rdname make_plot_fn_and_args_ls
+#' @export 
+#' @keywords internal
+make_plot_fn_and_args_ls <- function (type_1L_chr, depnt_var_desc_1L_chr, args_ls = NULL, 
+    base_size_1L_dbl = 11, brms_mdl = NULL, correspondences_lup = NULL, 
+    depnt_var_nm_1L_chr = NULL, new_var_nm_1L_chr = NA_character_, 
+    predn_type_1L_chr = NULL, round_var_nm_1L_chr = NULL, sd_dbl = NA_real_, 
+    seed_1L_dbl = 23456, sfx_1L_chr = " from table", table_predn_mdl = NULL, 
+    tfmn_1L_chr = "NTF", tfd_data_tb = NULL, utl_min_val_1L_dbl = -1, 
+    x_lbl_1L_chr = NA_character_, y_lbl_1L_chr = NA_character_) 
+{
+    if (!is.null(brms_mdl)) {
+        set.seed(seed_1L_dbl)
+        tfd_data_tb <- transform_ds_for_all_cmprsn_plts(tfd_data_tb = tfd_data_tb, 
+            model_mdl = brms_mdl, depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, 
+            is_brms_mdl_1L_lgl = inherits(brms_mdl, "brmsfit"), 
+            predn_type_1L_chr = predn_type_1L_chr, sd_dbl = NA_real_, 
+            sfx_1L_chr = ifelse(is.null(table_predn_mdl), " from brmsfit", 
+                sfx_1L_chr), tfmn_1L_chr = tfmn_1L_chr, utl_min_val_1L_dbl = utl_min_val_1L_dbl)
+        if (!is.null(table_predn_mdl)) {
+            tfd_data_tb <- transform_ds_for_all_cmprsn_plts(tfd_data_tb = tfd_data_tb, 
+                model_mdl = table_predn_mdl, depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, 
+                is_brms_mdl_1L_lgl = F, predn_type_1L_chr = predn_type_1L_chr, 
+                sd_dbl = sd_dbl, sfx_1L_chr = ifelse(!is.null(brms_mdl), 
+                  " from table", sfx_1L_chr), tfmn_1L_chr = tfmn_1L_chr, 
+                utl_min_val_1L_dbl = utl_min_val_1L_dbl)
+        }
+    }
+    ref_idx_1L_int <- which(type_1L_chr == c("coefs", "hetg", 
+        "dnst", "sctr_plt", "sim_dnst", "sim_sctr", "cnstrd_dnst", 
+        "cnstrd_sctr_plt", "cnstrd_sim_dnst", "cnstrd_sim_sctr"))
+    if (ref_idx_1L_int %in% c(3, 5, 7, 9)) {
+        plt_fn <- plot_obsd_predd_dnst
+        fn_args_ls <- list(tfd_data_tb = tfd_data_tb, base_size_1L_dbl = base_size_1L_dbl, 
+            depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, depnt_var_desc_1L_chr = depnt_var_desc_1L_chr, 
+            new_var_nm_1L_chr = new_var_nm_1L_chr, predd_val_var_nm_1L_chr = ifelse(ref_idx_1L_int %in% 
+                c(3, 7), transform_predd_var_nm("Predicted", 
+                sfx_1L_chr = ifelse(!is.null(table_predn_mdl), 
+                  " from brmsfit", sfx_1L_chr), utl_min_val_1L_dbl = ifelse(ref_idx_1L_int == 
+                  3, NA_real_, utl_min_val_1L_dbl)), transform_predd_var_nm("Simulated", 
+                sfx_1L_chr = ifelse(!is.null(table_predn_mdl), 
+                  " from brmsfit", sfx_1L_chr), utl_min_val_1L_dbl = ifelse(ref_idx_1L_int == 
+                  5, NA_real_, utl_min_val_1L_dbl))), cmprsn_predd_var_nm_1L_chr = ifelse(is.null(table_predn_mdl), 
+                NA_character_, ifelse(ref_idx_1L_int %in% c(3, 
+                  7), transform_predd_var_nm("Predicted", sfx_1L_chr = " from table", 
+                  utl_min_val_1L_dbl = ifelse(ref_idx_1L_int == 
+                    3, NA_real_, utl_min_val_1L_dbl)), transform_predd_var_nm("Simulated", 
+                  sfx_1L_chr = " from table", utl_min_val_1L_dbl = ifelse(ref_idx_1L_int == 
+                    5, NA_real_, utl_min_val_1L_dbl)))))
+    }
+    else {
+        plt_fn <- plot_obsd_predd_sctr_cmprsn
+        fn_args_ls <- list(tfd_data_tb = tfd_data_tb, base_size_1L_dbl = base_size_1L_dbl, 
+            correspondences_lup = correspondences_lup, depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, 
+            depnt_var_desc_1L_chr = depnt_var_desc_1L_chr, round_var_nm_1L_chr = round_var_nm_1L_chr, 
+            predd_val_var_nm_1L_chr = ifelse(ref_idx_1L_int %in% 
+                c(4, 8), transform_predd_var_nm("Predicted", 
+                sfx_1L_chr = ifelse(!is.null(table_predn_mdl), 
+                  " from brmsfit", sfx_1L_chr), utl_min_val_1L_dbl = ifelse(ref_idx_1L_int == 
+                  4, NA_real_, utl_min_val_1L_dbl)), transform_predd_var_nm("Simulated", 
+                sfx_1L_chr = ifelse(!is.null(table_predn_mdl), 
+                  " from brmsfit", sfx_1L_chr), utl_min_val_1L_dbl = ifelse(ref_idx_1L_int == 
+                  6, NA_real_, utl_min_val_1L_dbl))), args_ls = args_ls, 
+            x_lbl_1L_chr = x_lbl_1L_chr, y_lbl_1L_chr = y_lbl_1L_chr)
+    }
+    plot_fn_and_args_ls <- list(plt_fn = plt_fn, fn_args_ls = fn_args_ls)
+    return(plot_fn_and_args_ls)
+}
 #' Make prediction dataset with one predictor
 #' @description make_predn_ds_with_one_predr() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make prediction dataset with one predictor. The function returns Prediction dataset (a tibble).
 #' @param model_mdl Model (a model)
@@ -1723,6 +1930,7 @@ make_ranked_predrs_ls <- function (descv_tbls_ls, old_nms_chr = NULL, new_nms_ch
 #' @param include_idx_int Include index (an integer vector), Default: NULL
 #' @param var_nm_change_lup Variable name change (a lookup table), Default: NULL
 #' @param ctgl_vars_regrouping_ls Categorical variables regrouping (a list), Default: NULL
+#' @param make_cmpst_plt_1L_lgl Make composite plot (a logical vector of length one), Default: T
 #' @param outp_smry_ls Output summary (a list), Default: NULL
 #' @param sig_covars_some_predrs_mdls_tb Sig covariates some predictors models (a tibble), Default: NULL
 #' @param sig_thresh_covars_1L_chr Sig thresh covariates (a character vector of length one), Default: NULL
@@ -1740,7 +1948,7 @@ make_results_ls <- function (spine_of_results_ls = NULL, abstract_args_ls = NULL
     dv_ds_nm_and_url_chr = NULL, output_format_ls = NULL, params_ls_ls = NULL, 
     path_params_ls = NULL, study_descs_ls = NULL, fn_ls = NULL, 
     include_idx_int = NULL, var_nm_change_lup = NULL, ctgl_vars_regrouping_ls = NULL, 
-    outp_smry_ls = NULL, sig_covars_some_predrs_mdls_tb = NULL, 
+    make_cmpst_plt_1L_lgl = T, outp_smry_ls = NULL, sig_covars_some_predrs_mdls_tb = NULL, 
     sig_thresh_covars_1L_chr = NULL, version_1L_chr = NULL) 
 {
     if (is.null(spine_of_results_ls)) {
@@ -1757,11 +1965,13 @@ make_results_ls <- function (spine_of_results_ls = NULL, abstract_args_ls = NULL
         "/", spine_of_results_ls$outp_smry_ls$file_paths_chr[spine_of_results_ls$outp_smry_ls$file_paths_chr %>% 
             purrr::map_lgl(~stringr::str_detect(.x, "descv_tbls_ls.RDS"))]) %>% 
         readRDS()
-    composite_plt <- make_cmpst_sctr_and_dnst_plt(spine_of_results_ls$outp_smry_ls, 
-        output_data_dir_1L_chr = spine_of_results_ls$output_data_dir_1L_chr, 
-        predr_var_nms_chr = spine_of_results_ls$outp_smry_ls$predr_vars_nms_ls[[1]])
-    cowplot::save_plot(paste0(spine_of_results_ls$output_data_dir_1L_chr, 
-        "/dens_and_sctr.png"), composite_plt, base_height = 20)
+    if (make_cmpst_plt_1L_lgl) {
+        composite_plt <- make_cmpst_sctr_and_dnst_plt(spine_of_results_ls$outp_smry_ls, 
+            output_data_dir_1L_chr = spine_of_results_ls$output_data_dir_1L_chr, 
+            predr_var_nms_chr = spine_of_results_ls$outp_smry_ls$predr_vars_nms_ls[[1]])
+        cowplot::save_plot(paste0(spine_of_results_ls$output_data_dir_1L_chr, 
+            "/dens_and_sctr.png"), composite_plt, base_height = 20)
+    }
     ttu_cs_ls <- make_ttu_cs_ls(spine_of_results_ls$outp_smry_ls, 
         sig_covars_some_predrs_mdls_tb = sig_covars_some_predrs_mdls_tb, 
         sig_thresh_covars_1L_chr = sig_thresh_covars_1L_chr)
@@ -1898,6 +2108,25 @@ make_results_ls_spine <- function (output_format_ls = NULL, params_ls_ls = NULL,
         mdl_ingredients_ls = mdl_ingredients_ls, nbr_of_digits_1L_int = nbr_of_digits_1L_int, 
         study_descs_ls = study_descs_ls, var_nm_change_lup = var_nm_change_lup)
     return(spine_of_results_ls)
+}
+#' Make scaling factor double vector
+#' @description make_scaling_fctr_dbl() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make scaling factor double vector. The function returns Scaling factor (a double vector).
+#' @param outp_smry_ls Output summary (a list)
+#' @return Scaling factor (a double vector)
+#' @rdname make_scaling_fctr_dbl
+#' @export 
+#' @importFrom purrr flatten_chr map_dbl
+#' @importFrom ready4 get_from_lup_obj
+#' @keywords internal
+make_scaling_fctr_dbl <- function (outp_smry_ls) 
+{
+    scaling_fctr_dbl <- outp_smry_ls$predr_vars_nms_ls %>% purrr::flatten_chr() %>% 
+        unique() %>% purrr::map_dbl(~ifelse(.x %in% outp_smry_ls$predictors_lup$short_name_chr, 
+        ready4::get_from_lup_obj(outp_smry_ls$predictors_lup, 
+            target_var_nm_1L_chr = "mdl_scaling_dbl", match_value_xx = .x, 
+            match_var_nm_1L_chr = "short_name_chr", evaluate_1L_lgl = F), 
+        1))
+    return(scaling_fctr_dbl)
 }
 #' Make scaling text
 #' @description make_scaling_text() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make scaling text. The function returns Text (a character vector of length one).

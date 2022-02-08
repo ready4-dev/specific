@@ -9,6 +9,24 @@ get_background_text <- function (results_ls)
     text_1L_chr <- results_ls$study_descs_ls$background_1L_chr
     return(text_1L_chr)
 }
+#' Get bayesian regression models model
+#' @description get_brms_mdl() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get bayesian regression models model. Function argument outp_smry_ls specifies the where to look for the required object. The function returns Bayesian regression models (a model).
+#' @param outp_smry_ls Output summary (a list)
+#' @param mdl_nm_1L_chr Model name (a character vector of length one)
+#' @return Bayesian regression models (a model)
+#' @rdname get_brms_mdl
+#' @export 
+#' @importFrom purrr flatten_chr
+#' @keywords internal
+get_brms_mdl <- function (outp_smry_ls, mdl_nm_1L_chr) 
+{
+    ranked_mdl_nms_chr <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr()
+    incld_mdl_paths_chr <- make_incld_mdl_paths(outp_smry_ls)
+    brms_mdl <- readRDS(paste0(outp_smry_ls$path_to_write_to_1L_chr, 
+        "/", incld_mdl_paths_chr[incld_mdl_paths_chr %>% endsWith(paste0(mdl_nm_1L_chr, 
+            ".RDS"))]))
+    return(brms_mdl)
+}
 #' Get candidate models
 #' @description get_cndt_mdls() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get candidate models. Function argument filter_1L_lgl specifies the where to look for the required object. The function returns Candidate models (a lookup table).
 #' @param filter_1L_lgl Filter (a logical vector of length one), Default: T
