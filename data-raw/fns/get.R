@@ -2,6 +2,14 @@ get_background_text <- function(results_ls){
   text_1L_chr <- results_ls$study_descs_ls$background_1L_chr
   return(text_1L_chr)
 }
+get_brms_mdl <- function(outp_smry_ls,
+                         mdl_nm_1L_chr){
+  ranked_mdl_nms_chr <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr()
+  incld_mdl_paths_chr <- make_incld_mld_paths(outp_smry_ls)
+  brms_mdl <- readRDS(paste0(outp_smry_ls$path_to_write_to_1L_chr,"/",
+                             incld_mdl_paths_chr[incld_mdl_paths_chr %>% endsWith(paste0(mdl_nm_1L_chr,".RDS"))]))
+  return(brms_mdl)
+}
 get_conclusion_text <- function(results_ls){
   text_1L_chr <- results_ls$study_descs_ls$conclusion_1L_chr
   return(text_1L_chr)

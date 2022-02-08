@@ -729,23 +729,24 @@ write_shareable_mdls <- function (outp_smry_ls,
 {
   output_dir_chr <- write_shareable_dir(outp_smry_ls = outp_smry_ls,
                                         new_dir_nm_1L_chr = new_dir_nm_1L_chr)
-  incld_mdl_paths_chr <- outp_smry_ls$file_paths_chr %>%
-    purrr::map_chr(~{
-      file_path_1L_chr <- .x
-      mdl_fl_nms_chr <- paste0(outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr(),".RDS")
-      mdl_fl_nms_locn_ls <- mdl_fl_nms_chr %>% purrr::map(~stringr::str_locate(file_path_1L_chr,.x))
-      match_lgl <- mdl_fl_nms_locn_ls %>% purrr::map_lgl(~!(is.na(.x[[1,1]]) | is.na(.x[[1,2]])))
-      if(any(match_lgl)){
-        file_path_1L_chr
-      }else{
-        NA_character_
-      }
-    })
-  incld_mdl_paths_chr <- incld_mdl_paths_chr[!is.na(incld_mdl_paths_chr)]
-  ranked_mdl_nms_chr <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr()
-  sorted_mdl_nms_chr <- sort(ranked_mdl_nms_chr)
-  rank_idcs_int <- purrr::map_int(sorted_mdl_nms_chr,~which(ranked_mdl_nms_chr==.x))
-  incld_mdl_paths_chr <- incld_mdl_paths_chr[order(rank_idcs_int)]
+  # incld_mdl_paths_chr <- outp_smry_ls$file_paths_chr %>%
+  #   purrr::map_chr(~{
+  #     file_path_1L_chr <- .x
+  #     mdl_fl_nms_chr <- paste0(outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr(),".RDS")
+  #     mdl_fl_nms_locn_ls <- mdl_fl_nms_chr %>% purrr::map(~stringr::str_locate(file_path_1L_chr,.x))
+  #     match_lgl <- mdl_fl_nms_locn_ls %>% purrr::map_lgl(~!(is.na(.x[[1,1]]) | is.na(.x[[1,2]])))
+  #     if(any(match_lgl)){
+  #       file_path_1L_chr
+  #     }else{
+  #       NA_character_
+  #     }
+  #   })
+  # incld_mdl_paths_chr <- incld_mdl_paths_chr[!is.na(incld_mdl_paths_chr)]
+  # ranked_mdl_nms_chr <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr()
+  # sorted_mdl_nms_chr <- sort(ranked_mdl_nms_chr)
+  # rank_idcs_int <- purrr::map_int(sorted_mdl_nms_chr,~which(ranked_mdl_nms_chr==.x))
+  # incld_mdl_paths_chr <- incld_mdl_paths_chr[order(rank_idcs_int)]
+  incld_mdl_paths_chr <- make_incld_mld_paths(outp_smry_ls)
   fake_ds_tb <- make_fake_ts_data(outp_smry_ls, depnt_vars_are_NA_1L_lgl = F)
   mdl_types_lup <- outp_smry_ls$mdl_types_lup
     shareable_mdls_ls <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr() %>%
@@ -798,16 +799,17 @@ write_shareable_mdls <- function (outp_smry_ls,
                 ".RDS"))
             saveRDS(model_mdl, paste0(output_dir_chr[3], "/", .x,
                                           ".RDS"))
-            scaling_fctr_dbl <- outp_smry_ls$predr_vars_nms_ls %>%
-              purrr::flatten_chr() %>%
-              unique() %>%
-              purrr::map_dbl(~ ifelse(.x %in% outp_smry_ls$predictors_lup$short_name_chr,
-                                      ready4::get_from_lup_obj(outp_smry_ls$predictors_lup,
-                                                                  target_var_nm_1L_chr = "mdl_scaling_dbl",
-                                                                  match_value_xx = .x,
-                                                                  match_var_nm_1L_chr = "short_name_chr",
-                                                                  evaluate_1L_lgl = F),
-                                      1))
+            scaling_fctr_dbl <- make_scaling_fctr_dbl(outp_smry_ls)
+              # outp_smry_ls$predr_vars_nms_ls %>%
+              # purrr::flatten_chr() %>%
+              # unique() %>%
+              # purrr::map_dbl(~ ifelse(.x %in% outp_smry_ls$predictors_lup$short_name_chr,
+              #                         ready4::get_from_lup_obj(outp_smry_ls$predictors_lup,
+              #                                                     target_var_nm_1L_chr = "mdl_scaling_dbl",
+              #                                                     match_value_xx = .x,
+              #                                                     match_var_nm_1L_chr = "short_name_chr",
+              #                                                     evaluate_1L_lgl = F),
+              #                         1))
             write_ts_mdl_plts(brms_mdl = model_mdl,
                               table_predn_mdl = table_predn_mdl,
                               tfd_data_tb = outp_smry_ls$scored_data_tb %>%
@@ -1130,6 +1132,7 @@ write_ts_mdl_plts <- function (brms_mdl, # Rename lngl
     }
     else {
       plot_fn_and_args_ls <- make_plot_fn_and_args_ls(tfd_data_tb,
+                                                      args_ls = args_ls,
                                depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
                                depnt_var_desc_1L_chr = depnt_var_desc_1L_chr,
                                round_var_nm_1L_chr = round_var_nm_1L_chr,

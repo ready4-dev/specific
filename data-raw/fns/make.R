@@ -120,6 +120,60 @@ make_bl_fup_add_to_row_ls <-  function(df,
   )
   return(add_to_row_ls)
 }
+make_brms_mdl_plt <- function(outp_smry_ls,
+                              depnt_var_desc_1L_chr,
+                              mdl_nm_1L_chr,
+                              type_1L_chr,
+                              base_size_1L_dbl = 8,
+                              brms_mdl = NULL,
+                              correspondences_lup = NULL,
+                              new_var_nm_1L_chr = "Predicted",
+                              predn_type_1L_chr = NULL,
+                              x_lbl_1L_chr = NA_character_,
+                              y_lbl_1L_chr = NA_character_){
+  sfx_1L_chr <- " from brmsfit"
+  mdl_types_lup <- outp_smry_ls$mdl_types_lup
+  if(is.null(brms_mdl)){
+    incld_mdl_paths_chr <- make_incld_mld_paths(outp_smry_ls)
+    brms_mdl <- readRDS(paste0(outp_smry_ls$path_to_write_to_1L_chr,"/",
+                               incld_mdl_paths_chr[incld_mdl_paths_chr %>% endsWith(paste0(mdl_nm_1L_chr,".RDS"))]))
+
+  }
+  mdl_type_1L_chr <- get_mdl_type_from_nm(mdl_nm_1L_chr,
+                                          mdl_types_lup = mdl_types_lup)
+  tfmn_1L_chr <- ready4::get_from_lup_obj(mdl_types_lup,
+                                          match_value_xx = mdl_type_1L_chr,
+                                          match_var_nm_1L_chr = "short_name_chr",
+                                          target_var_nm_1L_chr = "tfmn_chr",
+                                          evaluate_1L_lgl = F)
+  plot_fn_and_args_ls <- make_plot_fn_and_args_ls(brms_mdl = brms_mdl,
+                                                  tfd_data_tb = outp_smry_ls$scored_data_tb %>%
+                                                    transform_tb_to_mdl_inp(depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr,
+                                                                            predr_vars_nms_chr = outp_smry_ls$predr_vars_nms_ls %>% purrr::flatten_chr() %>% unique(),
+                                                                            id_var_nm_1L_chr = outp_smry_ls$id_var_nm_1L_chr,
+                                                                            round_var_nm_1L_chr = outp_smry_ls$round_var_nm_1L_chr,
+                                                                            round_bl_val_1L_chr = outp_smry_ls$round_bl_val_1L_chr,
+                                                                            scaling_fctr_dbl = make_scaling_fctr_dbl(outp_smry_ls)),
+                                                  base_size_1L_dbl = base_size_1L_dbl,
+                                                  correspondences_lup = correspondences_lup,
+                                                  depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr,
+                                                  depnt_var_desc_1L_chr = depnt_var_desc_1L_chr,
+                                                  new_var_nm_1L_chr = new_var_nm_1L_chr,
+                                                  #mdl_nm_1L_chr = mdl_nm_1L_chr,
+                                                  predn_type_1L_chr = predn_type_1L_chr,
+                                                  round_var_nm_1L_chr = outp_smry_ls$round_var_nm_1L_chr,
+                                                  sd_dbl = NA_real_,
+                                                  sfx_1L_chr = sfx_1L_chr,
+                                                  tfmn_1L_chr = tfmn_1L_chr,
+                                                  type_1L_chr = type_1L_chr,
+                                                  utl_min_val_1L_dbl = ifelse(!is.null(outp_smry_ls$utl_min_val_1L_dbl),
+                                                                              outp_smry_ls$utl_min_val_1L_dbl,
+                                                                              -1),
+                                                  x_lbl_1L_chr = x_lbl_1L_chr,
+                                                  y_lbl_1L_chr = y_lbl_1L_chr)
+  plt <- rlang::exec(plot_fn_and_args_ls$plt_fn, !!!plot_fn_and_args_ls$fn_args_ls)
+  return(plt)
+}
 make_brms_mdl_print_ls <- function (mdl_ls, label_stub_1L_chr, caption_1L_chr, output_type_1L_chr = "PDF",
                                     digits_1L_dbl = 2, big_mark_1L_chr = " ")
 {
@@ -214,23 +268,61 @@ make_brms_mdl_smry_tbl <- function (smry_mdl_ls, grp_1L_chr, popl_1L_chr, fam_1L
     return(brms_mdl_smry_tb)
 }
 make_cmpst_sctr_and_dnst_plt <- function(outp_smry_ls,
-                                          output_data_dir_1L_chr,
-                                          predr_var_nms_chr,
-                                          labels_chr = c("A","B","C","D"),
-                                          label_x_1L_dbl = 0.1,
-                                          label_y_1L_dbl = 0.9,
-                                          label_size_1L_dbl = 22){
-  filtered_paths_chr <- outp_smry_ls$file_paths_chr %>% purrr::discard(~endsWith(.x,"_sim_sctr.png")|endsWith(.x,"_sim_dnst.png")|endsWith(.x,"_cnstrd_sctr_plt.png")|endsWith(.x,"_cnstrd_dnst.png"))
-  filtered_paths_chr <- paste0(output_data_dir_1L_chr,"/",filtered_paths_chr[filtered_paths_chr %>% purrr::map_lgl(~stringr::str_detect(.x,paste0(predr_var_nms_chr,"_1")) & (stringr::str_detect(.x,"_dnst.png") | stringr::str_detect(.x,"_sctr_plt.png")))])
-  mdl_types_chr <- filtered_paths_chr %>% purrr::map_chr(~DescTools::SplitPath(.x)$filename %>%
-                                          stringr::str_remove("_dnst") %>%
-                                          stringr::str_remove("_sctr_plt") %>%
-                                          get_mdl_type_from_nm())
-ordered_paths_chr <- outp_smry_ls$prefd_mdl_types_chr %>%
-  purrr::map(~filtered_paths_chr[which(mdl_types_chr==.x)]) %>%
-  purrr::flatten_chr()
-  plot_ls <- ordered_paths_chr %>% purrr::map(~cowplot::ggdraw() + cowplot::draw_image(.x))
-  composite_plt <- cowplot::plot_grid(plot_ls[[1]],plot_ls[[2]],plot_ls[[3]],plot_ls[[4]],nrow = 2, labels = labels_chr, label_x = label_x_1L_dbl,label_y = label_y_1L_dbl, label_size = label_size_1L_dbl)
+                                         output_data_dir_1L_chr = NA_character_,
+                                         predr_var_nms_chr = NA_character_,
+                                         base_size_1L_dbl = 16,
+                                         correspondences_lup = NULL,
+                                         labels_chr = c("A","B","C","D"),
+                                         label_x_1L_dbl = 0.1,
+                                         label_y_1L_dbl = 0.9,
+                                         label_size_1L_dbl = 22,
+                                         mdl_idcs_int = 1:2,
+                                         use_png_fls_1L_lgl = T){
+  if(use_png_fls_1L_lgl){
+    filtered_paths_chr <- outp_smry_ls$file_paths_chr %>% purrr::discard(~endsWith(.x,"_sim_sctr.png")|endsWith(.x,"_sim_dnst.png")|endsWith(.x,"_cnstrd_sctr_plt.png")|endsWith(.x,"_cnstrd_dnst.png"))
+    filtered_paths_chr <- paste0(output_data_dir_1L_chr,"/",filtered_paths_chr[filtered_paths_chr %>% purrr::map_lgl(~stringr::str_detect(.x,paste0(predr_var_nms_chr,"_1")) & (stringr::str_detect(.x,"_dnst.png") | stringr::str_detect(.x,"_sctr_plt.png")))])
+    mdl_types_chr <- filtered_paths_chr %>% purrr::map_chr(~DescTools::SplitPath(.x)$filename %>%
+                                                             stringr::str_remove("_dnst") %>%
+                                                             stringr::str_remove("_sctr_plt") %>%
+                                                             get_mdl_type_from_nm())
+    ordered_paths_chr <- outp_smry_ls$prefd_mdl_types_chr %>%
+      purrr::map(~filtered_paths_chr[which(mdl_types_chr==.x)]) %>%
+      purrr::flatten_chr()
+    plot_ls <- ordered_paths_chr %>% purrr::map(~cowplot::ggdraw() + cowplot::draw_image(.x))
+  }else{
+    plot_ls <- outp_smry_ls$mdl_nms_ls %>%
+      purrr::flatten_chr() %>%
+      `[`(mdl_idcs_int) %>%
+      purrr::map(~{
+        mdl_nm_1L_chr <- .x
+        brms_mdl <- get_brms_mdl(outp_smry_ls,
+                                 mdl_nm_1L_chr = mdl_nm_1L_chr)
+        depnt_var_desc_1L_chr <- get_hlth_utl_nm(outp_smry_ls$results_ls,
+                                                 short_nm_1L_lgl = T)
+        purrr::map(c("dnst", "sctr_plt"),
+                   ~ {
+                     make_brms_mdl_plt(outp_smry_ls,
+                                       base_size_1L_dbl = base_size_1L_dbl,
+                                       brms_mdl = brms_mdl,
+                                       correspondences_lup = correspondences_lup,
+                                       depnt_var_desc_1L_chr = depnt_var_desc_1L_chr,#
+                                       mdl_nm_1L_chr = mdl_nm_1L_chr,
+                                       type_1L_chr = .x,
+                                       predn_type_1L_chr = NULL,
+                                       x_lbl_1L_chr = paste0("Observed ", depnt_var_desc_1L_chr),
+                                       y_lbl_1L_chr = paste0("Predicted ", depnt_var_desc_1L_chr))
+                   })
+      }) %>%
+      purrr::flatten()
+
+  }
+  composite_plt <- cowplot::plot_grid(plot_ls[[1]],plot_ls[[2]],plot_ls[[3]],plot_ls[[4]],
+                                      nrow = 2,
+                                      labels = labels_chr,
+                                      label_x = label_x_1L_dbl,
+                                      label_y = label_y_1L_dbl,
+                                      label_size = label_size_1L_dbl)
+  return(composite_plt)
 }
 make_cndt_predr_text <- function(results_ls,
                                  type_1L_chr = "description"){
@@ -816,6 +908,26 @@ make_hlth_utl_and_predrs_ls <- function(outp_smry_ls, # Generalise from HU
   return(hlth_utl_and_predrs_ls)
 
 }
+make_incld_mld_paths <- function(outp_smry_ls){
+  incld_mdl_paths_chr <- outp_smry_ls$file_paths_chr %>%
+    purrr::map_chr(~{
+      file_path_1L_chr <- .x
+      mdl_fl_nms_chr <- paste0(outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr(),".RDS")
+      mdl_fl_nms_locn_ls <- mdl_fl_nms_chr %>% purrr::map(~stringr::str_locate(file_path_1L_chr,.x))
+      match_lgl <- mdl_fl_nms_locn_ls %>% purrr::map_lgl(~!(is.na(.x[[1,1]]) | is.na(.x[[1,2]])))
+      if(any(match_lgl)){
+        file_path_1L_chr
+      }else{
+        NA_character_
+      }
+    })
+  incld_mdl_paths_chr <- incld_mdl_paths_chr[!is.na(incld_mdl_paths_chr)]
+  ranked_mdl_nms_chr <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr()
+  sorted_mdl_nms_chr <- sort(ranked_mdl_nms_chr)
+  rank_idcs_int <- purrr::map_int(sorted_mdl_nms_chr,~which(ranked_mdl_nms_chr==.x))
+  incld_mdl_paths_chr <- incld_mdl_paths_chr[order(rank_idcs_int)]
+  return(incld_mdl_paths_chr)
+}
 make_indpnt_predrs_lngl_tbls_ref <- function(params_ls){
   results_ls <- params_ls$results_ls
   n_mdls_1L_int <- length(results_ls$ttu_lngl_ls$best_mdls_tb$model_type)
@@ -1338,8 +1450,12 @@ make_paths_to_ss_plts_ls <- function(output_data_dir_1L_chr,
 }
 make_plot_fn_and_args_ls <- function(type_1L_chr,
                                      depnt_var_desc_1L_chr,
+                                     args_ls = NULL,
+                                     base_size_1L_dbl = 11,
                                      brms_mdl = NULL,
-                                     depnt_var_nm_1L_chr  = NULL,
+                                     correspondences_lup = NULL,
+                                     depnt_var_nm_1L_chr = NULL,
+                                     new_var_nm_1L_chr = NA_character_,
                                      predn_type_1L_chr = NULL,
                                      round_var_nm_1L_chr = NULL,
                                      sd_dbl = NA_real_,
@@ -1348,18 +1464,20 @@ make_plot_fn_and_args_ls <- function(type_1L_chr,
                                      table_predn_mdl = NULL,
                                      tfmn_1L_chr = "NTF",
                                      tfd_data_tb = NULL,
-                                     utl_min_val_1L_dbl = -1){
+                                     utl_min_val_1L_dbl = -1,
+                                     x_lbl_1L_chr = NA_character_,
+                                     y_lbl_1L_chr = NA_character_){
   if(!is.null(brms_mdl)){
     set.seed(seed_1L_dbl)
-    tfd_data_tb <- brms_mdl$data
-    depnt_var_nm_1L_chr <- names(tfd_data_tb)[1]
+    # tfd_data_tb <- brms_mdl$data
+    # depnt_var_nm_1L_chr <- names(tfd_data_tb)[1]
     tfd_data_tb <- transform_ds_for_all_cmprsn_plts(tfd_data_tb = tfd_data_tb,
                                                     model_mdl = brms_mdl,
                                                     depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
                                                     is_brms_mdl_1L_lgl = inherits(brms_mdl,"brmsfit"),
                                                     predn_type_1L_chr = predn_type_1L_chr,
                                                     sd_dbl = NA_real_,
-                                                    sfx_1L_chr = ifelse(!is.null(table_predn_mdl),
+                                                    sfx_1L_chr = ifelse(is.null(table_predn_mdl),
                                                                         " from brmsfit",
                                                                         sfx_1L_chr),
                                                     tfmn_1L_chr = tfmn_1L_chr,
@@ -1387,8 +1505,10 @@ make_plot_fn_and_args_ls <- function(type_1L_chr,
   if (ref_idx_1L_int %in% c(3,5,7,9)) {
     plt_fn <- plot_obsd_predd_dnst
     fn_args_ls <- list(tfd_data_tb = tfd_data_tb,
+                       base_size_1L_dbl = base_size_1L_dbl,
                        depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
                        depnt_var_desc_1L_chr = depnt_var_desc_1L_chr,
+                       new_var_nm_1L_chr = new_var_nm_1L_chr,
                        predd_val_var_nm_1L_chr = ifelse(ref_idx_1L_int %in% c(3,7),
                                                         transform_predd_var_nm("Predicted",
                                                                                sfx_1L_chr = ifelse(!is.null(table_predn_mdl),
@@ -1420,6 +1540,8 @@ make_plot_fn_and_args_ls <- function(type_1L_chr,
   }else{
     plt_fn <- plot_obsd_predd_sctr_cmprsn
     fn_args_ls <- list(tfd_data_tb = tfd_data_tb,
+                       base_size_1L_dbl = base_size_1L_dbl,
+                       correspondences_lup = correspondences_lup,
                        depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
                        depnt_var_desc_1L_chr = depnt_var_desc_1L_chr,
                        round_var_nm_1L_chr = round_var_nm_1L_chr,
@@ -1438,7 +1560,9 @@ make_plot_fn_and_args_ls <- function(type_1L_chr,
                                                                                utl_min_val_1L_dbl = ifelse(ref_idx_1L_int == 6,
                                                                                                            NA_real_,
                                                                                                            utl_min_val_1L_dbl))),
-                       args_ls = args_ls)
+                       args_ls = args_ls,
+                       x_lbl_1L_chr = x_lbl_1L_chr,
+                       y_lbl_1L_chr = y_lbl_1L_chr)
   }
   plot_fn_and_args_ls <- list(plt_fn = plt_fn,
                               fn_args_ls = fn_args_ls)
@@ -1676,6 +1800,7 @@ make_results_ls <- function(spine_of_results_ls = NULL, # CORE OF S4 Classes - r
                             include_idx_int = NULL,
                             var_nm_change_lup = NULL,
                             ctgl_vars_regrouping_ls = NULL,
+                            make_cmpst_plt_1L_lgl = T,
                             outp_smry_ls = NULL,
                             sig_covars_some_predrs_mdls_tb = NULL,
                             sig_thresh_covars_1L_chr = NULL,
@@ -1695,10 +1820,13 @@ make_results_ls <- function(spine_of_results_ls = NULL, # CORE OF S4 Classes - r
   covars_mdls_ls <- make_mdls_ls(spine_of_results_ls$outp_smry_ls,
                                  mdls_tb = mdls_smry_tbls_ls$covar_mdls_tb)
   descv_tbls_ls <- paste0(spine_of_results_ls$output_data_dir_1L_chr,"/",spine_of_results_ls$outp_smry_ls$file_paths_chr[spine_of_results_ls$outp_smry_ls$file_paths_chr %>% purrr::map_lgl(~stringr::str_detect(.x,"descv_tbls_ls.RDS"))]) %>% readRDS()
-  composite_plt <- make_cmpst_sctr_and_dnst_plt(spine_of_results_ls$outp_smry_ls,
-                                                 output_data_dir_1L_chr = spine_of_results_ls$output_data_dir_1L_chr,
-                                                 predr_var_nms_chr = spine_of_results_ls$outp_smry_ls$predr_vars_nms_ls[[1]])
-  cowplot::save_plot(paste0(spine_of_results_ls$output_data_dir_1L_chr,"/dens_and_sctr.png"), composite_plt, base_height = 20)
+  if(make_cmpst_plt_1L_lgl){
+    composite_plt <- make_cmpst_sctr_and_dnst_plt(spine_of_results_ls$outp_smry_ls,
+                                                  output_data_dir_1L_chr = spine_of_results_ls$output_data_dir_1L_chr,
+                                                  predr_var_nms_chr = spine_of_results_ls$outp_smry_ls$predr_vars_nms_ls[[1]])
+    cowplot::save_plot(paste0(spine_of_results_ls$output_data_dir_1L_chr,"/dens_and_sctr.png"), composite_plt, base_height = 20)
+
+  }
   ttu_cs_ls <- make_ttu_cs_ls(spine_of_results_ls$outp_smry_ls,
                              sig_covars_some_predrs_mdls_tb = sig_covars_some_predrs_mdls_tb,
                              sig_thresh_covars_1L_chr = sig_thresh_covars_1L_chr)
@@ -1863,6 +1991,19 @@ make_results_ls_spine <-  function(output_format_ls = NULL,
                               study_descs_ls = study_descs_ls,
                               var_nm_change_lup = var_nm_change_lup)
   return(spine_of_results_ls)
+}
+make_scaling_fctr_dbl <- function(outp_smry_ls){
+  scaling_fctr_dbl <- outp_smry_ls$predr_vars_nms_ls %>%
+    purrr::flatten_chr() %>%
+    unique() %>%
+    purrr::map_dbl(~ ifelse(.x %in% outp_smry_ls$predictors_lup$short_name_chr,
+                            ready4::get_from_lup_obj(outp_smry_ls$predictors_lup,
+                                                     target_var_nm_1L_chr = "mdl_scaling_dbl",
+                                                     match_value_xx = .x,
+                                                     match_var_nm_1L_chr = "short_name_chr",
+                                                     evaluate_1L_lgl = F),
+                            1))
+  return(scaling_fctr_dbl)
 }
 make_scaling_text <- function(results_ls,
                               table_1L_chr = "cfscl"){

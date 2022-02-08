@@ -2,6 +2,7 @@ manufacture_SpecificSynopsis <- function(x,
                                          y_SpecificMixed,
                                          z_Ready4useRepos = NULL,
                                          depnt_var_nms_chr = NA_character_,
+                                         make_cmpst_plt_1L_lgl = F,
                                          scndry_anlys_params_ls = NULL,
                                          version_1L_chr = "0.6",
                                          what_1L_chr = "input_params_ls"){
@@ -39,11 +40,11 @@ manufacture_SpecificSynopsis <- function(x,
                                    scndry_anlys_params_ls = scndry_anlys_params_ls,
                                    write_new_dir_1L_lgl = F)
     if(is.na(depnt_var_nms_chr[1]))
-      depnt_var_nms_chr <- c(y_SpecificMixed@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3 %>%
+      depnt_var_nms_chr <- c(y_SpecificMixed@b_SpecificParameters@depnt_var_nm_1L_chr,
+                             y_SpecificMixed@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3 %>%
                                    ready4::get_from_lup_obj(match_value_xx = y_SpecificMixed@b_SpecificParameters@depnt_var_nm_1L_chr,
                                                             match_var_nm_1L_chr = "var_nm_chr",
-                                                            target_var_nm_1L_chr = "var_desc_chr"),
-                             y_SpecificMixed@b_SpecificParameters@depnt_var_nm_1L_chr)
+                                                            target_var_nm_1L_chr = "var_desc_chr"))
     object_xx$short_and_long_nm <- depnt_var_nms_chr
     object_xx <- object_xx %>%
       make_study_descs_ls(time_btwn_bl_and_fup_1L_chr = x@interval_chr,
@@ -57,6 +58,7 @@ manufacture_SpecificSynopsis <- function(x,
                           var_nm_change_lup = x@correspondences_r3)
     if(what_1L_chr == "results_ls"){
       object_xx <- make_results_ls(dv_ds_nm_and_url_chr = object_xx$path_params_ls$dv_ds_nm_and_url_chr,
+                                   make_cmpst_plt_1L_lgl = make_cmpst_plt_1L_lgl,
                                     outp_smry_ls = x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
                                     output_format_ls = object_xx$output_format_ls,
                                     params_ls_ls = object_xx,

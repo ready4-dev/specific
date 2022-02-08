@@ -14,14 +14,6 @@ library(specific)
 ```
 
 ```{r}
-# Y <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz", 
-#                                                                   gh_tag_1L_chr = "Documentation_0.0") %>%
-#                          ingest(fls_to_ingest_chr = "ymh_ScorzEuroQol5",
-#                                 metadata_1L_lgl = F)
-```
-
-
-```{r}
 X <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/specific", 
                           gh_tag_1L_chr = "Documentation_0.0") %>%
                          ingest(fls_to_ingest_chr = "eq5d_ttu_SpecificMixed",
@@ -29,7 +21,9 @@ X <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/specific",
 ```
 ```{r}
 # Fix for Shared X
+## renewSlot
 X@paths_chr <- X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$path_to_write_to_1L_chr
+## ratify (conditional)
 private_res_ls <- procureSlot(X,
                               "c_SpecificResults@b_SpecificPrivate@private_outp_ls")
 if(identical(private_res_ls,
@@ -102,9 +96,6 @@ authorReport(Z,
 ```
 
 ```{r}
-# Z@a_Ready4showPaths@ms_mkdn_dir_1L_chr <- "Manuscript"
-# Z@a_Ready4showPaths@ms_dir_1L_chr <- "Manuscript"
-# Z@fl_nm_1L_chr <- "Manuscript"
 Z <- renewSlot(Z,
                "rmd_fl_nms_ls",
                ready4show::make_rmd_fl_nms_ls(pdf_fl_nm_1L_chr = "Main_PDF",
@@ -120,29 +111,13 @@ A <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes",
                                dv_ds_nm_1L_chr = "https://doi.org/10.7910/DVN/GW7ZKC")
 ```
 ```{r}
-## MANUFACTURE_SpecificMixed
-# Ratify??
-# input_params_ls <- manufacture_SpecificSynopsis(Z, 
-#                                y_SpecificMixed = X, # Add to Z
-#                                z_Ready4useRepos = A, # Add to Z
-#                                depnt_var_nms_chr = c("EuroQol Five Dimension",
-#                                                      "EQ5D"),
-#                                scndry_anlys_params_ls = NULL,
-#                                what_1L_chr = "input_params_ls") 
-# results_ls <- make_results_ls(dv_ds_nm_and_url_chr = input_params_ls$path_params_ls$dv_ds_nm_and_url_chr,
-#                               outp_smry_ls = Z@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
-#                                   output_format_ls = input_params_ls$output_format_ls,
-#                                   params_ls_ls = input_params_ls,
-#                                   path_params_ls = list(paths_ls = list(output_data_dir_1L_chr = paste0(Z@a_Ready4showPaths@outp_data_dir_1L_chr,"/Output"))),#input_params_ls$path_params_ls,
-#                                   study_descs_ls = input_params_ls$study_descs_ls,
-#                                   var_nm_change_lup = input_params_ls$study_descs_ls$var_nm_change_lup,
-#                                   version_1L_chr = "0.5")
-results_ls <- manufacture(Z, 
-                          y_SpecificMixed = X,
-                          z_Ready4useRepos = A,
-                          depnt_var_nms_chr = c("EuroQol Five Dimension",
-                                                "EQ5D"),
-                          what_1L_chr = "results_ls")
+# Enhance
+Z <- enhance_SpecificSynopsis(Z,
+                              y_SpecificMixed = X,
+                              z_Ready4useRepos = A,
+                              depnt_var_nms_chr = c("EQ5D",
+                                                    "EuroQol Five Dimension"), 
+                              with_1L_chr = "results_ls")
 ```
 ```{r}
 # print_corls_tbl
@@ -155,12 +130,7 @@ results_ls <- manufacture(Z,
 ```
 
 ```{r}
-outp_smry_ls <- append(Z@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
-       list(results_ls = results_ls))
-# outp_smry_ls$results_ls <- results_ls
-Z <- renewSlot(Z,
-               "b_SpecificResults@a_SpecificShareable@shareable_outp_ls",
-               outp_smry_ls)
+
 ```
 ```{r}
 # Need to update template RMDs
@@ -168,22 +138,7 @@ authorReport(Z)
 ```
 #### WIP
 ```{r}
-ranked_mdl_nms_chr <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr()
-mdl_types_lup <- outp_smry_ls$mdl_types_lup
-mdl_nm_1L_chr <- ranked_mdl_nms_chr[1]
-mdl_type_1L_chr <- get_mdl_type_from_nm(mdl_nm_1L_chr,
-                                        mdl_types_lup = mdl_types_lup)
-tfmn_1L_chr <- ready4::get_from_lup_obj(mdl_types_lup,
-                                        match_value_xx = mdl_type_1L_chr,
-                                        match_var_nm_1L_chr = "short_name_chr",
-                                        target_var_nm_1L_chr = "tfmn_chr",
-                                        evaluate_1L_lgl = F)
-plot_fn_and_args_ls <- make_plot_fn_and_args_ls(brms_mdl = K10_1_OLS_CLL,
-                                                depnt_var_desc_1L_chr = "EQ5D",
-                                                sfx_1L_chr = "",
-                                                tfmn_1L_chr = tfmn_1L_chr,
-                                                type_1L_chr = "dnst")
-plt <- rlang::exec(plot_fn_and_args_ls$plt_fn, !!!plot_fn_and_args_ls$fn_args_ls)
+
 ```
 
 
@@ -340,4 +295,9 @@ saveRDS(outp_smry_ls,
 # write_analyses(input_params_ls) # Secondary analyses component
 
 ```
-
+```{r}
+# Y <- ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz", 
+#                                                                   gh_tag_1L_chr = "Documentation_0.0") %>%
+#                          ingest(fls_to_ingest_chr = "ymh_ScorzEuroQol5",
+#                                 metadata_1L_lgl = F)
+```
