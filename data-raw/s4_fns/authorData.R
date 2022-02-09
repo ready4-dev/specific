@@ -1,7 +1,7 @@
 authorData_SpecificMixed <- function(x,
                                      title_1L_chr = "An R model object",
                                      what_1L_chr = "Shareable"){
-  if(wwhat_1L_chr == "Shareable"){
+  if(what_1L_chr == "Shareable"){
     outp_smry_ls <- append(procureSlot(x,
                                        "c_SpecificResults@b_SpecificPrivate@private_outp_ls"),
                            procureSlot(x,

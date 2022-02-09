@@ -13,7 +13,12 @@
 \usage{
 \S4method{investigate}{SpecificModels}(x, depnt_var_max_val_1L_dbl = Inf, session_ls = NULL)
 
-\S4method{investigate}{SpecificMixed}(x, backend_1L_chr = "cmdstanr", new_dir_nm_1L_chr = "F_TS_Mdls")
+\S4method{investigate}{SpecificMixed}(
+  x,
+  backend_1L_chr = "cmdstanr",
+  new_dir_nm_1L_chr = "F_TS_Mdls",
+  scndry_anlys_params_ls = NULL
+)
 
 \S4method{investigate}{SpecificPredictors}(x)
 
@@ -29,6 +34,8 @@
 \item{backend_1L_chr}{Backend (a character vector of length one), Default: 'cmdstanr'}
 
 \item{new_dir_nm_1L_chr}{New directory name (a character vector of length one), Default: 'F_TS_Mdls'}
+
+\item{scndry_anlys_params_ls}{Secondary analysis parameters (a list), Default: NULL}
 }
 \value{
 X (Modelling project dataset, input parameters and predictor comparison results.)

@@ -36,6 +36,29 @@ if(identical(private_res_ls,
 ```
 
 ```{r}
+input_params_ls <- manufacture(X,
+                               what_1L_chr = "input_params_ls")
+input_params_ls$rename_lup <- X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$rename_lup
+input_params_ls$scndry_anlys_params_ls <- make_scndry_anlys_params(candidate_predrs_chr = c("d_age"),
+                                                                   prefd_covars_chr = NA_character_)
+input_params_ls$path_params_ls$paths_ls <- list(write_to_dir_nm_1L_chr = X@paths_chr)
+input_params_ls$outp_smry_ls <- append(X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls,
+                                       X@c_SpecificResults@b_SpecificPrivate@private_outp_ls)
+input_params_ls$params_ls$control_ls <- X@b_SpecificParameters@control_ls
+input_params_ls$params_ls$prior_ls <- X@b_SpecificParameters@prior_ls
+input_params_ls$params_ls$iters_1L_int <- X@b_SpecificParameters@iters_1L_int
+
+# %>%
+#   make_scndry_anlys_params(candidate_predrs_chr = c("d_age"),
+#                                                    prefd_covars_chr = NA_character_)
+
+#X@a_YouthvarsProfile@a_Ready4useDyad@ds_tb$dage
+```
+
+
+
+
+```{r}
 # ENSURE MOST UP TO DATE RESULTS SAVED LOCALLY
 X <- authorData(X)
 ``` 

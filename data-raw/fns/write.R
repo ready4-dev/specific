@@ -7,27 +7,10 @@ write_analyses <- function(input_params_ls,
                abstract_args_ls = abstract_args_ls,
                header_yaml_args_ls = input_params_ls$header_yaml_args_ls)
   if(!is.null(input_params_ls$scndry_anlys_params_ls)){
-    references_int <- 1:length(input_params_ls$scndry_anlys_params_ls)
-    references_int %>%
-      purrr::walk(~{
-        changes_ls <- input_params_ls$scndry_anlys_params_ls %>%
-          purrr::pluck(.x)
-        if(is.null(changes_ls$candidate_covar_nms_chr))
-          changes_ls$candidate_covar_nms_chr <- input_params_ls$params_ls$candidate_covar_nms_chr %>% transform_names(input_params_ls$rename_lup, invert_1L_lgl = T)
-        if(is.null(changes_ls$candidate_predrs_chr)){
-          changes_ls$candidate_covar_nms_chr <- changes_ls$candidate_covar_nms_chr[!changes_ls$candidate_covar_nms_chr %in% changes_ls$candidate_predrs_chr]
-        }
-        write_scndry_analysis(valid_params_ls_ls = input_params_ls,
-                              candidate_covar_nms_chr = changes_ls$candidate_covar_nms_chr,
-                              candidate_predrs_chr = changes_ls$candidate_predrs_chr,
-                              header_yaml_args_ls = input_params_ls$header_yaml_args_ls,
-                              path_params_ls = input_params_ls$path_params_ls,
-                              prefd_covars_chr = changes_ls$prefd_covars_chr,
-                              reference_1L_int = .x,
-                              start_at_int = start_at_int,
-                              rprt_nm_1L_chr = "AAA_SUPLRY_ANLYS_MTH",
-                              abstract_args_ls = abstract_args_ls)
-      })
+    write_secondary_analyses(input_params_ls,
+                             abstract_args_ls = abstract_args_ls,
+                             start_at_int = start_at_int)
+
   }
 }
 write_box_cox_tfmn <- function (data_tb, predr_var_nm_1L_chr, path_to_write_to_1L_chr,
@@ -518,9 +501,12 @@ write_predr_and_covars_cmprsn <- function(scored_data_tb,
                                                            depnt_var_nm_1L_chr = ds_smry_ls$depnt_var_nm_1L_chr,
                                                            candidate_predrs_chr = ds_smry_ls$candidate_predrs_chr,
                                                            max_nbr_of_boruta_mdl_runs_int = mdl_smry_ls$max_nbr_of_boruta_mdl_runs_int)
+  if(identical(mdl_smry_ls$predr_cmprsn_tb$predr_chr, character(0))){
+    stop("No important predictors identified - execution aborted. Try specifying other predictors.")
+  }
   mdl_smry_ls$smry_of_mdl_sngl_predrs_tb <- write_mdl_type_multi_outps(data_tb = bl_tb,
                                                                        folds_1L_int = mdl_smry_ls$folds_1L_int,
-                                                                       predrs_var_nms_chr = mdl_smry_ls$predr_cmprsn_tb$predr_chr,
+                                                                       predrs_var_nms_chr = predrs_var_nms_chr,#mdl_smry_ls$predr_cmprsn_tb$predr_chr,
                                                                        mdl_type_1L_chr = mdl_smry_ls$prefd_mdl_types_chr[1],
                                                                        depnt_var_nm_1L_chr = ds_smry_ls$depnt_var_nm_1L_chr,
                                                                        path_to_write_to_1L_chr = output_data_dir_1L_chr,
@@ -588,8 +574,7 @@ write_predr_cmprsn_outps <- function (data_tb, path_to_write_to_1L_chr, new_dir_
 {
     if (length(candidate_predrs_chr) > 1) {
         covar_var_nms_chr <- candidate_predrs_chr[2:length(candidate_predrs_chr)]
-    }
-    else {
+    } else {
         covar_var_nms_chr <- NA_character_
     }
     data_tb <- transform_ds_for_mdlng(data_tb, depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
@@ -616,17 +601,20 @@ write_predr_cmprsn_outps <- function (data_tb, path_to_write_to_1L_chr, new_dir_
         confirmed_predrs_chr)
     return(confirmed_predrs_tb)
 }
-write_scndry_analysis <- function(predictors_lup = NULL,
-                                  valid_params_ls_ls,
+write_scndry_analysis <- function(valid_params_ls_ls,
                                   candidate_covar_nms_chr,
-                                  candidate_predrs_chr = NULL,
-                                  header_yaml_args_ls,
+                                  #header_yaml_args_ls,
                                   path_params_ls,
-                                  prefd_covars_chr = NA_character_,
                                   reference_1L_int,
-                                  start_at_int = c(2,1),
-                                  rprt_nm_1L_chr = "AAA_SUPLRY_ANLYS_MTH",
-                                  abstract_args_ls = NULL) {
+                                  backend_1L_chr = "cmdstanr",
+                                  candidate_predrs_chr = NULL,
+                                  new_dir_nm_1L_chr = "F_TS_Mdls",
+                                  predictors_lup = NULL,
+                                  prefd_covars_chr = NA_character_
+                                  # start_at_int = c(2,1),
+                                  # rprt_nm_1L_chr = "AAA_SUPLRY_ANLYS_MTH",
+                                  # abstract_args_ls = NULL
+                                  ) {
   analysis_params_ls <- valid_params_ls_ls$params_ls %>%
     append(path_params_ls[1:2])
   rename_lup <- valid_params_ls_ls$rename_lup
@@ -672,45 +660,112 @@ write_scndry_analysis <- function(predictors_lup = NULL,
                                                          target_var_nm_1L_chr = "new_nms_chr",
                                                          evaluate_1L_lgl = F)))
   }
-  data("rprt_lup", package = "specific", # "specific"
-       envir = environment())
-  rprt_lup <- rprt_lup %>% transform_rprt_lup(start_at_int = start_at_int,
-                                              reference_1L_int = reference_1L_int) %>%
-    dplyr::filter(rprt_nms_chr == "AAA_SUPLRY_ANLYS_MTH")
-
-  analysis_params_ls$subtitle_1L_chr <- ready4::get_from_lup_obj(rprt_lup,
-                                                                    match_value_xx = "AAA_SUPLRY_ANLYS_MTH",
-                                                                    match_var_nm_1L_chr = "rprt_nms_chr",
-                                                                    target_var_nm_1L_chr = "title_chr",
-                                                                    evaluate_1L_lgl = F)
   analysis_params_ls$prefd_covars_chr <- prefd_covars_chr
   analysis_params_ls$candidate_covar_nms_chr <- candidate_covar_nms_chr
   path_params_ls$paths_ls <- write_scndry_analysis_dir(path_params_ls$paths_ls,
                                                        reference_1L_int = reference_1L_int)
   params_ls <- list(candidate_predrs_chr = candidate_predrs_chr,
-       transform_paths_ls = list(fn = transform_paths_ls_for_scndry,
-                                 args_ls = list(reference_1L_int = reference_1L_int))) %>%
+                    transform_paths_ls = list(fn = transform_paths_ls_for_scndry,
+                                              args_ls = list(reference_1L_int = reference_1L_int))) %>%
     append(analysis_params_ls)
   params_ls$utl_class_fn_1L_chr <- params_ls$raw_ds_tfmn_fn <- NULL
   params_ls_ls <- transform_params_ls_to_valid(params_ls)
   params_ls <- params_ls_ls %>%
     purrr::pluck("params_ls") %>%
     append(list(rename_lup = params_ls_ls$rename_lup))
-  params_ls %>%
-    ready4show::write_report(paths_ls = path_params_ls$paths_ls,
-                 rprt_nm_1L_chr = rprt_nm_1L_chr,
-                 abstract_args_ls = abstract_args_ls,
-                 header_yaml_args_ls = header_yaml_args_ls,
-                 rprt_lup = rprt_lup)
+  outp_smry_ls <- valid_params_ls_ls$outp_smry_ls
+  mdl_smry_ls <- params_ls$mdl_smry_ls
+  data_tb <- outp_smry_ls$scored_data_tb
+  # data_tb <- data_tb %>%
+  #   youthvars::transform_ds_with_rename_lup(rename_lup = params_ls$rename_lup)
+  ds_smry_ls <- params_ls$ds_descvs_ls %>%
+    make_analysis_ds_smry_ls(candidate_covar_nms_chr = params_ls$candidate_covar_nms_chr,
+                                  predictors_lup = params_ls$predictors_lup)
+  ds_smry_ls$candidate_predrs_chr <- params_ls$candidate_predrs_chr
+  existing_mdls_chr <- outp_smry_ls[["mdl_nms_ls"]] %>% purrr::flatten_chr()
+  existing_predrs_ls <- outp_smry_ls$predr_vars_nms_ls
+  ### WRITE CNDT MDL TESTS
+  cmprsns_ls <- write_mdl_cmprsn(scored_data_tb = data_tb,
+                                 ds_smry_ls = ds_smry_ls,
+                                 mdl_smry_ls = mdl_smry_ls,
+                                 output_data_dir_1L_chr = path_params_ls$paths_ls$write_to_dir_nm_1L_chr,
+                                 seed_1L_int = params_ls$seed_1L_int)
+  if(!is.null(params_ls$prefd_mdl_types_chr)){
+    cmprsns_ls$mdl_smry_ls$prefd_mdl_types_chr <- params_ls$prefd_mdl_types_chr
+  }
+  cmprsns_ls <- write_predr_and_covars_cmprsn(scored_data_tb = data_tb,
+                                              bl_tb = cmprsns_ls$bl_tb,
+                                              ds_smry_ls = cmprsns_ls$ds_smry_ls,
+                                              mdl_smry_ls  = cmprsns_ls$mdl_smry_ls,
+                                              output_data_dir_1L_chr = path_params_ls$paths_ls$write_to_dir_nm_1L_chr,
+                                              seed_1L_int = params_ls$seed_1L_int)
+  if(!is.null(params_ls$prefd_covars_chr)){
+    cmprsns_ls$mdl_smry_ls$prefd_covars_chr <- params_ls$prefd_covars_chr
+  }
+  outp_smry_ls <- write_mdls_with_covars_cmprsn(scored_data_tb = data_tb,
+                                                bl_tb = cmprsns_ls$bl_tb,
+                                                ds_smry_ls = cmprsns_ls$ds_smry_ls,
+                                                mdl_smry_ls = cmprsns_ls$mdl_smry_ls,
+                                                output_data_dir_1L_chr = path_params_ls$paths_ls$write_to_dir_nm_1L_chr,
+                                                seed_1L_int = params_ls$seed_1L_int,
+                                                session_data_ls = sessionInfo())
+  outp_smry_ls$mdl_nms_ls <- outp_smry_ls$mdl_nms_ls %>%
+    purrr::map(~.x[!.x %in% existing_mdls_chr]) %>%
+    purrr::compact()
+  outp_smry_ls$predr_vars_nms_ls <- outp_smry_ls$predr_vars_nms_ls[outp_smry_ls$predr_vars_nms_ls %>% purrr::map_lgl(~{
+    test_chr <- .x
+    !any(existing_predrs_ls %>% purrr::map_lgl(~identical(.x,test_chr))
+    )})]
+  outp_smry_ls <- write_ts_mdls_from_alg_outp(outp_smry_ls = outp_smry_ls,
+                                              utl_min_val_1L_dbl = params_ls$utl_min_val_1L_dbl,
+                                              predictors_lup = params_ls$predictors_lup,
+                                              backend_1L_chr = backend_1L_chr,
+                                              new_dir_nm_1L_chr = new_dir_nm_1L_chr,
+                                              iters_1L_int = params_ls$iters_1L_int,
+                                              prior_ls = params_ls$prior_ls,
+                                              control_ls = params_ls$control_ls)
+  return(outp_smry_ls)
 }
 write_scndry_analysis_dir <- function(paths_ls,
                                       reference_1L_int = 1){
   paths_ls <- transform_paths_ls_for_scndry(paths_ls,
                                             reference_1L_int = reference_1L_int)
-  paste0(here::here(paths_ls$path_from_top_level_1L_chr),
-         "/", paths_ls$write_to_dir_nm_1L_chr) %>%
-    dir.create()
+  ready4::write_new_dirs(paths_ls$write_to_dir_nm_1L_chr)
+  # paste0(here::here(paths_ls$path_from_top_level_1L_chr),
+  #        "/", paths_ls$write_to_dir_nm_1L_chr) %>%
+  #   dir.create()
   return(paths_ls)
+}
+write_secondary_analyses <- function(input_params_ls,
+                                     backend_1L_chr = "cmdstanr",
+                                     new_dir_nm_1L_chr = "F_TS_Mdls"
+                                     ){
+  references_int <- 1:length(input_params_ls$scndry_anlys_params_ls)
+  results_ls <- references_int %>%
+    purrr::map(~{
+      changes_ls <- input_params_ls$scndry_anlys_params_ls %>%
+        purrr::pluck(.x)
+      if(is.null(changes_ls$candidate_covar_nms_chr))
+        changes_ls$candidate_covar_nms_chr <- input_params_ls$params_ls$candidate_covar_nms_chr %>% transform_names(input_params_ls$rename_lup, invert_1L_lgl = T)
+      if(is.null(changes_ls$candidate_predrs_chr)){
+        changes_ls$candidate_covar_nms_chr <- changes_ls$candidate_covar_nms_chr[!changes_ls$candidate_covar_nms_chr %in% changes_ls$candidate_predrs_chr]
+      }
+      write_scndry_analysis(valid_params_ls_ls = input_params_ls,
+                            backend_1L_chr = backend_1L_chr,
+                            candidate_covar_nms_chr = changes_ls$candidate_covar_nms_chr,
+                            candidate_predrs_chr = changes_ls$candidate_predrs_chr,
+                            new_dir_nm_1L_chr = new_dir_nm_1L_chr,
+                            path_params_ls = input_params_ls$path_params_ls,
+                            predictors_lup = changes_ls$predictors_lup,
+                            prefd_covars_chr = changes_ls$prefd_covars_chr,
+                            reference_1L_int = .x#,
+                            #header_yaml_args_ls = input_params_ls$header_yaml_args_ls,
+                            #start_at_int = start_at_int,
+                            #rprt_nm_1L_chr = "AAA_SUPLRY_ANLYS_MTH",
+                            #abstract_args_ls = abstract_args_ls
+                            )
+    })
+  return(results_ls)
 }
 write_shareable_dir <- function(outp_smry_ls,
                                 new_dir_nm_1L_chr = "G_Shareable",
