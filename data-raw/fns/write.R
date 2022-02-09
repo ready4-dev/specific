@@ -1131,10 +1131,10 @@ write_ts_mdl_plts <- function (brms_mdl, # Rename lngl
       }
     }
     else {
-      plot_fn_and_args_ls <- make_plot_fn_and_args_ls(tfd_data_tb,
+      plot_fn_and_args_ls <- make_plot_fn_and_args_ls(tfd_data_tb = tfd_data_tb,
                                                       args_ls = args_ls,
-                               depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
-                               depnt_var_desc_1L_chr = depnt_var_desc_1L_chr,
+                                                      depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
+                                                      depnt_var_desc_1L_chr = depnt_var_desc_1L_chr,
                                round_var_nm_1L_chr = round_var_nm_1L_chr,
                                sfx_1L_chr = sfx_1L_chr,
                                table_predn_mdl = table_predn_mdl,
