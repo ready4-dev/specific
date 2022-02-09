@@ -616,7 +616,7 @@ write_predr_and_covars_cmprsn <- function (scored_data_tb, bl_tb, ds_smry_ls, md
         stop("No important predictors identified - execution aborted. Try specifying other predictors.")
     }
     mdl_smry_ls$smry_of_mdl_sngl_predrs_tb <- write_mdl_type_multi_outps(data_tb = bl_tb, 
-        folds_1L_int = mdl_smry_ls$folds_1L_int, predrs_var_nms_chr = predrs_var_nms_chr, 
+        folds_1L_int = mdl_smry_ls$folds_1L_int, predrs_var_nms_chr = mdl_smry_ls$predr_cmprsn_tb$predr_chr, 
         mdl_type_1L_chr = mdl_smry_ls$prefd_mdl_types_chr[1], 
         depnt_var_nm_1L_chr = ds_smry_ls$depnt_var_nm_1L_chr, 
         path_to_write_to_1L_chr = output_data_dir_1L_chr, new_dir_nm_1L_chr = "C_Predrs_Sngl_Mdl_Cmprsn", 
