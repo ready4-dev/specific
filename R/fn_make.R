@@ -303,6 +303,7 @@ make_brms_mdl_smry_tbl <- function (smry_mdl_ls, grp_1L_chr, popl_1L_chr, fam_1L
 #' @param predr_var_nms_chr Predictor variable names (a character vector), Default: 'NA'
 #' @param base_size_1L_dbl Base size (a double vector of length one), Default: 16
 #' @param correspondences_lup Correspondences (a lookup table), Default: NULL
+#' @param depnt_var_desc_1L_chr Dependent variable description (a character vector of length one), Default: 'NA'
 #' @param labels_chr Labels (a character vector), Default: c("A", "B", "C", "D")
 #' @param label_x_1L_dbl Label x (a double vector of length one), Default: 0.1
 #' @param label_y_1L_dbl Label y (a double vector of length one), Default: 0.9
@@ -318,9 +319,10 @@ make_brms_mdl_smry_tbl <- function (smry_mdl_ls, grp_1L_chr, popl_1L_chr, fam_1L
 #' @importFrom cowplot ggdraw draw_image plot_grid
 make_cmpst_sctr_and_dnst_plt <- function (outp_smry_ls, output_data_dir_1L_chr = NA_character_, 
     predr_var_nms_chr = NA_character_, base_size_1L_dbl = 16, 
-    correspondences_lup = NULL, labels_chr = c("A", "B", "C", 
-        "D"), label_x_1L_dbl = 0.1, label_y_1L_dbl = 0.9, label_size_1L_dbl = 22, 
-    mdl_idxs_int = 1:2, use_png_fls_1L_lgl = T) 
+    correspondences_lup = NULL, depnt_var_desc_1L_chr = NA_character_, 
+    labels_chr = c("A", "B", "C", "D"), label_x_1L_dbl = 0.1, 
+    label_y_1L_dbl = 0.9, label_size_1L_dbl = 22, mdl_idxs_int = 1:2, 
+    use_png_fls_1L_lgl = T) 
 {
     if (use_png_fls_1L_lgl) {
         filtered_paths_chr <- outp_smry_ls$file_paths_chr %>% 
@@ -345,8 +347,10 @@ make_cmpst_sctr_and_dnst_plt <- function (outp_smry_ls, output_data_dir_1L_chr =
             mdl_idxs_int[] %>% purrr::map(~{
             mdl_nm_1L_chr <- .x
             brms_mdl <- get_brms_mdl(outp_smry_ls, mdl_nm_1L_chr = mdl_nm_1L_chr)
-            depnt_var_desc_1L_chr <- get_hlth_utl_nm(outp_smry_ls$results_ls, 
-                short_nm_1L_lgl = T)
+            if (is.na(depnt_var_desc_1L_chr)) {
+                depnt_var_desc_1L_chr <- get_hlth_utl_nm(outp_smry_ls$results_ls, 
+                  short_nm_1L_lgl = T)
+            }
             purrr::map(c("dnst", "sctr_plt"), ~{
                 make_brms_mdl_plt(outp_smry_ls, base_size_1L_dbl = base_size_1L_dbl, 
                   brms_mdl = brms_mdl, correspondences_lup = correspondences_lup, 

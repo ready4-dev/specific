@@ -11,8 +11,6 @@
 
 \S4method{manufacture}{SpecificSynopsis}(
   x,
-  y_SpecificMixed,
-  z_Ready4useRepos = NULL,
   depnt_var_nms_chr = NA_character_,
   make_cmpst_plt_1L_lgl = F,
   scndry_anlys_params_ls = NULL,
@@ -26,10 +24,6 @@
 \item{what_1L_chr}{What (a character vector of length one), Default: 'input_params_ls'}
 
 \item{scndry_anlys_params_ls}{Secondary analysis parameters (a list), Default: NULL}
-
-\item{y_SpecificMixed}{PARAM_DESCRIPTION}
-
-\item{z_Ready4useRepos}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{depnt_var_nms_chr}{Dependent variable names (a character vector), Default: 'NA'}
 

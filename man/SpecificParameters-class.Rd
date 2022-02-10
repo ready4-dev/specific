@@ -29,6 +29,8 @@ Input parameters that specify candidate models to be explored.
 
 \item{\code{descv_var_nms_chr}}{Descriptive variable names (a character vector)}
 
+\item{\code{domain_labels_chr}}{Domain labels (a character vector)}
+
 \item{\code{fake_1L_lgl}}{Fake (a logical vector of length one)}
 
 \item{\code{folds_1L_int}}{Folds (an integer vector of length one)}

@@ -272,6 +272,7 @@ make_cmpst_sctr_and_dnst_plt <- function(outp_smry_ls,
                                          predr_var_nms_chr = NA_character_,
                                          base_size_1L_dbl = 16,
                                          correspondences_lup = NULL,
+                                         depnt_var_desc_1L_chr = NA_character_,
                                          labels_chr = c("A","B","C","D"),
                                          label_x_1L_dbl = 0.1,
                                          label_y_1L_dbl = 0.9,
@@ -297,8 +298,10 @@ make_cmpst_sctr_and_dnst_plt <- function(outp_smry_ls,
         mdl_nm_1L_chr <- .x
         brms_mdl <- get_brms_mdl(outp_smry_ls,
                                  mdl_nm_1L_chr = mdl_nm_1L_chr)
-        depnt_var_desc_1L_chr <- get_hlth_utl_nm(outp_smry_ls$results_ls,
-                                                 short_nm_1L_lgl = T)
+        if(is.na(depnt_var_desc_1L_chr)){
+          depnt_var_desc_1L_chr <- get_hlth_utl_nm(outp_smry_ls$results_ls,
+                                                   short_nm_1L_lgl = T)
+        }
         purrr::map(c("dnst", "sctr_plt"),
                    ~ {
                      make_brms_mdl_plt(outp_smry_ls,

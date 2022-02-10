@@ -143,6 +143,7 @@ y <- dplyr::bind_rows(ready4class::make_pt_ready4class_constructor(make_s3_lgl =
                                                                      "depnt_var_nm_1L_chr",
                                                                      "depnt_var_min_max_dbl",
                                                                      "descv_var_nms_chr", #1
+                                                                     "domain_labels_chr",
                                                                      "fake_1L_lgl", #2
                                                                      "folds_1L_int",
                                                                      "itm_labels_chr", #3
@@ -165,6 +166,7 @@ y <- dplyr::bind_rows(ready4class::make_pt_ready4class_constructor(make_s3_lgl =
                                                                      "character",
                                                                      "numeric",
                                                                      "character",#1
+                                                                     "character",
                                                                      "logical",#2
                                                                      "integer",
                                                                      "character",#3
@@ -297,11 +299,17 @@ y <- y %>%
   dplyr::bind_rows(y,
     ready4class::make_pt_ready4class_constructor(make_s3_lgl = FALSE,
                                                  name_stub_chr = "Synopsis",
-                                                 slots_ls = list("b_SpecificResults") %>% list(),
-                                                 pt_ls = list("SpecificResults") %>% list(),
-                                                 class_desc_chr = "Results and manuscript metadata.",
+                                                 slots_ls = list("b_SpecificResults",
+                                                                 "c_SpecificParameters",
+                                                                 "d_YouthvarsProfile",
+                                                                 "e_Ready4useRepos") %>% list(),
+                                                 pt_ls = list("SpecificResults",
+                                                              "SpecificParameters",
+                                                              "YouthvarsProfile",
+                                                              "Ready4useRepos") %>% list(),
+                                                 class_desc_chr = "Input, Output and Authorship Data For Generating Reports.",
                                                  parent_class_chr = "Ready4showSynopsis",
-                                                 inc_clss_ls = list("SpecificResults") %>% list()))
+                                                 inc_clss_ls = list("SpecificResults","SpecificParameters") %>% list()))
 y <- y %>%
   dplyr::bind_rows(tibble::tribble(
     ~ make_s3_lgl, ~ name_stub_chr, ~ pt_ls, ~ pt_chkr_pfx_ls, ~ pt_ns_ls, ~ vals_ls, ~ allowed_vals_ls, ~ min_max_vals_ls, ~ start_end_vals_ls, ~ class_desc_chr, ~ parent_class_chr, ~ slots_ls, ~ meaningful_nms_ls, ~ inc_clss_ls, ~ asserts_ls,

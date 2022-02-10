@@ -36,39 +36,21 @@ if(identical(private_res_ls,
 ```
 
 ```{r}
-input_params_ls <- manufacture(X,
-                               what_1L_chr = "input_params_ls")
-input_params_ls$rename_lup <- X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$rename_lup
-input_params_ls$scndry_anlys_params_ls <- make_scndry_anlys_params(candidate_predrs_chr = c("d_age"),
-                                                                   prefd_covars_chr = NA_character_)
-input_params_ls$path_params_ls$paths_ls <- list(write_to_dir_nm_1L_chr = X@paths_chr)
-input_params_ls$outp_smry_ls <- append(X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls,
-                                       X@c_SpecificResults@b_SpecificPrivate@private_outp_ls)
-input_params_ls$params_ls$control_ls <- X@b_SpecificParameters@control_ls
-input_params_ls$params_ls$prior_ls <- X@b_SpecificParameters@prior_ls
-input_params_ls$params_ls$iters_1L_int <- X@b_SpecificParameters@iters_1L_int
-
-# %>%
-#   make_scndry_anlys_params(candidate_predrs_chr = c("d_age"),
-#                                                    prefd_covars_chr = NA_character_)
-
-#X@a_YouthvarsProfile@a_Ready4useDyad@ds_tb$dage
+# X <- investigate(X,
+#                  scndry_anlys_params_ls = make_scndry_anlys_params(candidate_predrs_chr = c("d_age"),
+#                                                                    prefd_covars_chr = NA_character_))
 ```
 
-
-
-
 ```{r}
-# ENSURE MOST UP TO DATE RESULTS SAVED LOCALLY
-X <- authorData(X)
+X <- authorData(X) # Ammend to make shareable secondary analyses
 ``` 
 ```{r}
-X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$session_data_ls <- sessionInfo()
+X@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$session_data_ls <- sessionInfo() # REMOVE
 ```
 
 ## Specify metadata about the reports to be authored
 ```{r}
-Z <- metamorphose(X)
+Z <- metamorphose_SpecificMixed(X)
 ```
 <!-- Move this to later -->
 ```{r}
@@ -88,9 +70,17 @@ Z <- Z %>% #
   renewSlot("title_1L_chr", "A hypothetical study using fake data") %>%
   renewSlot("correspondences_r3",
             old_nms_chr = c("PHQ9", "GAD7"),
-            new_nms_chr = c("PHQ-9", "GAD-7"))
+            new_nms_chr = c("PHQ-9", "GAD-7")) %>%
+  renewSlot("e_Ready4useRepos",
+            ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes",
+                               dv_ds_nm_1L_chr = "https://doi.org/10.7910/DVN/GW7ZKC"))
 ```
-
+```{r}
+Z <- enhance_SpecificSynopsis(Z,
+             depnt_var_nms_chr = c("EQ5D",
+                                   "EuroQol Five Dimension"), 
+             with_1L_chr = "results_ls")
+```
 ### Report
 
 ```{r}
@@ -100,24 +90,10 @@ authorData(Z,
            what_1L_chr = "Catalogue")
 ```
 ```{r}
-# Z@a_Ready4showPaths@ms_mkdn_dir_1L_chr <- "Catalogue"
-# Z@a_Ready4showPaths@ms_dir_1L_chr <- "Catalogue"
-# Z@fl_nm_1L_chr <- "AAA_TTU_MDL_CTG"
-```
-
-```{r}
-# Need to modify PDF, Word and HTML parents with G_Shareable/Models
-authorReport(Z,
+authorReport(Z, # Modify for Secondary Analysis
              fl_nm_1L_chr = "AAA_TTU_MDL_CTG",
              what_1L_chr = "Catalogue")
 ```
-```{r}
-# UPDATE MS PROGRAM
-# UPDATE AUTHORREPORT MTHD
-# AUTHOR MS WITH RESET VALUES FOR DIR AND FL NM
-# PURGE DS COPIES
-```
-
 ```{r}
 Z <- renewSlot(Z,
                "rmd_fl_nms_ls",
@@ -130,18 +106,24 @@ authorData(Z,
            tmpl_version_1_L_chr = "0.6")
 ```
 ```{r}
-A <- ready4use::Ready4useRepos(dv_nm_1L_chr = "fakes",
-                               dv_ds_nm_1L_chr = "https://doi.org/10.7910/DVN/GW7ZKC")
+#A <- 
+```
+
+```{r}
+composite_plt <- depict_SpecificSynopsis(Z,
+                                          depnt_var_desc_1L_chr = "EQ5D",
+                                          timepoint_old_nms_chr = X@a_YouthvarsProfile@timepoint_vals_chr,
+                                          timepoint_new_nms_chr = c("Baseline","Follow-up"),
+                                          write_1L_lgl = T)
 ```
 ```{r}
-# Enhance
-Z <- enhance(Z,
-                              y_SpecificMixed = X,
-                              z_Ready4useRepos = A,
-                              depnt_var_nms_chr = c("EQ5D",
-                                                    "EuroQol Five Dimension"), 
-                              with_1L_chr = "results_ls")
+composite_plt <- depict_SpecificSynopsis(Z,
+                                          depnt_var_desc_1L_chr = "EQ5D",
+                                          timepoint_old_nms_chr = X@a_YouthvarsProfile@timepoint_vals_chr,
+                                          timepoint_new_nms_chr = c("Baseline","Follow-up"),
+                                          write_1L_lgl = T)
 ```
+
 ```{r}
 # print_corls_tbl
 # make_dnsty_and_sctr_plt_title
@@ -159,6 +141,9 @@ Z <- enhance(Z,
 # Need to update template RMDs
 authorReport(Z)
 ```
+
+## PURGE DS
+
 #### WIP
 ```{r}
 

@@ -90,8 +90,6 @@ methods::setMethod("manufacture", "SpecificProject", function (x, what_1L_chr = 
 #' @name manufacture-SpecificSynopsis
 #' @description manufacture method applied to SpecificSynopsis
 #' @param x An object of class SpecificSynopsis
-#' @param y_SpecificMixed PARAM_DESCRIPTION
-#' @param z_Ready4useRepos PARAM_DESCRIPTION, Default: NULL
 #' @param depnt_var_nms_chr Dependent variable names (a character vector), Default: 'NA'
 #' @param make_cmpst_plt_1L_lgl Make composite plot (a logical vector of length one), Default: F
 #' @param scndry_anlys_params_ls Secondary analysis parameters (a list), Default: NULL
@@ -104,10 +102,15 @@ methods::setMethod("manufacture", "SpecificProject", function (x, what_1L_chr = 
 #' @importFrom ready4show make_header_yaml_args_ls make_output_format_ls
 #' @importFrom ready4 get_from_lup_obj manufacture
 #' @importFrom methods callNextMethod
-methods::setMethod("manufacture", "SpecificSynopsis", function (x, y_SpecificMixed, z_Ready4useRepos = NULL, depnt_var_nms_chr = NA_character_, 
-    make_cmpst_plt_1L_lgl = F, scndry_anlys_params_ls = NULL, 
-    version_1L_chr = "0.6", what_1L_chr = "input_params_ls") 
+methods::setMethod("manufacture", "SpecificSynopsis", function (x, depnt_var_nms_chr = NA_character_, make_cmpst_plt_1L_lgl = F, 
+    scndry_anlys_params_ls = NULL, version_1L_chr = "0.6", what_1L_chr = "input_params_ls") 
 {
+    y_SpecificMixed <- SpecificMixed(a_YouthvarsProfile = x@d_YouthvarsProfile, 
+        b_SpecificParameters = x@c_SpecificParameters, c_SpecificResults = x@b_SpecificResults, 
+        paths_chr = x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls$path_to_write_to_1L_chr)
+    if (what_1L_chr %in% c("ds_descvs_ls", "ds_smry_ls", "mdl_smry_ls")) {
+        object_xx <- manufacture(y_SpecificMixed, what_1L_chr = what_1L_chr)
+    }
     if (what_1L_chr %in% c("input_params_ls", "results_ls")) {
         header_yaml_args_ls <- ready4show::make_header_yaml_args_ls(authors_tb = x@authors_r3, 
             institutes_tb = x@institutes_r3, title_1L_chr = x@title_1L_chr, 
@@ -123,8 +126,8 @@ methods::setMethod("manufacture", "SpecificSynopsis", function (x, y_SpecificMix
         object_xx <- make_input_params(y_SpecificMixed@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
             control_ls = y_SpecificMixed@b_SpecificParameters@control_ls, 
             ds_descvs_ls = manufacture(y_SpecificMixed, what_1L_chr = "ds_descvs_ls"), 
-            dv_ds_nm_and_url_chr = c(z_Ready4useRepos@dv_nm_1L_chr, 
-                z_Ready4useRepos@dv_ds_nm_1L_chr), header_yaml_args_ls = header_yaml_args_ls, 
+            dv_ds_nm_and_url_chr = c(x@e_Ready4useRepos@dv_nm_1L_chr, 
+                x@e_Ready4useRepos@dv_ds_nm_1L_chr), header_yaml_args_ls = header_yaml_args_ls, 
             maui_params_ls = maui_params_ls, output_format_ls = output_format_ls, 
             predictors_lup = y_SpecificMixed@b_SpecificParameters@predictors_lup, 
             prefd_covars_chr = ifelse(is.null(procure(y_SpecificMixed, 

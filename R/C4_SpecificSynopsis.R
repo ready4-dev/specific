@@ -1,9 +1,12 @@
 #' SpecificSynopsis
 #' 
-#' Results and manuscript metadata.
+#' Input, Output and Authorship Data For Generating Reports.
 #' 
-#' @include C4_SpecificResults.R
+#' @include C4_SpecificResults.R C4_SpecificParameters.R
 #' @slot b_SpecificResults  (an instance of the SpecificResults class)
+#' @slot c_SpecificParameters  (an instance of the SpecificParameters class)
+#' @slot d_YouthvarsProfile  (an instance of the YouthvarsProfile class)
+#' @slot e_Ready4useRepos  (an instance of the Ready4useRepos class)
 #' @slot a_Ready4showPaths  (an instance of the Ready4showPaths class)
 #' @slot abstract_args_ls Abstract arguments (a list)
 #' @slot authors_r3 Authors (a ready4 S3)
@@ -32,8 +35,8 @@
 #' @exportClass SpecificSynopsis
 SpecificSynopsis <- methods::setClass("SpecificSynopsis",
 contains = "Ready4showSynopsis",
-slots = c(b_SpecificResults = "SpecificResults",a_Ready4showPaths = "Ready4showPaths",abstract_args_ls = "list",authors_r3 = "ready4show_authors",background_1L_chr = "character",coi_1L_chr = "character",conclusion_1L_chr = "character",correspondences_r3 = "ready4show_correspondences",digits_int = "integer",ethics_1L_chr = "character",fl_nm_1L_chr = "character",figures_in_body_lgl = "logical",funding_1L_chr = "character",institutes_r3 = "ready4show_institutes",interval_chr = "character",keywords_chr = "character",outp_formats_chr = "character",rmd_fl_nms_ls = "list",sample_desc_1L_chr = "character",tables_in_body_lgl = "logical",title_1L_chr = "character",dissemination_1L_chr = "character"),
-prototype =  list(b_SpecificResults = SpecificResults()))
+slots = c(b_SpecificResults = "SpecificResults",c_SpecificParameters = "SpecificParameters",d_YouthvarsProfile = "YouthvarsProfile",e_Ready4useRepos = "Ready4useRepos",a_Ready4showPaths = "Ready4showPaths",abstract_args_ls = "list",authors_r3 = "ready4show_authors",background_1L_chr = "character",coi_1L_chr = "character",conclusion_1L_chr = "character",correspondences_r3 = "ready4show_correspondences",digits_int = "integer",ethics_1L_chr = "character",fl_nm_1L_chr = "character",figures_in_body_lgl = "logical",funding_1L_chr = "character",institutes_r3 = "ready4show_institutes",interval_chr = "character",keywords_chr = "character",outp_formats_chr = "character",rmd_fl_nms_ls = "list",sample_desc_1L_chr = "character",tables_in_body_lgl = "logical",title_1L_chr = "character",dissemination_1L_chr = "character"),
+prototype =  list(b_SpecificResults = SpecificResults(),c_SpecificParameters = SpecificParameters(),d_YouthvarsProfile = youthvars::YouthvarsProfile(),e_Ready4useRepos = ready4use::Ready4useRepos()))
 
 
 methods::setValidity(methods::className("SpecificSynopsis"),

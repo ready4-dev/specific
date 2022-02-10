@@ -133,6 +133,7 @@ reference:
   - author-SpecificProject
   - authorData-SpecificMixed
   - depict-SpecificProject
+  - depict-SpecificSynopsis
   - enhance-SpecificSynopsis
   - exhibit-SpecificProject
   - exhibit.specific_models

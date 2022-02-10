@@ -6,12 +6,18 @@
 \alias{SpecificSynopsis}
 \title{SpecificSynopsis}
 \description{
-Results and manuscript metadata.
+Input, Output and Authorship Data For Generating Reports.
 }
 \section{Slots}{
 
 \describe{
 \item{\code{b_SpecificResults}}{(an instance of the SpecificResults class)}
+
+\item{\code{c_SpecificParameters}}{(an instance of the SpecificParameters class)}
+
+\item{\code{d_YouthvarsProfile}}{(an instance of the YouthvarsProfile class)}
+
+\item{\code{e_Ready4useRepos}}{(an instance of the Ready4useRepos class)}
 
 \item{\code{a_Ready4showPaths}}{(an instance of the Ready4showPaths class)}
 

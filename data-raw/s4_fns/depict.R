@@ -37,3 +37,47 @@ depict_SpecificProject <- function(x,
     })
   knitr::include_graphics({{plt_paths_ls[[1]]}})
 }
+depict_SpecificSynopsis <- function(x,
+                                     base_height = 13,
+                                     base_size_1L_dbl = 30,
+                                     depnt_var_desc_1L_chr = NA_character_,
+                                     labels_chr = c("A","B","C","D"),
+                                     label_x_1L_dbl = 0.2,
+                                     label_y_1L_dbl = 0.9,
+                                     label_size_1L_dbl = 30,
+                                     mdl_idxs_int = 1:2,
+                                     timepoint_old_nms_chr = NA_character_,
+                                     timepoint_new_nms_chr = NA_character_,
+                                     use_png_fls_1L_lgl = F,
+                                     what_1L_chr = "composite_mdl",
+                                     write_1L_lgl = F){
+  plt <- NULL
+  outp_smry_ls <- append(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
+                         x@b_SpecificResults@b_SpecificPrivate@private_outp_ls)
+  if(!is.na(timepoint_new_nms_chr[1])){
+    correspondences_lup <- ready4show::ready4show_correspondences() %>%
+      renew(old_nms_chr = timepoint_old_nms_chr,
+            new_nms_chr = timepoint_new_nms_chr)
+  }else{
+    correspondences_lup
+  }
+  if(what_1L_chr == "composite_mdl"){
+    plt <- make_cmpst_sctr_and_dnst_plt(outp_smry_ls,
+                                        base_size_1L_dbl =  base_size_1L_dbl,
+                                        correspondences_lup = correspondences_lup,
+                                        depnt_var_desc_1L_chr = depnt_var_desc_1L_chr,
+                                        labels_chr = labels_chr,
+                                        label_x_1L_dbl = label_x_1L_dbl,
+                                        label_y_1L_dbl = label_y_1L_dbl,
+                                        label_size_1L_dbl = label_size_1L_dbl,
+                                        mdl_idxs_int = mdl_idxs_int,
+                                        use_png_fls_1L_lgl = use_png_fls_1L_lgl)
+    if(write_1L_lgl){
+      cowplot::save_plot(paste0(outp_smry_ls$path_to_write_to_1L_chr,
+                                "/dens_and_sctr.png"),
+                         plt,
+                         base_height = base_height)
+    }
+  }
+  return(plt)
+}
