@@ -40,7 +40,7 @@ author_SpecificModels <- function(x,
                                                           ds_descvs_ls = ds_descvs_ls,
                                                           descv_outp_dir_1L_chr = x@b_SpecificParameters@paths_ls$descv_outp_dir_1L_chr,
                                                           lbl_nms_chr = x@b_SpecificParameters@itm_labels_chr, # Should be domain labels
-                                                          maui_domains_pfxs_1L_chr = hutils::longest_prefix(C@b_SpecificParameters@domain_labels_chr))
+                                                          maui_domains_pfxs_1L_chr = hutils::longest_prefix(x@b_SpecificParameters@domain_labels_chr))
 
     }
     if(what_1L_chr %in% c("models","all")){
