@@ -1,5 +1,42 @@
 #' 
 #' Manufacture a (non ready4 framework) object
+#' @name manufacture-SpecificResults
+#' @description manufacture method applied to SpecificResults
+#' @param x An object of class SpecificResults
+#' @param what_1L_chr What (a character vector of length one), Default: 'indexed_shareable'
+#' @return Object (an output object of multiple potential types)
+#' @rdname manufacture-methods
+#' @aliases manufacture,SpecificResults-method
+#' @export 
+#' @importFrom purrr map
+#' @importFrom methods callNextMethod
+#' @importFrom ready4 manufacture
+methods::setMethod("manufacture", "SpecificResults", function (x, what_1L_chr = "indexed_shareable") 
+{
+    if (what_1L_chr == "indexed_shareable") {
+        shareable_outp_ls <- procureSlot(x, "a_SpecificShareable@shareable_outp_ls")
+        secondary_chr <- names(shareable_outp_ls)[startsWith(names(shareable_outp_ls), 
+            "secondary_")]
+        if (!identical(secondary_chr, character(0))) {
+            primary_ls <- shareable_outp_ls[names(shareable_outp_ls) != 
+                secondary_chr]
+            secondary_ls <- shareable_outp_ls[names(shareable_outp_ls) == 
+                secondary_chr]
+            object_xx <- append(list(primary_ls = primary_ls[(names(primary_ls))[!names(primary_ls) %>% 
+                duplicated()]]), secondary_ls %>% purrr::map(~.x[(.x %>% 
+                names())[!.x %>% names() %>% duplicated()]]))
+        }
+        else {
+            object_xx <- list(primary_ls = primary_ls)
+        }
+    }
+    else {
+        object_xx <- methods::callNextMethod()
+    }
+    return(object_xx)
+})
+#' 
+#' Manufacture a (non ready4 framework) object
 #' @name manufacture-SpecificProject
 #' @description manufacture method applied to SpecificProject
 #' @param x An object of class SpecificProject

@@ -165,3 +165,23 @@ manufacture_SpecificProject <- function(x,
   }
   return(object_xx)
 }
+manufacture_SpecificResults<- function(x,
+                                      what_1L_chr = "indexed_shareable"){
+  if(what_1L_chr == "indexed_shareable"){
+    shareable_outp_ls <- procureSlot(x,
+                                     "a_SpecificShareable@shareable_outp_ls")
+    secondary_chr <- names(shareable_outp_ls)[startsWith(names(shareable_outp_ls),"secondary_")]
+    if(!identical(secondary_chr,character(0))){
+      primary_ls <- shareable_outp_ls[names(shareable_outp_ls)!=secondary_chr]
+      secondary_ls <- shareable_outp_ls[names(shareable_outp_ls)==secondary_chr]
+      object_xx <- append(list(primary_ls = primary_ls[(names(primary_ls))[!names(primary_ls) %>% duplicated()]]),
+                           secondary_ls %>%
+                             purrr::map(~.x[(.x %>% names())[!.x %>% names() %>% duplicated()]]))
+    }else{
+      object_xx <- list(primary_ls = primary_ls)
+    }
+  }else{
+    object_xx <- methods::callNextMethod()
+  }
+  return(object_xx)
+}

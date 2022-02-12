@@ -14,6 +14,7 @@
 #' @importFrom ready4show make_paths_ls write_all_outp_dirs
 #' @importFrom rlang exec
 #' @importFrom youthvars write_descv_tbls write_descv_plots
+#' @importFrom hutils longest_prefix
 #' @importFrom methods callNextMethod
 #' @importFrom ready4 author
 methods::setMethod("author", "SpecificModels", function (x, prefd_mdl_types_chr = NULL, what_1L_chr = "all", 
@@ -49,8 +50,8 @@ methods::setMethod("author", "SpecificModels", function (x, prefd_mdl_types_chr 
                 nbr_of_digits_1L_int = digits_1L_int, participation_var_1L_chr = x@a_YouthvarsProfile@participation_var_1L_chr)
             descv_plts_paths_ls <- youthvars::write_descv_plots(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
                 ds_descvs_ls = ds_descvs_ls, descv_outp_dir_1L_chr = x@b_SpecificParameters@paths_ls$descv_outp_dir_1L_chr, 
-                lbl_nms_chr = x@b_SpecificParameters@domain_labels_chr, 
-                maui_domains_pfxs_1L_chr = x@b_SpecificParameters@itm_prefix_1L_chr)
+                lbl_nms_chr = x@b_SpecificParameters@itm_labels_chr, 
+                maui_domains_pfxs_1L_chr = hutils::longest_prefix(C@b_SpecificParameters@domain_labels_chr))
         }
         if (what_1L_chr %in% c("models", "all")) {
             x <- investigate(x)

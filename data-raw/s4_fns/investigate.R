@@ -33,7 +33,8 @@ investigate_SpecificMixed <- function(x,
                                    what_1L_chr = "input_params_ls")
     input_params_ls$rename_lup <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$rename_lup
     input_params_ls$scndry_anlys_params_ls <- scndry_anlys_params_ls
-    input_params_ls$path_params_ls$paths_ls <- list(write_to_dir_nm_1L_chr = x@paths_chr)
+    input_params_ls$path_params_ls$paths_ls <- list(write_to_dir_nm_1L_chr = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$path_to_write_to_1L_chr)
+    # changed from x@paths_chr
     input_params_ls$outp_smry_ls <- append(x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls,
                                            x@c_SpecificResults@b_SpecificPrivate@private_outp_ls)
     input_params_ls$params_ls$control_ls <- control_ls
@@ -41,7 +42,8 @@ investigate_SpecificMixed <- function(x,
     input_params_ls$params_ls$iters_1L_int <- x@b_SpecificParameters@iters_1L_int
     results_ls_ls <- write_secondary_analyses(input_params_ls,
                                               backend_1L_chr = backend_1L_chr,
-                                              new_dir_nm_1L_chr = new_dir_nm_1L_chr)
+                                              new_dir_nm_1L_chr = new_dir_nm_1L_chr) %>%
+      stats::setNames(names(scndry_anlys_params_ls))
     x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls <- append(x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls,
                                                                         results_ls_ls %>%
                                                                           purrr::map(~.x[-1]))

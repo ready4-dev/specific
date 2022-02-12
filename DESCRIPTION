@@ -119,10 +119,15 @@ Collate:
     'pkg_specific.R'
     'specific-package.R'
 Suggests: 
-    scorz,
-    rmarkdown
-Remotes: 
+    scorz (>= 0.0.0.9047),
+    rmarkdown,
+    betareg,
+    cmdstanr (>= 0.4.0.9000),
+    rstan
+Remotes:  
     ready4-dev/ready4,
     ready4-dev/ready4show,
     ready4-dev/ready4use,
-    ready4-dev/youthvars
+    ready4-dev/youthvars,
+    stan-dev/cmdstanr,
+    ready4-dev/scorz

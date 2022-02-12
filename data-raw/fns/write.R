@@ -7,9 +7,7 @@ write_analyses <- function(input_params_ls,
                abstract_args_ls = abstract_args_ls,
                header_yaml_args_ls = input_params_ls$header_yaml_args_ls)
   if(!is.null(input_params_ls$scndry_anlys_params_ls)){
-    write_secondary_analyses(input_params_ls,
-                             abstract_args_ls = abstract_args_ls,
-                             start_at_int = start_at_int)
+    write_secondary_analyses(input_params_ls)
 
   }
 }

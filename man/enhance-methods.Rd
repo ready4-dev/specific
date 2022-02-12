@@ -7,8 +7,6 @@
 \usage{
 \S4method{enhance}{SpecificSynopsis}(
   x,
-  y_SpecificMixed,
-  z_Ready4useRepos,
   depnt_var_nms_chr = NA_character_,
   what_1L_chr = "shareable_outp_ls",
   with_1L_chr = "results_ls"
@@ -16,10 +14,6 @@
 }
 \arguments{
 \item{x}{An object of class SpecificSynopsis}
-
-\item{y_SpecificMixed}{PARAM_DESCRIPTION}
-
-\item{z_Ready4useRepos}{PARAM_DESCRIPTION}
 
 \item{depnt_var_nms_chr}{Dependent variable names (a character vector), Default: 'NA'}
 
