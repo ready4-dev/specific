@@ -3,17 +3,35 @@
 \name{share-SpecificProject}
 \alias{share-SpecificProject}
 \alias{share,SpecificProject-method}
+\alias{share-SpecificSynopsis}
+\alias{share,SpecificSynopsis-method}
 \title{Share (publish) open data}
 \usage{
-\S4method{share}{SpecificProject}(x, fl_nm_1L_chr, repos_Ready4useRepos)
+\S4method{share}{SpecificProject}(x, fl_nm_1L_chr = "mdl_ingredients", repos_Ready4useRepos)
+
+\S4method{share}{SpecificSynopsis}(
+  x,
+  consolidate_1L_lgl = T,
+  fl_nm_1L_chr = "mdl_ingredients",
+  type_1L_chr = "Models",
+  what_1L_chr = "ingredients"
+)
 }
 \arguments{
-\item{x}{An object of class SpecificProject}
+\item{x}{An object of class SpecificSynopsis}
 
-\item{fl_nm_1L_chr}{File name (a character vector of length one)}
+\item{fl_nm_1L_chr}{File name (a character vector of length one), Default: 'mdl_ingredients'}
 
 \item{repos_Ready4useRepos}{PARAM_DESCRIPTION}
+
+\item{consolidate_1L_lgl}{Consolidate (a logical vector of length one), Default: T}
+
+\item{type_1L_chr}{Type (a character vector of length one), Default: 'Models'}
+
+\item{what_1L_chr}{What (a character vector of length one), Default: 'ingredients'}
 }
 \description{
 share method applied to SpecificProject
+
+share method applied to SpecificSynopsis
 }

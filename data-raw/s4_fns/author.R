@@ -73,14 +73,18 @@ author_SpecificProject <- function(x,
                                    type_1L_chr = "results",
                                    what_1L_chr = "public"){
   if(type_1L_chr %in% c("purge_all","purge_write")){
-    write_to_delete_mdl_fls(x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls)
+    outp_smry_ls_ls <- manufactureSlot(x,
+                                       "c_SpecificResults",
+                                       what_1L_chr = "indexed_shareable")
+    purrr::walk(outp_smry_ls_ls,
+                ~ write_to_delete_mdl_fls(.x))
   }
   if(type_1L_chr != "purge_all"){
     path_1L_chr <- ifelse(is.na(path_1L_chr),
                           x@paths_chr[1],
                           path_1L_chr)
     if(type_1L_chr == "results"){
-      if(what_1L_chr == "public")
+      if(what_1L_chr %in% c("public", "purge_write"))
         output_xx <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls
       if(what_1L_chr == "private")
         output_xx <- x@c_SpecificResults@b_SpecificPrivate@private_outp_ls
@@ -132,26 +136,26 @@ author_SpecificSynopsis <- function(x,
                                       fl_nm_1L_chr
                                     }
     )
-    if(!is.na(x@e_Ready4useRepos@dv_ds_nm_1L_chr)){
-      ready4::write_to_dv_with_wait(dss_tb = tibble::tibble(ds_obj_nm_chr = ctlg_nms_chr,
-                                                            title_chr = purrr::map_chr(1:length(ctlg_nms_chr),
-                                                                                       ~ paste0("Catalogue of utility mapping models",
-                                                                                                ifelse(.x==1,
-                                                                                                       " (Primary Analysis)",
-                                                                                                       paste0(" (Supplementary Analysis ",
-                                                                                                              (.x-1),
-                                                                                                              ")"))))),
-                                    dv_nm_1L_chr = x@e_Ready4useRepos@dv_nm_1L_chr,
-                                    ds_url_1L_chr = x@e_Ready4useRepos@dv_ds_nm_1L_chr,
-                                    parent_dv_dir_1L_chr = paste0(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls$path_to_write_to_1L_chr,"/H_Dataverse"),
-                                    paths_to_dirs_chr = paste0(x@a_Ready4showPaths@outp_data_dir_1L_chr,
-                                                               "/",
-                                                               x@a_Ready4showPaths@reports_dir_1L_chr,
-                                                               "/",
-                                                               what_1L_chr),
-                                    inc_fl_types_chr = ".pdf",
-                                    paths_are_rltv_1L_lgl = F)
-    }
+    # if(!is.na(x@e_Ready4useRepos@dv_ds_nm_1L_chr)){
+    #   ready4::write_to_dv_with_wait(dss_tb = tibble::tibble(ds_obj_nm_chr = ctlg_nms_chr,
+    #                                                         title_chr = purrr::map_chr(1:length(ctlg_nms_chr),
+    #                                                                                    ~ paste0("Catalogue of utility mapping models",
+    #                                                                                             ifelse(.x==1,
+    #                                                                                                    " (Primary Analysis)",
+    #                                                                                                    paste0(" (Supplementary Analysis ",
+    #                                                                                                           (.x-1),
+    #                                                                                                           ")"))))),
+    #                                 dv_nm_1L_chr = x@e_Ready4useRepos@dv_nm_1L_chr,
+    #                                 ds_url_1L_chr = x@e_Ready4useRepos@dv_ds_nm_1L_chr,
+    #                                 parent_dv_dir_1L_chr = paste0(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls$path_to_write_to_1L_chr,"/H_Dataverse"),
+    #                                 paths_to_dirs_chr = paste0(x@a_Ready4showPaths@outp_data_dir_1L_chr,
+    #                                                            "/",
+    #                                                            x@a_Ready4showPaths@reports_dir_1L_chr,
+    #                                                            "/",
+    #                                                            what_1L_chr),
+    #                                 inc_fl_types_chr = ".pdf",
+    #                                 paths_are_rltv_1L_lgl = F)
+    # }
   }
 
 }
