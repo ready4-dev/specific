@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9072</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9073</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,6 +64,7 @@
   backend_1L_chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"brms.backend"</span>, <span class="st">"rstan"</span><span class="op">)</span>,
   iters_1L_int <span class="op">=</span> <span class="fl">4000L</span>,
   new_dir_nm_1L_chr <span class="op">=</span> <span class="st">"F_TS_Mdls"</span>,
+  path_to_write_to_1L_chr <span class="op">=</span> <span class="cn">NA_character_</span>,
   prior_ls <span class="op">=</span> <span class="cn">NULL</span>,
   control_ls <span class="op">=</span> <span class="cn">NULL</span>
 <span class="op">)</span></code></pre></div>
@@ -83,6 +84,8 @@
 <dd><p>Iterations (an integer vector of length one), Default: 4000</p></dd>
 <dt>new_dir_nm_1L_chr</dt>
 <dd><p>New directory name (a character vector of length one), Default: 'F_TS_Mdls'</p></dd>
+<dt>path_to_write_to_1L_chr</dt>
+<dd><p>Path to write to (a character vector of length one), Default: 'NA'</p></dd>
 <dt>prior_ls</dt>
 <dd><p>Prior (a list), Default: NULL</p></dd>
 <dt>control_ls</dt>
