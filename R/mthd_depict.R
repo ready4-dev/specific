@@ -57,7 +57,7 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
             renew(old_nms_chr = timepoint_old_nms_chr, new_nms_chr = timepoint_new_nms_chr)
     }
     else {
-        correspondences_lup
+        correspondences_lup <- NULL
     }
     if (what_1L_chr == "composite_mdl") {
         plt <- make_cmpst_sctr_and_dnst_plt(outp_smry_ls, base_size_1L_dbl = base_size_1L_dbl, 

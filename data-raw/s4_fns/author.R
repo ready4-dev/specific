@@ -112,11 +112,13 @@ author_SpecificSynopsis <- function(x,
   if(what_1L_chr == "Catalogue"){
     outp_smry_ls_ls <- manufacture(x@b_SpecificResults,
                                    what_1L_chr = "indexed_shareable")
-    if(is.na(reference_1L_int)){
+    refs_int <- 1:length(outp_smry_ls_ls)
+    if(!is.na(reference_1L_int)){
       outp_smry_ls_ls <- outp_smry_ls_ls[reference_1L_int]
+      refs_int <- reference_1L_int
     }
     ctlg_nms_chr <- purrr::map2_chr(outp_smry_ls_ls,
-                                    1:length(outp_smry_ls_ls),
+                                    refs_int,
                                     ~ {
                                       fl_nm_1L_chr <- paste0("AAA_TTU_MDL_CTG",
                                                              ifelse(.y==1,

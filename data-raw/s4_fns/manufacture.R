@@ -65,7 +65,7 @@ manufacture_SpecificSynopsis <- function(x,
                             #predr_ctgs_ls = NULL,
                             sample_desc_1L_chr = x@sample_desc_1L_chr,
                             var_nm_change_lup = x@correspondences_r3)
-      if(what_1L_chr == "results_ls"){
+      if(what_1L_chr %in% c("abstract_args_ls","results_ls")){
         object_xx <- make_results_ls(dv_ds_nm_and_url_chr = object_xx$path_params_ls$dv_ds_nm_and_url_chr,
                                      make_cmpst_plt_1L_lgl = make_cmpst_plt_1L_lgl,
                                      outp_smry_ls = x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
@@ -182,8 +182,8 @@ manufacture_SpecificResults<- function(x,
                                      "a_SpecificShareable@shareable_outp_ls")
     secondary_chr <- names(shareable_outp_ls)[startsWith(names(shareable_outp_ls),"secondary_")]
     if(!identical(secondary_chr,character(0))){
-      primary_ls <- shareable_outp_ls[names(shareable_outp_ls)!=secondary_chr]
-      secondary_ls <- shareable_outp_ls[names(shareable_outp_ls)==secondary_chr]
+      primary_ls <- shareable_outp_ls[setdiff(names(shareable_outp_ls),secondary_chr)]
+      secondary_ls <- shareable_outp_ls[secondary_chr]
       object_xx <- append(list(primary_ls = primary_ls[(names(primary_ls))[!names(primary_ls) %>% duplicated()]]),
                            secondary_ls %>%
                              purrr::map(~.x[(.x %>% names())[!.x %>% names() %>% duplicated()]]))

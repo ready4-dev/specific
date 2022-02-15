@@ -72,7 +72,7 @@ depict_SpecificSynopsis <- function(x,
       renew(old_nms_chr = timepoint_old_nms_chr,
             new_nms_chr = timepoint_new_nms_chr)
   }else{
-    correspondences_lup
+    correspondences_lup <- NULL
   }
   if(what_1L_chr == "composite_mdl"){
     plt <- make_cmpst_sctr_and_dnst_plt(outp_smry_ls,
