@@ -9,19 +9,30 @@
 \usage{
 \S4method{depict}{SpecificSynopsis}(
   x,
-  base_height = 13,
+  axis_text_sclg_1L_dbl = 1.5,
+  axis_title_sclg_1L_dbl = 2,
+  base_height_1L_dbl = 13,
   base_size_1L_dbl = 30,
   depnt_var_desc_1L_chr = NA_character_,
+  dim_plot_heights_int = c(10L, 1L),
+  dim_plot_log_log_tfmn_1L_lgl = F,
+  dim_plot_rows_cols_pair_int = c(3L, 2L),
   labels_chr = c("A", "B", "C", "D"),
   label_x_1L_dbl = 0.2,
   label_y_1L_dbl = 0.9,
   label_size_1L_dbl = 30,
+  legend_sclg_1L_dbl = 2,
   mdl_idxs_int = 1:2,
+  rel_heights_dbl = c(4, 10, 1),
+  scale_dbl = c(0.9, 0.9, 0.9),
   timepoint_old_nms_chr = NA_character_,
   timepoint_new_nms_chr = NA_character_,
   use_png_fls_1L_lgl = F,
+  utl_plot_label_1L_chr = " ",
+  utl_by_rnd_plots_params_ls = list(width_1L_dbl = 6, height_1L_dbl = 4),
   what_1L_chr = "composite_mdl",
-  write_1L_lgl = F
+  write_1L_lgl = F,
+  y_label_1L_chr = " "
 )
 
 \S4method{depict}{SpecificProject}(
@@ -34,11 +45,21 @@
 \arguments{
 \item{x}{An object of class SpecificProject}
 
-\item{base_height}{PARAM_DESCRIPTION, Default: 13}
+\item{axis_text_sclg_1L_dbl}{Axis text scaling (a double vector of length one), Default: 1.5}
+
+\item{axis_title_sclg_1L_dbl}{Axis title scaling (a double vector of length one), Default: 2}
+
+\item{base_height_1L_dbl}{Base height (a double vector of length one), Default: 13}
 
 \item{base_size_1L_dbl}{Base size (a double vector of length one), Default: 30}
 
 \item{depnt_var_desc_1L_chr}{Dependent variable description (a character vector of length one), Default: 'NA'}
+
+\item{dim_plot_heights_int}{Dimension plot heights (an integer vector), Default: c(10L, 1L)}
+
+\item{dim_plot_log_log_tfmn_1L_lgl}{Dimension plot log log transformation (a logical vector of length one), Default: F}
+
+\item{dim_plot_rows_cols_pair_int}{Dimension plot rows columns pair (an integer vector), Default: c(3L, 2L)}
 
 \item{labels_chr}{Labels (a character vector), Default: c("A", "B", "C", "D")}
 
@@ -48,7 +69,13 @@
 
 \item{label_size_1L_dbl}{Label size (a double vector of length one), Default: 30}
 
+\item{legend_sclg_1L_dbl}{Legend scaling (a double vector of length one), Default: 2}
+
 \item{mdl_idxs_int}{Model indices (an integer vector), Default: NULL}
+
+\item{rel_heights_dbl}{Rel heights (a double vector), Default: c(4, 10, 1)}
+
+\item{scale_dbl}{Scale (a double vector), Default: c(0.9, 0.9, 0.9)}
 
 \item{timepoint_old_nms_chr}{Timepoint old names (a character vector), Default: 'NA'}
 
@@ -56,9 +83,15 @@
 
 \item{use_png_fls_1L_lgl}{Use png files (a logical vector of length one), Default: F}
 
+\item{utl_plot_label_1L_chr}{Utility plot label (a character vector of length one), Default: ' '}
+
+\item{utl_by_rnd_plots_params_ls}{Utility by round plots parameters (a list), Default: list(width_1L_dbl = 6, height_1L_dbl = 4)}
+
 \item{what_1L_chr}{What (a character vector of length one), Default: 'composite_mdl'}
 
 \item{write_1L_lgl}{Write (a logical vector of length one), Default: F}
+
+\item{y_label_1L_chr}{Y label (a character vector of length one), Default: ' '}
 
 \item{output_type_1L_chr}{Output type (a character vector of length one), Default: 'HTML'}
 

@@ -1310,11 +1310,15 @@ write_ts_mdls_from_alg_outp <- function (outp_smry_ls, # rename lngl
                                          backend_1L_chr = getOption("brms.backend", "rstan"),
                                          iters_1L_int = 4000L,
                                          new_dir_nm_1L_chr = "F_TS_Mdls",
+                                         path_to_write_to_1L_chr = NA_character_,
                                          prior_ls = NULL,
                                          control_ls = NULL)
 {
-  output_dir_1L_chr <- write_new_outp_dir(outp_smry_ls$path_to_write_to_1L_chr,
-                                          new_dir_nm_1L_chr = new_dir_nm_1L_chr)
+  if(is.na(path_to_write_to_1L_chr))
+    path_to_write_to_1L_chr <- outp_smry_ls$path_to_write_to_1L_chr %>%
+      stringr::str_sub(end=-8)
+  output_dir_1L_chr <- write_new_outp_dir(path_to_write_to_1L_chr,
+                                            new_dir_nm_1L_chr = new_dir_nm_1L_chr)
 
     mdls_smry_tb <- write_ts_mdls(data_tb = outp_smry_ls$scored_data_tb,
         depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr, predr_vars_nms_ls = outp_smry_ls$predr_vars_nms_ls,

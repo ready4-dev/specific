@@ -3,6 +3,8 @@
 \name{author-SpecificModels}
 \alias{author-SpecificModels}
 \alias{author,SpecificModels-method}
+\alias{author-SpecificSynopsis}
+\alias{author,SpecificSynopsis-method}
 \alias{author-SpecificProject}
 \alias{author,SpecificProject-method}
 \title{Author and save files}
@@ -13,6 +15,13 @@
   what_1L_chr = "all",
   digits_1L_int = 3L,
   reference_1L_int = NULL
+)
+
+\S4method{author}{SpecificSynopsis}(
+  x,
+  reference_1L_int = NA_integer_,
+  type_1L_chr = "Report",
+  what_1L_chr = "Catalogue"
 )
 
 \S4method{author}{SpecificProject}(
@@ -32,19 +41,21 @@
 
 \item{digits_1L_int}{Digits (an integer vector of length one), Default: 3}
 
-\item{reference_1L_int}{Reference (an integer vector of length one), Default: NULL}
+\item{reference_1L_int}{Reference (an integer vector of length one), Default: NA}
+
+\item{type_1L_chr}{Type (a character vector of length one), Default: 'results'}
 
 \item{fl_nm_1L_chr}{File name (a character vector of length one), Default: 'I_ALL_OUTPUT_'}
 
 \item{path_1L_chr}{Path (a character vector of length one), Default: 'NA'}
-
-\item{type_1L_chr}{Type (a character vector of length one), Default: 'results'}
 }
 \value{
 x (An object of class SpecificModels)
 }
 \description{
 author method applied to SpecificModels
+
+author method applied to SpecificSynopsis
 
 author method applied to SpecificProject
 }

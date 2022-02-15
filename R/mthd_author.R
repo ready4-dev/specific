@@ -74,6 +74,52 @@ methods::setMethod("author", "SpecificModels", function (x, prefd_mdl_types_chr 
 })
 #' 
 #' Author and save files
+#' @name author-SpecificSynopsis
+#' @description author method applied to SpecificSynopsis
+#' @param x An object of class SpecificSynopsis
+#' @param reference_1L_int Reference (an integer vector of length one), Default: NA
+#' @param type_1L_chr Type (a character vector of length one), Default: 'Report'
+#' @param what_1L_chr What (a character vector of length one), Default: 'Catalogue'
+#' @return NULL
+#' @rdname author-methods
+#' @aliases author,SpecificSynopsis-method
+#' @export 
+#' @importFrom purrr map2_chr map_chr
+#' @importFrom ready4 write_to_dv_with_wait author
+#' @importFrom tibble tibble
+methods::setMethod("author", "SpecificSynopsis", function (x, reference_1L_int = NA_integer_, type_1L_chr = "Report", 
+    what_1L_chr = "Catalogue") 
+{
+    if (what_1L_chr == "Catalogue") {
+        outp_smry_ls_ls <- manufacture(x@b_SpecificResults, what_1L_chr = "indexed_shareable")
+        if (is.na(reference_1L_int)) {
+            outp_smry_ls_ls <- outp_smry_ls_ls[reference_1L_int]
+        }
+        ctlg_nms_chr <- purrr::map2_chr(outp_smry_ls_ls, 1:length(outp_smry_ls_ls), 
+            ~{
+                fl_nm_1L_chr <- paste0("AAA_TTU_MDL_CTG", ifelse(.y == 
+                  1, "", paste0("-", (.y - 1))))
+                authorReport(x %>% renewSlot("b_SpecificResults@a_SpecificShareable@shareable_outp_ls", 
+                  .x), fl_nm_1L_chr = fl_nm_1L_chr, what_1L_chr = "Catalogue")
+                fl_nm_1L_chr
+            })
+        if (!is.na(x@e_Ready4useRepos@dv_ds_nm_1L_chr)) {
+            ready4::write_to_dv_with_wait(dss_tb = tibble::tibble(ds_obj_nm_chr = ctlg_nms_chr, 
+                title_chr = purrr::map_chr(1:length(ctlg_nms_chr), 
+                  ~paste0("Catalogue of utility mapping models", 
+                    ifelse(.x == 1, " (Primary Analysis)", paste0(" (Supplementary Analysis ", 
+                      (.x - 1), ")"))))), dv_nm_1L_chr = x@e_Ready4useRepos@dv_nm_1L_chr, 
+                ds_url_1L_chr = x@e_Ready4useRepos@dv_ds_nm_1L_chr, 
+                parent_dv_dir_1L_chr = paste0(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls$path_to_write_to_1L_chr, 
+                  "/H_Dataverse"), paths_to_dirs_chr = paste0(x@a_Ready4showPaths@outp_data_dir_1L_chr, 
+                  "/", x@a_Ready4showPaths@reports_dir_1L_chr, 
+                  "/", what_1L_chr), inc_fl_types_chr = ".pdf", 
+                paths_are_rltv_1L_lgl = F)
+        }
+    }
+})
+#' 
+#' Author and save files
 #' @name author-SpecificProject
 #' @description author method applied to SpecificProject
 #' @param x An object of class SpecificProject

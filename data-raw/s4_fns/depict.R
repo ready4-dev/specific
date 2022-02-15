@@ -38,19 +38,32 @@ depict_SpecificProject <- function(x,
   knitr::include_graphics({{plt_paths_ls[[1]]}})
 }
 depict_SpecificSynopsis <- function(x,
-                                     base_height = 13,
-                                     base_size_1L_dbl = 30,
-                                     depnt_var_desc_1L_chr = NA_character_,
-                                     labels_chr = c("A","B","C","D"),
-                                     label_x_1L_dbl = 0.2,
-                                     label_y_1L_dbl = 0.9,
-                                     label_size_1L_dbl = 30,
-                                     mdl_idxs_int = 1:2,
-                                     timepoint_old_nms_chr = NA_character_,
-                                     timepoint_new_nms_chr = NA_character_,
-                                     use_png_fls_1L_lgl = F,
-                                     what_1L_chr = "composite_mdl",
-                                     write_1L_lgl = F){
+                                    axis_text_sclg_1L_dbl = 1.5,
+                                    axis_title_sclg_1L_dbl = 2,
+                                    base_height_1L_dbl = 13,
+                                    base_size_1L_dbl = 30,
+                                    depnt_var_desc_1L_chr = NA_character_,
+                                    dim_plot_heights_int = c(10L, 1L),
+                                    dim_plot_log_log_tfmn_1L_lgl = F,
+                                    dim_plot_rows_cols_pair_int = c(3L,2L),
+
+                                    labels_chr = c("A","B","C","D"),
+                                    label_x_1L_dbl = 0.2,
+                                    label_y_1L_dbl = 0.9,
+                                    label_size_1L_dbl = 30,
+                                    legend_sclg_1L_dbl = 2,
+                                    mdl_idxs_int = 1:2,
+                                    rel_heights_dbl = c(4,10,1),
+                                    scale_dbl = c(0.9,0.9,0.9),
+                                    timepoint_old_nms_chr = NA_character_,
+                                    timepoint_new_nms_chr = NA_character_,
+                                    use_png_fls_1L_lgl = F,
+                                    utl_plot_label_1L_chr = " ",
+                                    utl_by_rnd_plots_params_ls = list(width_1L_dbl = 6,
+                                                                      height_1L_dbl = 4),
+                                    what_1L_chr = "composite_mdl",
+                                    write_1L_lgl = F,
+                                    y_label_1L_chr = " "){
   plt <- NULL
   outp_smry_ls <- append(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
                          x@b_SpecificResults@b_SpecificPrivate@private_outp_ls)
@@ -72,12 +85,57 @@ depict_SpecificSynopsis <- function(x,
                                         label_size_1L_dbl = label_size_1L_dbl,
                                         mdl_idxs_int = mdl_idxs_int,
                                         use_png_fls_1L_lgl = use_png_fls_1L_lgl)
-    if(write_1L_lgl){
-      cowplot::save_plot(paste0(outp_smry_ls$path_to_write_to_1L_chr,
-                                "/dens_and_sctr.png"),
-                         plt,
-                         base_height = base_height)
-    }
+    write_path_1L_chr <- paste0(outp_smry_ls$path_to_write_to_1L_chr,
+                                "/dens_and_sctr.png")
+  }
+  if(what_1L_chr == "composite_utl"){
+    ds_descvs_ls <- manufacture_SpecificSynopsis(x,
+                                                 what_1L_chr = "ds_descvs_ls")
+    outp_smry_ls <- append(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
+                           x@b_SpecificResults@b_SpecificPrivate@private_outp_ls)
+    maui_domains_col_nms_chr <- x@c_SpecificParameters@domain_labels_chr
+    first_plt <- rlang::exec(youthvars::make_var_by_round_plt,
+                             !!!list(data_tb = outp_smry_ls$scored_data_tb,
+                                     legend_sclg_1L_dbl = legend_sclg_1L_dbl,
+                                     var_nm_1L_chr = ds_descvs_ls$utl_wtd_var_nm_1L_chr,
+                                     round_var_nm_1L_chr = ds_descvs_ls$round_var_nm_1L_chr,
+                                     x_label_1L_chr = ds_descvs_ls$dictionary_tb %>%
+                                       ready4::get_from_lup_obj(match_value_xx = ds_descvs_ls$utl_wtd_var_nm_1L_chr,
+                                                                match_var_nm_1L_chr = "var_nm_chr",
+                                                                target_var_nm_1L_chr = "var_desc_chr",
+                                                                evaluate_1L_lgl = F) %>% as.vector(),
+                                     label_fill_1L_chr = utl_plot_label_1L_chr,
+                                     axis_text_sclg_1L_dbl = axis_text_sclg_1L_dbl,
+                                     axis_title_sclg_1L_dbl = axis_title_sclg_1L_dbl,
+                                     y_label_1L_chr = y_label_1L_chr))
+    second_plt <- rlang::exec(youthvars::make_sub_tot_plts,
+                              !!!list(data_tb = outp_smry_ls$scored_data_tb,
+                                      add_legend_1L_lgl = F,
+                                      axis_text_sclg_1L_dbl = axis_text_sclg_1L_dbl,
+                                      axis_title_sclg_1L_dbl = axis_title_sclg_1L_dbl,
+                                      col_nms_chr = maui_domains_col_nms_chr,
+                                      legend_sclg_1L_dbl = legend_sclg_1L_dbl,
+                                      plot_rows_cols_pair_int = dim_plot_rows_cols_pair_int,
+                                      round_var_nm_1L_chr = ds_descvs_ls$round_var_nm_1L_chr,
+                                      heights_int = dim_plot_heights_int,
+                                      make_log_log_tfmn_1L_lgl = dim_plot_log_log_tfmn_1L_lgl,
+                                      y_label_1L_chr = y_label_1L_chr))
+    legend_ls <- cowplot::get_legend(first_plt)
+
+    plt <- cowplot::plot_grid(first_plt +
+                                ggplot2::theme(legend.position="none"),
+                              second_plt,
+                              legend_ls,
+                              nrow = 3L,
+                              rel_heights = rel_heights_dbl,
+                              scale = scale_dbl)
+    write_path_1L_chr <- paste0(x@a_Ready4showPaths@outp_data_dir_1L_chr,
+                                "/Output/_Descriptives/combined_utl.png")
+  }
+  if(write_1L_lgl){
+    cowplot::save_plot(write_path_1L_chr,
+                       plt,
+                       base_height = base_height_1L_dbl)
   }
   return(plt)
 }

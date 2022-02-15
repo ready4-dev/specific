@@ -343,8 +343,9 @@ make_cmpst_sctr_and_dnst_plt <- function (outp_smry_ls, output_data_dir_1L_chr =
             cowplot::draw_image(.x))
     }
     else {
-        plot_ls <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr() %>% 
-            mdl_idxs_int[] %>% purrr::map(~{
+        plots_chr <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr()
+        plots_chr <- plots_chr[mdl_idxs_int]
+        plot_ls <- plots_chr %>% purrr::map(~{
             mdl_nm_1L_chr <- .x
             brms_mdl <- get_brms_mdl(outp_smry_ls, mdl_nm_1L_chr = mdl_nm_1L_chr)
             if (is.na(depnt_var_desc_1L_chr)) {

@@ -46,7 +46,6 @@ make_abstract_args_ls <- function(results_ls, # Generalise from TTU
                                               Conclusions = get_conclusion_text(results_ls),
                                               Data = make_data_availability_text(results_ls)),
                            fl_nm_1L_chr = fl_nm_1L_chr)
-
  return(abstract_args_ls)
 }
 make_all_mdl_types_smry_tbl <- function(outp_smry_ls,
@@ -291,9 +290,12 @@ make_cmpst_sctr_and_dnst_plt <- function(outp_smry_ls,
       purrr::flatten_chr()
     plot_ls <- ordered_paths_chr %>% purrr::map(~cowplot::ggdraw() + cowplot::draw_image(.x))
   }else{
-    plot_ls <- outp_smry_ls$mdl_nms_ls %>%
-      purrr::flatten_chr() %>%
-      `[`(mdl_idxs_int) %>%
+    plots_chr <- outp_smry_ls$mdl_nms_ls %>%
+      purrr::flatten_chr()
+    plots_chr <- plots_chr[mdl_idxs_int]
+    # %>%
+    #   `[`(mdl_idxs_int)
+    plot_ls <- plots_chr %>%
       purrr::map(~{
         mdl_nm_1L_chr <- .x
         brms_mdl <- get_brms_mdl(outp_smry_ls,

@@ -436,6 +436,8 @@ z <- ready4pack::make_pt_ready4pack_manifest(x,
 ) %>%
   ready4pack::ready4pack_manifest()
 z <- ready4::author(z)
+ready4::write_citation_cff(packageDescription("specific"),
+                           citation_chr = readLines("inst/CITATION"))
 # usethis::use_dev_package("ready4",
 #                          type = "Depends",
 #                          remote = "ready4-dev/ready4")

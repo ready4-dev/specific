@@ -23,7 +23,7 @@ methods::setMethod("authorData", "SpecificMixed", function (x, title_1L_chr = "A
             outp_smry_ls[-1]
         })
         x <- renewSlot(x, "c_SpecificResults@a_SpecificShareable@shareable_outp_ls", 
-            outp_smry_ls[-1])
+            append(results_ls[[1]], results_ls[-1]))
     }
     return(x)
 })

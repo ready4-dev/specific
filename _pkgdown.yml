@@ -131,6 +131,7 @@ reference:
 - contents:
   - author-SpecificModels
   - author-SpecificProject
+  - author-SpecificSynopsis
   - authorData-SpecificMixed
   - depict-SpecificProject
   - depict-SpecificSynopsis

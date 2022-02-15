@@ -11,6 +11,7 @@ write_ts_mdls_from_alg_outp(
   backend_1L_chr = getOption("brms.backend", "rstan"),
   iters_1L_int = 4000L,
   new_dir_nm_1L_chr = "F_TS_Mdls",
+  path_to_write_to_1L_chr = NA_character_,
   prior_ls = NULL,
   control_ls = NULL
 )
@@ -27,6 +28,8 @@ write_ts_mdls_from_alg_outp(
 \item{iters_1L_int}{Iterations (an integer vector of length one), Default: 4000}
 
 \item{new_dir_nm_1L_chr}{New directory name (a character vector of length one), Default: 'F_TS_Mdls'}
+
+\item{path_to_write_to_1L_chr}{Path to write to (a character vector of length one), Default: 'NA'}
 
 \item{prior_ls}{Prior (a list), Default: NULL}
 

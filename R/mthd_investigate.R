@@ -64,6 +64,7 @@ methods::setMethod("investigate", "SpecificMixed", function (x, backend_1L_chr =
             utl_min_val_1L_dbl = x@b_SpecificParameters@depnt_var_min_max_dbl[1], 
             backend_1L_chr = backend_1L_chr, new_dir_nm_1L_chr = new_dir_nm_1L_chr, 
             iters_1L_int = x@b_SpecificParameters@iters_1L_int, 
+            path_to_write_to_1L_chr = x@a_Ready4showPaths@outp_data_dir_1L_chr, 
             prior_ls = prior_ls, control_ls = control_ls)
         rename_lup <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$rename_lup
         session_ls <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$session_ls

@@ -23,7 +23,7 @@ print_all_plts_for_mdl_set <- function (output_ls, start_from_1L_int = 0L)
 #' @return NULL
 #' @rdname print_cohort_table
 #' @export 
-#' @importFrom dplyr mutate mutate_all
+#' @importFrom dplyr mutate filter mutate_all
 #' @importFrom purrr map_chr
 #' @importFrom Hmisc capitalize
 #' @importFrom stringr str_replace
@@ -37,6 +37,7 @@ print_cohort_table <- function (params_ls, caption_1L_chr, mkdn_tbl_ref_1L_chr)
     df <- results_ls$tables_ls$participant_descs
     df$variable <- gsub("\\s*\\([^\\)]+\\)", "", df$variable)
     df <- df %>% dplyr::mutate(variable = variable %>% purrr::map_chr(~Hmisc::capitalize(.x)))
+    df <- dplyr::filter(df, !df[, 3] == "")
     if (params_ls$output_type_1L_chr == "PDF") {
         df <- df %>% dplyr::mutate_all(~stringr::str_replace(.x, 
             "%", "\\\\%") %>% stringr::str_replace(",", "\\\\,"))
@@ -137,7 +138,9 @@ print_covar_ttu_tbls <- function (params_ls, caption_1L_chr, table_1L_chr, ref_1
 #' @rdname print_indpnt_predrs_coefs_tbl
 #' @export 
 #' @importFrom stringr str_replace_all
-#' @importFrom purrr map_chr
+#' @importFrom dplyr mutate across case_when
+#' @importFrom kableExtra kbl kable_styling column_spec row_spec add_header_above collapse_rows footnote
+#' @importFrom knitr opts_current
 #' @importFrom ready4show print_table
 print_indpnt_predrs_coefs_tbl <- function (params_ls, caption_1L_chr, mkdn_tbl_ref_1L_chr) 
 {
@@ -159,14 +162,31 @@ print_indpnt_predrs_coefs_tbl <- function (params_ls, caption_1L_chr, mkdn_tbl_r
             "\\\\textbf", ""), "\\{", ""), "\\}", "")
     }
     if (params_ls$output_type_1L_chr == "PDF") {
-        tb$Parameter <- tb$Parameter %>% purrr::map_chr(~ifelse(endsWith(.x, 
-            " model"), paste0("\\textbf{", .x, "}"), .x))
+        tb %>% dplyr::mutate(dplyr::across(.cols = everything(), 
+            ~dplyr::case_when(is.na(.x) ~ "", T ~ .x))) %>% kableExtra::kbl(booktabs = T, 
+            caption = knitr::opts_current$get("tab.cap"), escape = F, 
+            longtable = T, col.names = c("Parameter", "Estimate", 
+                "SE", "CI (95\\%)", "R2", "Sigma", "Estimate", 
+                "SE", "CI (95\\%)", "R2", "Sigma")) %>% kableExtra::kable_styling(latex_options = c("repeat_header")) %>% 
+            kableExtra::column_spec(3:6, width = "3em") %>% kableExtra::row_spec(which(!is.na(tb[, 
+            5])), bold = T) %>% kableExtra::add_header_above(parse(text = paste0("c(", 
+            "\" \"", ", ", paste0("\"", results_ls$ttu_lngl_ls$best_mdls_tb[[1, 
+                "model_type"]], " - ", results_ls$ttu_lngl_ls$best_mdls_tb[[1, 
+                "link_and_tfmn_chr"]], "\" = 5"), ", ", paste0("\"", 
+                results_ls$ttu_lngl_ls$best_mdls_tb[[2, "model_type"]], 
+                " - ", results_ls$ttu_lngl_ls$best_mdls_tb[[2, 
+                  "link_and_tfmn_chr"]], "\" = 5"), ")")) %>% 
+            eval()) %>% kableExtra::collapse_rows(columns = 1) %>% 
+            kableExtra::footnote(general = make_scaling_text(results_ls), 
+                general_title = " ")
     }
-    tb %>% ready4show::print_table(output_type_1L_chr = params_ls$output_type_1L_chr, 
-        caption_1L_chr = caption_1L_chr, mkdn_tbl_ref_1L_chr = mkdn_tbl_ref_1L_chr, 
-        use_rdocx_1L_lgl = ifelse(params_ls$output_type_1L_chr == 
-            "Word", T, F), add_to_row_ls = add_to_row_ls, footnotes_chr = make_scaling_text(results_ls), 
-        sanitize_fn = force)
+    else {
+        ready4show::print_table(output_type_1L_chr = params_ls$output_type_1L_chr, 
+            caption_1L_chr = caption_1L_chr, mkdn_tbl_ref_1L_chr = mkdn_tbl_ref_1L_chr, 
+            use_rdocx_1L_lgl = ifelse(params_ls$output_type_1L_chr == 
+                "Word", T, F), add_to_row_ls = add_to_row_ls, 
+            footnotes_chr = make_scaling_text(results_ls), sanitize_fn = force)
+    }
 }
 #' Print independent predictors longitudinal model coefficients
 #' @description print_indpnt_predrs_lngl_mdl_coefs() is a Print function that prints output to console Specifically, this function implements an algorithm to print independent predictors longitudinal model coefficients. The function is called for its side effects and does not return a value.
