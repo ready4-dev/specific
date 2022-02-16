@@ -471,6 +471,7 @@ transform_predd_var_nm <- function (new_data_is_1L_chr, sfx_1L_chr = "", utl_min
 #' @rdname transform_predr_nm_part_of_phrases
 #' @export 
 #' @importFrom tibble tibble
+#' @importFrom dplyr distinct
 #' @importFrom purrr map_chr map_lgl
 #' @importFrom stringr str_detect str_replace
 #' @keywords internal
@@ -481,7 +482,7 @@ transform_predr_nm_part_of_phrases <- function (phrases_chr, old_nms_chr = NULL,
     }
     else {
         nm_changes_lup_tb = tibble::tibble(old_nms_chr = old_nms_chr, 
-            new_nms_chr = new_nms_chr)
+            new_nms_chr = new_nms_chr) %>% dplyr::distinct()
         tfd_phrases_chr <- phrases_chr %>% purrr::map_chr(~{
             phrase_1L_chr <- .x
             match_lgl <- nm_changes_lup_tb$old_nms_chr %>% purrr::map_lgl(~stringr::str_detect(phrase_1L_chr, 

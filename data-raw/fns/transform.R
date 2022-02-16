@@ -381,7 +381,8 @@ transform_predr_nm_part_of_phrases <- function(phrases_chr,
     tfd_phrases_chr <- phrases_chr
   }else{
     nm_changes_lup_tb = tibble::tibble(old_nms_chr = old_nms_chr,
-                                       new_nms_chr = new_nms_chr)
+                                       new_nms_chr = new_nms_chr) %>%
+      dplyr::distinct()
     tfd_phrases_chr <- phrases_chr %>%
       purrr::map_chr(~{
         phrase_1L_chr <- .x

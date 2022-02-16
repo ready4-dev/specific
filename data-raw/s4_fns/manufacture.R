@@ -62,10 +62,11 @@ manufacture_SpecificSynopsis <- function(x,
                             conclusion_1L_chr = x@conclusion_1L_chr,
                             ethics_1L_chr = x@ethics_1L_chr,
                             funding_1L_chr = x@funding_1L_chr,
-                            #predr_ctgs_ls = NULL,
+                            #predr_ctgs_ls = make_predr_ctgs_ls(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls),
                             sample_desc_1L_chr = x@sample_desc_1L_chr,
                             var_nm_change_lup = x@correspondences_r3)
       if(what_1L_chr %in% c("abstract_args_ls","results_ls")){
+        object_xx$study_descs_ls$predr_ctgs_ls <- make_predr_ctgs_ls(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls)
         object_xx <- make_results_ls(dv_ds_nm_and_url_chr = object_xx$path_params_ls$dv_ds_nm_and_url_chr,
                                      make_cmpst_plt_1L_lgl = make_cmpst_plt_1L_lgl,
                                      outp_smry_ls = x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
