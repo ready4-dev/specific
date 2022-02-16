@@ -15,12 +15,12 @@ investigate_SpecificMixed <- function(x,
   if(is.null(scndry_anlys_params_ls)){
     results_ls <- write_ts_mdls_from_alg_outp(outp_smry_ls = append(x@c_SpecificResults@b_SpecificPrivate@private_outp_ls,
                                                                     x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls),
-                                              predictors_lup = x@b_SpecificParameters@predictors_lup ,
+                                              predictors_lup = x@b_SpecificParameters@predictors_lup,
                                               utl_min_val_1L_dbl = x@b_SpecificParameters@depnt_var_min_max_dbl[1],# Change
                                               backend_1L_chr = backend_1L_chr,
                                               new_dir_nm_1L_chr = new_dir_nm_1L_chr, # Method Arg
                                               iters_1L_int = x@b_SpecificParameters@iters_1L_int,
-                                              path_to_write_to_1L_chr = x@a_Ready4showPaths@outp_data_dir_1L_chr,
+                                              path_to_write_to_1L_chr = x@b_SpecificParameters@paths_ls$output_data_dir_1L_chr,#x@a_Ready4showPaths@outp_data_dir_1L_chr,
                                               prior_ls = prior_ls,
                                               control_ls = control_ls)
     rename_lup <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$rename_lup
@@ -34,7 +34,8 @@ investigate_SpecificMixed <- function(x,
                                    what_1L_chr = "input_params_ls")
     input_params_ls$rename_lup <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$rename_lup
     input_params_ls$scndry_anlys_params_ls <- scndry_anlys_params_ls
-    input_params_ls$path_params_ls$paths_ls <- list(write_to_dir_nm_1L_chr = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$path_to_write_to_1L_chr)
+    input_params_ls$path_params_ls$paths_ls <- list(write_to_dir_nm_1L_chr = x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$path_to_write_to_1L_chr %>%
+                                                      stringr::str_sub(end=-8))
     # changed from x@paths_chr
     input_params_ls$outp_smry_ls <- append(x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls,
                                            x@c_SpecificResults@b_SpecificPrivate@private_outp_ls)

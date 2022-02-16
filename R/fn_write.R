@@ -819,6 +819,7 @@ write_scndry_analysis <- function (valid_params_ls_ls, candidate_covar_nms_chr, 
                 test_chr)))
         })]
     outp_smry_ls <- write_ts_mdls_from_alg_outp(outp_smry_ls = outp_smry_ls, 
+        path_to_write_to_1L_chr = outp_smry_ls$path_to_write_to_1L_chr, 
         utl_min_val_1L_dbl = params_ls$utl_min_val_1L_dbl, predictors_lup = params_ls$predictors_lup, 
         backend_1L_chr = backend_1L_chr, new_dir_nm_1L_chr = new_dir_nm_1L_chr, 
         iters_1L_int = params_ls$iters_1L_int, prior_ls = params_ls$prior_ls, 
