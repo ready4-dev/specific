@@ -89,8 +89,8 @@ depict_SpecificSynopsis <- function(x,
                                 "/dens_and_sctr.png")
   }
   if(what_1L_chr == "composite_utl"){
-    ds_descvs_ls <- manufacture_SpecificSynopsis(x,
-                                                 what_1L_chr = "ds_descvs_ls")
+    ds_descvs_ls <- manufacture(x,
+                                what_1L_chr = "ds_descvs_ls")
     outp_smry_ls <- append(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
                            x@b_SpecificResults@b_SpecificPrivate@private_outp_ls)
     maui_domains_col_nms_chr <- x@c_SpecificParameters@domain_labels_chr
