@@ -452,6 +452,6 @@ usethis::use_dev_package("cmdstanr",
 usethis::use_package("rstan",
                      type = "Suggests")
 usethis::use_dev_package("scorz",
-                         type = "Suggests",
+                         type = "Imports",
                          remote = "ready4-dev/scorz")
 # devtools::build_vignettes()

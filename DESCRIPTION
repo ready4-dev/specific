@@ -52,6 +52,7 @@ Imports:
     ready4show (>= 0.0.0.9095),
     ready4use (>= 0.0.0.9220),
     rlang,
+    scorz (>= 0.0.0.9048),
     stats,
     stringi,
     stringr,
@@ -119,12 +120,11 @@ Collate:
     'pkg_specific.R'
     'specific-package.R'
 Suggests: 
-    scorz (>= 0.0.0.9048),
     rmarkdown,
     betareg,
     cmdstanr (>= 0.4.0.9000),
     rstan
-Remotes:  
+Remotes: 
     ready4-dev/ready4,
     ready4-dev/ready4show,
     ready4-dev/ready4use,
