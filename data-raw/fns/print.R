@@ -110,31 +110,27 @@ print_indpnt_predrs_coefs_tbl <- function(params_ls,
   tb <- results_ls$tables_ls$ind_preds_coefs_tbl %>%
     transform_nms_in_mdl_tbl(col_nm_1L_chr = "Parameter",
                              var_nm_change_lup = results_ls$var_nm_change_lup)
-  add_to_row_ls <- list()
-  add_to_row_ls$pos <- list(-1, 0, nrow(tb))
-  add_to_row_ls$command <- c(paste0("\\toprule \n",
-                                    "&\\multicolumn{5}{c}{",
-                                    paste0(results_ls$ttu_lngl_ls$best_mdls_tb[[1,"model_type"]],
-                                           " - ",
-                                           results_ls$ttu_lngl_ls$best_mdls_tb[[1,"link_and_tfmn_chr"]]),
-                                    "}&\\multicolumn{5}{c}{",
-                                    paste0(results_ls$ttu_lngl_ls$best_mdls_tb[[2,"model_type"]],
-                                           " - ",                                             results_ls$ttu_lngl_ls$best_mdls_tb[[2,"link_and_tfmn_chr"]]),
-                                    "}\\\\\n"),
-                             paste0("Parameter & Estimate	& SE	& 95CI & R2	& Sigma & Estimate & SE	& 95CI & R2 & Sigma \\\\\n",
-                                    "\\midrule \n"),
-                             paste0("\\hline\n","{\\footnotesize ",
-                                    make_scaling_text(results_ls),
-                                    "}\n")
-  )
+  # add_to_row_ls <- list()
+  # add_to_row_ls$pos <- list(-1, 0, nrow(tb))
+  # add_to_row_ls$command <- c(paste0("\\toprule \n",
+  #                                   "&\\multicolumn{5}{c}{",
+  #                                   paste0(results_ls$ttu_lngl_ls$best_mdls_tb[[1,"model_type"]],
+  #                                          " - ",
+  #                                          results_ls$ttu_lngl_ls$best_mdls_tb[[1,"link_and_tfmn_chr"]]),
+  #                                   "}&\\multicolumn{5}{c}{",
+  #                                   paste0(results_ls$ttu_lngl_ls$best_mdls_tb[[2,"model_type"]],
+  #                                          " - ",                                             results_ls$ttu_lngl_ls$best_mdls_tb[[2,"link_and_tfmn_chr"]]),
+  #                                   "}\\\\\n"),
+  #                            paste0("Parameter & Estimate	& SE	& 95CI & R2	& Sigma & Estimate & SE	& 95CI & R2 & Sigma \\\\\n",
+  #                                   "\\midrule \n"),
+  #                            paste0("\\hline\n","{\\footnotesize ",
+  #                                   make_scaling_text(results_ls),
+  #                                   "}\n")
+  # )
   if(params_ls$output_type_1L_chr =="Word"){
     tb$Parameter <- stringr::str_replace_all(stringr::str_replace_all(stringr::str_replace_all(tb$Parameter, '\\\\textbf', ''), '\\{', ''), '\\}', '')
   }
   if(params_ls$output_type_1L_chr == "PDF"){
-    # tb$Parameter <- tb$Parameter %>% purrr::map_chr(~ifelse(endsWith(.x,
-    #                                                                  " model"),
-    #                                                         paste0("\\textbf{",.x,"}"),.x))
-
     tb %>%
       dplyr::mutate(dplyr::across(.cols = everything(),
                                   ~ dplyr::case_when(is.na(.x) ~ "",
@@ -169,6 +165,7 @@ print_indpnt_predrs_coefs_tbl <- function(params_ls,
       kableExtra::footnote(general = make_scaling_text(results_ls),
                            general_title = " ")
   }else{
+    add_to_row_ls <- NULL
     ready4show::print_table(output_type_1L_chr = params_ls$output_type_1L_chr,
                             caption_1L_chr = caption_1L_chr,
                             mkdn_tbl_ref_1L_chr = mkdn_tbl_ref_1L_chr,
@@ -204,6 +201,7 @@ print_lngl_ttu_tbls <- function(table_df, # Rename and generalise from TTU
                                 params_ls,
                                 caption_1L_chr,
                                 table_1L_chr,
+                                column_1_width_1L_chr = "25em",
                                 ref_1L_int = 1){
   results_ls <- params_ls$results_ls
   if(params_ls$output_type_1L_chr == "PDF"){
@@ -221,21 +219,41 @@ print_lngl_ttu_tbls <- function(table_df, # Rename and generalise from TTU
   }else{
     add_to_row_ls <- NULL
   }
-  table_df %>%
-    ready4show::print_table(output_type_1L_chr = params_ls$output_type_1L_chr,
-                            caption_1L_chr = caption_1L_chr,
-                            mkdn_tbl_ref_1L_chr = paste0("tab:",table_1L_chr),
-                            use_rdocx_1L_lgl = ifelse(params_ls$output_type_1L_chr=="Word",T,F),
-                            add_to_row_ls = add_to_row_ls,
-                            footnotes_chr = make_scaling_text(results_ls,
-                                                              table_1L_chr = table_1L_chr),
-                            hline_after_ls = c(-1,0),
-                            sanitize_fn = force)
-
+  if(params_ls$output_type_1L_chr == "PDF"){
+    table_df %>%
+      dplyr::mutate(dplyr::across(.cols = everything(),
+                                  ~ dplyr::case_when(is.na(.x) ~ "",
+                                                     T ~ .x))) %>%
+      kableExtra::kbl(booktabs = T,
+                      caption = knitr::opts_current$get("tab.cap"),
+                      escape = F,
+                      longtable = T,
+                      col.names = c("Parameter", "Estimate",	"SE",	"CI (95\\%)", "R2", "Sigma")) %>%
+      kableExtra::kable_styling(latex_options = c("repeat_header"),
+                                full_width = F) %>%
+      kableExtra::column_spec(1, width = column_1_width_1L_chr) %>%
+      kableExtra::row_spec(which(!is.na(table_df[,5])), bold = T) %>%
+      kableExtra::collapse_rows(columns = 1) %>%
+      kableExtra::footnote(general = make_scaling_text(results_ls,
+                                                       table_1L_chr = table_1L_chr),
+                           general_title = " ")
+  }else{
+    table_df %>%
+      ready4show::print_table(output_type_1L_chr = params_ls$output_type_1L_chr,
+                              caption_1L_chr = caption_1L_chr,
+                              mkdn_tbl_ref_1L_chr = paste0("tab:",table_1L_chr),
+                              use_rdocx_1L_lgl = ifelse(params_ls$output_type_1L_chr=="Word",T,F),
+                              add_to_row_ls = add_to_row_ls,
+                              footnotes_chr = make_scaling_text(results_ls,
+                                                                table_1L_chr = table_1L_chr),
+                              hline_after_ls = c(-1,0),
+                              sanitize_fn = force)
+  }
 }
 print_ten_folds_tbl <- function(params_ls,
                                 caption_1L_chr,
                                 mkdn_tbl_ref_1L_chr,
+                                column_1_width_1L_chr = "20em",
                                 ref_1L_int = 1){
   results_ls <- params_ls$results_ls
   if(ref_1L_int ==1){
@@ -249,12 +267,6 @@ print_ten_folds_tbl <- function(params_ls,
     df$Predictor <- df$Predictor %>% transform_names(rename_lup = results_ls$var_nm_change_lup)
   }
   if(params_ls$output_type_1L_chr == "PDF"){
-    add_to_row_ls <- list()
-    add_to_row_ls$pos <- list(0,0,0,nrow(df))
-    add_to_row_ls$command <- c("&\\multicolumn{3}{c}{Training model fit}&\\multicolumn{3}{c}{Testing model fit}\\\\\n",
-                               "&\\multicolumn{3}{c}{(averaged over 10 folds)}&\\multicolumn{3}{c}{(averaged over 10 folds)}\\\\\n",
-                               "Model & R2	& RMSE & MAE &  R2	& RMSE & MAE  \\\\\n",
-                               paste0("\\hline\n","{\\footnotesize  RMSE: Root Mean Squared Error; MAE: Mean Absolute Error}\n"))
     if(ref_1L_int ==1){
       df$Model <- df$Model %>% purrr::map_chr(~ifelse(.x %in% c("GLM","OLS"),
                                                       paste0("\\textbf{",
@@ -263,18 +275,46 @@ print_ten_folds_tbl <- function(params_ls,
     }else{
       df$Predictor <- df$Predictor %>% purrr::map_chr(~paste0("\\textbf{",.x,"}"))
     }
+    df %>%
+      dplyr::mutate(dplyr::across(.cols = everything(),
+                                  ~ dplyr::case_when(is.na(.x) ~ "",
+                                                     T ~ .x))) %>%
+      kableExtra::kbl(booktabs = T,
+                      caption = knitr::opts_current$get("tab.cap"),
+                      escape = F,
+                      longtable = T,
+                      col.names = c("Model", "R2",	"RMSE",	"MAE", "R2", "RMSE", "MAE")) %>%
+      kableExtra::kable_styling(latex_options = c("repeat_header"),
+                                full_width = F) %>%
+      kableExtra::column_spec(1, bold = T, width = column_1_width_1L_chr) %>%
+      kableExtra::add_header_above(parse(text=paste0("c(",
+                                                     "\" \"",
+                                                     ", ",
+                                                     paste0("\"",
+                                                            "Training model fit",
+                                                            "\" = 3"),
+                                                     ", ",
+                                                     paste0("\"",
+                                                            "Testing model fit",
+                                                            "\" = 3"),
+                                                     ")"
+      )) %>% eval()
+      ) %>%
+      kableExtra::collapse_rows(columns = 1) %>%
+      kableExtra::footnote(general = "Results are averaged over ten folds. RMSE: Root Mean Squared Error; MAE: Mean Absolute Error",
+                           general_title = " ")
+
   }else{
     add_to_row_ls <- NULL
+    df %>%
+      ready4show::print_table(output_type_1L_chr = params_ls$output_type_1L_chr,
+                              caption_1L_chr = caption_1L_chr,
+                              mkdn_tbl_ref_1L_chr = mkdn_tbl_ref_1L_chr,
+                              use_rdocx_1L_lgl = ifelse(params_ls$output_type_1L_chr=="Word",T,F),
+                              add_to_row_ls = add_to_row_ls,
+                              hline_after_ls = c(-1,0),
+                              sanitize_fn = force)
   }
-  df %>%
-    ready4show::print_table(output_type_1L_chr = params_ls$output_type_1L_chr,
-                            caption_1L_chr = caption_1L_chr,
-                            mkdn_tbl_ref_1L_chr = mkdn_tbl_ref_1L_chr,
-                            use_rdocx_1L_lgl = ifelse(params_ls$output_type_1L_chr=="Word",T,F),
-                            add_to_row_ls = add_to_row_ls,
-                            hline_after_ls = c(-1,0),
-                            sanitize_fn = force)
-
 }
 print_ts_mdl_plts <- function (paths_to_plts_chr, title_1L_chr, label_refs_chr, mdl_smry_ls)
 {

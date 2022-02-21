@@ -9,6 +9,7 @@ print_lngl_ttu_tbls(
   params_ls,
   caption_1L_chr,
   table_1L_chr,
+  column_1_width_1L_chr = "25em",
   ref_1L_int = 1
 )
 }
@@ -20,6 +21,8 @@ print_lngl_ttu_tbls(
 \item{caption_1L_chr}{Caption (a character vector of length one)}
 
 \item{table_1L_chr}{Table (a character vector of length one)}
+
+\item{column_1_width_1L_chr}{Column 1 width (a character vector of length one), Default: '25em'}
 
 \item{ref_1L_int}{Reference (an integer vector of length one), Default: 1}
 }

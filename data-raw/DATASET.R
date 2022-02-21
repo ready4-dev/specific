@@ -432,8 +432,7 @@ datasets_ls <- list(tibble::tibble(short_name_chr = c("OLS_NTF",
                                                 desc_1L_chr = "A lookup table of different report types"))
 z <- ready4pack::make_pt_ready4pack_manifest(x,
                                              constructor_r3 = y,
-                                             pkg_ds_ls_ls = datasets_ls
-) %>%
+                                             pkg_ds_ls_ls = datasets_ls) %>%
   ready4pack::ready4pack_manifest()
 z <- ready4::author(z)
 ready4::write_citation_cff(packageDescription("specific"),

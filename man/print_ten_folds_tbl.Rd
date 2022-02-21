@@ -8,6 +8,7 @@ print_ten_folds_tbl(
   params_ls,
   caption_1L_chr,
   mkdn_tbl_ref_1L_chr,
+  column_1_width_1L_chr = "20em",
   ref_1L_int = 1
 )
 }
@@ -17,6 +18,8 @@ print_ten_folds_tbl(
 \item{caption_1L_chr}{Caption (a character vector of length one)}
 
 \item{mkdn_tbl_ref_1L_chr}{Markdown table reference (a character vector of length one)}
+
+\item{column_1_width_1L_chr}{Column 1 width (a character vector of length one), Default: '20em'}
 
 \item{ref_1L_int}{Reference (an integer vector of length one), Default: 1}
 }
