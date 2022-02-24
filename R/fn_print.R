@@ -172,7 +172,7 @@ print_indpnt_predrs_coefs_tbl <- function (params_ls, caption_1L_chr, mkdn_tbl_r
     }
     else {
         add_to_row_ls <- NULL
-        ready4show::print_table(output_type_1L_chr = params_ls$output_type_1L_chr, 
+        tb %>% ready4show::print_table(output_type_1L_chr = params_ls$output_type_1L_chr, 
             caption_1L_chr = caption_1L_chr, mkdn_tbl_ref_1L_chr = mkdn_tbl_ref_1L_chr, 
             use_rdocx_1L_lgl = ifelse(params_ls$output_type_1L_chr == 
                 "Word", T, F), add_to_row_ls = add_to_row_ls, 
