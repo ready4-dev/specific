@@ -38,34 +38,6 @@ add_tfd_var_to_ds <- function (data_tb, depnt_var_nm_1L_chr, tfmn_1L_chr, depnt_
             depnt_var_max_val_1L_dbl = depnt_var_max_val_1L_dbl)))
     return(data_tb)
 }
-#' Add unique identifiers to tibbles list
-#' @description add_uids_to_tbs_ls() is an Add function that updates an object by adding data to that object. Specifically, this function implements an algorithm to add unique identifiers to tibbles list. Function argument tbs_ls specifies the object to be updated. The function returns Tibbles (a list).
-#' @param tbs_ls Tibbles (a list)
-#' @param prefix_1L_chr Prefix (a character vector of length one)
-#' @param id_var_nm_1L_chr Identity variable name (a character vector of length one), Default: 'fkClientID'
-#' @return Tibbles (a list)
-#' @rdname add_uids_to_tbs_ls
-#' @export 
-#' @importFrom purrr map map_chr
-#' @importFrom dplyr mutate arrange
-#' @importFrom rlang sym
-#' @importFrom tidyselect all_of
-#' @importFrom stringr str_replace
-#' @importFrom stats setNames
-#' @keywords internal
-add_uids_to_tbs_ls <- function (tbs_ls, prefix_1L_chr, id_var_nm_1L_chr = "fkClientID") 
-{
-    participant_ids <- paste0(prefix_1L_chr, 1:nrow(tbs_ls[[1]])) %>% 
-        sample(nrow(tbs_ls[[1]]))
-    tbs_ls <- purrr::map(tbs_ls, ~{
-        .x %>% dplyr::mutate(`:=`(!!rlang::sym(id_var_nm_1L_chr), 
-            tidyselect::all_of(participant_ids[1:nrow(.x)]))) %>% 
-            dplyr::arrange(!!rlang::sym(id_var_nm_1L_chr) %>% 
-                purrr::map_chr(~stringr::str_replace(.x, prefix_1L_chr, 
-                  "")) %>% as.numeric())
-    }) %>% stats::setNames(names(tbs_ls))
-    return(tbs_ls)
-}
 #' Add utility prediction to dataset
 #' @description add_utility_predn_to_ds() is an Add function that updates an object by adding data to that object. Specifically, this function implements an algorithm to add utility prediction to dataset. Function argument data_tb specifies the object to be updated. The function returns Data (a tibble).
 #' @param data_tb Data (a tibble)

@@ -18,19 +18,6 @@ add_tfd_var_to_ds <- function(data_tb,
                                                                       depnt_var_max_val_1L_dbl = depnt_var_max_val_1L_dbl)))
   return(data_tb)
 }
-add_uids_to_tbs_ls <- function (tbs_ls, prefix_1L_chr, id_var_nm_1L_chr = "fkClientID")
-{
-  participant_ids <- paste0(prefix_1L_chr, 1:nrow(tbs_ls[[1]])) %>%
-    sample(nrow(tbs_ls[[1]]))
-  tbs_ls <- purrr::map(tbs_ls, ~{
-    .x %>% dplyr::mutate(`:=`(!!rlang::sym(id_var_nm_1L_chr),
-                              tidyselect::all_of(participant_ids[1:nrow(.x)]))) %>%
-      dplyr::arrange(!!rlang::sym(id_var_nm_1L_chr) %>%
-                       purrr::map_chr(~stringr::str_replace(.x, prefix_1L_chr,
-                                                            "")) %>% as.numeric())
-  }) %>% stats::setNames(names(tbs_ls))
-  return(tbs_ls)
-}
 add_utl_predn_to_new_ds <- function(data_tb,
                                     ingredients_ls,
                                     mdl_nm_1L_chr,
