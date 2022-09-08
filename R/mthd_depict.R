@@ -1,5 +1,5 @@
 #' 
-#' Depict (plot) features of a ready4 framework module (or sub-module)
+#' Depict (plot) features of a dataset
 #' @name depict-SpecificSynopsis
 #' @description depict method applied to SpecificSynopsis
 #' @param x An object of class SpecificSynopsis
@@ -106,7 +106,7 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
     return(plt)
 })
 #' 
-#' Depict (plot) features of a ready4 framework module (or sub-module)
+#' Depict (plot) features of a dataset
 #' @name depict-SpecificProject
 #' @description depict method applied to SpecificProject
 #' @param x An object of class SpecificProject

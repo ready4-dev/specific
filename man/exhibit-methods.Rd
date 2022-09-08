@@ -7,7 +7,7 @@
 \alias{exhibit,specific_predictors-method}
 \alias{exhibit-SpecificProject}
 \alias{exhibit,SpecificProject-method}
-\title{Exhibit (print to console) features of a ready4 framework module (or sub-module)}
+\title{Exhibit features of a dataset by printing them to the R console}
 \usage{
 exhibit.specific_models(
   x,

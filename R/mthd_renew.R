@@ -1,4 +1,4 @@
-#' Renew (update) a ready4 framework module (or sub-module)
+#' Renew values in a dataset
 #' @description renew.specific_models() is a renew method that renews an instance of a class by updating it with new data. This method is implemented for the Candidate models lookup table The function is called for its side effects and does not return a value.
 #' @param x An instance of Candidate models lookup table
 #' @param short_name_chr Short name (a character vector), Default: 'NA'
@@ -48,7 +48,7 @@ renew.specific_models <- function (x, short_name_chr = NA_character_, long_name_
 #' @aliases renew,specific_models-method
 #' @importFrom ready4 renew
 methods::setMethod("renew", methods::className("specific_models", package = "specific"), renew.specific_models)
-#' Renew (update) a ready4 framework module (or sub-module)
+#' Renew values in a dataset
 #' @description renew.specific_predictors() is a renew method that renews an instance of a class by updating it with new data. This method is implemented for the Candidate predictors lookup table The function is called for its side effects and does not return a value.
 #' @param x An instance of Candidate predictors lookup table
 #' @param short_name_chr Short name (a character vector), Default: 'NA'
@@ -94,7 +94,7 @@ renew.specific_predictors <- function (x, short_name_chr = NA_character_, long_n
 #' @importFrom ready4 renew
 methods::setMethod("renew", methods::className("specific_predictors", package = "specific"), renew.specific_predictors)
 #' 
-#' Renew (update) a ready4 framework module (or sub-module)
+#' Renew values in a dataset
 #' @name renew-SpecificProject
 #' @description renew method applied to SpecificProject
 #' @param x An object of class SpecificProject
@@ -117,7 +117,7 @@ methods::setMethod("renew", "SpecificProject", function (x, new_val_xx, type_1L_
     return(x)
 })
 #' 
-#' Renew (update) a ready4 framework module (or sub-module)
+#' Renew values in a dataset
 #' @name renew-SpecificMixed
 #' @description renew method applied to SpecificMixed
 #' @param x An object of class SpecificMixed

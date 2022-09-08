@@ -1,5 +1,5 @@
 #' 
-#' Ratify (validate) a ready4 framework module (or sub-module)
+#' Ratify that a dataset meets validity criteria
 #' @name ratify-SpecificModels
 #' @description ratify method applied to SpecificModels
 #' @param x An object of class SpecificModels

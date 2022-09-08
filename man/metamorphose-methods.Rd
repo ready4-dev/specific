@@ -5,7 +5,7 @@
 \alias{metamorphose,SpecificMixed-method}
 \alias{metamorphose-SpecificConverter}
 \alias{metamorphose,SpecificConverter-method}
-\title{Metamorphose from one ready4 framework module (or sub-module) class to another}
+\title{Metamorphose data from one model module (or sub-module) instance to an instance of a different model module or sub-module}
 \usage{
 \S4method{metamorphose}{SpecificMixed}(x, to_1L_chr = "SpecificSynopsis", rmd_fl_nms_ls = NULL)
 

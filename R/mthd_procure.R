@@ -1,5 +1,5 @@
 #' 
-#' Procure (get) data
+#' Procure items from a dataset
 #' @name procure-SpecificProject
 #' @description procure method applied to SpecificProject
 #' @param x An object of class SpecificProject

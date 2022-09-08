@@ -5,7 +5,7 @@
 \alias{share,SpecificProject-method}
 \alias{share-SpecificSynopsis}
 \alias{share,SpecificSynopsis-method}
-\title{Share (publish) open data}
+\title{Share data via an online repository}
 \usage{
 \S4method{share}{SpecificProject}(x, fl_nm_1L_chr = "mdl_ingredients", repos_Ready4useRepos)
 

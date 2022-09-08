@@ -3,7 +3,7 @@
 \name{ratify-SpecificModels}
 \alias{ratify-SpecificModels}
 \alias{ratify,SpecificModels-method}
-\title{Ratify (validate) a ready4 framework module (or sub-module)}
+\title{Ratify that a dataset meets validity criteria}
 \usage{
 \S4method{ratify}{SpecificModels}(
   x,

@@ -3,7 +3,7 @@
 \name{enhance-SpecificSynopsis}
 \alias{enhance-SpecificSynopsis}
 \alias{enhance,SpecificSynopsis-method}
-\title{Enhance a ready4 framework module (or sub-module) with new data items}
+\title{Enhance a dataset by adding new elements}
 \usage{
 \S4method{enhance}{SpecificSynopsis}(
   x,

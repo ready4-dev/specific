@@ -7,7 +7,7 @@
 \alias{manufacture,SpecificProject-method}
 \alias{manufacture-SpecificSynopsis}
 \alias{manufacture,SpecificSynopsis-method}
-\title{Manufacture a (non ready4 framework) object}
+\title{Manufacture a new object}
 \usage{
 \S4method{manufacture}{SpecificResults}(x, what_1L_chr = "indexed_shareable")
 
@@ -18,7 +18,7 @@
   depnt_var_nms_chr = NA_character_,
   make_cmpst_plt_1L_lgl = F,
   scndry_anlys_params_ls = NULL,
-  version_1L_chr = "0.6",
+  version_1L_chr = "",
   what_1L_chr = "input_params_ls"
 )
 }
@@ -33,7 +33,7 @@
 
 \item{make_cmpst_plt_1L_lgl}{Make composite plot (a logical vector of length one), Default: F}
 
-\item{version_1L_chr}{Version (a character vector of length one), Default: '0.6'}
+\item{version_1L_chr}{Version (a character vector of length one), Default: ''}
 }
 \value{
 Object (an output object of multiple potential types)

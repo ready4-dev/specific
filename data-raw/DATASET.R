@@ -1,8 +1,9 @@
-library(ready4)
+library(ready4fun)
 library(ready4show)
 library(ready4use)
 library(youthvars)
 library(scorz)
+library(cmdstanr)
 fns_env_ls <- ready4fun::read_fns(c("data-raw/fns/","data-raw/mthds/"),
                                   fns_env = new.env(parent = globalenv()))
 x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify Candidate Models For Representing Mental Health Systems" %>% tools::toTitleCase(),
@@ -435,8 +436,6 @@ z <- ready4pack::make_pt_ready4pack_manifest(x,
                                              pkg_ds_ls_ls = datasets_ls) %>%
   ready4pack::ready4pack_manifest()
 z <- ready4::author(z)
-ready4::write_citation_cff(packageDescription("specific"),
-                           citation_chr = readLines("inst/CITATION"))
 # usethis::use_dev_package("ready4",
 #                          type = "Depends",
 #                          remote = "ready4-dev/ready4")

@@ -1,5 +1,5 @@
 #' 
-#' Metamorphose from one ready4 framework module (or sub-module) class to another
+#' Metamorphose data from one model module (or sub-module) instance to an instance of a different model module or sub-module
 #' @name metamorphose-SpecificMixed
 #' @description metamorphose method applied to SpecificMixed
 #' @param x An object of class SpecificMixed
@@ -29,7 +29,7 @@ methods::setMethod("metamorphose", "SpecificMixed", function (x, to_1L_chr = "Sp
     return(y_r4)
 })
 #' 
-#' Metamorphose from one ready4 framework module (or sub-module) class to another
+#' Metamorphose data from one model module (or sub-module) instance to an instance of a different model module or sub-module
 #' @name metamorphose-SpecificConverter
 #' @description metamorphose method applied to SpecificConverter
 #' @param x An object of class SpecificConverter

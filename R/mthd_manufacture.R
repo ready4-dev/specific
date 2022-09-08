@@ -1,5 +1,5 @@
 #' 
-#' Manufacture a (non ready4 framework) object
+#' Manufacture a new object
 #' @name manufacture-SpecificResults
 #' @description manufacture method applied to SpecificResults
 #' @param x An object of class SpecificResults
@@ -35,7 +35,7 @@ methods::setMethod("manufacture", "SpecificResults", function (x, what_1L_chr = 
     return(object_xx)
 })
 #' 
-#' Manufacture a (non ready4 framework) object
+#' Manufacture a new object
 #' @name manufacture-SpecificProject
 #' @description manufacture method applied to SpecificProject
 #' @param x An object of class SpecificProject
@@ -122,14 +122,14 @@ methods::setMethod("manufacture", "SpecificProject", function (x, what_1L_chr = 
     return(object_xx)
 })
 #' 
-#' Manufacture a (non ready4 framework) object
+#' Manufacture a new object
 #' @name manufacture-SpecificSynopsis
 #' @description manufacture method applied to SpecificSynopsis
 #' @param x An object of class SpecificSynopsis
 #' @param depnt_var_nms_chr Dependent variable names (a character vector), Default: 'NA'
 #' @param make_cmpst_plt_1L_lgl Make composite plot (a logical vector of length one), Default: F
 #' @param scndry_anlys_params_ls Secondary analysis parameters (a list), Default: NULL
-#' @param version_1L_chr Version (a character vector of length one), Default: '0.6'
+#' @param version_1L_chr Version (a character vector of length one), Default: ''
 #' @param what_1L_chr What (a character vector of length one), Default: 'input_params_ls'
 #' @return Object (an output object of multiple potential types)
 #' @rdname manufacture-methods
@@ -139,7 +139,7 @@ methods::setMethod("manufacture", "SpecificProject", function (x, what_1L_chr = 
 #' @importFrom ready4 get_from_lup_obj manufacture
 #' @importFrom methods callNextMethod
 methods::setMethod("manufacture", "SpecificSynopsis", function (x, depnt_var_nms_chr = NA_character_, make_cmpst_plt_1L_lgl = F, 
-    scndry_anlys_params_ls = NULL, version_1L_chr = "0.6", what_1L_chr = "input_params_ls") 
+    scndry_anlys_params_ls = NULL, version_1L_chr = "", what_1L_chr = "input_params_ls") 
 {
     if (what_1L_chr %in% c("abstract_args_ls", "ds_descvs_ls", 
         "ds_smry_ls", "input_params_ls", "results_ls", "mdl_smry_ls")) {

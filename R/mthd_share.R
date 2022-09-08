@@ -1,5 +1,5 @@
 #' 
-#' Share (publish) open data
+#' Share data via an online repository
 #' @name share-SpecificProject
 #' @description share method applied to SpecificProject
 #' @param x An object of class SpecificProject
@@ -17,7 +17,7 @@ methods::setMethod("share", "SpecificProject", function (x, fl_nm_1L_chr = "mdl_
     y <- share(repos_Ready4useRepos, obj_to_share_xx = x, fl_nm_1L_chr = fl_nm_1L_chr)
 })
 #' 
-#' Share (publish) open data
+#' Share data via an online repository
 #' @name share-SpecificSynopsis
 #' @description share method applied to SpecificSynopsis
 #' @param x An object of class SpecificSynopsis

@@ -5,7 +5,7 @@
 \alias{depict,SpecificSynopsis-method}
 \alias{depict-SpecificProject}
 \alias{depict,SpecificProject-method}
-\title{Depict (plot) features of a ready4 framework module (or sub-module)}
+\title{Depict (plot) features of a dataset}
 \usage{
 \S4method{depict}{SpecificSynopsis}(
   x,

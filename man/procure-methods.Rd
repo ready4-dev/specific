@@ -3,7 +3,7 @@
 \name{procure-SpecificProject}
 \alias{procure-SpecificProject}
 \alias{procure,SpecificProject-method}
-\title{Procure (get) data}
+\title{Procure items from a dataset}
 \usage{
 \S4method{procure}{SpecificProject}(x, type_1L_chr = "results", what_1L_chr = "prefd_mdls")
 }

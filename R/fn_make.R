@@ -636,6 +636,7 @@ make_covariates_text <- function (results_ls)
 #' @importFrom purrr map flatten_chr map_dfr pluck map_lgl
 #' @importFrom tibble tibble
 #' @importFrom rlang exec
+#' @importFrom dplyr distinct
 #' @keywords internal
 make_cs_ts_ratios_tb <- function (predr_ctgs_ls, mdl_coef_ratios_ls, candidate_predrs_chr = NULL, 
     nbr_of_digits_1L_int = 2L, fn_ls = NULL) 
@@ -665,6 +666,7 @@ make_cs_ts_ratios_tb <- function (predr_ctgs_ls, mdl_coef_ratios_ls, candidate_p
                 purrr::map_lgl(~!identical(intersect(.x, candidate_predrs_chr), 
                   character(0))) %>% unname())
     })
+    cs_ts_ratios_tb <- dplyr::distinct(cs_ts_ratios_tb)
     return(cs_ts_ratios_tb)
 }
 #' Make data availability text
@@ -2025,13 +2027,13 @@ make_results_ls <- function (spine_of_results_ls = NULL, abstract_args_ls = NULL
             purrr::map_chr(~ifelse(.x %in% spine_of_results_ls$var_nm_change_lup$old_nms_chr, 
                 .x %>% ready4::get_from_lup_obj(data_lookup_tb = spine_of_results_ls$var_nm_change_lup, 
                   match_var_nm_1L_chr = "old_nms_chr", target_var_nm_1L_chr = "new_nms_chr", 
-                  evaluate_1L_lgl = F), .x)), r_version_1L_chr = paste0(spine_of_results_ls$outp_smry_ls$session_data_ls$R.version$major, 
-            ".", spine_of_results_ls$outp_smry_ls$session_data_ls$R.version$minor), 
+                  evaluate_1L_lgl = F), .x)), r_version_1L_chr = paste0(spine_of_results_ls$outp_smry_ls$session_ls$R.version$major, 
+            ".", spine_of_results_ls$outp_smry_ls$session_ls$R.version$minor), 
         study_descs_ls = spine_of_results_ls$study_descs_ls, 
         tables_ls = make_ss_tbls_ls(spine_of_results_ls$outp_smry_ls, 
             mdls_smry_tbls_ls = mdls_smry_tbls_ls, covars_mdls_ls = covars_mdls_ls, 
             descv_tbls_ls = descv_tbls_ls, nbr_of_digits_1L_int = spine_of_results_ls$nbr_of_digits_1L_int), 
-        ttu_cs_ls = ttu_cs_ls, ttu_lngl_ls = ttu_lngl_ls, ttu_version_1L_chr = spine_of_results_ls$outp_smry_ls$session_data_ls$otherPkgs$specific$Version, 
+        ttu_cs_ls = ttu_cs_ls, ttu_lngl_ls = ttu_lngl_ls, ttu_version_1L_chr = spine_of_results_ls$outp_smry_ls$session_ls$otherPkgs$TTU$Version, 
         var_nm_change_lup = spine_of_results_ls$var_nm_change_lup, 
         version_1L_chr = version_1L_chr)
     return(results_ls)
@@ -2886,12 +2888,12 @@ make_valid_params_ls_ls <- function (analysis_core_params_ls, ds_tb, path_params
 #' @return Text (a character vector of length one)
 #' @rdname make_within_between_ratios_text
 #' @export 
-#' @importFrom dplyr filter
+#' @importFrom dplyr distinct filter
 #' @importFrom purrr pmap_chr
 #' @importFrom stringi stri_replace_last
 make_within_between_ratios_text <- function (results_ls, exclude_covars_1L_lgl = F) 
 {
-    tb <- results_ls$ttu_lngl_ls$cs_ts_ratios_tb
+    tb <- results_ls$ttu_lngl_ls$cs_ts_ratios_tb %>% dplyr::distinct()
     if (exclude_covars_1L_lgl) 
         tb <- tb %>% dplyr::filter(contains_cndt_predr_lgl)
     text_1L_chr <- tb %>% purrr::pmap_chr(~paste0(..2, " for ", 

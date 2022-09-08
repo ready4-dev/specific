@@ -593,6 +593,7 @@ make_cs_ts_ratios_tb <- function(predr_ctgs_ls,
                               purrr::map_lgl(~!identical(intersect(.x, candidate_predrs_chr), character(0))) %>% unname()
                             )
              })
+  cs_ts_ratios_tb <- dplyr::distinct(cs_ts_ratios_tb)
   return(cs_ts_ratios_tb)
 }
 make_data_availability_text <- function(results_ls){
@@ -1902,9 +1903,9 @@ make_results_ls <- function(spine_of_results_ls = NULL, # CORE OF S4 Classes - r
                                                                             target_var_nm_1L_chr = "new_nms_chr",
                                                                             evaluate_1L_lgl = F),
                                               .x)),
-                     r_version_1L_chr = paste0(spine_of_results_ls$outp_smry_ls$session_data_ls$R.version$major,
+                     r_version_1L_chr = paste0(spine_of_results_ls$outp_smry_ls$session_ls$R.version$major,
                                                ".",
-                                               spine_of_results_ls$outp_smry_ls$session_data_ls$R.version$minor),
+                                               spine_of_results_ls$outp_smry_ls$session_ls$R.version$minor),
                      study_descs_ls = spine_of_results_ls$study_descs_ls,
                      tables_ls = make_ss_tbls_ls(spine_of_results_ls$outp_smry_ls,
                                                  mdls_smry_tbls_ls = mdls_smry_tbls_ls,
@@ -1913,7 +1914,7 @@ make_results_ls <- function(spine_of_results_ls = NULL, # CORE OF S4 Classes - r
                                                  nbr_of_digits_1L_int = spine_of_results_ls$nbr_of_digits_1L_int),
                      ttu_cs_ls = ttu_cs_ls,
                      ttu_lngl_ls = ttu_lngl_ls,
-                     ttu_version_1L_chr = spine_of_results_ls$outp_smry_ls$session_data_ls$otherPkgs$specific$Version,
+                     ttu_version_1L_chr = spine_of_results_ls$outp_smry_ls$session_ls$otherPkgs$TTU$Version,
                      var_nm_change_lup = spine_of_results_ls$var_nm_change_lup,
                      version_1L_chr = version_1L_chr)
   return(results_ls)
@@ -2633,7 +2634,8 @@ make_valid_params_ls_ls <- function(analysis_core_params_ls, # Generalise utilit
 }
 make_within_between_ratios_text <- function(results_ls,
                                             exclude_covars_1L_lgl = F){
-  tb <- results_ls$ttu_lngl_ls$cs_ts_ratios_tb
+  tb <- results_ls$ttu_lngl_ls$cs_ts_ratios_tb %>%
+    dplyr::distinct()
   if(exclude_covars_1L_lgl)
     tb <- tb %>%
       dplyr::filter(contains_cndt_predr_lgl)

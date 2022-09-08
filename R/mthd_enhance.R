@@ -1,5 +1,5 @@
 #' 
-#' Enhance a ready4 framework module (or sub-module) with new data items
+#' Enhance a dataset by adding new elements
 #' @name enhance-SpecificSynopsis
 #' @description enhance method applied to SpecificSynopsis
 #' @param x An object of class SpecificSynopsis

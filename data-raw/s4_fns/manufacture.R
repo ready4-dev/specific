@@ -2,7 +2,7 @@ manufacture_SpecificSynopsis <- function(x,
                                          depnt_var_nms_chr = NA_character_,
                                          make_cmpst_plt_1L_lgl = F,
                                          scndry_anlys_params_ls = NULL,
-                                         version_1L_chr = "0.6",
+                                         version_1L_chr = "",
                                          what_1L_chr = "input_params_ls"){
    if(what_1L_chr %in% c("abstract_args_ls","ds_descvs_ls","ds_smry_ls","input_params_ls","results_ls","mdl_smry_ls")){
      y_SpecificMixed <- SpecificMixed(a_YouthvarsProfile = x@d_YouthvarsProfile,
