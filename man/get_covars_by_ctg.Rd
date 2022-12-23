@@ -2,7 +2,7 @@
 % Please edit documentation in R/fn_get.R
 \name{get_covars_by_ctg}
 \alias{get_covars_by_ctg}
-\title{Get covariates by category categories}
+\title{Get covariates by category}
 \usage{
 get_covars_by_ctg(results_ls, collapse_1L_lgl = F)
 }
@@ -12,8 +12,8 @@ get_covars_by_ctg(results_ls, collapse_1L_lgl = F)
 \item{collapse_1L_lgl}{Collapse (a logical vector of length one), Default: F}
 }
 \value{
-Covariates by category categories (a list)
+Covariates by category (a list)
 }
 \description{
-get_covars_by_ctg() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get covariates by category categories. Function argument results_ls specifies the where to look for the required object. The function returns Covariates by category categories (a list).
+get_covars_by_ctg() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get covariates by category. Function argument results_ls specifies the where to look for the required object. The function returns Covariates by category (a list).
 }

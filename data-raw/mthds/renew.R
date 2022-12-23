@@ -15,7 +15,7 @@ renew.specific_models <- function(x,
                                   filter_cdn_1L_chr = NA_character_,
                                   new_cases_r3 = NULL,
                                   new_ready4_dict_r3 = deprecated(),
-                                  slice_idxs_int = NA_integer_){
+                                  slice_indcs_int = NA_integer_){
   if(lifecycle::is_present(new_ready4_dict_r3)) {
     lifecycle::deprecate_warn("0.0.0.9211",
                               "ready4use::renew.ready4use_dictionary(new_ready4_dict_r3)",
@@ -26,7 +26,7 @@ renew.specific_models <- function(x,
                             filter_cdn_1L_chr = filter_cdn_1L_chr,
                             fn = renew.specific_models, ## ## ##
                             fn_env_ls = fn_env_ls,
-                            slice_idxs_int = slice_idxs_int)
+                            slice_indcs_int = slice_indcs_int)
   if(!is.null(new_cases_r3)){
     x <- ready4::add_lups(x,
                           new_lup = new_cases_r3,
@@ -47,7 +47,7 @@ renew.specific_predictors <- function(x,
                                       filter_cdn_1L_chr = NA_character_,
                                       new_cases_r3 = NULL,
                                       new_ready4_dict_r3 = deprecated(),
-                                      slice_idxs_int = NA_integer_){
+                                      slice_indcs_int = NA_integer_){
   if(lifecycle::is_present(new_ready4_dict_r3)) {
     lifecycle::deprecate_warn("0.0.0.9211",
                               "ready4use::renew.ready4use_dictionary(new_ready4_dict_r3)",
@@ -58,7 +58,7 @@ renew.specific_predictors <- function(x,
                             filter_cdn_1L_chr = filter_cdn_1L_chr,
                             fn = renew.specific_predictors, ## ## ##
                             fn_env_ls = fn_env_ls,
-                            slice_idxs_int = slice_idxs_int)
+                            slice_indcs_int = slice_indcs_int)
   if(!is.null(new_cases_r3)){
     x <- ready4::add_lups(x,
                           new_lup = new_cases_r3,

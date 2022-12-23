@@ -22,7 +22,7 @@
   label_y_1L_dbl = 0.9,
   label_size_1L_dbl = 30,
   legend_sclg_1L_dbl = 2,
-  mdl_idxs_int = 1:2,
+  mdl_indcs_int = 1:2,
   rel_heights_dbl = c(4, 10, 1),
   scale_dbl = c(0.9, 0.9, 0.9),
   timepoint_old_nms_chr = NA_character_,
@@ -37,7 +37,7 @@
 
 \S4method{depict}{SpecificProject}(
   x,
-  mdl_idxs_int = NULL,
+  mdl_indcs_int = NULL,
   output_type_1L_chr = "HTML",
   plt_indcs_int = NULL
 )
@@ -71,7 +71,7 @@
 
 \item{legend_sclg_1L_dbl}{Legend scaling (a double vector of length one), Default: 2}
 
-\item{mdl_idxs_int}{Model indices (an integer vector), Default: NULL}
+\item{mdl_indcs_int}{Model indices (an integer vector), Default: NULL}
 
 \item{rel_heights_dbl}{Rel heights (a double vector), Default: c(4, 10, 1)}
 
@@ -95,7 +95,7 @@
 
 \item{output_type_1L_chr}{Output type (a character vector of length one), Default: 'HTML'}
 
-\item{plt_indcs_int}{Plot indcs (an integer vector), Default: NULL}
+\item{plt_indcs_int}{Plot indices (an integer vector), Default: NULL}
 }
 \value{
 Plot (a plot)

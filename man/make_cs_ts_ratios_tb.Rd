@@ -13,7 +13,7 @@ make_cs_ts_ratios_tb(
 )
 }
 \arguments{
-\item{predr_ctgs_ls}{Predictor category categoriess (a list)}
+\item{predr_ctgs_ls}{Predictor categories (a list)}
 
 \item{mdl_coef_ratios_ls}{Model coefficient ratios (a list)}
 

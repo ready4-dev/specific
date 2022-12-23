@@ -121,7 +121,7 @@
 ^data-raw/draft_vignettes/V_02\.Rmd$
 ^data-raw/Fake/Output/_Descriptives/combined_utl\.png$
 ^data-raw/Fake/Output/_Descriptives/descv_tbls_ls\.RDS$
-^data-raw/Fake/Output/_Descriptives/ll_sub_ttl\.png$
+^data-raw/Fake/Output/_Descriptives/ll_sub_tot\.png$
 ^data-raw/Fake/Output/_Descriptives/qstn_rspns\.png$
 ^data-raw/Fake/Output/_Descriptives/utl_by_rnd\.png$
 ^data-raw/Fake/Output/_Descriptives/wtd_sub_tots\.png$
@@ -152,3 +152,4 @@
 ^data-raw/s4_fns/authorData\.R$
 ^data-raw/draft_vignettes/MORE_WIP\.R$
 ^data-raw/s4_fns/enhance\.R$
+^data-raw/Fake/Output/_Descriptives/ll_sub_ttl\.png$

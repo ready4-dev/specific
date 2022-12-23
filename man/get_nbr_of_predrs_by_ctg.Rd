@@ -2,7 +2,7 @@
 % Please edit documentation in R/fn_get.R
 \name{get_nbr_of_predrs_by_ctg}
 \alias{get_nbr_of_predrs_by_ctg}
-\title{Get number of predictors by category categories}
+\title{Get number of predictors by category}
 \usage{
 get_nbr_of_predrs_by_ctg(results_ls)
 }
@@ -10,8 +10,8 @@ get_nbr_of_predrs_by_ctg(results_ls)
 \item{results_ls}{Results (a list)}
 }
 \value{
-Predictors by category categories (a character vector of length one)
+Predictors by category (a character vector of length one)
 }
 \description{
-get_nbr_of_predrs_by_ctg() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get number of predictors by category categories. Function argument results_ls specifies the where to look for the required object. The function returns Predictors by category categories (a character vector of length one).
+get_nbr_of_predrs_by_ctg() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get number of predictors by category. Function argument results_ls specifies the where to look for the required object. The function returns Predictors by category (a character vector of length one).
 }

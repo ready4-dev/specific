@@ -80,11 +80,11 @@ get_conclusion_text <- function (results_ls)
     text_1L_chr <- results_ls$study_descs_ls$conclusion_1L_chr
     return(text_1L_chr)
 }
-#' Get covariate category categoriess
-#' @description get_covar_ctgs() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get covariate category categoriess. Function argument results_ls specifies the where to look for the required object. The function returns Covariate category categoriess (a character vector).
+#' Get covariate categories
+#' @description get_covar_ctgs() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get covariate categories. Function argument results_ls specifies the where to look for the required object. The function returns Covariate categories (a character vector).
 #' @param results_ls Results (a list)
 #' @param collapse_1L_lgl Collapse (a logical vector of length one), Default: T
-#' @return Covariate category categoriess (a character vector)
+#' @return Covariate categories (a character vector)
 #' @rdname get_covar_ctgs
 #' @export 
 #' @importFrom stringi stri_replace_last_fixed
@@ -98,11 +98,11 @@ get_covar_ctgs <- function (results_ls, collapse_1L_lgl = T)
     }
     return(covar_ctgs_chr)
 }
-#' Get covariates by category categories
-#' @description get_covars_by_ctg() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get covariates by category categories. Function argument results_ls specifies the where to look for the required object. The function returns Covariates by category categories (a list).
+#' Get covariates by category
+#' @description get_covars_by_ctg() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get covariates by category. Function argument results_ls specifies the where to look for the required object. The function returns Covariates by category (a list).
 #' @param results_ls Results (a list)
 #' @param collapse_1L_lgl Collapse (a logical vector of length one), Default: F
-#' @return Covariates by category categories (a list)
+#' @return Covariates by category (a list)
 #' @rdname get_covars_by_ctg
 #' @export 
 #' @importFrom purrr map map2
@@ -311,10 +311,10 @@ get_nbr_of_predrs <- function (results_ls, as_words_1L_lgl = T)
         nbr_of_predrs_xx <- nbr_of_predrs_xx %>% xfun::numbers_to_words()
     return(nbr_of_predrs_xx)
 }
-#' Get number of predictors by category categories
-#' @description get_nbr_of_predrs_by_ctg() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get number of predictors by category categories. Function argument results_ls specifies the where to look for the required object. The function returns Predictors by category categories (a character vector of length one).
+#' Get number of predictors by category
+#' @description get_nbr_of_predrs_by_ctg() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get number of predictors by category. Function argument results_ls specifies the where to look for the required object. The function returns Predictors by category (a character vector of length one).
 #' @param results_ls Results (a list)
-#' @return Predictors by category categories (a character vector of length one)
+#' @return Predictors by category (a character vector of length one)
 #' @rdname get_nbr_of_predrs_by_ctg
 #' @export 
 #' @importFrom purrr map_lgl map2_chr
@@ -395,11 +395,11 @@ get_popl_descvs <- function (results_ls)
         " and")
     return(popl_descvs_1L_chr)
 }
-#' Get predictor category categoriess
-#' @description get_predr_ctgs() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get predictor category categoriess. Function argument results_ls specifies the where to look for the required object. The function returns Predictor category categoriess (a character vector).
+#' Get predictor categories
+#' @description get_predr_ctgs() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get predictor categories. Function argument results_ls specifies the where to look for the required object. The function returns Predictor categories (a character vector).
 #' @param results_ls Results (a list)
 #' @param collapse_1L_lgl Collapse (a logical vector of length one), Default: T
-#' @return Predictor category categoriess (a character vector)
+#' @return Predictor categories (a character vector)
 #' @rdname get_predr_ctgs
 #' @export 
 #' @importFrom purrr map_int
@@ -416,13 +416,13 @@ get_predr_ctgs <- function (results_ls, collapse_1L_lgl = T)
     }
     return(predr_ctgs_chr)
 }
-#' Get predictors by category categories
-#' @description get_predrs_by_ctg() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get predictors by category categories. Function argument results_ls specifies the where to look for the required object. The function returns Predictors by category categories (a list).
+#' Get predictors by category
+#' @description get_predrs_by_ctg() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get predictors by category. Function argument results_ls specifies the where to look for the required object. The function returns Predictors by category (a list).
 #' @param results_ls Results (a list)
 #' @param long_desc_1L_lgl Long description (a logical vector of length one), Default: F
 #' @param transform_1L_lgl Transform (a logical vector of length one), Default: F
 #' @param collapse_1L_lgl Collapse (a logical vector of length one), Default: F
-#' @return Predictors by category categories (a list)
+#' @return Predictors by category (a list)
 #' @rdname get_predrs_by_ctg
 #' @export 
 #' @importFrom purrr map_lgl map map2 map_chr flatten_chr

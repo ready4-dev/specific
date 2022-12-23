@@ -15,7 +15,7 @@ make_cmpst_sctr_and_dnst_plt(
   label_x_1L_dbl = 0.1,
   label_y_1L_dbl = 0.9,
   label_size_1L_dbl = 22,
-  mdl_idxs_int = 1:2,
+  mdl_indcs_int = 1:2,
   use_png_fls_1L_lgl = T
 )
 }
@@ -40,7 +40,7 @@ make_cmpst_sctr_and_dnst_plt(
 
 \item{label_size_1L_dbl}{Label size (a double vector of length one), Default: 22}
 
-\item{mdl_idxs_int}{Model indices (an integer vector), Default: 1:2}
+\item{mdl_indcs_int}{Model indices (an integer vector), Default: 1:2}
 
 \item{use_png_fls_1L_lgl}{Use png files (a logical vector of length one), Default: T}
 }

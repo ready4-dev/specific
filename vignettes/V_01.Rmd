@@ -151,12 +151,12 @@ exhibitSlot(X,
             "b_SpecificParameters@candidate_mdls_lup")
 ```
 
-We can choose to select just a subset of these to explore using the `renewSlot` method. As this is an illustrative example, we have restricted the models we will explore to just four types, passing the relevant row numbers to the `slice_idxs_int` argument.
+We can choose to select just a subset of these to explore using the `renewSlot` method. As this is an illustrative example, we have restricted the models we will explore to just four types, passing the relevant row numbers to the `slice_indcs_int` argument.
 
 ```{r warning=F}
 X <- renewSlot(X,
                "b_SpecificParameters@candidate_mdls_lup",
-               slice_idxs_int = c(1L,5L,7L,8L))
+               slice_indcs_int = c(1L,5L,7L,8L))
 ```
 
 ### Other parameters
@@ -242,7 +242,7 @@ plt_nms_chr <- paste0("Plot ",1:5) # Make fn
 ```{r, eval = F, fig.cap=plt_nms_chr, out.width = "400px", echo=FALSE, message=F}
 # Also written to that sub-directory are a number of plots for each model, that can be inspected using the `depict` method.
 depict(X,
-       mdl_idxs_int = 2)
+       mdl_indcs_int = 2)
 ```
 
 The `investigate` method also outputs a table summarising the performance of each of the candidate models.

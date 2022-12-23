@@ -120,14 +120,14 @@ write_mdl_plts <- function (data_tb, model_mdl, mdl_fl_nm_1L_chr = "OLS_NTF", de
                             tfmn_1L_chr = "NTF", predr_var_nm_1L_chr, predr_var_desc_1L_chr,
     predr_vals_dbl, covar_var_nms_chr = NA_character_, path_to_write_to_1L_chr,
     predn_type_1L_chr = NULL, tfmn_for_bnml_1L_lgl = F, family_1L_chr = NA_character_,
-    plt_idxs_int = 1:5)
+    plt_indcs_int = 1:5)
 {
     data_tb <- transform_ds_for_mdlng(data_tb, depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
         predr_var_nm_1L_chr = predr_var_nm_1L_chr, covar_var_nms_chr = covar_var_nms_chr)
     tfd_data_tb <- transform_data_tb_for_cmprsn(data_tb, model_mdl = model_mdl, depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
         predn_type_1L_chr = predn_type_1L_chr, tfmn_for_bnml_1L_lgl = tfmn_for_bnml_1L_lgl,
         family_1L_chr = family_1L_chr, tfmn_1L_chr = tfmn_1L_chr)
-    if (1 %in% plt_idxs_int) {
+    if (1 %in% plt_indcs_int) {
         predn_ds_tb <- make_predn_ds_with_one_predr(model_mdl, depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
             tfmn_1L_chr = tfmn_1L_chr, predr_var_nm_1L_chr = predr_var_nm_1L_chr,
             predr_vals_dbl = predr_vals_dbl, predn_type_1L_chr = predn_type_1L_chr)
@@ -138,7 +138,7 @@ write_mdl_plts <- function (data_tb, model_mdl, mdl_fl_nm_1L_chr = "OLS_NTF", de
                                        plot_auto_lm,
                                        plot_obsd_predd_dnst,
                                        plot_obsd_predd_dnst,
-                                       plot_sctr_plt_cmprsn)[plt_idxs_int],
+                                       plot_sctr_plt_cmprsn)[plt_indcs_int],
         fn_args_ls_ls = list(list(data_tb = data_tb,
                                   predn_ds_tb = predn_ds_tb,
                                   predr_var_nm_1L_chr = predr_var_nm_1L_chr,
@@ -152,7 +152,7 @@ write_mdl_plts <- function (data_tb, model_mdl, mdl_fl_nm_1L_chr = "OLS_NTF", de
                              list(tfd_data_tb = transform_data_tb_for_cmprsn(data_tb,
                                                                              model_mdl = model_mdl,
                                                                              depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
-                                                                             new_data_is_1L_chr = ifelse(!4 %in% plt_idxs_int,
+                                                                             new_data_is_1L_chr = ifelse(!4 %in% plt_indcs_int,
                                                                                                      "Predicted", "Simulated"),
                                                                              predn_type_1L_chr = NULL,
                                                                              tfmn_for_bnml_1L_lgl = tfmn_for_bnml_1L_lgl,
@@ -162,11 +162,11 @@ write_mdl_plts <- function (data_tb, model_mdl, mdl_fl_nm_1L_chr = "OLS_NTF", de
                                   depnt_var_desc_1L_chr = depnt_var_desc_1L_chr,
                                   predd_val_var_nm_1L_chr = "Simulated"),
                              list(tfd_data_tb = tfd_data_tb,
-                                  depnt_var_nm_1L_chr = depnt_var_nm_1L_chr))[plt_idxs_int],
+                                  depnt_var_nm_1L_chr = depnt_var_nm_1L_chr))[plt_indcs_int],
         plt_nm_sfx_chr = c("_LNR_CMPRSN",
-            "_AUTOPLT", "_PRED_DNSTY", "_SIM_DNSTY", "_PRED_SCTR")[plt_idxs_int],
+            "_AUTOPLT", "_PRED_DNSTY", "_SIM_DNSTY", "_PRED_SCTR")[plt_indcs_int],
         size_ls = list(c(6, 6), c(4, 7), c(6, 6), c(6, 6), c(6,
-            6))[plt_idxs_int]), ~ ready4show::write_mdl_plt_fl(plt_fn = ..1,
+            6))[plt_indcs_int]), ~ ready4show::write_mdl_plt_fl(plt_fn = ..1,
         fn_args_ls = ..2, path_to_write_to_1L_chr = path_to_write_to_1L_chr,
         plt_nm_1L_chr = paste0(mdl_fl_nm_1L_chr, ifelse(!is.na(covar_var_nms_chr[1]),
             paste("_", paste0(covar_var_nms_chr[1:min(length(covar_var_nms_chr),
@@ -369,7 +369,7 @@ write_mdl_type_multi_outps <- function (data_tb, folds_1L_int = 10, predrs_var_n
     start_1L_chr = NULL, mdl_type_1L_chr,
     depnt_var_nm_1L_chr = "utl_total_w",# remove default
     path_to_write_to_1L_chr, new_dir_nm_1L_chr, mdl_types_lup = NULL, fl_nm_pfx_1L_chr = "C_PREDR",
-    plt_idxs_int = c(3, 5))
+    plt_indcs_int = c(3, 5))
 {
     if (is.null(mdl_types_lup))
         utils::data("mdl_types_lup", envir = environment())
@@ -387,7 +387,7 @@ write_mdl_type_multi_outps <- function (data_tb, folds_1L_int = 10, predrs_var_n
                 predr_vals_dbl = NA_real_, covar_var_nms_chr = covar_var_nms_chr,
                 mdl_type_1L_chr = mdl_type_1L_chr, path_to_write_to_1L_chr = output_dir_1L_chr,
                 mdl_types_lup = mdl_types_lup, mdl_fl_nm_1L_chr = paste0(fl_nm_pfx_1L_chr,
-                  "_", .x, "_", mdl_type_1L_chr), plt_idxs_int = plt_idxs_int)
+                  "_", .x, "_", mdl_type_1L_chr), plt_indcs_int = plt_indcs_int)
             if (!is.null(folds_1L_int)) {
                 mdl_smry_tb <- mdl_smry_tb %>% dplyr::select((-Model)) %>%
                   dplyr::mutate(Predictor = .x) %>% dplyr::select(Predictor,
@@ -405,7 +405,7 @@ write_mdl_type_sngl_outps <- function (data_tb, folds_1L_int = 10, depnt_var_nm_
     start_1L_chr = NULL, tfmn_1L_chr = "NTF", predr_var_nm_1L_chr,
     predr_var_desc_1L_chr, predr_vals_dbl, covar_var_nms_chr = NA_character_,
     mdl_type_1L_chr = "OLS_NTF", mdl_types_lup = NULL, path_to_write_to_1L_chr,
-    mdl_fl_nm_1L_chr, plt_idxs_int = NA_integer_)
+    mdl_fl_nm_1L_chr, plt_indcs_int = NA_integer_)
 {
     if (is.null(mdl_types_lup))
         utils::data("mdl_types_lup", envir = environment())
@@ -418,11 +418,11 @@ write_mdl_type_sngl_outps <- function (data_tb, folds_1L_int = 10, depnt_var_nm_
     predn_type_1L_chr <- arg_vals_chr[3]
     if (is.na(predn_type_1L_chr))
         predn_type_1L_chr <- NULL
-    if (is.na(plt_idxs_int[1])) {
-        plt_idxs_int <- 1:5
+    if (is.na(plt_indcs_int[1])) {
+        plt_indcs_int <- 1:5
         if (!is.na(control_1L_chr)) {
             if (control_1L_chr %>% startsWith("betareg"))
-                plt_idxs_int <- c(1, 3, 4, 5)
+                plt_indcs_int <- c(1, 3, 4, 5)
         }
     }
     tfmn_for_bnml_1L_lgl <- ready4::get_from_lup_obj(mdl_types_lup,
@@ -442,7 +442,7 @@ write_mdl_type_sngl_outps <- function (data_tb, folds_1L_int = 10, depnt_var_nm_
         predr_vals_dbl = predr_vals_dbl, covar_var_nms_chr = covar_var_nms_chr,
         path_to_write_to_1L_chr = path_to_write_to_1L_chr, predn_type_1L_chr = predn_type_1L_chr,
         tfmn_for_bnml_1L_lgl = tfmn_for_bnml_1L_lgl, family_1L_chr = family_1L_chr,
-        plt_idxs_int = plt_idxs_int)
+        plt_indcs_int = plt_indcs_int)
     if (!is.null(folds_1L_int)) {
         smry_of_one_predr_mdl_tb <- make_smry_of_mdl_outp(data_tb,
             #model_mdl = model_mdl,
@@ -798,8 +798,8 @@ write_shareable_mdls <- function (outp_smry_ls,
   # incld_mdl_paths_chr <- incld_mdl_paths_chr[!is.na(incld_mdl_paths_chr)]
   # ranked_mdl_nms_chr <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr()
   # sorted_mdl_nms_chr <- sort(ranked_mdl_nms_chr)
-  # rank_idxs_int <- purrr::map_int(sorted_mdl_nms_chr,~which(ranked_mdl_nms_chr==.x))
-  # incld_mdl_paths_chr <- incld_mdl_paths_chr[order(rank_idxs_int)]
+  # rank_indcs_int <- purrr::map_int(sorted_mdl_nms_chr,~which(ranked_mdl_nms_chr==.x))
+  # incld_mdl_paths_chr <- incld_mdl_paths_chr[order(rank_indcs_int)]
   incld_mdl_paths_chr <- make_incld_mdl_paths(outp_smry_ls)
   fake_ds_tb <- make_fake_ts_data(outp_smry_ls, depnt_vars_are_NA_1L_lgl = F)
   mdl_types_lup <- outp_smry_ls$mdl_types_lup
@@ -990,7 +990,7 @@ write_sngl_predr_multi_mdls_outps <- function (data_tb, mdl_types_chr, predr_var
     covar_var_nms_chr = NA_character_,
     depnt_var_nm_1L_chr = "utl_total_w", # Remove default
     folds_1L_int = 10, mdl_types_lup = NULL, fl_nm_pfx_1L_chr = "A_RT_",
-    plt_idxs_int = NA_integer_, dictionary_tb)
+    plt_indcs_int = NA_integer_, dictionary_tb)
 {
     if (is.null(mdl_types_lup))
         utils::data("mdl_types_lup", envir = environment())
@@ -1018,7 +1018,7 @@ write_sngl_predr_multi_mdls_outps <- function (data_tb, mdl_types_chr, predr_var
                 predr_vals_dbl = predr_vals_dbl, covar_var_nms_chr = covar_var_nms_chr,
                 mdl_type_1L_chr = .x, path_to_write_to_1L_chr = output_dir_1L_chr,
                 mdl_types_lup = mdl_types_lup, mdl_fl_nm_1L_chr = paste0(fl_nm_pfx_1L_chr,
-                  predr_var_nm_1L_chr, "_", .x), plt_idxs_int = plt_idxs_int)
+                  predr_var_nm_1L_chr, "_", .x), plt_indcs_int = plt_indcs_int)
         })
     if (!is.null(folds_1L_int))
         smry_of_sngl_predr_mdls_tb <- smry_of_sngl_predr_mdls_tb %>%

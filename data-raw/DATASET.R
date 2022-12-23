@@ -6,8 +6,8 @@ library(scorz)
 library(cmdstanr)
 fns_env_ls <- ready4fun::read_fns(c("data-raw/fns/","data-raw/mthds/"),
                                   fns_env = new.env(parent = globalenv()))
-x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify Candidate Models For Representing Mental Health Systems" %>% tools::toTitleCase(),
-                                 pkg_desc_1L_chr = "Tools to standardise the formalising and solving of inverse problems as part of the development of open and modular mental health systems.
+x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify Inverse Problems To Solve With Ready4" %>% tools::toTitleCase(),
+                                 pkg_desc_1L_chr = "Tools to standardise the formalising and solving of inverse problems with the ready4 youth mental health systems model (https://www.ready4-dev.com/).
   This development version of the specific package has been made available as part of the process of testing and documenting the package.
                             If you have any questions, please contact the authors (matthew.hamilton@orygen.org.au).",
                                  authors_prsn = c(utils::person(given = "Matthew",family = "Hamilton",email = "matthew.hamilton@orygen.org.au", role = c("aut", "cre"),comment = c(ORCID = "0000-0001-7407-9194")),
@@ -436,12 +436,7 @@ z <- ready4pack::make_pt_ready4pack_manifest(x,
                                              pkg_ds_ls_ls = datasets_ls) %>%
   ready4pack::ready4pack_manifest()
 z <- ready4::author(z)
-# usethis::use_dev_package("ready4",
-#                          type = "Depends",
-#                          remote = "ready4-dev/ready4")
-# usethis::use_dev_package("youthvars",
-#                          type = "Depends",
-#                          remote = "ready4-dev/youthvars")
+ready4::write_extra_pkgs_to_actions()
 usethis::use_package("betareg",
                      type = "Suggests")
 usethis::use_dev_package("cmdstanr",
@@ -452,4 +447,10 @@ usethis::use_package("rstan",
 usethis::use_dev_package("scorz",
                          type = "Imports",
                          remote = "ready4-dev/scorz")
-# devtools::build_vignettes()
+devtools::build_vignettes()
+# usethis::use_dev_package("ready4",
+#                          type = "Depends",
+#                          remote = "ready4-dev/ready4")
+# usethis::use_dev_package("youthvars",
+#                          type = "Depends",
+#                          remote = "ready4-dev/youthvars")

@@ -9,7 +9,7 @@ make_mdl_smry_elmt_tbl(mat, ctg_chr)
 \arguments{
 \item{mat}{Matrix (a matrix)}
 
-\item{ctg_chr}{Category categories (a character vector)}
+\item{ctg_chr}{Category (a character vector)}
 }
 \value{
 Model element sum (a tibble)

@@ -18,7 +18,7 @@ write_mdl_type_sngl_outps(
   mdl_types_lup = NULL,
   path_to_write_to_1L_chr,
   mdl_fl_nm_1L_chr,
-  plt_idxs_int = NA_integer_
+  plt_indcs_int = NA_integer_
 )
 }
 \arguments{
@@ -48,7 +48,7 @@ write_mdl_type_sngl_outps(
 
 \item{mdl_fl_nm_1L_chr}{Model file name (a character vector of length one)}
 
-\item{plt_idxs_int}{Plot indices (an integer vector), Default: NA}
+\item{plt_indcs_int}{Plot indices (an integer vector), Default: NA}
 }
 \value{
 Summary of one predictor model (a tibble)

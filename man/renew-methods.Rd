@@ -29,7 +29,7 @@ renew.specific_models(
   filter_cdn_1L_chr = NA_character_,
   new_cases_r3 = NULL,
   new_ready4_dict_r3 = deprecated(),
-  slice_idxs_int = NA_integer_
+  slice_indcs_int = NA_integer_
 )
 
 \S4method{renew}{specific_models}(
@@ -50,7 +50,7 @@ renew.specific_models(
   filter_cdn_1L_chr = NA_character_,
   new_cases_r3 = NULL,
   new_ready4_dict_r3 = deprecated(),
-  slice_idxs_int = NA_integer_
+  slice_indcs_int = NA_integer_
 )
 
 renew.specific_predictors(
@@ -67,7 +67,7 @@ renew.specific_predictors(
   filter_cdn_1L_chr = NA_character_,
   new_cases_r3 = NULL,
   new_ready4_dict_r3 = deprecated(),
-  slice_idxs_int = NA_integer_
+  slice_indcs_int = NA_integer_
 )
 
 \S4method{renew}{specific_predictors}(
@@ -84,7 +84,7 @@ renew.specific_predictors(
   filter_cdn_1L_chr = NA_character_,
   new_cases_r3 = NULL,
   new_ready4_dict_r3 = deprecated(),
-  slice_idxs_int = NA_integer_
+  slice_indcs_int = NA_integer_
 )
 
 \S4method{renew}{SpecificProject}(x, new_val_xx, type_1L_chr = "results", what_1L_chr = "prefd_mdls")
@@ -132,7 +132,7 @@ renew.specific_predictors(
 
 \item{new_ready4_dict_r3}{New ready4 dictionary (a ready4 S3), Default: deprecated()}
 
-\item{slice_idxs_int}{Slice indices (an integer vector), Default: NA}
+\item{slice_indcs_int}{Slice indices (an integer vector), Default: NA}
 
 \item{min_val_dbl}{Minimum value (a double vector), Default: NA}
 

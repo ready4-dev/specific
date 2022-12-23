@@ -32,7 +32,7 @@ make_study_descs_ls(
 
 \item{funding_1L_chr}{Funding (a character vector of length one), Default: NULL}
 
-\item{predr_ctgs_ls}{Predictor category categoriess (a list), Default: NULL}
+\item{predr_ctgs_ls}{Predictor categories (a list), Default: NULL}
 
 \item{sample_desc_1L_chr}{Sample description (a character vector of length one), Default: NULL}
 

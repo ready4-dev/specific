@@ -2,7 +2,7 @@
 % Please edit documentation in R/fn_get.R
 \name{get_covar_ctgs}
 \alias{get_covar_ctgs}
-\title{Get covariate category categoriess}
+\title{Get covariate categories}
 \usage{
 get_covar_ctgs(results_ls, collapse_1L_lgl = T)
 }
@@ -12,8 +12,8 @@ get_covar_ctgs(results_ls, collapse_1L_lgl = T)
 \item{collapse_1L_lgl}{Collapse (a logical vector of length one), Default: T}
 }
 \value{
-Covariate category categoriess (a character vector)
+Covariate categories (a character vector)
 }
 \description{
-get_covar_ctgs() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get covariate category categoriess. Function argument results_ls specifies the where to look for the required object. The function returns Covariate category categoriess (a character vector).
+get_covar_ctgs() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get covariate categories. Function argument results_ls specifies the where to look for the required object. The function returns Covariate categories (a character vector).
 }

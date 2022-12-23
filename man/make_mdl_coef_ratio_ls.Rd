@@ -9,7 +9,7 @@ make_mdl_coef_ratio_ls(mdl_ingredients_ls, predr_ctgs_ls = NULL)
 \arguments{
 \item{mdl_ingredients_ls}{Model ingredients (a list)}
 
-\item{predr_ctgs_ls}{Predictor category categoriess (a list), Default: NULL}
+\item{predr_ctgs_ls}{Predictor categories (a list), Default: NULL}
 }
 \value{
 Model coefficient ratios (a list)

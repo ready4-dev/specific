@@ -308,7 +308,7 @@ make_brms_mdl_smry_tbl <- function (smry_mdl_ls, grp_1L_chr, popl_1L_chr, fam_1L
 #' @param label_x_1L_dbl Label x (a double vector of length one), Default: 0.1
 #' @param label_y_1L_dbl Label y (a double vector of length one), Default: 0.9
 #' @param label_size_1L_dbl Label size (a double vector of length one), Default: 22
-#' @param mdl_idxs_int Model indices (an integer vector), Default: 1:2
+#' @param mdl_indcs_int Model indices (an integer vector), Default: 1:2
 #' @param use_png_fls_1L_lgl Use png files (a logical vector of length one), Default: T
 #' @return Composite (a plot)
 #' @rdname make_cmpst_sctr_and_dnst_plt
@@ -321,7 +321,7 @@ make_cmpst_sctr_and_dnst_plt <- function (outp_smry_ls, output_data_dir_1L_chr =
     predr_var_nms_chr = NA_character_, base_size_1L_dbl = 16, 
     correspondences_lup = NULL, depnt_var_desc_1L_chr = NA_character_, 
     labels_chr = c("A", "B", "C", "D"), label_x_1L_dbl = 0.1, 
-    label_y_1L_dbl = 0.9, label_size_1L_dbl = 22, mdl_idxs_int = 1:2, 
+    label_y_1L_dbl = 0.9, label_size_1L_dbl = 22, mdl_indcs_int = 1:2, 
     use_png_fls_1L_lgl = T) 
 {
     if (use_png_fls_1L_lgl) {
@@ -344,7 +344,7 @@ make_cmpst_sctr_and_dnst_plt <- function (outp_smry_ls, output_data_dir_1L_chr =
     }
     else {
         plots_chr <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr()
-        plots_chr <- plots_chr[mdl_idxs_int]
+        plots_chr <- plots_chr[mdl_indcs_int]
         plot_ls <- plots_chr %>% purrr::map(~{
             mdl_nm_1L_chr <- .x
             brms_mdl <- get_brms_mdl(outp_smry_ls, mdl_nm_1L_chr = mdl_nm_1L_chr)
@@ -625,7 +625,7 @@ make_covariates_text <- function (results_ls)
 }
 #' Make cross-section time series ratios tibble
 #' @description make_cs_ts_ratios_tb() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make cross-section time series ratios tibble. The function returns Cross-section time series ratios (a tibble).
-#' @param predr_ctgs_ls Predictor category categoriess (a list)
+#' @param predr_ctgs_ls Predictor categories (a list)
 #' @param mdl_coef_ratios_ls Model coefficient ratios (a list)
 #' @param candidate_predrs_chr Candidate predictors (a character vector), Default: NULL
 #' @param nbr_of_digits_1L_int Number of digits (an integer vector of length one), Default: 2
@@ -919,9 +919,9 @@ make_incld_mdl_paths <- function (outp_smry_ls)
     incld_mdl_paths_chr <- incld_mdl_paths_chr[!is.na(incld_mdl_paths_chr)]
     ranked_mdl_nms_chr <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr()
     sorted_mdl_nms_chr <- sort(ranked_mdl_nms_chr)
-    rank_idxs_int <- purrr::map_int(sorted_mdl_nms_chr, ~which(ranked_mdl_nms_chr == 
+    rank_indcs_int <- purrr::map_int(sorted_mdl_nms_chr, ~which(ranked_mdl_nms_chr == 
         .x))
-    incld_mdl_paths_chr <- incld_mdl_paths_chr[order(rank_idxs_int)]
+    incld_mdl_paths_chr <- incld_mdl_paths_chr[order(rank_indcs_int)]
     return(incld_mdl_paths_chr)
 }
 #' Make independent predictors longitudinal table title
@@ -1052,7 +1052,7 @@ make_knit_pars_ls <- function (rltv_path_to_data_dir_1L_chr, mdl_types_chr, pred
                     nchar() %>% which.min()]
                 }) %>% purrr::flatten_chr() %>% unique()
             })
-            mdl_ttls_chr <- paste0(..1[1], ifelse(is.na(..1[2]), 
+            mdl_tots_chr <- paste0(..1[1], ifelse(is.na(..1[2]), 
                 "", paste(" with ", ..1[2])), " ", mdl_types_chr %>% 
                 purrr::map_chr(~paste0(ready4::get_from_lup_obj(mdl_types_lup, 
                   match_var_nm_1L_chr = "short_name_chr", match_value_xx = .x, 
@@ -1060,12 +1060,12 @@ make_knit_pars_ls <- function (rltv_path_to_data_dir_1L_chr, mdl_types_chr, pred
                   " with ", ready4::get_from_lup_obj(mdl_types_lup, 
                     match_var_nm_1L_chr = "short_name_chr", match_value_xx = .x, 
                     target_var_nm_1L_chr = "with_chr", evaluate_1L_lgl = F))))
-            section_ttls_chr <- paste0(section_type_1L_chr, " ", 
-                mdl_ttls_chr)
-            plt_nms_ls <- paths_to_mdl_plts_ls %>% purrr::map2(mdl_ttls_chr, 
+            section_tots_chr <- paste0(section_type_1L_chr, " ", 
+                mdl_tots_chr)
+            plt_nms_ls <- paths_to_mdl_plts_ls %>% purrr::map2(mdl_tots_chr, 
                 ~{
                   paths_to_mdl_plts_chr <- .x
-                  mdl_ttl_1L_chr <- .y
+                  mdl_tot_1L_chr <- .y
                   transform_1L_lgl <- paths_to_mdl_plts_chr %>% 
                     endsWith("_coefs.png") %>% any()
                   if (paths_to_mdl_plts_chr %>% endsWith("_hetg.png") %>% 
@@ -1074,7 +1074,7 @@ make_knit_pars_ls <- function (rltv_path_to_data_dir_1L_chr, mdl_types_chr, pred
                   plt_types_chr %>% purrr::map(~{
                     if (endsWith(paths_to_mdl_plts_chr, paste0("_", 
                       .x, ".png")) %>% any()) {
-                      paste0(mdl_ttl_1L_chr, " ", ifelse(transform_1L_lgl & 
+                      paste0(mdl_tot_1L_chr, " ", ifelse(transform_1L_lgl & 
                         .x == "coefs", "population and group level effects", 
                         ready4::get_from_lup_obj(plt_types_lup, 
                           match_var_nm_1L_chr = "short_name_chr", 
@@ -1087,9 +1087,9 @@ make_knit_pars_ls <- function (rltv_path_to_data_dir_1L_chr, mdl_types_chr, pred
                   }) %>% purrr::flatten_chr()
                 })
             list(plt_nms_ls = plt_nms_ls, paths_to_mdls_chr = paths_to_mdls_chr, 
-                tbl_captions_chr = mdl_ttls_chr, label_stubs_chr = paste0("lab", 
+                tbl_captions_chr = mdl_tots_chr, label_stubs_chr = paste0("lab", 
                   ..2), output_type_1L_chr = output_type_1L_chr, 
-                section_ttls_chr = section_ttls_chr, paths_to_mdl_plts_ls = paths_to_mdl_plts_ls)
+                section_tots_chr = section_tots_chr, paths_to_mdl_plts_ls = paths_to_mdl_plts_ls)
         }) %>% stats::setNames(predr_vars_nms_ls %>% purrr::map_chr(~paste(.x, 
         collapse = "_")))
     return(knit_pars_ls)
@@ -1284,7 +1284,7 @@ make_mdl_coef_range_text <- function (coef_ratios_dbl, nbr_of_digits_1L_int = 2L
 #' Make model coefficient ratio list
 #' @description make_mdl_coef_ratio_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make model coefficient ratio list. The function returns Model coefficient ratios (a list).
 #' @param mdl_ingredients_ls Model ingredients (a list)
-#' @param predr_ctgs_ls Predictor category categoriess (a list), Default: NULL
+#' @param predr_ctgs_ls Predictor categories (a list), Default: NULL
 #' @return Model coefficient ratios (a list)
 #' @rdname make_mdl_coef_ratio_ls
 #' @export 
@@ -1385,7 +1385,7 @@ make_mdl_nms_ls <- function (predr_vars_nms_ls, mdl_types_chr)
 #' Make model summary element table
 #' @description make_mdl_smry_elmt_tbl() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make model summary element table. The function returns Model element sum (a tibble).
 #' @param mat Matrix (a matrix)
-#' @param ctg_chr Category categories (a character vector)
+#' @param ctg_chr Category (a character vector)
 #' @return Model element sum (a tibble)
 #' @rdname make_mdl_smry_elmt_tbl
 #' @export 
@@ -1669,11 +1669,11 @@ make_predn_ds_with_one_predr <- function (model_mdl, depnt_var_nm_1L_chr = "utl_
                 tfmn_is_outp_1L_lgl = T)))
     return(predn_ds_tb)
 }
-#' Make predictor category categoriess list
-#' @description make_predr_ctgs_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make predictor category categoriess list. The function returns Predictor category categoriess (a list).
+#' Make predictor categories list
+#' @description make_predr_ctgs_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make predictor categories list. The function returns Predictor categories (a list).
 #' @param outp_smry_ls Output summary (a list)
 #' @param include_idx_int Include index (an integer vector), Default: NULL
-#' @return Predictor category categoriess (a list)
+#' @return Predictor categories (a list)
 #' @rdname make_predr_ctgs_ls
 #' @export 
 #' @importFrom purrr flatten_chr map_chr map pluck
@@ -2611,7 +2611,7 @@ make_ss_tbls_ls <- function (outp_smry_ls, mdls_smry_tbls_ls, covars_mdls_ls, de
 #' @param conclusion_1L_chr Conclusion (a character vector of length one), Default: ''
 #' @param ethics_1L_chr Ethics (a character vector of length one), Default: NULL
 #' @param funding_1L_chr Funding (a character vector of length one), Default: NULL
-#' @param predr_ctgs_ls Predictor category categoriess (a list), Default: NULL
+#' @param predr_ctgs_ls Predictor categories (a list), Default: NULL
 #' @param sample_desc_1L_chr Sample description (a character vector of length one), Default: NULL
 #' @param var_nm_change_lup Variable name change (a lookup table), Default: NULL
 #' @return Input parameters (a list)

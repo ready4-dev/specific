@@ -2,7 +2,7 @@
 % Please edit documentation in R/fn_get.R
 \name{get_predr_ctgs}
 \alias{get_predr_ctgs}
-\title{Get predictor category categoriess}
+\title{Get predictor categories}
 \usage{
 get_predr_ctgs(results_ls, collapse_1L_lgl = T)
 }
@@ -12,8 +12,8 @@ get_predr_ctgs(results_ls, collapse_1L_lgl = T)
 \item{collapse_1L_lgl}{Collapse (a logical vector of length one), Default: T}
 }
 \value{
-Predictor category categoriess (a character vector)
+Predictor categories (a character vector)
 }
 \description{
-get_predr_ctgs() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get predictor category categoriess. Function argument results_ls specifies the where to look for the required object. The function returns Predictor category categoriess (a character vector).
+get_predr_ctgs() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get predictor categories. Function argument results_ls specifies the where to look for the required object. The function returns Predictor categories (a character vector).
 }

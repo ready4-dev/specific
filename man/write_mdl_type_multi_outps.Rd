@@ -16,7 +16,7 @@ write_mdl_type_multi_outps(
   new_dir_nm_1L_chr,
   mdl_types_lup = NULL,
   fl_nm_pfx_1L_chr = "C_PREDR",
-  plt_idxs_int = c(3, 5)
+  plt_indcs_int = c(3, 5)
 )
 }
 \arguments{
@@ -42,7 +42,7 @@ write_mdl_type_multi_outps(
 
 \item{fl_nm_pfx_1L_chr}{File name prefix (a character vector of length one), Default: 'C_PREDR'}
 
-\item{plt_idxs_int}{Plot indices (an integer vector), Default: c(3, 5)}
+\item{plt_indcs_int}{Plot indices (an integer vector), Default: c(3, 5)}
 }
 \value{
 Summary of model single predictors (a tibble)

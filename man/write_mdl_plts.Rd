@@ -19,7 +19,7 @@ write_mdl_plts(
   predn_type_1L_chr = NULL,
   tfmn_for_bnml_1L_lgl = F,
   family_1L_chr = NA_character_,
-  plt_idxs_int = 1:5
+  plt_indcs_int = 1:5
 )
 }
 \arguments{
@@ -51,7 +51,7 @@ write_mdl_plts(
 
 \item{family_1L_chr}{Family (a character vector of length one), Default: 'NA'}
 
-\item{plt_idxs_int}{Plot indices (an integer vector), Default: 1:5}
+\item{plt_indcs_int}{Plot indices (an integer vector), Default: 1:5}
 }
 \description{
 write_mdl_plts() is a Write function that writes a file to a specified local directory. Specifically, this function implements an algorithm to write model plots. The function is called for its side effects and does not return a value. WARNING: This function writes R scripts to your local environment. Make sure to only use if you want this behaviour

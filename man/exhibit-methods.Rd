@@ -14,7 +14,8 @@ exhibit.specific_models(
   caption_1L_chr = NULL,
   mkdn_tbl_ref_1L_chr = NULL,
   output_type_1L_chr = "HTML",
-  use_lbls_as_col_nms_1L_lgl = T
+  use_lbls_as_col_nms_1L_lgl = T,
+  ...
 )
 
 \S4method{exhibit}{specific_models}(
@@ -22,7 +23,8 @@ exhibit.specific_models(
   caption_1L_chr = NULL,
   mkdn_tbl_ref_1L_chr = NULL,
   output_type_1L_chr = "HTML",
-  use_lbls_as_col_nms_1L_lgl = T
+  use_lbls_as_col_nms_1L_lgl = T,
+  ...
 )
 
 exhibit.specific_predictors(
@@ -30,7 +32,8 @@ exhibit.specific_predictors(
   caption_1L_chr = NULL,
   mkdn_tbl_ref_1L_chr = NULL,
   output_type_1L_chr = "HTML",
-  use_lbls_as_col_nms_1L_lgl = T
+  use_lbls_as_col_nms_1L_lgl = T,
+  ...
 )
 
 \S4method{exhibit}{specific_predictors}(
@@ -38,7 +41,8 @@ exhibit.specific_predictors(
   caption_1L_chr = NULL,
   mkdn_tbl_ref_1L_chr = NULL,
   output_type_1L_chr = "HTML",
-  use_lbls_as_col_nms_1L_lgl = T
+  use_lbls_as_col_nms_1L_lgl = T,
+  ...
 )
 
 \S4method{exhibit}{SpecificProject}(
@@ -64,6 +68,8 @@ exhibit.specific_predictors(
 
 \item{use_lbls_as_col_nms_1L_lgl}{Use labels as column names (a logical vector of length one), Default: T}
 
+\item{...}{Additional arguments}
+
 \item{captions_chr}{Captions (a character vector), Default: character(0)}
 
 \item{method_chr}{Method (a character vector), Default: c("pearson", "spearman")}
@@ -75,8 +81,6 @@ exhibit.specific_predictors(
 \item{type_1L_chr}{Type (a character vector of length one), Default: 'data'}
 
 \item{what_1L_chr}{What (a character vector of length one), Default: 'correlation'}
-
-\item{...}{Additional arguments}
 }
 \description{
 exhibit.specific_models() is an exhibit method that exhibits features of a class instance by printing to console. This method is implemented for the Candidate models lookup table The function is called for its side effects and does not return a value.

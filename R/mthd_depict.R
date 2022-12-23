@@ -16,7 +16,7 @@
 #' @param label_y_1L_dbl Label y (a double vector of length one), Default: 0.9
 #' @param label_size_1L_dbl Label size (a double vector of length one), Default: 30
 #' @param legend_sclg_1L_dbl Legend scaling (a double vector of length one), Default: 2
-#' @param mdl_idxs_int Model indices (an integer vector), Default: 1:2
+#' @param mdl_indcs_int Model indices (an integer vector), Default: 1:2
 #' @param rel_heights_dbl Rel heights (a double vector), Default: c(4, 10, 1)
 #' @param scale_dbl Scale (a double vector), Default: c(0.9, 0.9, 0.9)
 #' @param timepoint_old_nms_chr Timepoint old names (a character vector), Default: 'NA'
@@ -42,7 +42,7 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
     dim_plot_heights_int = c(10L, 1L), dim_plot_log_log_tfmn_1L_lgl = F, 
     dim_plot_rows_cols_pair_int = c(3L, 2L), labels_chr = c("A", 
         "B", "C", "D"), label_x_1L_dbl = 0.2, label_y_1L_dbl = 0.9, 
-    label_size_1L_dbl = 30, legend_sclg_1L_dbl = 2, mdl_idxs_int = 1:2, 
+    label_size_1L_dbl = 30, legend_sclg_1L_dbl = 2, mdl_indcs_int = 1:2, 
     rel_heights_dbl = c(4, 10, 1), scale_dbl = c(0.9, 0.9, 0.9), 
     timepoint_old_nms_chr = NA_character_, timepoint_new_nms_chr = NA_character_, 
     use_png_fls_1L_lgl = F, utl_plot_label_1L_chr = " ", utl_by_rnd_plots_params_ls = list(width_1L_dbl = 6, 
@@ -64,7 +64,7 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
             correspondences_lup = correspondences_lup, depnt_var_desc_1L_chr = depnt_var_desc_1L_chr, 
             labels_chr = labels_chr, label_x_1L_dbl = label_x_1L_dbl, 
             label_y_1L_dbl = label_y_1L_dbl, label_size_1L_dbl = label_size_1L_dbl, 
-            mdl_idxs_int = mdl_idxs_int, use_png_fls_1L_lgl = use_png_fls_1L_lgl)
+            mdl_indcs_int = mdl_indcs_int, use_png_fls_1L_lgl = use_png_fls_1L_lgl)
         write_path_1L_chr <- paste0(outp_smry_ls$path_to_write_to_1L_chr, 
             "/dens_and_sctr.png")
     }
@@ -110,9 +110,9 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
 #' @name depict-SpecificProject
 #' @description depict method applied to SpecificProject
 #' @param x An object of class SpecificProject
-#' @param mdl_idxs_int Model indices (an integer vector), Default: NULL
+#' @param mdl_indcs_int Model indices (an integer vector), Default: NULL
 #' @param output_type_1L_chr Output type (a character vector of length one), Default: 'HTML'
-#' @param plt_indcs_int Plot indcs (an integer vector), Default: NULL
+#' @param plt_indcs_int Plot indices (an integer vector), Default: NULL
 #' @return NULL
 #' @rdname depict-methods
 #' @aliases depict,SpecificProject-method
@@ -120,18 +120,18 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
 #' @importFrom purrr map_lgl map map_int discard
 #' @importFrom knitr include_graphics
 #' @importFrom ready4 depict
-methods::setMethod("depict", "SpecificProject", function (x, mdl_idxs_int = NULL, output_type_1L_chr = "HTML", 
+methods::setMethod("depict", "SpecificProject", function (x, mdl_indcs_int = NULL, output_type_1L_chr = "HTML", 
     plt_indcs_int = NULL) 
 {
-    if (is.null(mdl_idxs_int)) {
-        mdl_idxs_int <- 1
+    if (is.null(mdl_indcs_int)) {
+        mdl_indcs_int <- 1
     }
     if (is.null(plt_indcs_int)) 
         plt_indcs_int <- 1:5
     predr_var_nm_1L_chr <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$predr_var_nm_1L_chr
     plt_paths_chr <- list.files(x@paths_chr, recursive = T)[list.files(x@paths_chr, 
         recursive = T) %>% purrr::map_lgl(~endsWith(.x, ".png"))]
-    plt_paths_ls <- x@b_SpecificParameters@candidate_mdls_lup$short_name_chr[mdl_idxs_int] %>% 
+    plt_paths_ls <- x@b_SpecificParameters@candidate_mdls_lup$short_name_chr[mdl_indcs_int] %>% 
         purrr::map(~{
             pfx_1L_chr <- paste0("A_Candidate_Mdls_Cmprsn/A_RT_", 
                 predr_var_nm_1L_chr, "_", .x)

@@ -5,13 +5,15 @@
 #' @param mkdn_tbl_ref_1L_chr Markdown table reference (a character vector of length one), Default: NULL
 #' @param output_type_1L_chr Output type (a character vector of length one), Default: 'HTML'
 #' @param use_lbls_as_col_nms_1L_lgl Use labels as column names (a logical vector of length one), Default: T
+#' @param ... Additional arguments
 #' @return NULL
 #' @rdname exhibit-methods
 #' @export 
 #' @importFrom ready4show print_from_chunk
 #' @importFrom ready4 exhibit
 exhibit.specific_models <- function (x, caption_1L_chr = NULL, mkdn_tbl_ref_1L_chr = NULL, 
-    output_type_1L_chr = "HTML", use_lbls_as_col_nms_1L_lgl = T) 
+    output_type_1L_chr = "HTML", use_lbls_as_col_nms_1L_lgl = T, 
+    ...) 
 {
     x %>% ready4show::print_from_chunk(caption_1L_chr = caption_1L_chr, 
         mkdn_tbl_ref_1L_chr = mkdn_tbl_ref_1L_chr, output_type_1L_chr = output_type_1L_chr, 
@@ -19,7 +21,7 @@ exhibit.specific_models <- function (x, caption_1L_chr = NULL, mkdn_tbl_ref_1L_c
         var_desc_chr = c("Reference", "Name", "Control", "Familty", 
             "Function", "Start", "Predict", "Transformation", 
             "Binomial", "Acronym (Fixed)", "Acronymy (Mixed)", 
-            "Type (Mixed)", "With"))
+            "Type (Mixed)", "With"), ...)
 }
 #' @rdname exhibit-methods
 #' @aliases exhibit,specific_models-method
@@ -32,20 +34,22 @@ methods::setMethod("exhibit", methods::className("specific_models", package = "s
 #' @param mkdn_tbl_ref_1L_chr Markdown table reference (a character vector of length one), Default: NULL
 #' @param output_type_1L_chr Output type (a character vector of length one), Default: 'HTML'
 #' @param use_lbls_as_col_nms_1L_lgl Use labels as column names (a logical vector of length one), Default: T
+#' @param ... Additional arguments
 #' @return NULL
 #' @rdname exhibit-methods
 #' @export 
 #' @importFrom ready4show print_from_chunk
 #' @importFrom ready4 exhibit
 exhibit.specific_predictors <- function (x, caption_1L_chr = NULL, mkdn_tbl_ref_1L_chr = NULL, 
-    output_type_1L_chr = "HTML", use_lbls_as_col_nms_1L_lgl = T) 
+    output_type_1L_chr = "HTML", use_lbls_as_col_nms_1L_lgl = T, 
+    ...) 
 {
     x %>% ready4show::print_from_chunk(caption_1L_chr = caption_1L_chr, 
         mkdn_tbl_ref_1L_chr = mkdn_tbl_ref_1L_chr, output_type_1L_chr = output_type_1L_chr, 
         use_lbls_as_col_nms_1L_lgl = use_lbls_as_col_nms_1L_lgl, 
         var_desc_chr = c("Variable", "Description", "Minimum", 
             "Maximum", "Class", "Increment", "Function", "Scaling", 
-            "Covariate"))
+            "Covariate"), ...)
 }
 #' @rdname exhibit-methods
 #' @aliases exhibit,specific_predictors-method
