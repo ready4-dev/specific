@@ -130,7 +130,8 @@ vignette from the scorz pacakge</a>) into a
 <p>The dataset we are using has a total of 1786 records at two
 timepoints on 1068 study participants. The first six records are
 reproduced below.</p>
-<table class="table  lightable-paper lightable-hover" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;'>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
+<table class="table  lightable-paper lightable-hover lightable-paper" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0; font-family: "Arial Narrow", arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;'>
 <caption>
 Dataset
 </caption>
@@ -597,6 +598,7 @@ Not studying or working
 </td>
 </tr></tfoot>
 </table>
+</div>
 <p>To source dataset of <code>X</code> is contained in the
 <code>a_YouthvarsProfile</code> slot and is a
 <code>YouthvarsSeries</code> module. For more information about methods
@@ -655,8 +657,10 @@ form of a <code>specific_predictors</code> object.</p>
 method.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/exhibitSlot-methods.html" class="external-link">exhibitSlot</a></span><span class="op">(</span><span class="va">X</span>,</span>
-<span>            <span class="st">"b_SpecificParameters@predictors_lup"</span><span class="op">)</span></span></code></pre></div>
-<table class="table  lightable-paper lightable-hover" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;'>
+<span>            <span class="st">"b_SpecificParameters@predictors_lup"</span>,</span>
+<span>            scroll_box_args_ls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="st">"100%"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
+<table class="table  lightable-paper lightable-hover lightable-paper" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0; font-family: "Arial Narrow", arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;'>
 <thead><tr>
 <th style="text-align:left;">
 Variable
@@ -753,6 +757,7 @@ FALSE
 </tr></tfoot>
 </table>
 </div>
+</div>
 <div class="section level3">
 <h3 id="covariates">Covariates<a class="anchor" aria-label="anchor" href="#covariates"></a>
 </h3>
@@ -801,8 +806,10 @@ stored as a <code>specific_models</code> sub-module, which can be
 inspected using the <code>exhibitSlot</code> method.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/exhibitSlot-methods.html" class="external-link">exhibitSlot</a></span><span class="op">(</span><span class="va">X</span>,</span>
-<span>            <span class="st">"b_SpecificParameters@candidate_mdls_lup"</span><span class="op">)</span></span></code></pre></div>
-<table class="table  lightable-paper lightable-hover" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;'>
+<span>            <span class="st">"b_SpecificParameters@candidate_mdls_lup"</span>,</span>
+<span>            scroll_box_args_ls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="st">"100%"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
+<table class="table  lightable-paper lightable-hover lightable-paper" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0; font-family: "Arial Narrow", arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;'>
 <caption>
 Model types lookup table
 </caption>
@@ -1184,6 +1191,7 @@ Binomial distribution and complementary log log link
 </td>
 </tr></tfoot>
 </table>
+</div>
 <p>We can choose to select just a subset of these to explore using the
 <code>renewSlot</code> method. As this is an illustrative example, we
 have restricted the models we will explore to just four types, passing
@@ -1288,7 +1296,8 @@ the performance of each of the candidate models.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/exhibit-methods.html" class="external-link">exhibit</a></span><span class="op">(</span><span class="va">X</span>,</span>
 <span>        what_1L_chr <span class="op">=</span> <span class="st">"mdl_cmprsn"</span>,</span>
-<span>        type_1L_chr <span class="op">=</span> <span class="st">"results"</span><span class="op">)</span></span></code></pre></div>
+<span>        type_1L_chr <span class="op">=</span> <span class="st">"results"</span></span>
+<span>        <span class="op">)</span> </span></code></pre></div>
 <table class="table  lightable-paper lightable-hover" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;'>
 <caption>
 Comparison of candidate models using highest correlated predictor
@@ -1472,8 +1481,10 @@ directory. These results are also viewable as a table.</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/exhibit-methods.html" class="external-link">exhibit</a></span><span class="op">(</span><span class="va">X</span>,</span>
 <span>        what_1L_chr <span class="op">=</span> <span class="st">"predr_cmprsn"</span>,</span>
-<span>        type_1L_chr <span class="op">=</span> <span class="st">"results"</span><span class="op">)</span></span></code></pre></div>
-<table class="table  lightable-paper lightable-hover" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0;'>
+<span>        type_1L_chr <span class="op">=</span> <span class="st">"results"</span>,</span>
+<span>        scroll_box_args_ls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="st">"100%"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
+<table class="table  lightable-paper lightable-hover lightable-paper" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;border-bottom: 0; font-family: "Arial Narrow", arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;'>
 <caption>
 Comparison of all candidate predictors using preferred model
 </caption>
@@ -1518,6 +1529,7 @@ Psychwell
 </td>
 </tr></tfoot>
 </table>
+</div>
 <p>The most recent call to the <code class="sourceCode r">investigate</code> method also saved single
 predictor R model objects (one for each candidate predictors) along with
 the two plots for each model in a sub-directory of our output directory.
@@ -1631,7 +1643,8 @@ updated models, along with all signficant model terms, in a table.</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/exhibit-methods.html" class="external-link">exhibit</a></span><span class="op">(</span><span class="va">X</span>,</span>
 <span>        type_1L_chr <span class="op">=</span> <span class="st">"results"</span>,</span>
-<span>        what_1L_chr <span class="op">=</span> <span class="st">"fxd_full_cmprsn"</span><span class="op">)</span></span></code></pre></div>
+<span>        what_1L_chr <span class="op">=</span> <span class="st">"fxd_full_cmprsn"</span>,</span>
+<span>        scroll_box_args_ls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="st">"100%"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>We can now identify which, if any, of the candidate covariates we
 previously specified are significant predictors in any of the
 models.</p>
