@@ -46,7 +46,8 @@ The dataset we are using has a total of `r nrow(ds_tb)` records at two timepoint
 ```{r inputds, echo=F, eval = knitr::is_html_output(), results='asis'}
 X %>%
   procureSlot("a_YouthvarsProfile@a_Ready4useDyad") %>%
-  exhibit(display_1L_chr = "head")
+  exhibit(display_1L_chr = "head",
+          scroll_box_args_ls = list(width = "100%"))
 ```
 
 To source dataset of `X` is contained in the `a_YouthvarsProfile` slot and is a `YouthvarsSeries` module. For more information about methods that can be used to explore this dataset, [read this vignette from the youthvars package](https://ready4-dev.github.io/youthvars/articles/V_02.html).
@@ -101,7 +102,8 @@ The `specific_predictors` object that we have added to `X` can be inspected usin
 
 ```{r}
 exhibitSlot(X,
-            "b_SpecificParameters@predictors_lup")
+            "b_SpecificParameters@predictors_lup",
+            scroll_box_args_ls = list(width = "100%"))
 ```
 
 ### Covariates
@@ -148,7 +150,8 @@ X <- renewSlot(X,
 
 ```{r mdlslup, tab.cap='Model types lookup table', tab.id = 'mdlslup', results = "asis"}
 exhibitSlot(X,
-            "b_SpecificParameters@candidate_mdls_lup")
+            "b_SpecificParameters@candidate_mdls_lup",
+            scroll_box_args_ls = list(width = "100%"))
 ```
 
 We can choose to select just a subset of these to explore using the `renewSlot` method. As this is an illustrative example, we have restricted the models we will explore to just four types, passing the relevant row numbers to the `slice_indcs_int` argument.
@@ -247,10 +250,11 @@ depict(X,
 
 The `investigate` method also outputs a table summarising the performance of each of the candidate models.
 
-```{r mdl_cmprsn, tab.cap='Comparison of candidate models using highest correlated predictor', tab.id = 'mdl_cmprsn', results = "asis"}
+```{r mdl_cmprsn, tab.cap='Comparison of candidate models using highest correlated predictor', tab.id = 'mdl_cmprsn'}
 exhibit(X,
         what_1L_chr = "mdl_cmprsn",
-        type_1L_chr = "results")
+        type_1L_chr = "results"
+        ) 
 ```
 
 We can now identify the highest performing model in each category of candidate model based on the testing R^2^ statistic.
@@ -284,7 +288,8 @@ Now, we compare the performance of single predictor models of our preferred mode
 ```{r predr_cmprsn, tab.cap='Comparison of all candidate predictors using preferred model', tab.id = 'predr_cmprsn', results = "asis"}
 exhibit(X,
         what_1L_chr = "predr_cmprsn",
-        type_1L_chr = "results")
+        type_1L_chr = "results",
+        scroll_box_args_ls = list(width = "100%"))
 ```
 
 The most recent call to the `investigate`{.R} method also saved single predictor R model objects (one for each candidate predictors) along with the two plots for each model in a sub-directory of our output directory. The performance of each single predictor model can also be summarised in a table.
@@ -300,7 +305,8 @@ Updated versions of each of the models in the previous step (this time with cova
 ```{r fxdfull_cmprsn, eval = F, tab.cap='Performance of preferred models with covariate predictors by candidate predictor', tab.id = 'fxdfull_cmprsn', results = "asis"}
 exhibit(X,
         type_1L_chr = "results",
-        what_1L_chr = "fxd_full_cmprsn")
+        what_1L_chr = "fxd_full_cmprsn",
+        scroll_box_args_ls = list(width = "100%"))
 ```
 
 We can now identify which, if any, of the candidate covariates we previously specified are significant predictors in any of the models.
