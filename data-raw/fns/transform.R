@@ -445,7 +445,7 @@ transform_rprt_lup <- function(rprt_lup, # Generalise TTU parts - Also need to a
                                                                                                             ifelse(is.null(reference_1L_int),
                                                                                                                    start_at_int[2],
                                                                                                                    start_at_int[2]+reference_1L_int),
-                                                                                                            ": Catalogue of longitudinal models (",
+                                                                                                            ": Catalogue of models (",
                                                                                                             ifelse(is.null(reference_1L_int),
                                                                                                                    "Primary Analysis",
                                                                                                                    paste0("Secondary Analysis ",LETTERS[reference_1L_int])),

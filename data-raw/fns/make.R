@@ -912,7 +912,6 @@ make_hlth_utl_and_predrs_ls <- function(outp_smry_ls, # Generalise from HU
                                 predrs_nartv_seq_chr = ranked_predrs_ls$unranked_predrs_chr,
                                 cor_seq_dscdng_chr =  ranked_predrs_ls$ranked_predrs_chr)
   return(hlth_utl_and_predrs_ls)
-
 }
 make_incld_mdl_paths <- function(outp_smry_ls){
   incld_mdl_paths_chr <- outp_smry_ls$file_paths_chr %>%
@@ -974,7 +973,7 @@ make_input_params <- function(ds_tb, # Generalise MAUI
                               write_new_dir_1L_lgl = T){
   path_params_ls <- ready4show::make_path_params_ls(use_fake_data_1L_lgl = ds_descvs_ls$is_fake_1L_lgl,
                                         dv_ds_nm_and_url_chr = dv_ds_nm_and_url_chr,
-                                        write_new_dir_1L_lgl = write_new_dir_1L_lgl)
+                                        write_new_dir_1L_lgl = write_new_dir_1L_lgl) # # add consent args
   params_ls_ls <- make_analysis_core_params_ls(ds_descvs_ls = ds_descvs_ls,
                                                output_format_ls = output_format_ls,
                                                predictors_lup = predictors_lup,
@@ -1328,7 +1327,7 @@ make_mdls_smry_tbls_ls <- function(outp_smry_ls,
     dplyr::mutate(dplyr::across(c("Estimate","SE"),
                                 ~ round(.x,nbr_of_digits_1L_int) %>%
                                   format(nsmall = nbr_of_digits_1L_int))) %>%
-    dplyr::mutate(`95% CI` = `95% CI` %>% transform_chr_digit_pairs())
+    dplyr::mutate(`95% CI` = `95% CI` %>% transform_chr_digit_pairs(nbr_of_digits_1L_int = nbr_of_digits_1L_int)) # Fix
   rownames(mdls_smry_tb) <- NULL
   indpt_predrs_mdls_tb <- mdls_smry_tb %>% dplyr::filter(Model %in% (paste0(outp_smry_ls$predr_cmprsn_tb$predr_chr,"_1_") %>% purrr::map(~paste0(.x,
                                                                                                                                                  outp_smry_ls$prefd_mdl_types_chr)) %>% purrr::flatten_chr()))
