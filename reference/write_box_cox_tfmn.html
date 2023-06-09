@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9084</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9088</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,13 +61,16 @@
 <span>  <span class="va">data_tb</span>,</span>
 <span>  <span class="va">predr_var_nm_1L_chr</span>,</span>
 <span>  <span class="va">path_to_write_to_1L_chr</span>,</span>
+<span>  consent_1L_chr <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  consent_indcs_int <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  depnt_var_nm_1L_chr <span class="op">=</span> <span class="st">"utl_total_w"</span>,</span>
 <span>  covar_var_nms_chr <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
 <span>  fl_nm_pfx_1L_chr <span class="op">=</span> <span class="st">"A_RT"</span>,</span>
 <span>  height_1L_dbl <span class="op">=</span> <span class="fl">6</span>,</span>
-<span>  width_1L_dbl <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  mdl_types_lup <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  options_chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Y"</span>, <span class="st">"N"</span><span class="op">)</span>,</span>
 <span>  start_1L_chr <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  mdl_types_lup <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  width_1L_dbl <span class="op">=</span> <span class="fl">6</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -83,6 +86,14 @@
 
 <dt>path_to_write_to_1L_chr</dt>
 <dd><p>Path to write to (a character vector of length one)</p></dd>
+
+
+<dt>consent_1L_chr</dt>
+<dd><p>Consent (a character vector of length one), Default: ''</p></dd>
+
+
+<dt>consent_indcs_int</dt>
+<dd><p>Consent indices (an integer vector), Default: 1</p></dd>
 
 
 <dt>depnt_var_nm_1L_chr</dt>
@@ -101,16 +112,20 @@
 <dd><p>Height (a double vector of length one), Default: 6</p></dd>
 
 
-<dt>width_1L_dbl</dt>
-<dd><p>Width (a double vector of length one), Default: 6</p></dd>
+<dt>mdl_types_lup</dt>
+<dd><p>Model types (a lookup table), Default: NULL</p></dd>
+
+
+<dt>options_chr</dt>
+<dd><p>Options (a character vector), Default: c("Y", "N")</p></dd>
 
 
 <dt>start_1L_chr</dt>
 <dd><p>Start (a character vector of length one), Default: NULL</p></dd>
 
 
-<dt>mdl_types_lup</dt>
-<dd><p>Model types (a lookup table), Default: NULL</p></dd>
+<dt>width_1L_dbl</dt>
+<dd><p>Width (a double vector of length one), Default: 6</p></dd>
 
 </dl></div>
     <div class="section level2">

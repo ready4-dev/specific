@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9084</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9088</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,6 +60,14 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">write_analyses</span><span class="op">(</span></span>
 <span>  <span class="va">input_params_ls</span>,</span>
 <span>  abstract_args_ls <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  combinations_1L_lgl <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  consent_1L_chr <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  consent_indcs_int <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>  cores_1L_int <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>  depnt_var_min_val_1L_dbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  existing_predrs_ls <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_nbr_of_covars_1L_int <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  options_chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Y"</span>, <span class="st">"N"</span><span class="op">)</span>,</span>
 <span>  start_at_int <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -72,6 +80,38 @@
 
 <dt>abstract_args_ls</dt>
 <dd><p>Abstract arguments (a list), Default: NULL</p></dd>
+
+
+<dt>combinations_1L_lgl</dt>
+<dd><p>Combinations (a logical vector of length one), Default: F</p></dd>
+
+
+<dt>consent_1L_chr</dt>
+<dd><p>Consent (a character vector of length one), Default: ''</p></dd>
+
+
+<dt>consent_indcs_int</dt>
+<dd><p>Consent indices (an integer vector), Default: 1</p></dd>
+
+
+<dt>cores_1L_int</dt>
+<dd><p>Cores (an integer vector of length one), Default: 1</p></dd>
+
+
+<dt>depnt_var_min_val_1L_dbl</dt>
+<dd><p>Dependent variable minimum value (a double vector of length one), Default: numeric(0)</p></dd>
+
+
+<dt>existing_predrs_ls</dt>
+<dd><p>Existing predictors (a list), Default: NULL</p></dd>
+
+
+<dt>max_nbr_of_covars_1L_int</dt>
+<dd><p>Maximum number of covariates (an integer vector of length one), Default: integer(0)</p></dd>
+
+
+<dt>options_chr</dt>
+<dd><p>Options (a character vector), Default: c("Y", "N")</p></dd>
 
 
 <dt>start_at_int</dt>

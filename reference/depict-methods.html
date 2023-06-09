@@ -12,7 +12,7 @@ depict method applied to SpecificProject"><meta property="og:image" content="htt
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9084</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9088</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,9 @@ depict method applied to SpecificProject"><meta property="og:image" content="htt
 <span>  axis_title_sclg_1L_dbl <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  base_height_1L_dbl <span class="op">=</span> <span class="fl">13</span>,</span>
 <span>  base_size_1L_dbl <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  consent_1L_chr <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  depnt_var_desc_1L_chr <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
+<span>  depnt_var_min_val_1L_dbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  dim_plot_heights_int <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10L</span>, <span class="fl">1L</span><span class="op">)</span>,</span>
 <span>  dim_plot_log_log_tfmn_1L_lgl <span class="op">=</span> <span class="cn">F</span>,</span>
 <span>  dim_plot_rows_cols_pair_int <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3L</span>, <span class="fl">2L</span><span class="op">)</span>,</span>
@@ -86,7 +88,8 @@ depict method applied to SpecificProject"><meta property="og:image" content="htt
 <span>  utl_by_rnd_plots_params_ls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width_1L_dbl <span class="op">=</span> <span class="fl">6</span>, height_1L_dbl <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span>
 <span>  what_1L_chr <span class="op">=</span> <span class="st">"composite_mdl"</span>,</span>
 <span>  write_1L_lgl <span class="op">=</span> <span class="cn">F</span>,</span>
-<span>  y_label_1L_chr <span class="op">=</span> <span class="st">" "</span></span>
+<span>  y_label_1L_chr <span class="op">=</span> <span class="st">" "</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for SpecificProject</span></span>
@@ -94,7 +97,8 @@ depict method applied to SpecificProject"><meta property="og:image" content="htt
 <span>  <span class="va">x</span>,</span>
 <span>  mdl_indcs_int <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  output_type_1L_chr <span class="op">=</span> <span class="st">"HTML"</span>,</span>
-<span>  plt_indcs_int <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  plt_indcs_int <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -120,8 +124,16 @@ depict method applied to SpecificProject"><meta property="og:image" content="htt
 <dd><p>Base size (a double vector of length one), Default: 30</p></dd>
 
 
+<dt>consent_1L_chr</dt>
+<dd><p>Consent (a character vector of length one), Default: ''</p></dd>
+
+
 <dt>depnt_var_desc_1L_chr</dt>
 <dd><p>Dependent variable description (a character vector of length one), Default: 'NA'</p></dd>
+
+
+<dt>depnt_var_min_val_1L_dbl</dt>
+<dd><p>Dependent variable minimum value (a double vector of length one), Default: numeric(0)</p></dd>
 
 
 <dt>dim_plot_heights_int</dt>
@@ -198,6 +210,10 @@ depict method applied to SpecificProject"><meta property="og:image" content="htt
 
 <dt>y_label_1L_chr</dt>
 <dd><p>Y label (a character vector of length one), Default: ' '</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Additional arguments</p></dd>
 
 
 <dt>output_type_1L_chr</dt>

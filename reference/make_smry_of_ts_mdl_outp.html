@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9084</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9088</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,21 +59,25 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_smry_of_ts_mdl_outp</span><span class="op">(</span></span>
 <span>  <span class="va">data_tb</span>,</span>
-<span>  <span class="va">predr_vars_nms_chr</span>,</span>
 <span>  <span class="va">mdl_nm_1L_chr</span>,</span>
-<span>  path_to_write_to_1L_chr <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
+<span>  <span class="va">mdl_types_lup</span>,</span>
+<span>  <span class="va">predr_vars_nms_chr</span>,</span>
+<span>  <span class="va">predictors_lup</span>,</span>
+<span>  backend_1L_chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"brms.backend"</span>, <span class="st">"rstan"</span><span class="op">)</span>,</span>
+<span>  consent_1L_chr <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  consent_indcs_int <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>  control_ls <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  depnt_var_min_val_1L_dbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  depnt_var_nm_1L_chr <span class="op">=</span> <span class="st">"utl_total_w"</span>,</span>
 <span>  id_var_nm_1L_chr <span class="op">=</span> <span class="st">"fkClientID"</span>,</span>
-<span>  round_var_nm_1L_chr <span class="op">=</span> <span class="st">"round"</span>,</span>
-<span>  round_bl_val_1L_chr <span class="op">=</span> <span class="st">"Baseline"</span>,</span>
-<span>  <span class="va">predictors_lup</span>,</span>
-<span>  utl_min_val_1L_dbl <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
-<span>  backend_1L_chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"brms.backend"</span>, <span class="st">"rstan"</span><span class="op">)</span>,</span>
 <span>  iters_1L_int <span class="op">=</span> <span class="fl">4000L</span>,</span>
-<span>  <span class="va">mdl_types_lup</span>,</span>
-<span>  seed_1L_int <span class="op">=</span> <span class="fl">1000L</span>,</span>
+<span>  options_chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Y"</span>, <span class="st">"N"</span><span class="op">)</span>,</span>
+<span>  path_to_write_to_1L_chr <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
 <span>  prior_ls <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  control_ls <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  round_bl_val_1L_chr <span class="op">=</span> <span class="st">"Baseline"</span>,</span>
+<span>  round_var_nm_1L_chr <span class="op">=</span> <span class="st">"round"</span>,</span>
+<span>  seed_1L_int <span class="op">=</span> <span class="fl">1000L</span>,</span>
+<span>  utl_min_val_1L_dbl <span class="op">=</span> <span class="op">-</span><span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -83,16 +87,40 @@
 <dd><p>Data (a tibble)</p></dd>
 
 
-<dt>predr_vars_nms_chr</dt>
-<dd><p>Predictor variables names (a character vector)</p></dd>
-
-
 <dt>mdl_nm_1L_chr</dt>
 <dd><p>Model name (a character vector of length one)</p></dd>
 
 
-<dt>path_to_write_to_1L_chr</dt>
-<dd><p>Path to write to (a character vector of length one), Default: 'NA'</p></dd>
+<dt>mdl_types_lup</dt>
+<dd><p>Model types (a lookup table)</p></dd>
+
+
+<dt>predr_vars_nms_chr</dt>
+<dd><p>Predictor variables names (a character vector)</p></dd>
+
+
+<dt>predictors_lup</dt>
+<dd><p>Predictors (a lookup table)</p></dd>
+
+
+<dt>backend_1L_chr</dt>
+<dd><p>Backend (a character vector of length one), Default: getOption("brms.backend", "rstan")</p></dd>
+
+
+<dt>consent_1L_chr</dt>
+<dd><p>Consent (a character vector of length one), Default: ''</p></dd>
+
+
+<dt>consent_indcs_int</dt>
+<dd><p>Consent indices (an integer vector), Default: 1</p></dd>
+
+
+<dt>control_ls</dt>
+<dd><p>Control (a list), Default: NULL</p></dd>
+
+
+<dt>depnt_var_min_val_1L_dbl</dt>
+<dd><p>Dependent variable minimum value (a double vector of length one), Default: numeric(0)</p></dd>
 
 
 <dt>depnt_var_nm_1L_chr</dt>
@@ -103,44 +131,36 @@
 <dd><p>Identity variable name (a character vector of length one), Default: 'fkClientID'</p></dd>
 
 
-<dt>round_var_nm_1L_chr</dt>
-<dd><p>Round variable name (a character vector of length one), Default: 'round'</p></dd>
-
-
-<dt>round_bl_val_1L_chr</dt>
-<dd><p>Round baseline value (a character vector of length one), Default: 'Baseline'</p></dd>
-
-
-<dt>predictors_lup</dt>
-<dd><p>Predictors (a lookup table)</p></dd>
-
-
-<dt>utl_min_val_1L_dbl</dt>
-<dd><p>Utility minimum value (a double vector of length one), Default: -1</p></dd>
-
-
-<dt>backend_1L_chr</dt>
-<dd><p>Backend (a character vector of length one), Default: getOption("brms.backend", "rstan")</p></dd>
-
-
 <dt>iters_1L_int</dt>
 <dd><p>Iterations (an integer vector of length one), Default: 4000</p></dd>
 
 
-<dt>mdl_types_lup</dt>
-<dd><p>Model types (a lookup table)</p></dd>
+<dt>options_chr</dt>
+<dd><p>Options (a character vector), Default: c("Y", "N")</p></dd>
 
 
-<dt>seed_1L_int</dt>
-<dd><p>Seed (an integer vector of length one), Default: 1000</p></dd>
+<dt>path_to_write_to_1L_chr</dt>
+<dd><p>Path to write to (a character vector of length one), Default: 'NA'</p></dd>
 
 
 <dt>prior_ls</dt>
 <dd><p>Prior (a list), Default: NULL</p></dd>
 
 
-<dt>control_ls</dt>
-<dd><p>Control (a list), Default: NULL</p></dd>
+<dt>round_bl_val_1L_chr</dt>
+<dd><p>Round baseline value (a character vector of length one), Default: 'Baseline'</p></dd>
+
+
+<dt>round_var_nm_1L_chr</dt>
+<dd><p>Round variable name (a character vector of length one), Default: 'round'</p></dd>
+
+
+<dt>seed_1L_int</dt>
+<dd><p>Seed (an integer vector of length one), Default: 1000</p></dd>
+
+
+<dt>utl_min_val_1L_dbl</dt>
+<dd><p>Utility minimum value (a double vector of length one), Default: -1</p></dd>
 
 </dl></div>
     <div class="section level2">

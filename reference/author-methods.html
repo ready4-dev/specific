@@ -14,7 +14,7 @@ author method applied to SpecificProject"><meta property="og:image" content="htt
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9084</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9088</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,27 +66,34 @@ author method applied to SpecificProject"><meta property="og:image" content="htt
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for SpecificModels</span></span>
 <span><span class="fu">author</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
-<span>  prefd_mdl_types_chr <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  what_1L_chr <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  consent_1L_chr <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  digits_1L_int <span class="op">=</span> <span class="fl">3L</span>,</span>
-<span>  reference_1L_int <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  prefd_mdl_types_chr <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  reference_1L_int <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  what_1L_chr <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  x_labels_chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for SpecificSynopsis</span></span>
 <span><span class="fu">author</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
+<span>  consent_1L_chr <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  reference_1L_int <span class="op">=</span> <span class="cn">NA_integer_</span>,</span>
 <span>  type_1L_chr <span class="op">=</span> <span class="st">"Report"</span>,</span>
-<span>  what_1L_chr <span class="op">=</span> <span class="st">"Catalogue"</span></span>
+<span>  what_1L_chr <span class="op">=</span> <span class="st">"Catalogue"</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for SpecificProject</span></span>
 <span><span class="fu">author</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
+<span>  consent_1L_chr <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  fl_nm_1L_chr <span class="op">=</span> <span class="st">"I_ALL_OUTPUT_"</span>,</span>
 <span>  path_1L_chr <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
 <span>  type_1L_chr <span class="op">=</span> <span class="st">"results"</span>,</span>
-<span>  what_1L_chr <span class="op">=</span> <span class="st">"public"</span></span>
+<span>  what_1L_chr <span class="op">=</span> <span class="st">"public"</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -96,20 +103,32 @@ author method applied to SpecificProject"><meta property="og:image" content="htt
 <dd><p>An object of class SpecificProject</p></dd>
 
 
-<dt>prefd_mdl_types_chr</dt>
-<dd><p>Preferred model types (a character vector), Default: NULL</p></dd>
-
-
-<dt>what_1L_chr</dt>
-<dd><p>What (a character vector of length one), Default: 'public'</p></dd>
+<dt>consent_1L_chr</dt>
+<dd><p>Consent (a character vector of length one), Default: ''</p></dd>
 
 
 <dt>digits_1L_int</dt>
 <dd><p>Digits (an integer vector of length one), Default: 3</p></dd>
 
 
+<dt>prefd_mdl_types_chr</dt>
+<dd><p>Preferred model types (a character vector), Default: NULL</p></dd>
+
+
 <dt>reference_1L_int</dt>
 <dd><p>Reference (an integer vector of length one), Default: NA</p></dd>
+
+
+<dt>what_1L_chr</dt>
+<dd><p>What (a character vector of length one), Default: 'public'</p></dd>
+
+
+<dt>x_labels_chr</dt>
+<dd><p>X labels (a character vector), Default: character(0)</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Additional arguments</p></dd>
 
 
 <dt>type_1L_chr</dt>
@@ -129,6 +148,12 @@ author method applied to SpecificProject"><meta property="og:image" content="htt
     
 
 <p>x (An object of class SpecificModels)</p>
+
+
+<p>x (An object of class SpecificSynopsis)</p>
+
+
+<p>x (An object of class SpecificProject)</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

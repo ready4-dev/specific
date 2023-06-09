@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9084</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9088</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,17 +59,21 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">write_mdl_type_multi_outps</span><span class="op">(</span></span>
 <span>  <span class="va">data_tb</span>,</span>
-<span>  folds_1L_int <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  <span class="va">predrs_var_nms_chr</span>,</span>
-<span>  covar_var_nms_chr <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
-<span>  start_1L_chr <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">mdl_type_1L_chr</span>,</span>
-<span>  depnt_var_nm_1L_chr <span class="op">=</span> <span class="st">"utl_total_w"</span>,</span>
-<span>  <span class="va">path_to_write_to_1L_chr</span>,</span>
 <span>  <span class="va">new_dir_nm_1L_chr</span>,</span>
-<span>  mdl_types_lup <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">path_to_write_to_1L_chr</span>,</span>
+<span>  <span class="va">predrs_var_nms_chr</span>,</span>
+<span>  consent_1L_chr <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  consent_indcs_int <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>  covar_var_nms_chr <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
+<span>  depnt_var_min_val_1L_dbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  depnt_var_nm_1L_chr <span class="op">=</span> <span class="st">"utl_total_w"</span>,</span>
 <span>  fl_nm_pfx_1L_chr <span class="op">=</span> <span class="st">"C_PREDR"</span>,</span>
-<span>  plt_indcs_int <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">5</span><span class="op">)</span></span>
+<span>  folds_1L_int <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  mdl_types_lup <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  options_chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Y"</span>, <span class="st">"N"</span><span class="op">)</span>,</span>
+<span>  plt_indcs_int <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">5</span><span class="op">)</span>,</span>
+<span>  start_1L_chr <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -79,48 +83,64 @@
 <dd><p>Data (a tibble)</p></dd>
 
 
-<dt>folds_1L_int</dt>
-<dd><p>Folds (an integer vector of length one), Default: 10</p></dd>
-
-
-<dt>predrs_var_nms_chr</dt>
-<dd><p>Predictors variable names (a character vector)</p></dd>
-
-
-<dt>covar_var_nms_chr</dt>
-<dd><p>Covariate variable names (a character vector), Default: 'NA'</p></dd>
-
-
-<dt>start_1L_chr</dt>
-<dd><p>Start (a character vector of length one), Default: NULL</p></dd>
-
-
 <dt>mdl_type_1L_chr</dt>
 <dd><p>Model type (a character vector of length one)</p></dd>
-
-
-<dt>depnt_var_nm_1L_chr</dt>
-<dd><p>Dependent variable name (a character vector of length one), Default: 'utl_total_w'</p></dd>
-
-
-<dt>path_to_write_to_1L_chr</dt>
-<dd><p>Path to write to (a character vector of length one)</p></dd>
 
 
 <dt>new_dir_nm_1L_chr</dt>
 <dd><p>New directory name (a character vector of length one)</p></dd>
 
 
-<dt>mdl_types_lup</dt>
-<dd><p>Model types (a lookup table), Default: NULL</p></dd>
+<dt>path_to_write_to_1L_chr</dt>
+<dd><p>Path to write to (a character vector of length one)</p></dd>
+
+
+<dt>predrs_var_nms_chr</dt>
+<dd><p>Predictors variable names (a character vector)</p></dd>
+
+
+<dt>consent_1L_chr</dt>
+<dd><p>Consent (a character vector of length one), Default: ''</p></dd>
+
+
+<dt>consent_indcs_int</dt>
+<dd><p>Consent indices (an integer vector), Default: 1</p></dd>
+
+
+<dt>covar_var_nms_chr</dt>
+<dd><p>Covariate variable names (a character vector), Default: 'NA'</p></dd>
+
+
+<dt>depnt_var_min_val_1L_dbl</dt>
+<dd><p>Dependent variable minimum value (a double vector of length one), Default: numeric(0)</p></dd>
+
+
+<dt>depnt_var_nm_1L_chr</dt>
+<dd><p>Dependent variable name (a character vector of length one), Default: 'utl_total_w'</p></dd>
 
 
 <dt>fl_nm_pfx_1L_chr</dt>
 <dd><p>File name prefix (a character vector of length one), Default: 'C_PREDR'</p></dd>
 
 
+<dt>folds_1L_int</dt>
+<dd><p>Folds (an integer vector of length one), Default: 10</p></dd>
+
+
+<dt>mdl_types_lup</dt>
+<dd><p>Model types (a lookup table), Default: NULL</p></dd>
+
+
+<dt>options_chr</dt>
+<dd><p>Options (a character vector), Default: c("Y", "N")</p></dd>
+
+
 <dt>plt_indcs_int</dt>
 <dd><p>Plot indices (an integer vector), Default: c(3, 5)</p></dd>
+
+
+<dt>start_1L_chr</dt>
+<dd><p>Start (a character vector of length one), Default: NULL</p></dd>
 
 </dl></div>
     <div class="section level2">

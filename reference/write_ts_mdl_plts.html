@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9084</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9088</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,24 +59,27 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">write_ts_mdl_plts</span><span class="op">(</span></span>
 <span>  <span class="va">brms_mdl</span>,</span>
-<span>  table_predn_mdl <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">tfd_data_tb</span>,</span>
 <span>  <span class="va">mdl_nm_1L_chr</span>,</span>
 <span>  <span class="va">path_to_write_to_1L_chr</span>,</span>
-<span>  depnt_var_nm_1L_chr <span class="op">=</span> <span class="st">"utl_total_w"</span>,</span>
+<span>  <span class="va">tfd_data_tb</span>,</span>
+<span>  args_ls <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  consent_1L_chr <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  consent_indcs_int <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  depnt_var_desc_1L_chr <span class="op">=</span> <span class="st">"Utility score"</span>,</span>
+<span>  depnt_var_nm_1L_chr <span class="op">=</span> <span class="st">"utl_total_w"</span>,</span>
+<span>  height_dbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  options_chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Y"</span>, <span class="st">"N"</span><span class="op">)</span>,</span>
 <span>  predn_type_1L_chr <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  round_var_nm_1L_chr <span class="op">=</span> <span class="st">"round"</span>,</span>
+<span>  rsl_dbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fl">10</span><span class="op">)</span>,</span>
 <span>  sd_dbl <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>  seed_1L_dbl <span class="op">=</span> <span class="fl">23456</span>,</span>
 <span>  sfx_1L_chr <span class="op">=</span> <span class="st">" from table"</span>,</span>
+<span>  table_predn_mdl <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  tfmn_1L_chr <span class="op">=</span> <span class="st">"NTF"</span>,</span>
 <span>  units_1L_chr <span class="op">=</span> <span class="st">"in"</span>,</span>
-<span>  height_dbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  width_dbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  rsl_dbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fl">10</span><span class="op">)</span>,</span>
-<span>  args_ls <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  seed_1L_dbl <span class="op">=</span> <span class="fl">23456</span>,</span>
-<span>  utl_min_val_1L_dbl <span class="op">=</span> <span class="op">-</span><span class="fl">1</span></span>
+<span>  utl_min_val_1L_dbl <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>  width_dbl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -84,14 +87,6 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>brms_mdl</dt>
 <dd><p>Bayesian regression models (a model)</p></dd>
-
-
-<dt>table_predn_mdl</dt>
-<dd><p>Table prediction (a model), Default: NULL</p></dd>
-
-
-<dt>tfd_data_tb</dt>
-<dd><p>Transformed data (a tibble)</p></dd>
 
 
 <dt>mdl_nm_1L_chr</dt>
@@ -102,12 +97,36 @@
 <dd><p>Path to write to (a character vector of length one)</p></dd>
 
 
-<dt>depnt_var_nm_1L_chr</dt>
-<dd><p>Dependent variable name (a character vector of length one), Default: 'utl_total_w'</p></dd>
+<dt>tfd_data_tb</dt>
+<dd><p>Transformed data (a tibble)</p></dd>
+
+
+<dt>args_ls</dt>
+<dd><p>Arguments (a list), Default: NULL</p></dd>
+
+
+<dt>consent_1L_chr</dt>
+<dd><p>Consent (a character vector of length one), Default: ''</p></dd>
+
+
+<dt>consent_indcs_int</dt>
+<dd><p>Consent indices (an integer vector), Default: 1</p></dd>
 
 
 <dt>depnt_var_desc_1L_chr</dt>
 <dd><p>Dependent variable description (a character vector of length one), Default: 'Utility score'</p></dd>
+
+
+<dt>depnt_var_nm_1L_chr</dt>
+<dd><p>Dependent variable name (a character vector of length one), Default: 'utl_total_w'</p></dd>
+
+
+<dt>height_dbl</dt>
+<dd><p>Height (a double vector), Default: c(rep(6, 2), rep(5, 8))</p></dd>
+
+
+<dt>options_chr</dt>
+<dd><p>Options (a character vector), Default: c("Y", "N")</p></dd>
 
 
 <dt>predn_type_1L_chr</dt>
@@ -118,12 +137,24 @@
 <dd><p>Round variable name (a character vector of length one), Default: 'round'</p></dd>
 
 
+<dt>rsl_dbl</dt>
+<dd><p>Resolution (a double vector), Default: rep(300, 10)</p></dd>
+
+
 <dt>sd_dbl</dt>
 <dd><p>Standard deviation (a double vector), Default: NA</p></dd>
 
 
+<dt>seed_1L_dbl</dt>
+<dd><p>Seed (a double vector of length one), Default: 23456</p></dd>
+
+
 <dt>sfx_1L_chr</dt>
 <dd><p>Suffix (a character vector of length one), Default: ' from table'</p></dd>
+
+
+<dt>table_predn_mdl</dt>
+<dd><p>Table prediction (a model), Default: NULL</p></dd>
 
 
 <dt>tfmn_1L_chr</dt>
@@ -134,28 +165,12 @@
 <dd><p>Units (a character vector of length one), Default: 'in'</p></dd>
 
 
-<dt>height_dbl</dt>
-<dd><p>Height (a double vector), Default: c(rep(6, 2), rep(5, 8))</p></dd>
+<dt>utl_min_val_1L_dbl</dt>
+<dd><p>Utility minimum value (a double vector of length one), Default: -1</p></dd>
 
 
 <dt>width_dbl</dt>
 <dd><p>Width (a double vector), Default: c(rep(6, 2), rep(6, 8))</p></dd>
-
-
-<dt>rsl_dbl</dt>
-<dd><p>Resolution (a double vector), Default: rep(300, 10)</p></dd>
-
-
-<dt>args_ls</dt>
-<dd><p>Arguments (a list), Default: NULL</p></dd>
-
-
-<dt>seed_1L_dbl</dt>
-<dd><p>Seed (a double vector of length one), Default: 23456</p></dd>
-
-
-<dt>utl_min_val_1L_dbl</dt>
-<dd><p>Utility minimum value (a double vector of length one), Default: -1</p></dd>
 
 </dl></div>
     <div class="section level2">

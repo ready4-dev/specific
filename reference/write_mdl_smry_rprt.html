@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9084</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9088</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,7 +60,10 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">write_mdl_smry_rprt</span><span class="op">(</span></span>
 <span>  input_params_ls <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  abstract_args_ls <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  consent_1L_chr <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  consent_indcs_int <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  dv_ds_nm_and_url_chr <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  options_chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Y"</span>, <span class="st">"N"</span><span class="op">)</span>,</span>
 <span>  rprt_lup <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  rcrd_nm_1L_chr <span class="op">=</span> <span class="st">"AAA_RPRT_WRTNG_MTH"</span>,</span>
 <span>  rprt_nm_1L_chr <span class="op">=</span> <span class="st">"AAA_TTU_MDL_CTG"</span>,</span>
@@ -79,8 +82,20 @@
 <dd><p>Abstract arguments (a list), Default: NULL</p></dd>
 
 
+<dt>consent_1L_chr</dt>
+<dd><p>Consent (a character vector of length one), Default: ''</p></dd>
+
+
+<dt>consent_indcs_int</dt>
+<dd><p>Consent indices (an integer vector), Default: 1</p></dd>
+
+
 <dt>dv_ds_nm_and_url_chr</dt>
 <dd><p>Dataverse dataset name and url (a character vector), Default: NULL</p></dd>
+
+
+<dt>options_chr</dt>
+<dd><p>Options (a character vector), Default: c("Y", "N")</p></dd>
 
 
 <dt>rprt_lup</dt>

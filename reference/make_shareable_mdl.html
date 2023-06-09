@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9084</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9088</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,14 +60,14 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_shareable_mdl</span><span class="op">(</span></span>
 <span>  <span class="va">fake_ds_tb</span>,</span>
 <span>  <span class="va">mdl_smry_tb</span>,</span>
+<span>  control_1L_chr <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
 <span>  depnt_var_nm_1L_chr <span class="op">=</span> <span class="st">"utl_total_w"</span>,</span>
 <span>  id_var_nm_1L_chr <span class="op">=</span> <span class="st">"fkClientID"</span>,</span>
-<span>  tfmn_1L_chr <span class="op">=</span> <span class="st">"CLL"</span>,</span>
 <span>  mdl_type_1L_chr <span class="op">=</span> <span class="st">"OLS_CLL"</span>,</span>
 <span>  mdl_types_lup <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  control_1L_chr <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
+<span>  seed_1L_int <span class="op">=</span> <span class="fl">12345L</span>,</span>
 <span>  start_1L_chr <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
-<span>  seed_1L_int <span class="op">=</span> <span class="fl">12345L</span></span>
+<span>  tfmn_1L_chr <span class="op">=</span> <span class="st">"CLL"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -81,16 +81,16 @@
 <dd><p>Model summary (a tibble)</p></dd>
 
 
+<dt>control_1L_chr</dt>
+<dd><p>Control (a character vector of length one), Default: 'NA'</p></dd>
+
+
 <dt>depnt_var_nm_1L_chr</dt>
 <dd><p>Dependent variable name (a character vector of length one), Default: 'utl_total_w'</p></dd>
 
 
 <dt>id_var_nm_1L_chr</dt>
 <dd><p>Identity variable name (a character vector of length one), Default: 'fkClientID'</p></dd>
-
-
-<dt>tfmn_1L_chr</dt>
-<dd><p>Transformation (a character vector of length one), Default: 'CLL'</p></dd>
 
 
 <dt>mdl_type_1L_chr</dt>
@@ -101,16 +101,16 @@
 <dd><p>Model types (a lookup table), Default: NULL</p></dd>
 
 
-<dt>control_1L_chr</dt>
-<dd><p>Control (a character vector of length one), Default: 'NA'</p></dd>
+<dt>seed_1L_int</dt>
+<dd><p>Seed (an integer vector of length one), Default: 12345</p></dd>
 
 
 <dt>start_1L_chr</dt>
 <dd><p>Start (a character vector of length one), Default: 'NA'</p></dd>
 
 
-<dt>seed_1L_int</dt>
-<dd><p>Seed (an integer vector of length one), Default: 12345</p></dd>
+<dt>tfmn_1L_chr</dt>
+<dd><p>Transformation (a character vector of length one), Default: 'CLL'</p></dd>
 
 </dl></div>
     <div class="section level2">

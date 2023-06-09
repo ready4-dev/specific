@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9084</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9088</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,13 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_predr_vars_nms_ls</span><span class="op">(</span><span class="va">main_predrs_chr</span>, <span class="va">covars_ls</span>, existing_predrs_ls <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_predr_vars_nms_ls</span><span class="op">(</span></span>
+<span>  <span class="va">main_predrs_chr</span>,</span>
+<span>  <span class="va">covars_ls</span>,</span>
+<span>  combinations_1L_lgl <span class="op">=</span> <span class="cn">F</span>,</span>
+<span>  existing_predrs_ls <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_nbr_of_covars_1L_int <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -70,8 +76,16 @@
 <dd><p>Covariates (a list)</p></dd>
 
 
+<dt>combinations_1L_lgl</dt>
+<dd><p>Combinations (a logical vector of length one), Default: F</p></dd>
+
+
 <dt>existing_predrs_ls</dt>
 <dd><p>Existing predictors (a list), Default: NULL</p></dd>
+
+
+<dt>max_nbr_of_covars_1L_int</dt>
+<dd><p>Maximum number of covariates (an integer vector of length one), Default: integer(0)</p></dd>
 
 </dl></div>
     <div class="section level2">

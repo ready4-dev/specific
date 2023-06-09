@@ -241,6 +241,9 @@
     <loc>https://ready4-dev.github.io/specific/reference/make_cs_ts_ratios_tb.html</loc>
   </url>
   <url>
+    <loc>https://ready4-dev.github.io/specific/reference/make_csnl_example_predrs.html</loc>
+  </url>
+  <url>
     <loc>https://ready4-dev.github.io/specific/reference/make_data_availability_text.html</loc>
   </url>
   <url>
@@ -275,6 +278,9 @@
   </url>
   <url>
     <loc>https://ready4-dev.github.io/specific/reference/make_indpnt_predrs_lngl_tbls_ref.html</loc>
+  </url>
+  <url>
+    <loc>https://ready4-dev.github.io/specific/reference/make_inner_loop_mdl_smry.html</loc>
   </url>
   <url>
     <loc>https://ready4-dev.github.io/specific/reference/make_input_params.html</loc>
@@ -322,6 +328,9 @@
     <loc>https://ready4-dev.github.io/specific/reference/make_mdls_smry_tbls_ls.html</loc>
   </url>
   <url>
+    <loc>https://ready4-dev.github.io/specific/reference/make_ms_smry_tbls_ls.html</loc>
+  </url>
+  <url>
     <loc>https://ready4-dev.github.io/specific/reference/make_nbr_at_fup_text.html</loc>
   </url>
   <url>
@@ -334,7 +343,7 @@
     <loc>https://ready4-dev.github.io/specific/reference/make_new_specific_predictors.html</loc>
   </url>
   <url>
-    <loc>https://ready4-dev.github.io/specific/reference/make_paths_to_ss_plts_ls.html</loc>
+    <loc>https://ready4-dev.github.io/specific/reference/make_paths_to_ms_smry_plts_ls.html</loc>
   </url>
   <url>
     <loc>https://ready4-dev.github.io/specific/reference/make_plot_fn_and_args_ls.html</loc>
@@ -404,9 +413,6 @@
   </url>
   <url>
     <loc>https://ready4-dev.github.io/specific/reference/make_sngl_mdl_smry_tb.html</loc>
-  </url>
-  <url>
-    <loc>https://ready4-dev.github.io/specific/reference/make_ss_tbls_ls.html</loc>
   </url>
   <url>
     <loc>https://ready4-dev.github.io/specific/reference/make_study_descs_ls.html</loc>
@@ -604,10 +610,13 @@
     <loc>https://ready4-dev.github.io/specific/reference/transform_tbl_to_rnd_vars.html</loc>
   </url>
   <url>
-    <loc>https://ready4-dev.github.io/specific/reference/transform_timepoint_vals.html</loc>
+    <loc>https://ready4-dev.github.io/specific/reference/transform_tbls_for_covar_nms.html</loc>
   </url>
   <url>
-    <loc>https://ready4-dev.github.io/specific/reference/transform_ts_mdl_data.html</loc>
+    <loc>https://ready4-dev.github.io/specific/reference/transform_tbls_for_csnl_mdls.html</loc>
+  </url>
+  <url>
+    <loc>https://ready4-dev.github.io/specific/reference/transform_timepoint_vals.html</loc>
   </url>
   <url>
     <loc>https://ready4-dev.github.io/specific/reference/transform_uid_var.html</loc>
