@@ -44,7 +44,8 @@ methods::setMethod("author", "SpecificModels", function (x, consent_1L_chr = "",
                 paths_ls <- rlang::exec(transform_paths_ls$fn, 
                   paths_ls, !!!transform_paths_ls$args_ls)
             }
-            paths_ls <- ready4show::write_all_outp_dirs(paths_ls = paths_ls)
+            paths_ls <- ready4show::write_all_outp_dirs(paths_ls = paths_ls, 
+                consent_1L_chr = consent_1L_chr)
             x@b_SpecificParameters@paths_ls <- paths_ls
         }
         if (what_1L_chr %in% c("descriptives", "all")) {
