@@ -132,6 +132,7 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
 #' @aliases depict,SpecificProject-method
 #' @export 
 #' @importFrom purrr map_lgl map map_int discard
+#' @importFrom stringr str_detect
 #' @importFrom knitr include_graphics
 #' @importFrom ready4 depict
 methods::setMethod("depict", "SpecificProject", function (x, mdl_indcs_int = NULL, output_type_1L_chr = "HTML", 
@@ -149,7 +150,7 @@ methods::setMethod("depict", "SpecificProject", function (x, mdl_indcs_int = NUL
         purrr::map(~{
             pfx_1L_chr <- paste0("A_Candidate_Mdls_Cmprsn/A_RT_", 
                 predr_var_nm_1L_chr, "_", .x)
-            paths_chr <- plt_paths_chr[plt_paths_chr %>% purrr::map_lgl(~startsWith(.x, 
+            paths_chr <- plt_paths_chr[plt_paths_chr %>% purrr::map_lgl(~stringr::str_detect(.x, 
                 pfx_1L_chr))]
             paths_chr <- paste0(x@paths_chr, "/", paths_chr)
             paths_chr[purrr::map_int(c("_LNR_CMPRSN", "_AUTOPLT", 

@@ -174,12 +174,11 @@ methods::setMethod("author", "SpecificProject", function (x, consent_1L_chr = ""
         }
         ready4::write_with_consent(consented_fn = saveRDS, prompt_1L_chr = paste0("Do you confirm that you want to write the file ", 
             paste0(fl_nm_1L_chr, ".RDS"), " to ", path_1L_chr, 
-            "?"), consent_1L_chr = consent_1L_chr, consent_indcs_int = consent_indcs_int, 
-            consented_args_ls = list(object = output_xx, file = paste0(path_1L_chr, 
-                "/", fl_nm_1L_chr, ".RDS")), consented_msg_1L_chr = paste0("File ", 
-                paste0(fl_nm_1L_chr, ".RDS"), " has been written to ", 
-                path_1L_chr, "."), declined_msg_1L_chr = "Write request cancelled - no new files have been written.", 
-            options_chr = options_chr)
+            "?"), consent_1L_chr = consent_1L_chr, consented_args_ls = list(object = output_xx, 
+            file = paste0(path_1L_chr, "/", fl_nm_1L_chr, ".RDS")), 
+            consented_msg_1L_chr = paste0("File ", paste0(fl_nm_1L_chr, 
+                ".RDS"), " has been written to ", path_1L_chr, 
+                "."), declined_msg_1L_chr = "Write request cancelled - no new files have been written.")
     }
     return(x)
 })

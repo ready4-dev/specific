@@ -118,7 +118,6 @@ author_SpecificProject <- function(x,
                                                       path_1L_chr,
                                                       "?"),
                                consent_1L_chr = consent_1L_chr,
-                               consent_indcs_int = consent_indcs_int,
                                consented_args_ls = list(object = output_xx,
                                                         file = paste0(path_1L_chr, "/", fl_nm_1L_chr,".RDS")),
                                consented_msg_1L_chr = paste0("File ",
@@ -126,8 +125,7 @@ author_SpecificProject <- function(x,
                                                              " has been written to ",
                                                              path_1L_chr,
                                                              "."),
-                               declined_msg_1L_chr = "Write request cancelled - no new files have been written.",
-                               options_chr = options_chr)
+                               declined_msg_1L_chr = "Write request cancelled - no new files have been written.")
   }
   return(x)
 }

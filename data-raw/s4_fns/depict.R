@@ -19,10 +19,8 @@ depict_SpecificProject <- function(x,
                            "_",
                            .x)
       paths_chr <- plt_paths_chr[plt_paths_chr %>%
-                                   purrr::map_lgl(~startsWith(.x,pfx_1L_chr))]
-      paths_chr <- paste0(x@paths_chr,
-                          "/",
-                          paths_chr)
+                                   purrr::map_lgl(~stringr::str_detect(.x,pfx_1L_chr))]
+      paths_chr <- paste0(x@paths_chr, "/", paths_chr)
       paths_chr[purrr::map_int(c("_LNR_CMPRSN",
                                  "_AUTOPLT",
                                  "_PRED_DNSTY",

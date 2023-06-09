@@ -6,32 +6,45 @@
 \usage{
 make_smry_of_ts_mdl_outp(
   data_tb,
-  predr_vars_nms_chr,
   mdl_nm_1L_chr,
-  path_to_write_to_1L_chr = NA_character_,
+  mdl_types_lup,
+  predr_vars_nms_chr,
+  predictors_lup,
+  backend_1L_chr = getOption("brms.backend", "rstan"),
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
+  control_ls = NULL,
   depnt_var_min_val_1L_dbl = numeric(0),
   depnt_var_nm_1L_chr = "utl_total_w",
   id_var_nm_1L_chr = "fkClientID",
-  round_var_nm_1L_chr = "round",
-  round_bl_val_1L_chr = "Baseline",
-  predictors_lup,
-  utl_min_val_1L_dbl = -1,
-  backend_1L_chr = getOption("brms.backend", "rstan"),
   iters_1L_int = 4000L,
-  mdl_types_lup,
-  seed_1L_int = 1000L,
+  options_chr = c("Y", "N"),
+  path_to_write_to_1L_chr = NA_character_,
   prior_ls = NULL,
-  control_ls = NULL
+  round_bl_val_1L_chr = "Baseline",
+  round_var_nm_1L_chr = "round",
+  seed_1L_int = 1000L,
+  utl_min_val_1L_dbl = -1
 )
 }
 \arguments{
 \item{data_tb}{Data (a tibble)}
 
-\item{predr_vars_nms_chr}{Predictor variables names (a character vector)}
-
 \item{mdl_nm_1L_chr}{Model name (a character vector of length one)}
 
-\item{path_to_write_to_1L_chr}{Path to write to (a character vector of length one), Default: 'NA'}
+\item{mdl_types_lup}{Model types (a lookup table)}
+
+\item{predr_vars_nms_chr}{Predictor variables names (a character vector)}
+
+\item{predictors_lup}{Predictors (a lookup table)}
+
+\item{backend_1L_chr}{Backend (a character vector of length one), Default: getOption("brms.backend", "rstan")}
+
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
+\item{control_ls}{Control (a list), Default: NULL}
 
 \item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
 
@@ -39,25 +52,21 @@ make_smry_of_ts_mdl_outp(
 
 \item{id_var_nm_1L_chr}{Identity variable name (a character vector of length one), Default: 'fkClientID'}
 
-\item{round_var_nm_1L_chr}{Round variable name (a character vector of length one), Default: 'round'}
-
-\item{round_bl_val_1L_chr}{Round baseline value (a character vector of length one), Default: 'Baseline'}
-
-\item{predictors_lup}{Predictors (a lookup table)}
-
-\item{utl_min_val_1L_dbl}{Utility minimum value (a double vector of length one), Default: -1}
-
-\item{backend_1L_chr}{Backend (a character vector of length one), Default: getOption("brms.backend", "rstan")}
-
 \item{iters_1L_int}{Iterations (an integer vector of length one), Default: 4000}
 
-\item{mdl_types_lup}{Model types (a lookup table)}
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 
-\item{seed_1L_int}{Seed (an integer vector of length one), Default: 1000}
+\item{path_to_write_to_1L_chr}{Path to write to (a character vector of length one), Default: 'NA'}
 
 \item{prior_ls}{Prior (a list), Default: NULL}
 
-\item{control_ls}{Control (a list), Default: NULL}
+\item{round_bl_val_1L_chr}{Round baseline value (a character vector of length one), Default: 'Baseline'}
+
+\item{round_var_nm_1L_chr}{Round variable name (a character vector of length one), Default: 'round'}
+
+\item{seed_1L_int}{Seed (an integer vector of length one), Default: 1000}
+
+\item{utl_min_val_1L_dbl}{Utility minimum value (a double vector of length one), Default: -1}
 }
 \value{
 Summary of time series (a list of models)

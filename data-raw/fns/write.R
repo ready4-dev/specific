@@ -850,7 +850,10 @@ write_predr_cmprsn_outps <- function (data_tb, path_to_write_to_1L_chr, new_dir_
   boruta_mdl <- Boruta::Boruta(stats::as.formula(paste0(depnt_var_nm_1L_chr,
                                                         " ~ .")), data = data_tb, maxRuns = max_nbr_of_boruta_mdl_runs_int)
   output_dir_1L_chr <- write_new_outp_dir(path_to_write_to_1L_chr,
-                                          new_dir_nm_1L_chr = new_dir_nm_1L_chr)
+                                          consent_1L_chr = consent_1L_chr,
+                                          consent_indcs_int = consent_indcs_int,
+                                          new_dir_nm_1L_chr = new_dir_nm_1L_chr,
+                                          options_chr = options_chr)
   purrr::pwalk(list(fn_ls = list(randomForest::varImpPlot,
                                  plot), fn_args_ls_ls = list(list(rf_mdl, main = ""),
                                                              list(boruta_mdl, cex = 1.5, cex.axis = 0.8, las = 2,
@@ -1743,7 +1746,10 @@ write_ts_mdls_from_alg_outp <- function (outp_smry_ls, # rename lngl
     path_to_write_to_1L_chr <- outp_smry_ls$path_to_write_to_1L_chr %>%
       stringr::str_sub(end=-8)
   output_dir_1L_chr <- write_new_outp_dir(path_to_write_to_1L_chr,
-                                          new_dir_nm_1L_chr = new_dir_nm_1L_chr)
+                                          consent_1L_chr = consent_1L_chr,
+                                          consent_indcs_int = consent_indcs_int,
+                                          new_dir_nm_1L_chr = new_dir_nm_1L_chr,
+                                          options_chr = options_chr)
   outp_smry_ls$predr_vars_nms_ls <- make_predr_vars_nms_ls(main_predrs_chr = outp_smry_ls$predr_cmprsn_tb$predr_chr,
                                                            covars_ls = list(outp_smry_ls$prefd_covars_chr),
                                                            combinations_1L_lgl = combinations_1L_lgl,

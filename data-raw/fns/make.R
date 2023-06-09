@@ -2418,13 +2418,25 @@ make_smry_of_mdl_outp <- function (data_tb,
   return(smry_of_one_predr_mdl_tb)
 }
 make_smry_of_ts_mdl_outp <- function (data_tb, # rename ts to lngl
-                                      predr_vars_nms_chr, mdl_nm_1L_chr, path_to_write_to_1L_chr = NA_character_,
+                                      mdl_nm_1L_chr,
+                                      mdl_types_lup,
+                                      predr_vars_nms_chr,
+                                      predictors_lup,
+                                      backend_1L_chr = getOption("brms.backend", "rstan"),
+                                      consent_1L_chr = "",
+                                      consent_indcs_int = 1L,
+                                      control_ls = NULL,
                                       depnt_var_min_val_1L_dbl = numeric(0),
                                       depnt_var_nm_1L_chr = "utl_total_w", # Remove Default
                                       id_var_nm_1L_chr = "fkClientID",
-                                      round_var_nm_1L_chr = "round", round_bl_val_1L_chr = "Baseline", predictors_lup, utl_min_val_1L_dbl = -1,
-                                      backend_1L_chr = getOption("brms.backend", "rstan"), iters_1L_int = 4000L, mdl_types_lup,
-                                      seed_1L_int = 1000L, prior_ls = NULL, control_ls = NULL)
+                                      iters_1L_int = 4000L,
+                                      options_chr = c("Y", "N"),
+                                      path_to_write_to_1L_chr = NA_character_,
+                                      prior_ls = NULL,
+                                      round_bl_val_1L_chr = "Baseline",
+                                      round_var_nm_1L_chr = "round",
+                                      seed_1L_int = 1000L,
+                                      utl_min_val_1L_dbl = -1)
 {
   scaling_fctr_dbl <- predr_vars_nms_chr %>% purrr::map_dbl(~
                                                               ifelse(.x %in% predictors_lup$short_name_chr,
@@ -2481,15 +2493,34 @@ make_smry_of_ts_mdl_outp <- function (data_tb, # rename ts to lngl
   if (!is.na(path_to_write_to_1L_chr)) {
     smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr <- paste0(path_to_write_to_1L_chr,
                                                       "/", mdl_nm_1L_chr, ".RDS")
-    if (file.exists(smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr))
-      file.remove(smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr)
-    saveRDS(mdl_ls, smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr)
+    # if (file.exists(smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr))
+    #   file.remove(smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr)
+    capture_xx <- ready4::write_to_delete_fls(smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr,
+                                              consent_1L_chr = consent_1L_chr,
+                                              consent_indcs_int = consent_indcs_int,
+                                              options_chr = options_chr)
+    ready4::write_with_consent(consented_fn = saveRDS,
+                               consent_1L_chr = consent_1L_chr,
+                               consent_indcs_int = consent_indcs_int,
+                               consented_args_ls = list(object = mdl_ls,
+                                                        file = smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr),
+                               consented_msg_1L_chr = paste0("File ",
+                                                             smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr,
+                                                             " has been written"),
+                               declined_msg_1L_chr = "Write request cancelled - no new files have been written.",
+                               options_chr = options_chr,
+                               prompt_1L_chr = paste0("Do you confirm that you want to write the file ",
+                                                      smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr,
+                                                      "?"))
     smry_of_ts_mdl_ls$paths_to_mdl_plts_chr <- write_ts_mdl_plts(mdl_ls,
-                                                                 tfd_data_tb = tfd_data_tb,
+                                                                 consent_1L_chr = consent_1L_chr,
+                                                                 consent_indcs_int = consent_indcs_int,
                                                                  depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
                                                                  mdl_nm_1L_chr = mdl_nm_1L_chr,
+                                                                 options_chr = options_chr,
                                                                  path_to_write_to_1L_chr = path_to_write_to_1L_chr,
                                                                  round_var_nm_1L_chr = round_var_nm_1L_chr,
+                                                                 tfd_data_tb = tfd_data_tb,
                                                                  tfmn_1L_chr = tfmn_1L_chr,
                                                                  utl_min_val_1L_dbl = utl_min_val_1L_dbl)
   }

@@ -2666,37 +2666,42 @@ make_smry_of_mdl_outp <- function (data_tb, folds_1L_int = 10, depnt_var_min_val
 #' Make summary of time series model output
 #' @description make_smry_of_ts_mdl_outp() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make summary of time series model output. The function returns Summary of time series (a list of models).
 #' @param data_tb Data (a tibble)
-#' @param predr_vars_nms_chr Predictor variables names (a character vector)
 #' @param mdl_nm_1L_chr Model name (a character vector of length one)
-#' @param path_to_write_to_1L_chr Path to write to (a character vector of length one), Default: 'NA'
+#' @param mdl_types_lup Model types (a lookup table)
+#' @param predr_vars_nms_chr Predictor variables names (a character vector)
+#' @param predictors_lup Predictors (a lookup table)
+#' @param backend_1L_chr Backend (a character vector of length one), Default: getOption("brms.backend", "rstan")
+#' @param consent_1L_chr Consent (a character vector of length one), Default: ''
+#' @param consent_indcs_int Consent indices (an integer vector), Default: 1
+#' @param control_ls Control (a list), Default: NULL
 #' @param depnt_var_min_val_1L_dbl Dependent variable minimum value (a double vector of length one), Default: numeric(0)
 #' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: 'utl_total_w'
 #' @param id_var_nm_1L_chr Identity variable name (a character vector of length one), Default: 'fkClientID'
-#' @param round_var_nm_1L_chr Round variable name (a character vector of length one), Default: 'round'
-#' @param round_bl_val_1L_chr Round baseline value (a character vector of length one), Default: 'Baseline'
-#' @param predictors_lup Predictors (a lookup table)
-#' @param utl_min_val_1L_dbl Utility minimum value (a double vector of length one), Default: -1
-#' @param backend_1L_chr Backend (a character vector of length one), Default: getOption("brms.backend", "rstan")
 #' @param iters_1L_int Iterations (an integer vector of length one), Default: 4000
-#' @param mdl_types_lup Model types (a lookup table)
-#' @param seed_1L_int Seed (an integer vector of length one), Default: 1000
+#' @param options_chr Options (a character vector), Default: c("Y", "N")
+#' @param path_to_write_to_1L_chr Path to write to (a character vector of length one), Default: 'NA'
 #' @param prior_ls Prior (a list), Default: NULL
-#' @param control_ls Control (a list), Default: NULL
+#' @param round_bl_val_1L_chr Round baseline value (a character vector of length one), Default: 'Baseline'
+#' @param round_var_nm_1L_chr Round variable name (a character vector of length one), Default: 'round'
+#' @param seed_1L_int Seed (an integer vector of length one), Default: 1000
+#' @param utl_min_val_1L_dbl Utility minimum value (a double vector of length one), Default: -1
 #' @return Summary of time series (a list of models)
 #' @rdname make_smry_of_ts_mdl_outp
 #' @export 
 #' @importFrom purrr map_dbl
-#' @importFrom ready4 get_from_lup_obj
+#' @importFrom ready4 get_from_lup_obj write_to_delete_fls write_with_consent
 #' @importFrom stringr str_remove str_sub
 #' @importFrom stringi stri_locate_first_fixed
 #' @importFrom rlang exec
 #' @keywords internal
-make_smry_of_ts_mdl_outp <- function (data_tb, predr_vars_nms_chr, mdl_nm_1L_chr, path_to_write_to_1L_chr = NA_character_, 
-    depnt_var_min_val_1L_dbl = numeric(0), depnt_var_nm_1L_chr = "utl_total_w", 
-    id_var_nm_1L_chr = "fkClientID", round_var_nm_1L_chr = "round", 
-    round_bl_val_1L_chr = "Baseline", predictors_lup, utl_min_val_1L_dbl = -1, 
-    backend_1L_chr = getOption("brms.backend", "rstan"), iters_1L_int = 4000L, 
-    mdl_types_lup, seed_1L_int = 1000L, prior_ls = NULL, control_ls = NULL) 
+make_smry_of_ts_mdl_outp <- function (data_tb, mdl_nm_1L_chr, mdl_types_lup, predr_vars_nms_chr, 
+    predictors_lup, backend_1L_chr = getOption("brms.backend", 
+        "rstan"), consent_1L_chr = "", consent_indcs_int = 1L, 
+    control_ls = NULL, depnt_var_min_val_1L_dbl = numeric(0), 
+    depnt_var_nm_1L_chr = "utl_total_w", id_var_nm_1L_chr = "fkClientID", 
+    iters_1L_int = 4000L, options_chr = c("Y", "N"), path_to_write_to_1L_chr = NA_character_, 
+    prior_ls = NULL, round_bl_val_1L_chr = "Baseline", round_var_nm_1L_chr = "round", 
+    seed_1L_int = 1000L, utl_min_val_1L_dbl = -1) 
 {
     scaling_fctr_dbl <- predr_vars_nms_chr %>% purrr::map_dbl(~ifelse(.x %in% 
         predictors_lup$short_name_chr, ready4::get_from_lup_obj(predictors_lup, 
@@ -2740,14 +2745,22 @@ make_smry_of_ts_mdl_outp <- function (data_tb, predr_vars_nms_chr, mdl_nm_1L_chr
     if (!is.na(path_to_write_to_1L_chr)) {
         smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr <- paste0(path_to_write_to_1L_chr, 
             "/", mdl_nm_1L_chr, ".RDS")
-        if (file.exists(smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr)) 
-            file.remove(smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr)
-        saveRDS(mdl_ls, smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr)
+        capture_xx <- ready4::write_to_delete_fls(smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr, 
+            consent_1L_chr = consent_1L_chr, consent_indcs_int = consent_indcs_int, 
+            options_chr = options_chr)
+        ready4::write_with_consent(consented_fn = saveRDS, consent_1L_chr = consent_1L_chr, 
+            consent_indcs_int = consent_indcs_int, consented_args_ls = list(object = mdl_ls, 
+                file = smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr), 
+            consented_msg_1L_chr = paste0("File ", smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr, 
+                " has been written"), declined_msg_1L_chr = "Write request cancelled - no new files have been written.", 
+            options_chr = options_chr, prompt_1L_chr = paste0("Do you confirm that you want to write the file ", 
+                smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr, "?"))
         smry_of_ts_mdl_ls$paths_to_mdl_plts_chr <- write_ts_mdl_plts(mdl_ls, 
-            tfd_data_tb = tfd_data_tb, depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, 
-            mdl_nm_1L_chr = mdl_nm_1L_chr, path_to_write_to_1L_chr = path_to_write_to_1L_chr, 
-            round_var_nm_1L_chr = round_var_nm_1L_chr, tfmn_1L_chr = tfmn_1L_chr, 
-            utl_min_val_1L_dbl = utl_min_val_1L_dbl)
+            consent_1L_chr = consent_1L_chr, consent_indcs_int = consent_indcs_int, 
+            depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, mdl_nm_1L_chr = mdl_nm_1L_chr, 
+            options_chr = options_chr, path_to_write_to_1L_chr = path_to_write_to_1L_chr, 
+            round_var_nm_1L_chr = round_var_nm_1L_chr, tfd_data_tb = tfd_data_tb, 
+            tfmn_1L_chr = tfmn_1L_chr, utl_min_val_1L_dbl = utl_min_val_1L_dbl)
     }
     return(smry_of_ts_mdl_ls)
 }
