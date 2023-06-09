@@ -4,14 +4,24 @@
 \alias{make_predr_vars_nms_ls}
 \title{Make predictor variables names list}
 \usage{
-make_predr_vars_nms_ls(main_predrs_chr, covars_ls, existing_predrs_ls = NULL)
+make_predr_vars_nms_ls(
+  main_predrs_chr,
+  covars_ls,
+  combinations_1L_lgl = F,
+  existing_predrs_ls = NULL,
+  max_nbr_of_covars_1L_int = integer(0)
+)
 }
 \arguments{
 \item{main_predrs_chr}{Main predictors (a character vector)}
 
 \item{covars_ls}{Covariates (a list)}
 
+\item{combinations_1L_lgl}{Combinations (a logical vector of length one), Default: F}
+
 \item{existing_predrs_ls}{Existing predictors (a list), Default: NULL}
+
+\item{max_nbr_of_covars_1L_int}{Maximum number of covariates (an integer vector of length one), Default: integer(0)}
 }
 \value{
 Predictor variables names (a list)

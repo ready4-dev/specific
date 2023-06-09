@@ -107,7 +107,7 @@ get_covar_ctgs <- function (results_ls, collapse_1L_lgl = T)
 #' @export 
 #' @importFrom purrr map map2
 #' @importFrom stats setNames
-#' @importFrom stringi stri_replace_last_fixed
+#' @importFrom ready4 make_list_phrase
 #' @importFrom Hmisc capitalize
 get_covars_by_ctg <- function (results_ls, collapse_1L_lgl = F) 
 {
@@ -116,8 +116,7 @@ get_covars_by_ctg <- function (results_ls, collapse_1L_lgl = F)
     if (collapse_1L_lgl) {
         covars_by_ctg_ls <- covars_by_ctg_ls %>% purrr::map2(names(covars_by_ctg_ls), 
             ~{
-                covars_1L_chr <- .x %>% paste0(collapse = ", ") %>% 
-                  stringi::stri_replace_last_fixed(",", " and")
+                covars_1L_chr <- .x %>% sort() %>% ready4::make_list_phrase()
                 paste0(ifelse(length(.x) > 1, .y %>% Hmisc::capitalize(), 
                   paste0("The ", .y)), " covariate", ifelse(length(.x) > 
                   1, "s were ", " was "), covars_1L_chr, ".")
@@ -564,19 +563,53 @@ get_selected_mixed_mdls <- function (results_ls, collapse_1L_lgl = T)
 #' @description get_signft_covars() is a Get function that retrieves a pre-existing data object from memory, local file system or online repository. Specifically, this function implements an algorithm to get significant covariates. Function argument mdls_with_covars_smry_tb specifies the where to look for the required object. The function returns Signt covariates (a character vector).
 #' @param mdls_with_covars_smry_tb Models with covariates summary (a tibble)
 #' @param covar_var_nms_chr Covariate variable names (a character vector)
+#' @param what_1L_chr What (a character vector of length one), Default: 'any'
+#' @param X_Ready4useDyad PARAM_DESCRIPTION, Default: NULL
 #' @return Signt covariates (a character vector)
 #' @rdname get_signft_covars
 #' @export 
-#' @importFrom purrr map flatten flatten_chr
-get_signft_covars <- function (mdls_with_covars_smry_tb, covar_var_nms_chr) 
+#' @importFrom purrr map flatten flatten_chr map_lgl map_chr
+#' @importFrom stringr str_detect
+get_signft_covars <- function (mdls_with_covars_smry_tb, covar_var_nms_chr, what_1L_chr = "any", 
+    X_Ready4useDyad = NULL) 
 {
     signif_vars_chr <- mdls_with_covars_smry_tb$Significant %>% 
         purrr::map(~strsplit(.x, " ")) %>% purrr::flatten() %>% 
         purrr::flatten_chr() %>% unique()
     signt_covars_chr <- covar_var_nms_chr[covar_var_nms_chr %in% 
         signif_vars_chr]
-    if (identical(signt_covars_chr, character(0))) 
+    if (what_1L_chr == "all") {
+        signt_covars_chr <- signt_covars_chr[signt_covars_chr %>% 
+            purrr::map_lgl(~sum((mdls_with_covars_smry_tb$Significant %>% 
+                purrr::map(~strsplit(.x, " ")) %>% purrr::flatten() %>% 
+                purrr::flatten_chr()) == .x) == length(signt_covars_chr))]
+    }
+    if (!is.null(X_Ready4useDyad)) {
+        dummys_chr <- manufacture(X_Ready4useDyad, flatten_1L_lgl = T, 
+            type_1L_chr = "dummys", what_1L_chr = "factors")
+        signt_dumys_ls <- mdls_with_covars_smry_tb$Significant %>% 
+            purrr::map(~{
+                terms_1L_chr <- .x
+                dummys_chr[dummys_chr %>% purrr::map_lgl(~stringr::str_detect(terms_1L_chr, 
+                  .x))]
+            })
+        signt_dumys_chr <- signt_dumys_ls %>% purrr::flatten_chr() %>% 
+            unique()
+        if (what_1L_chr == "all" && !identical(signt_dumys_chr, 
+            character(0))) {
+            signt_dumys_chr <- signt_dumys_chr[signt_dumys_chr %>% 
+                purrr::map_lgl(~sum((signt_dumys_ls %>% purrr::flatten_chr()) == 
+                  .x) == length(signt_dumys_chr))]
+        }
+        signt_fctrs_chr <- signt_dumys_chr %>% purrr::map_chr(~manufacture(X_Ready4useDyad, 
+            flatten_1L_lgl = T, type_1L_chr = "dummys", what_1L_chr = "factors-d", 
+            match_1L_chr = .x)) %>% unique()
+        signt_covars_chr <- c(signt_covars_chr, signt_fctrs_chr) %>% 
+            sort()
+    }
+    if (identical(signt_covars_chr, character(0))) {
         signt_covars_chr <- NA_character_
+    }
     return(signt_covars_chr)
 }
 #' Get table prediction model

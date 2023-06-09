@@ -4,12 +4,21 @@
 \alias{get_signft_covars}
 \title{Get significant covariates}
 \usage{
-get_signft_covars(mdls_with_covars_smry_tb, covar_var_nms_chr)
+get_signft_covars(
+  mdls_with_covars_smry_tb,
+  covar_var_nms_chr,
+  what_1L_chr = "any",
+  X_Ready4useDyad = NULL
+)
 }
 \arguments{
 \item{mdls_with_covars_smry_tb}{Models with covariates summary (a tibble)}
 
 \item{covar_var_nms_chr}{Covariate variable names (a character vector)}
+
+\item{what_1L_chr}{What (a character vector of length one), Default: 'any'}
+
+\item{X_Ready4useDyad}{PARAM_DESCRIPTION, Default: NULL}
 }
 \value{
 Signt covariates (a character vector)

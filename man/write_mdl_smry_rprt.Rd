@@ -7,7 +7,10 @@
 write_mdl_smry_rprt(
   input_params_ls = NULL,
   abstract_args_ls = NULL,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
   dv_ds_nm_and_url_chr = NULL,
+  options_chr = c("Y", "N"),
   rprt_lup = NULL,
   rcrd_nm_1L_chr = "AAA_RPRT_WRTNG_MTH",
   rprt_nm_1L_chr = "AAA_TTU_MDL_CTG",
@@ -20,7 +23,13 @@ write_mdl_smry_rprt(
 
 \item{abstract_args_ls}{Abstract arguments (a list), Default: NULL}
 
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
 \item{dv_ds_nm_and_url_chr}{Dataverse dataset name and url (a character vector), Default: NULL}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 
 \item{rprt_lup}{Report (a lookup table), Default: NULL}
 

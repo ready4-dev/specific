@@ -150,22 +150,27 @@ transform_ds_for_all_cmprsn_plts <- function (tfd_data_tb, model_mdl, depnt_var_
 #' @description transform_ds_for_mdlng() is a Transform function that edits an object in such a way that core object attributes - e.g. shape, dimensions, elements, type - are altered. Specifically, this function implements an algorithm to transform dataset for modelling. Function argument data_tb specifies the object to be updated. Argument depnt_var_nm_1L_chr provides the object to be updated. The function returns Transformed data (a tibble).
 #' @param data_tb Data (a tibble)
 #' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: 'utl_total_w'
+#' @param depnt_var_min_val_1L_dbl Dependent variable minimum value (a double vector of length one), Default: numeric(0)
 #' @param predr_var_nm_1L_chr Predictor variable name (a character vector of length one)
 #' @param covar_var_nms_chr Covariate variable names (a character vector), Default: 'NA'
 #' @return Transformed data (a tibble)
 #' @rdname transform_ds_for_mdlng
 #' @export 
-#' @importFrom purrr discard
+#' @importFrom purrr discard map_dbl
 #' @importFrom tidyr drop_na
-#' @importFrom rlang syms
-#' @importFrom dplyr select
-transform_ds_for_mdlng <- function (data_tb, depnt_var_nm_1L_chr = "utl_total_w", predr_var_nm_1L_chr, 
-    covar_var_nms_chr = NA_character_) 
+#' @importFrom rlang syms sym
+#' @importFrom dplyr select mutate
+transform_ds_for_mdlng <- function (data_tb, depnt_var_nm_1L_chr = "utl_total_w", depnt_var_min_val_1L_dbl = numeric(0), 
+    predr_var_nm_1L_chr, covar_var_nms_chr = NA_character_) 
 {
     mdl_vars_chr <- c(names(data_tb)[names(data_tb) %>% startsWith(depnt_var_nm_1L_chr)], 
         predr_var_nm_1L_chr, covar_var_nms_chr) %>% purrr::discard(is.na)
     tfd_data_tb <- data_tb %>% tidyr::drop_na(!!!rlang::syms(mdl_vars_chr)) %>% 
         dplyr::select(!!!rlang::syms(mdl_vars_chr))
+    if (!identical(depnt_var_min_val_1L_dbl, numeric(0))) 
+        tfd_data_tb <- tfd_data_tb %>% dplyr::mutate(`:=`(!!rlang::sym(depnt_var_nm_1L_chr), 
+            !!rlang::sym(depnt_var_nm_1L_chr) %>% purrr::map_dbl(~max(.x, 
+                depnt_var_min_val_1L_dbl))))
     return(tfd_data_tb)
 }
 #' Transform dataset to prediction dataset
@@ -316,7 +321,8 @@ transform_nms_in_mdl_tbl <- function (mdl_tbl_tb, col_nm_1L_chr = "Parameter", v
         tfd_mdl_tbl_tb <- mdl_tbl_tb %>% dplyr::mutate(`:=`(!!rlang::sym(col_nm_1L_chr), 
             dplyr::case_when(!!rlang::sym(col_nm_1L_chr) %>% 
                 purrr::map_lgl(~(endsWith(.x, " model") | endsWith(.x, 
-                  " baseline") | endsWith(.x, " change"))) ~ 
+                  " baseline") | endsWith(.x, " change") | endsWith(.x, 
+                  " scaled") | endsWith(.x, " unscaled"))) ~ 
                 !!rlang::sym(col_nm_1L_chr) %>% purrr::map_chr(~{
                   sfx_starts_1L_int <- stringi::stri_locate_first_fixed(.x, 
                     " ")[[1, 1]]
@@ -370,7 +376,7 @@ transform_params_ls_from_lup <- function (params_ls, rename_lup)
             .x, ready4::get_from_lup_obj(rename_lup, match_value_xx = .x, 
                 match_var_nm_1L_chr = "old_nms_chr", target_var_nm_1L_chr = "new_nms_chr", 
                 evaluate_1L_lgl = F)))
-    if (!is.na(params_ls$prefd_covars_chr)) {
+    if (!is.na(params_ls$prefd_covars_chr[1])) {
         params_ls$prefd_covars_chr <- params_ls$prefd_covars_chr %>% 
             purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr, 
                 .x, ready4::get_from_lup_obj(rename_lup, match_value_xx = .x, 
@@ -540,7 +546,7 @@ transform_rprt_lup <- function (rprt_lup, add_suplry_rprt_1L_lgl = T, add_sharin
             start_at_int[1] + 2, ": Sharing Program"), rprt_nms_chr %in% 
             c("AAA_TTU_MDL_CTG") ~ paste0("Results Report ", 
             ifelse(is.null(reference_1L_int), start_at_int[2], 
-                start_at_int[2] + reference_1L_int), ": Catalogue of longitudinal models (", 
+                start_at_int[2] + reference_1L_int), ": Catalogue of models (", 
             ifelse(is.null(reference_1L_int), "Primary Analysis", 
                 paste0("Secondary Analysis ", LETTERS[reference_1L_int])), 
             ")"), T ~ title_chr))
@@ -555,8 +561,10 @@ transform_rprt_lup <- function (rprt_lup, add_suplry_rprt_1L_lgl = T, add_sharin
     return(rprt_lup)
 }
 #' Transform tibble to model input
-#' @description transform_tb_to_mdl_inp() is a Transform function that edits an object in such a way that core object attributes - e.g. shape, dimensions, elements, type - are altered. Specifically, this function implements an algorithm to transform tibble to model input. Function argument data_tb specifies the object to be updated. Argument depnt_var_nm_1L_chr provides the object to be updated. The function returns Transformed for model input (a tibble).
+#' @description transform_tb_to_mdl_inp() is a Transform function that edits an object in such a way that core object attributes - e.g. shape, dimensions, elements, type - are altered. Specifically, this function implements an algorithm to transform tibble to model input. Function argument data_tb specifies the object to be updated. Argument depnt_var_min_val_1L_dbl provides the object to be updated. The function returns Transformed for model input (a tibble).
 #' @param data_tb Data (a tibble)
+#' @param depnt_var_min_val_1L_dbl Dependent variable minimum value (a double vector of length one), Default: numeric(0)
+#' @param depnt_var_max_val_1L_dbl Dependent variable maximum value (a double vector of length one), Default: 0.99999
 #' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: 'utl_total_w'
 #' @param predr_vars_nms_chr Predictor variables names (a character vector)
 #' @param id_var_nm_1L_chr Identity variable name (a character vector of length one), Default: 'fkClientID'
@@ -570,11 +578,12 @@ transform_rprt_lup <- function (rprt_lup, add_suplry_rprt_1L_lgl = T, add_sharin
 #' @rdname transform_tb_to_mdl_inp
 #' @export 
 #' @importFrom ready4use remove_labels_from_ds
-#' @importFrom dplyr select all_of group_by arrange mutate across first lag ungroup
+#' @importFrom dplyr select all_of group_by arrange mutate across first lag rename ungroup
 #' @importFrom rlang sym
-#' @importFrom purrr reduce
+#' @importFrom purrr reduce map_dbl
 #' @importFrom stats na.omit
-transform_tb_to_mdl_inp <- function (data_tb, depnt_var_nm_1L_chr = "utl_total_w", predr_vars_nms_chr, 
+transform_tb_to_mdl_inp <- function (data_tb, depnt_var_min_val_1L_dbl = numeric(0), depnt_var_max_val_1L_dbl = 0.99999, 
+    depnt_var_nm_1L_chr = "utl_total_w", predr_vars_nms_chr, 
     id_var_nm_1L_chr = "fkClientID", round_var_nm_1L_chr = "round", 
     round_bl_val_1L_chr = "Baseline", drop_all_msng_1L_lgl = T, 
     scaling_fctr_dbl = 1, tfmn_1L_chr = "NTF", ungroup_1L_lgl = F) 
@@ -585,19 +594,55 @@ transform_tb_to_mdl_inp <- function (data_tb, depnt_var_nm_1L_chr = "utl_total_w
     data_tb <- data.frame(data_tb) %>% ready4use::remove_labels_from_ds()
     tfd_for_mdl_inp_tb <- data_tb %>% dplyr::select(dplyr::all_of(id_var_nm_1L_chr), 
         dplyr::all_of(round_var_nm_1L_chr), dplyr::all_of(predr_vars_nms_chr), 
-        dplyr::all_of(depnt_var_nm_1L_chr)) %>% dplyr::group_by(!!rlang::sym(id_var_nm_1L_chr)) %>% 
-        dplyr::arrange(!!rlang::sym(id_var_nm_1L_chr), !!rlang::sym(round_var_nm_1L_chr))
-    tfd_for_mdl_inp_tb <- purrr::reduce(1:length(predr_vars_nms_chr), 
-        .init = tfd_for_mdl_inp_tb, ~{
-            idx_1L_int <- as.integer(.y)
-            .x %>% dplyr::mutate(dplyr::across(dplyr::all_of(predr_vars_nms_chr[idx_1L_int]), 
-                .fns = list(baseline = ~dplyr::first(.) * scaling_fctr_dbl[idx_1L_int], 
-                  change = ~ifelse(!!rlang::sym(round_var_nm_1L_chr) == 
-                    round_bl_val_1L_chr, 0, (. - dplyr::lag(.)) * 
-                    scaling_fctr_dbl[idx_1L_int]))))
-        })
+        dplyr::all_of(depnt_var_nm_1L_chr)) %>% dplyr::group_by(!!rlang::sym(id_var_nm_1L_chr))
+    tfd_for_mdl_inp_tb <- if (!identical(round_var_nm_1L_chr, 
+        character(0)) && ifelse(identical(round_var_nm_1L_chr, 
+        character(0)), T, !is.na(round_var_nm_1L_chr))) {
+        tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% dplyr::arrange(!!rlang::sym(id_var_nm_1L_chr), 
+            !!rlang::sym(round_var_nm_1L_chr))
+        tfd_for_mdl_inp_tb <- purrr::reduce(1:length(predr_vars_nms_chr), 
+            .init = tfd_for_mdl_inp_tb, ~{
+                idx_1L_int <- as.integer(.y)
+                .x %>% dplyr::mutate(dplyr::across(dplyr::all_of(predr_vars_nms_chr[idx_1L_int]), 
+                  .fns = list(baseline = ~if (!is.numeric(.)) {
+                    .
+                  } else {
+                    dplyr::first(.) * scaling_fctr_dbl[idx_1L_int]
+                  }, change = ~ifelse(!!rlang::sym(round_var_nm_1L_chr) == 
+                    round_bl_val_1L_chr, 0, if (!is.numeric(.)) {
+                    .
+                  } else {
+                    (. - dplyr::lag(.)) * scaling_fctr_dbl[idx_1L_int]
+                  }))))
+            })
+    }
+    else {
+        tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% dplyr::arrange(!!rlang::sym(id_var_nm_1L_chr))
+        tfd_for_mdl_inp_tb <- purrr::reduce(1:length(predr_vars_nms_chr), 
+            .init = tfd_for_mdl_inp_tb, ~{
+                idx_1L_int <- as.integer(.y)
+                table_tb <- .x %>% dplyr::mutate(dplyr::across(dplyr::all_of(predr_vars_nms_chr[idx_1L_int]), 
+                  .fns = list(baseline = ~if (!is.numeric(.)) {
+                    .
+                  } else {
+                    dplyr::first(.) * scaling_fctr_dbl[idx_1L_int]
+                  }, change = ~0)))
+                old_name_1L_chr <- paste0(predr_vars_nms_chr[idx_1L_int], 
+                  "_baseline")
+                new_name_1L_chr <- paste0(predr_vars_nms_chr[idx_1L_int], 
+                  ifelse(scaling_fctr_dbl[idx_1L_int] == 1, "_unscaled", 
+                    "_scaled"))
+                table_tb <- table_tb %>% dplyr::rename(`:=`(!!rlang::sym(new_name_1L_chr), 
+                  !!rlang::sym(old_name_1L_chr)))
+            })
+    }
+    if (!identical(depnt_var_min_val_1L_dbl, numeric(0))) {
+        tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% dplyr::mutate(`:=`(!!rlang::sym(depnt_var_nm_1L_chr), 
+            !!rlang::sym(depnt_var_nm_1L_chr) %>% purrr::map_dbl(~max(.x, 
+                depnt_var_min_val_1L_dbl))))
+    }
     tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% add_tfd_var_to_ds(depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, 
-        tfmn_1L_chr = tfmn_1L_chr, depnt_var_max_val_1L_dbl = 0.999)
+        tfmn_1L_chr = tfmn_1L_chr, depnt_var_max_val_1L_dbl = depnt_var_max_val_1L_dbl)
     if (drop_all_msng_1L_lgl) {
         tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% stats::na.omit()
     }
@@ -625,6 +670,63 @@ transform_tbl_to_rnd_vars <- function (ds_tb, nbr_of_digits_1L_int = 2L)
         ~round(.x, nbr_of_digits_1L_int) %>% format(nsmall = nbr_of_digits_1L_int)))
     return(tfd_ds_tb)
 }
+#' Transform tables for covariate names
+#' @description transform_tbls_for_covar_nms() is a Transform function that edits an object in such a way that core object attributes - e.g. shape, dimensions, elements, type - are altered. Specifically, this function implements an algorithm to transform tables for covariate names. Function argument results_ls specifies the object to be updated. The function returns Results (a list).
+#' @param results_ls Results (a list)
+#' @return Results (a list)
+#' @rdname transform_tbls_for_covar_nms
+#' @export 
+#' @importFrom purrr map flatten_chr map_chr reduce
+#' @importFrom dplyr mutate
+#' @importFrom rlang sym
+#' @importFrom stringi stri_replace_last_fixed
+#' @importFrom ready4 get_from_lup_obj
+#' @importFrom Hmisc capitalize
+#' @keywords internal
+transform_tbls_for_covar_nms <- function (results_ls) 
+{
+    results_ls$tables_ls <- results_ls$tables_ls %>% purrr::map(~{
+        column_nm_1L_chr <- names(.x)[1]
+        predr_vars_nms_chr <- get_predrs_by_ctg(results_ls, collapse_1L_lgl = T) %>% 
+            purrr::flatten_chr()
+        .x %>% dplyr::mutate(`:=`(!!rlang::sym(column_nm_1L_chr), 
+            !!rlang::sym(column_nm_1L_chr) %>% purrr::map_chr(~{
+                var_nm_1L_chr <- .x
+                purrr::reduce(c(" baseline", " change"), .init = var_nm_1L_chr, 
+                  ~ifelse(endsWith(.x, .y) && !(stringi::stri_replace_last_fixed(.x, 
+                    .y, "") %in% predr_vars_nms_chr), ready4::get_from_lup_obj(results_ls$mdl_ingredients_ls$dictionary_tb, 
+                    match_value_xx = stringi::stri_replace_last_fixed(.x, 
+                      .y, ""), match_var_nm_1L_chr = "var_nm_chr", 
+                    target_var_nm_1L_chr = "var_desc_chr") %>% 
+                    Hmisc::capitalize(), .x))
+            })))
+    })
+    return(results_ls)
+}
+#' Transform tables for cross-sectional models
+#' @description transform_tbls_for_csnl_mdls() is a Transform function that edits an object in such a way that core object attributes - e.g. shape, dimensions, elements, type - are altered. Specifically, this function implements an algorithm to transform tables for cross-sectional models. Function argument results_ls specifies the object to be updated. The function returns Results (a list).
+#' @param results_ls Results (a list)
+#' @return Results (a list)
+#' @rdname transform_tbls_for_csnl_mdls
+#' @export 
+#' @importFrom purrr map map_chr
+#' @importFrom dplyr mutate
+#' @importFrom rlang sym
+#' @importFrom stringi stri_replace_last_fixed
+#' @keywords internal
+transform_tbls_for_csnl_mdls <- function (results_ls) 
+{
+    if (is.na(results_ls$cohort_ls$n_fup_1L_dbl)) {
+        results_ls$tables_ls <- results_ls$tables_ls %>% purrr::map(~{
+            column_nm_1L_chr <- names(.x)[1]
+            .x %>% dplyr::mutate(`:=`(!!rlang::sym(column_nm_1L_chr), 
+                !!rlang::sym(column_nm_1L_chr) %>% purrr::map_chr(~ifelse(endsWith(.x, 
+                  " baseline"), stringi::stri_replace_last_fixed(.x, 
+                  " baseline", ""), .x))))
+        })
+    }
+    return(results_ls)
+}
 #' Transform timepoint values
 #' @description transform_timepoint_vals() is a Transform function that edits an object in such a way that core object attributes - e.g. shape, dimensions, elements, type - are altered. Specifically, this function implements an algorithm to transform timepoint values. Function argument timepoint_vals_chr specifies the object to be updated. Argument timepoint_levels_chr provides the object to be updated. The function returns Timepoint values (a character vector).
 #' @param timepoint_vals_chr Timepoint values (a character vector)
@@ -648,33 +750,6 @@ transform_timepoint_vals <- function (timepoint_vals_chr, timepoint_levels_chr, 
                 length(unique_vals_chr))])
     }
     return(timepoint_vals_chr)
-}
-#' Transform time series model data
-#' @description transform_ts_mdl_data() is a Transform function that edits an object in such a way that core object attributes - e.g. shape, dimensions, elements, type - are altered. Specifically, this function implements an algorithm to transform time series model data. Function argument mdl_ls specifies the object to be updated. Argument data_tb provides the object to be updated. The function returns Cnfdl (a list of models).
-#' @param mdl_ls Model list (a list of models)
-#' @param data_tb Data (a tibble)
-#' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: 'utl_total_w'
-#' @param predr_vars_nms_chr Predictor variables names (a character vector)
-#' @param id_var_nm_1L_chr Identity variable name (a character vector of length one), Default: 'fkClientID'
-#' @param mdl_nm_1L_chr Model name (a character vector of length one)
-#' @return Cnfdl (a list of models)
-#' @rdname transform_ts_mdl_data
-#' @export 
-#' @importFrom dplyr select all_of summarise across everything
-#' @importFrom purrr map flatten_chr
-#' @keywords internal
-transform_ts_mdl_data <- function (mdl_ls, data_tb, depnt_var_nm_1L_chr = "utl_total_w", 
-    predr_vars_nms_chr, id_var_nm_1L_chr = "fkClientID", mdl_nm_1L_chr) 
-{
-    old_data_tb <- data_tb %>% dplyr::select(c(dplyr::all_of(id_var_nm_1L_chr), 
-        dplyr::all_of(depnt_var_nm_1L_chr), predr_vars_nms_chr %>% 
-            purrr::map(~paste0(.x, c("", "_baseline", "_change"))) %>% 
-            purrr::flatten_chr()))
-    cnfdl_mdl_ls <- mdl_ls
-    cnfdl_mdl_ls$data <- old_data_tb %>% as.data.frame() %>% 
-        dplyr::summarise(dplyr::across(dplyr::everything(), ~sample(.x, 
-            1)))
-    return(cnfdl_mdl_ls)
 }
 #' Transform unique identifier variable
 #' @description transform_uid_var() is a Transform function that edits an object in such a way that core object attributes - e.g. shape, dimensions, elements, type - are altered. Specifically, this function implements an algorithm to transform unique identifier variable. Function argument data_tb specifies the object to be updated. Argument id_var_nm_1L_chr provides the object to be updated. The function returns Transformed data (a tibble).

@@ -5,14 +5,27 @@
 \alias{authorData,SpecificMixed-method}
 \title{Author and document datasets}
 \usage{
-\S4method{authorData}{SpecificMixed}(x, title_1L_chr = "An R model object", what_1L_chr = "Shareable")
+\S4method{authorData}{SpecificMixed}(
+  x,
+  consent_1L_chr = "",
+  depnt_var_min_val_1L_dbl = numeric(0),
+  title_1L_chr = "An R model object",
+  what_1L_chr = "Shareable",
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class SpecificMixed}
 
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
+
 \item{title_1L_chr}{Title (a character vector of length one), Default: 'An R model object'}
 
 \item{what_1L_chr}{What (a character vector of length one), Default: 'Shareable'}
+
+\item{...}{Additional arguments}
 }
 \value{
 x (An object of class SpecificMixed)

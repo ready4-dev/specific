@@ -10,10 +10,13 @@ make_input_params(
   header_yaml_args_ls,
   maui_params_ls,
   predictors_lup,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
   control_ls = NULL,
   dv_ds_nm_and_url_chr = NULL,
   iters_1L_int = 4000L,
   mdl_smry_ls = make_mdl_smry_ls(),
+  options_chr = c("Y", "N"),
   output_format_ls = make_output_format_ls(),
   path_params_ls = NULL,
   prefd_covars_chr = NULL,
@@ -35,6 +38,10 @@ make_input_params(
 
 \item{predictors_lup}{Predictors (a lookup table)}
 
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
 \item{control_ls}{Control (a list), Default: NULL}
 
 \item{dv_ds_nm_and_url_chr}{Dataverse dataset name and url (a character vector), Default: NULL}
@@ -42,6 +49,8 @@ make_input_params(
 \item{iters_1L_int}{Iterations (an integer vector of length one), Default: 4000}
 
 \item{mdl_smry_ls}{Model summary (a list), Default: make_mdl_smry_ls()}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 
 \item{output_format_ls}{Output format (a list), Default: make_output_format_ls()}
 

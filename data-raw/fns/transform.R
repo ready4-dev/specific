@@ -112,14 +112,18 @@ transform_ds_for_all_cmprsn_plts <- function(tfd_data_tb, # Generalise to dep va
 }
 transform_ds_for_mdlng <- function (data_tb,
                                     depnt_var_nm_1L_chr = "utl_total_w", # Undo defaults
+                                    depnt_var_min_val_1L_dbl = numeric(0),
                                     predr_var_nm_1L_chr,
-    covar_var_nms_chr = NA_character_)
+                                    covar_var_nms_chr = NA_character_)
 {
-    mdl_vars_chr <- c(names(data_tb)[names(data_tb) %>% startsWith(depnt_var_nm_1L_chr)],
-        predr_var_nm_1L_chr, covar_var_nms_chr) %>% purrr::discard(is.na)
-    tfd_data_tb <- data_tb %>% tidyr::drop_na(!!!rlang::syms(mdl_vars_chr)) %>%
-        dplyr::select(!!!rlang::syms(mdl_vars_chr))
-    return(tfd_data_tb)
+  mdl_vars_chr <- c(names(data_tb)[names(data_tb) %>% startsWith(depnt_var_nm_1L_chr)],
+                    predr_var_nm_1L_chr, covar_var_nms_chr) %>% purrr::discard(is.na)
+  tfd_data_tb <- data_tb %>% tidyr::drop_na(!!!rlang::syms(mdl_vars_chr)) %>%
+    dplyr::select(!!!rlang::syms(mdl_vars_chr))
+  if(!identical(depnt_var_min_val_1L_dbl, numeric(0)))
+    tfd_data_tb <- tfd_data_tb %>% dplyr::mutate(!!rlang::sym(depnt_var_nm_1L_chr) := !!rlang::sym(depnt_var_nm_1L_chr) %>%
+                                                   purrr::map_dbl(~max(.x,depnt_var_min_val_1L_dbl)))
+  return(tfd_data_tb)
 }
 transform_ds_to_predn_ds <- function(data_tb,
                                      predr_vars_nms_chr,
@@ -135,27 +139,27 @@ transform_ds_to_predn_ds <- function(data_tb,
                            .init = data_tb,
                            ~ {
                              predr_cls_fn <- eval(parse(text=ready4::get_from_lup_obj(predictors_lup,
-                                                                                         match_var_nm_1L_chr = "short_name_chr",
-                                                                                         match_value_xx = .y,
-                                                                                         target_var_nm_1L_chr = "class_fn_chr",
-                                                                                         evaluate_1L_lgl = F)))
+                                                                                      match_var_nm_1L_chr = "short_name_chr",
+                                                                                      match_value_xx = .y,
+                                                                                      target_var_nm_1L_chr = "class_fn_chr",
+                                                                                      evaluate_1L_lgl = F)))
                              dplyr::mutate(.x,
                                            !!rlang::sym(.y) := !!rlang::sym(.y) %>% rlang::exec(.fn = predr_cls_fn))
                            })
   data_tb <- data_tb %>% transform_tb_to_mdl_inp(depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
-                                                      predr_vars_nms_chr = predr_vars_nms_chr,
-                                                      id_var_nm_1L_chr = id_var_nm_1L_chr,
-                                                      round_var_nm_1L_chr = round_var_nm_1L_chr,
-                                                      round_bl_val_1L_chr = round_bl_val_1L_chr,
-                                                      drop_all_msng_1L_lgl = F,
-                                                      scaling_fctr_dbl = purrr::map_dbl(predr_vars_nms_chr,
-                                                                                        ~ ready4::get_from_lup_obj(predictors_lup,
-                                                                                                                      target_var_nm_1L_chr = "mdl_scaling_dbl",
-                                                                                                                      match_var_nm_1L_chr = "short_name_chr",
-                                                                                                                      match_value_xx = .x,
-                                                                                                                      evaluate_1L_lgl = F)),
-                                                      ungroup_1L_lgl = T,
-                                                      tfmn_1L_chr = tfmn_1L_chr)
+                                                 predr_vars_nms_chr = predr_vars_nms_chr,
+                                                 id_var_nm_1L_chr = id_var_nm_1L_chr,
+                                                 round_var_nm_1L_chr = round_var_nm_1L_chr,
+                                                 round_bl_val_1L_chr = round_bl_val_1L_chr,
+                                                 drop_all_msng_1L_lgl = F,
+                                                 scaling_fctr_dbl = purrr::map_dbl(predr_vars_nms_chr,
+                                                                                   ~ ready4::get_from_lup_obj(predictors_lup,
+                                                                                                              target_var_nm_1L_chr = "mdl_scaling_dbl",
+                                                                                                              match_var_nm_1L_chr = "short_name_chr",
+                                                                                                              match_value_xx = .x,
+                                                                                                              evaluate_1L_lgl = F)),
+                                                 ungroup_1L_lgl = T,
+                                                 tfmn_1L_chr = tfmn_1L_chr)
   return(data_tb)
 }
 transform_mdl_vars_with_clss <- function(ds_tb,
@@ -234,7 +238,7 @@ transform_nms_in_mdl_tbl <- function(mdl_tbl_tb,
   }else{
     tfd_mdl_tbl_tb <-  mdl_tbl_tb %>%
       dplyr::mutate(!!rlang::sym(col_nm_1L_chr) := dplyr::case_when(!!rlang::sym(col_nm_1L_chr) %>%
-                                                                      purrr::map_lgl(~(endsWith(.x," model") | endsWith(.x," baseline") | endsWith(.x," change"))) ~ !!rlang::sym(col_nm_1L_chr) %>% purrr::map_chr(~{
+                                                                      purrr::map_lgl(~(endsWith(.x," model") | endsWith(.x," baseline") | endsWith(.x," change") | endsWith(.x," scaled") | endsWith(.x," unscaled"))) ~ !!rlang::sym(col_nm_1L_chr) %>% purrr::map_chr(~{
                                                                         sfx_starts_1L_int <- stringi::stri_locate_first_fixed(.x," ")[[1,1]]
                                                                         paste0(stringr::str_sub(.x,end=(sfx_starts_1L_int-1)) %>%
                                                                                  strsplit("_") %>%
@@ -244,7 +248,75 @@ transform_nms_in_mdl_tbl <- function(mdl_tbl_tb,
                                                                                stringr::str_sub(.x,start=sfx_starts_1L_int))}),
                                                                     T ~ !!rlang::sym(col_nm_1L_chr)))
   }
- return(tfd_mdl_tbl_tb)
+  return(tfd_mdl_tbl_tb)
+}
+transform_params_ls_from_lup <- function(params_ls,
+                                         rename_lup){
+  if(!is.null(params_ls$ds_descvs_ls)){
+    params_ls$ds_descvs_ls$candidate_predrs_chr <- params_ls$ds_descvs_ls$candidate_predrs_chr %>%
+      purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
+                             .x,
+                             ready4::get_from_lup_obj(rename_lup,
+                                                      match_value_xx = .x,
+                                                      match_var_nm_1L_chr = "old_nms_chr",
+                                                      target_var_nm_1L_chr = "new_nms_chr",
+                                                      evaluate_1L_lgl = F)))
+    params_ls$ds_descvs_ls$cohort_descv_var_nms_chr <- params_ls$ds_descvs_ls$cohort_descv_var_nms_chr %>%
+      purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
+                             .x,
+                             ready4::get_from_lup_obj(rename_lup,
+                                                      match_value_xx = .x,
+                                                      match_var_nm_1L_chr = "old_nms_chr",
+                                                      target_var_nm_1L_chr = "new_nms_chr",
+                                                      evaluate_1L_lgl = F)))
+    params_ls$ds_descvs_ls$utl_wtd_var_nm_1L_chr <- params_ls$ds_descvs_ls$utl_wtd_var_nm_1L_chr %>%
+      purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
+                             .x,
+                             ready4::get_from_lup_obj(rename_lup,
+                                                      match_value_xx = .x,
+                                                      match_var_nm_1L_chr = "old_nms_chr",
+                                                      target_var_nm_1L_chr = "new_nms_chr",
+                                                      evaluate_1L_lgl = F)))
+  }
+  if(!is.null(params_ls$predictors_lup)){
+    params_ls$predictors_lup$short_name_chr <-  params_ls$predictors_lup$short_name_chr %>%
+      purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
+                             .x,
+                             ready4::get_from_lup_obj(rename_lup,
+                                                      match_value_xx = .x,
+                                                      match_var_nm_1L_chr = "old_nms_chr",
+                                                      target_var_nm_1L_chr = "new_nms_chr",
+                                                      evaluate_1L_lgl = F)))
+  }
+  params_ls$candidate_covar_nms_chr <- params_ls$candidate_covar_nms_chr %>%
+    purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
+                           .x,
+                           ready4::get_from_lup_obj(rename_lup,
+                                                    match_value_xx = .x,
+                                                    match_var_nm_1L_chr = "old_nms_chr",
+                                                    target_var_nm_1L_chr = "new_nms_chr",
+                                                    evaluate_1L_lgl = F)))
+  if(!is.na(params_ls$prefd_covars_chr[1])){
+    params_ls$prefd_covars_chr <- params_ls$prefd_covars_chr %>%
+      purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
+                             .x,
+                             ready4::get_from_lup_obj(rename_lup,
+                                                      match_value_xx = .x,
+                                                      match_var_nm_1L_chr = "old_nms_chr",
+                                                      target_var_nm_1L_chr = "new_nms_chr",
+                                                      evaluate_1L_lgl = F)))
+  }
+  if(!is.null(params_ls$candidate_predrs_chr)){
+    params_ls$candidate_predrs_chr <- params_ls$candidate_predrs_chr %>%
+      purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
+                             .x,
+                             ready4::get_from_lup_obj(rename_lup,
+                                                      match_value_xx = .x,
+                                                      match_var_nm_1L_chr = "old_nms_chr",
+                                                      target_var_nm_1L_chr = "new_nms_chr",
+                                                      evaluate_1L_lgl = F)))
+  }
+  return(params_ls)
 }
 transform_params_ls_to_valid <- function(params_ls,
                                          scndry_analysis_extra_vars_chr = NA_character_){
@@ -265,8 +337,8 @@ transform_params_ls_to_valid <- function(params_ls,
                                                            valid_var_nms_chr), sep="V")) %>%
     dplyr::filter(!old_nms_chr %in% unchanged_var_nms_chr)
   params_ls$ds_tb <- youthvars::transform_ds_with_rename_lup(params_ls$ds_tb,
-                                                  rename_lup = rename_lup,
-                                                  target_var_nms_chr = target_var_nms_chr)
+                                                             rename_lup = rename_lup,
+                                                             target_var_nms_chr = target_var_nms_chr)
   params_ls$ds_descvs_ls$dictionary_tb <- params_ls$ds_descvs_ls$dictionary_tb %>%
     transform_dict_with_rename_lup(rename_lup = rename_lup)
   rename_lup <- rename_lup %>%
@@ -275,74 +347,6 @@ transform_params_ls_to_valid <- function(params_ls,
                                transform_params_ls_from_lup(rename_lup = rename_lup),
                              rename_lup = rename_lup)
   return(valid_params_ls_ls)
-}
-transform_params_ls_from_lup <- function(params_ls,
-                                         rename_lup){
-  if(!is.null(params_ls$ds_descvs_ls)){
-    params_ls$ds_descvs_ls$candidate_predrs_chr <- params_ls$ds_descvs_ls$candidate_predrs_chr %>%
-      purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
-                             .x,
-                             ready4::get_from_lup_obj(rename_lup,
-                                                  match_value_xx = .x,
-                                                  match_var_nm_1L_chr = "old_nms_chr",
-                                                  target_var_nm_1L_chr = "new_nms_chr",
-                                                  evaluate_1L_lgl = F)))
-    params_ls$ds_descvs_ls$cohort_descv_var_nms_chr <- params_ls$ds_descvs_ls$cohort_descv_var_nms_chr %>%
-      purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
-                             .x,
-                             ready4::get_from_lup_obj(rename_lup,
-                                                  match_value_xx = .x,
-                                                  match_var_nm_1L_chr = "old_nms_chr",
-                                                  target_var_nm_1L_chr = "new_nms_chr",
-                                                  evaluate_1L_lgl = F)))
-    params_ls$ds_descvs_ls$utl_wtd_var_nm_1L_chr <- params_ls$ds_descvs_ls$utl_wtd_var_nm_1L_chr %>%
-      purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
-                             .x,
-                             ready4::get_from_lup_obj(rename_lup,
-                                                      match_value_xx = .x,
-                                                      match_var_nm_1L_chr = "old_nms_chr",
-                                                      target_var_nm_1L_chr = "new_nms_chr",
-                                                      evaluate_1L_lgl = F)))
-  }
-  if(!is.null(params_ls$predictors_lup)){
-    params_ls$predictors_lup$short_name_chr <-  params_ls$predictors_lup$short_name_chr %>%
-      purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
-                             .x,
-                             ready4::get_from_lup_obj(rename_lup,
-                                                  match_value_xx = .x,
-                                                  match_var_nm_1L_chr = "old_nms_chr",
-                                                  target_var_nm_1L_chr = "new_nms_chr",
-                                                  evaluate_1L_lgl = F)))
-  }
-  params_ls$candidate_covar_nms_chr <- params_ls$candidate_covar_nms_chr %>%
-    purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
-                           .x,
-                           ready4::get_from_lup_obj(rename_lup,
-                                                match_value_xx = .x,
-                                                match_var_nm_1L_chr = "old_nms_chr",
-                                                target_var_nm_1L_chr = "new_nms_chr",
-                                                evaluate_1L_lgl = F)))
-  if(!is.na(params_ls$prefd_covars_chr)){
-    params_ls$prefd_covars_chr <- params_ls$prefd_covars_chr %>%
-      purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
-                             .x,
-                             ready4::get_from_lup_obj(rename_lup,
-                                                  match_value_xx = .x,
-                                                  match_var_nm_1L_chr = "old_nms_chr",
-                                                  target_var_nm_1L_chr = "new_nms_chr",
-                                                  evaluate_1L_lgl = F)))
-  }
-  if(!is.null(params_ls$candidate_predrs_chr)){
-    params_ls$candidate_predrs_chr <- params_ls$candidate_predrs_chr %>%
-      purrr::map_chr(~ifelse(!.x %in% rename_lup$old_nms_chr,
-                             .x,
-                             ready4::get_from_lup_obj(rename_lup,
-                                                  match_value_xx = .x,
-                                                  match_var_nm_1L_chr = "old_nms_chr",
-                                                  target_var_nm_1L_chr = "new_nms_chr",
-                                                  evaluate_1L_lgl = F)))
-  }
-  return(params_ls)
 }
 transform_paths_ls_for_scndry <- function(paths_ls,
                                           reference_1L_int = 1,
@@ -466,47 +470,73 @@ transform_rprt_lup <- function(rprt_lup, # Generalise TTU parts - Also need to a
   return(rprt_lup)
 }
 transform_tb_to_mdl_inp <- function (data_tb,
+                                     depnt_var_min_val_1L_dbl = numeric(0),
+                                     depnt_var_max_val_1L_dbl = 0.99999,
                                      depnt_var_nm_1L_chr = "utl_total_w", # remove default
                                      predr_vars_nms_chr,
-    id_var_nm_1L_chr = "fkClientID", round_var_nm_1L_chr = "round",
-    round_bl_val_1L_chr = "Baseline", drop_all_msng_1L_lgl = T, scaling_fctr_dbl = 1,
-    tfmn_1L_chr = "NTF", ungroup_1L_lgl = F)
+                                     id_var_nm_1L_chr = "fkClientID", round_var_nm_1L_chr = "round",
+                                     round_bl_val_1L_chr = "Baseline", drop_all_msng_1L_lgl = T, scaling_fctr_dbl = 1,
+                                     tfmn_1L_chr = "NTF", ungroup_1L_lgl = F)
 {
-    if(length(scaling_fctr_dbl)!=length(predr_vars_nms_chr)){
-      scaling_fctr_dbl <- rep(scaling_fctr_dbl[1],length(predr_vars_nms_chr))
-    }
+  if(length(scaling_fctr_dbl)!=length(predr_vars_nms_chr)){
+    scaling_fctr_dbl <- rep(scaling_fctr_dbl[1],length(predr_vars_nms_chr))
+  }
   data_tb <- data.frame(data_tb) %>%
     ready4use::remove_labels_from_ds()
-    tfd_for_mdl_inp_tb <- data_tb %>% dplyr::select(dplyr::all_of(id_var_nm_1L_chr), dplyr::all_of(round_var_nm_1L_chr),
-        dplyr::all_of(predr_vars_nms_chr),
-        dplyr::all_of(depnt_var_nm_1L_chr) # Moved from first var in tb
-        ) %>% dplyr::group_by(!!rlang::sym(id_var_nm_1L_chr)) %>%
-        dplyr::arrange(!!rlang::sym(id_var_nm_1L_chr), !!rlang::sym(round_var_nm_1L_chr))
+  tfd_for_mdl_inp_tb <- data_tb %>% dplyr::select(dplyr::all_of(id_var_nm_1L_chr), dplyr::all_of(round_var_nm_1L_chr),
+                                                  dplyr::all_of(predr_vars_nms_chr),
+                                                  dplyr::all_of(depnt_var_nm_1L_chr)
+  ) %>% dplyr::group_by(!!rlang::sym(id_var_nm_1L_chr))
+
+  tfd_for_mdl_inp_tb <- if(!identical(round_var_nm_1L_chr, character(0)) && ifelse(identical(round_var_nm_1L_chr, character(0)),T,!is.na(round_var_nm_1L_chr))){
+    tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% dplyr::arrange(!!rlang::sym(id_var_nm_1L_chr),
+                                                                !!rlang::sym(round_var_nm_1L_chr))
     tfd_for_mdl_inp_tb <- purrr::reduce(1:length(predr_vars_nms_chr),
                                         .init = tfd_for_mdl_inp_tb,
                                         ~ {
                                           idx_1L_int <- as.integer(.y)
                                           .x %>% dplyr::mutate(dplyr::across(dplyr::all_of(predr_vars_nms_chr[idx_1L_int]),
-                                                                             .fns = list(baseline = ~dplyr::first(.)*scaling_fctr_dbl[idx_1L_int],
+                                                                             .fns = list(baseline = ~if(!is.numeric(.)){.}else{dplyr::first(.)*scaling_fctr_dbl[idx_1L_int]},
                                                                                          change = ~ifelse(!!rlang::sym(round_var_nm_1L_chr) == round_bl_val_1L_chr,
                                                                                                           0,
-                                                                                                          (. - dplyr::lag(.))*scaling_fctr_dbl[idx_1L_int]))))
-                                          })
-      tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>%
-        add_tfd_var_to_ds(depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
-                           tfmn_1L_chr = tfmn_1L_chr,
-                           depnt_var_max_val_1L_dbl = 0.999)
-        if(drop_all_msng_1L_lgl){
-      tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>%
-        stats::na.omit()
-    }
-    if(ungroup_1L_lgl){
-      tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>%
-        dplyr::ungroup()
-    }
-      tfd_for_mdl_inp_tb  <- tfd_for_mdl_inp_tb %>%
-        transform_uid_var(id_var_nm_1L_chr = id_var_nm_1L_chr)
-    return(tfd_for_mdl_inp_tb)
+                                                                                                          if(!is.numeric(.)){.}else{(. - dplyr::lag(.))*scaling_fctr_dbl[idx_1L_int]}))))
+                                        })
+  }else{
+    tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% dplyr::arrange(!!rlang::sym(id_var_nm_1L_chr))
+    tfd_for_mdl_inp_tb <- purrr::reduce(1:length(predr_vars_nms_chr),
+                                        .init = tfd_for_mdl_inp_tb,
+                                        ~ {
+                                          idx_1L_int <- as.integer(.y)
+                                          table_tb <- .x %>% dplyr::mutate(dplyr::across(dplyr::all_of(predr_vars_nms_chr[idx_1L_int]),
+                                                                                         .fns = list(baseline = ~if(!is.numeric(.)){.}else{dplyr::first(.)*scaling_fctr_dbl[idx_1L_int]},
+                                                                                                     change = ~ 0)))
+                                          old_name_1L_chr <- paste0(predr_vars_nms_chr[idx_1L_int],"_baseline")
+                                          new_name_1L_chr <- paste0(predr_vars_nms_chr[idx_1L_int],ifelse(scaling_fctr_dbl[idx_1L_int]==1,"_unscaled","_scaled"))
+                                          table_tb <- table_tb %>% dplyr::rename(!!rlang::sym(new_name_1L_chr) := !!rlang::sym(old_name_1L_chr))
+                                        })
+  }
+
+  if(!identical(depnt_var_min_val_1L_dbl, numeric(0))){
+    tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% dplyr::mutate(!!rlang::sym(depnt_var_nm_1L_chr) := !!rlang::sym(depnt_var_nm_1L_chr) %>%
+                                                                 purrr::map_dbl(~max(.x,depnt_var_min_val_1L_dbl)))
+  }
+  tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>%
+    add_tfd_var_to_ds(depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
+                      tfmn_1L_chr = tfmn_1L_chr,
+                      depnt_var_max_val_1L_dbl = depnt_var_max_val_1L_dbl)
+  if(drop_all_msng_1L_lgl){
+    tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>%
+      stats::na.omit()
+  }
+  if(ungroup_1L_lgl){
+    tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>%
+      dplyr::ungroup()
+  }
+  tfd_for_mdl_inp_tb  <- tfd_for_mdl_inp_tb %>%
+    transform_uid_var(id_var_nm_1L_chr = id_var_nm_1L_chr)
+
+
+  return(tfd_for_mdl_inp_tb)
 }
 transform_tbl_to_rnd_vars <- function(ds_tb,
                                       nbr_of_digits_1L_int = 2L){
@@ -516,6 +546,42 @@ transform_tbl_to_rnd_vars <- function(ds_tb,
     dplyr::mutate(dplyr::across(where(is.numeric), ~round(.x,nbr_of_digits_1L_int) %>%
                                   format(nsmall = nbr_of_digits_1L_int)))
   return(tfd_ds_tb)
+}
+transform_tbls_for_covar_nms <- function(results_ls){
+  results_ls$tables_ls <- results_ls$tables_ls %>%
+    purrr::map(~{
+      column_nm_1L_chr <- names(.x)[1]
+      predr_vars_nms_chr <- get_predrs_by_ctg(results_ls,collapse_1L_lgl = T) %>% purrr::flatten_chr()
+      .x %>%
+        dplyr::mutate(!!rlang::sym(column_nm_1L_chr) := !!rlang::sym(column_nm_1L_chr) %>%
+                        purrr::map_chr(~
+                                         {
+                                           var_nm_1L_chr <- .x
+                                           purrr::reduce(c(" baseline"," change"),
+                                                         .init = var_nm_1L_chr,
+                                                         ~ ifelse(endsWith(.x, .y) &&  !(stringi::stri_replace_last_fixed(.x, .y,"") %in% predr_vars_nms_chr),
+                                                                  ready4::get_from_lup_obj(results_ls$mdl_ingredients_ls$dictionary_tb,
+                                                                                           match_value_xx = stringi::stri_replace_last_fixed(.x, .y,""),
+                                                                                           match_var_nm_1L_chr = "var_nm_chr",
+                                                                                           target_var_nm_1L_chr = "var_desc_chr") %>%
+                                                                    Hmisc::capitalize(),
+                                                                  .x))
+                                         }
+                        ))
+    })
+  return(results_ls)
+}
+transform_tbls_for_csnl_mdls <- function(results_ls){
+  if(is.na(results_ls$cohort_ls$n_fup_1L_dbl)){
+    results_ls$tables_ls <- results_ls$tables_ls %>%
+      purrr::map(~{
+        column_nm_1L_chr <- names(.x)[1]
+        .x %>%
+          dplyr::mutate(!!rlang::sym(column_nm_1L_chr) := !!rlang::sym(column_nm_1L_chr) %>%
+                          purrr::map_chr(~ifelse(endsWith(.x, " baseline"), stringi::stri_replace_last_fixed(.x, " baseline","") ,.x)))
+      })
+  }
+  return(results_ls)
 }
 transform_timepoint_vals <- function(timepoint_vals_chr,
                                      timepoint_levels_chr,
@@ -533,20 +599,20 @@ transform_timepoint_vals <- function(timepoint_vals_chr,
   }
   return(timepoint_vals_chr)
 }
-transform_ts_mdl_data <- function (mdl_ls, data_tb,
-                                   depnt_var_nm_1L_chr = "utl_total_w", # remove default
-                                   predr_vars_nms_chr, id_var_nm_1L_chr = "fkClientID", mdl_nm_1L_chr)
-{
-  old_data_tb <- data_tb %>% dplyr::select(c(dplyr::all_of(id_var_nm_1L_chr),
-                                             dplyr::all_of(depnt_var_nm_1L_chr), predr_vars_nms_chr %>%
-                                               purrr::map(~paste0(.x, c("", "_baseline", "_change"))) %>%
-                                               purrr::flatten_chr()))
-  cnfdl_mdl_ls <- mdl_ls
-  cnfdl_mdl_ls$data <- old_data_tb %>% as.data.frame() %>%
-    dplyr::summarise(dplyr::across(dplyr::everything(), ~sample(.x,
-                                                                1)))
-  return(cnfdl_mdl_ls)
-}
+# transform_ts_mdl_data <- function (mdl_ls, data_tb,
+#                                    depnt_var_nm_1L_chr = "utl_total_w", # remove default
+#                                    predr_vars_nms_chr, id_var_nm_1L_chr = "fkClientID", mdl_nm_1L_chr)
+# {
+#   old_data_tb <- data_tb %>% dplyr::select(c(dplyr::all_of(id_var_nm_1L_chr),
+#                                              dplyr::all_of(depnt_var_nm_1L_chr), predr_vars_nms_chr %>%
+#                                                purrr::map(~paste0(.x, c("", "_baseline", "_change"))) %>%
+#                                                purrr::flatten_chr()))
+#   cnfdl_mdl_ls <- mdl_ls
+#   cnfdl_mdl_ls$data <- old_data_tb %>% as.data.frame() %>%
+#     dplyr::summarise(dplyr::across(dplyr::everything(), ~sample(.x,
+#                                                                 1)))
+#   return(cnfdl_mdl_ls)
+# }
 transform_uid_var <- function(data_tb,
                               id_var_nm_1L_chr,
                               rename_tb = NULL,

@@ -6,7 +6,10 @@
 \usage{
 write_mdls_to_dv(
   outp_smry_ls,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
   new_dir_nm_1L_chr = "G_Shareable",
+  options_chr = c("Y", "N"),
   shareable_title_detail_1L_chr = "",
   output_dir_chr = NA_character_
 )
@@ -14,7 +17,13 @@ write_mdls_to_dv(
 \arguments{
 \item{outp_smry_ls}{Output summary (a list)}
 
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
 \item{new_dir_nm_1L_chr}{New directory name (a character vector of length one), Default: 'G_Shareable'}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 
 \item{shareable_title_detail_1L_chr}{Shareable title detail (a character vector of length one), Default: ''}
 

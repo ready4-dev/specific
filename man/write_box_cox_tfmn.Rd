@@ -8,13 +8,16 @@ write_box_cox_tfmn(
   data_tb,
   predr_var_nm_1L_chr,
   path_to_write_to_1L_chr,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
   depnt_var_nm_1L_chr = "utl_total_w",
   covar_var_nms_chr = NA_character_,
   fl_nm_pfx_1L_chr = "A_RT",
   height_1L_dbl = 6,
-  width_1L_dbl = 6,
+  mdl_types_lup = NULL,
+  options_chr = c("Y", "N"),
   start_1L_chr = NULL,
-  mdl_types_lup = NULL
+  width_1L_dbl = 6
 )
 }
 \arguments{
@@ -24,6 +27,10 @@ write_box_cox_tfmn(
 
 \item{path_to_write_to_1L_chr}{Path to write to (a character vector of length one)}
 
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
 \item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
 
 \item{covar_var_nms_chr}{Covariate variable names (a character vector), Default: 'NA'}
@@ -32,11 +39,13 @@ write_box_cox_tfmn(
 
 \item{height_1L_dbl}{Height (a double vector of length one), Default: 6}
 
-\item{width_1L_dbl}{Width (a double vector of length one), Default: 6}
+\item{mdl_types_lup}{Model types (a lookup table), Default: NULL}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 
 \item{start_1L_chr}{Start (a character vector of length one), Default: NULL}
 
-\item{mdl_types_lup}{Model types (a lookup table), Default: NULL}
+\item{width_1L_dbl}{Width (a double vector of length one), Default: 6}
 }
 \value{
 Path to plot (a character vector of length one)

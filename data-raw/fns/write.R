@@ -714,7 +714,7 @@ write_predr_and_covars_cmprsn <- function(scored_data_tb,
                                           options_chr = c("Y", "N"),
                                           output_data_dir_1L_chr,
                                           seed_1L_int = 1234,
-                                          signft_covars_cndn_1L_chr = "any"){
+                                          signft_covars_cdn_1L_chr = "any"){
   mdl_smry_ls$predr_cmprsn_tb <- write_predr_cmprsn_outps(data_tb = bl_tb,
                                                           candidate_predrs_chr = ds_smry_ls$candidate_predrs_chr,
                                                           consent_1L_chr = consent_1L_chr,
@@ -766,7 +766,7 @@ write_predr_and_covars_cmprsn <- function(scored_data_tb,
                                                     covar_var_nms_chr = ds_smry_ls$candidate_covar_nms_chr,
                                                     X_Ready4useDyad = Ready4useDyad(ds_tb = scored_data_tb,
                                                                                     dictionary_r3 = ds_smry_ls$dictionary_tb),
-                                                    what_1L_chr = signft_covars_cndn_1L_chr)
+                                                    what_1L_chr = signft_covars_cdn_1L_chr)
   predr_and_covars_cmprsn_ls <- list(bl_tb = bl_tb,
                                      ds_smry_ls = ds_smry_ls,
                                      mdl_smry_ls = mdl_smry_ls)
@@ -786,7 +786,7 @@ write_predr_and_mdl_tstng_results <- function(scored_data_tb,
                                               options_chr = c("Y", "N"),
                                               output_data_dir_1L_chr,
                                               seed_1L_int = 1234,
-                                              signft_covars_cndn_1L_chr = "any"){
+                                              signft_covars_cdn_1L_chr = "any"){
   cmprsn_ls <- write_mdl_cmprsn(scored_data_tb = scored_data_tb,
                                 consent_1L_chr = consent_1L_chr,
                                 consent_indcs_int = consent_indcs_int,
@@ -807,7 +807,7 @@ write_predr_and_mdl_tstng_results <- function(scored_data_tb,
                                              options_chr = options_chr,
                                              output_data_dir_1L_chr = output_data_dir_1L_chr,
                                              seed_1L_int = seed_1L_int,
-                                             signft_covars_cndn_1L_chr  = signft_covars_cndn_1L_chr)
+                                             signft_covars_cdn_1L_chr  = signft_covars_cdn_1L_chr)
   if(ifelse(is.null(cmprsn_ls$mdl_smry_ls$prefd_covars_chr),
             T,
             is.na(cmprsn_ls$mdl_smry_ls$prefd_covars_chr[1]))){
@@ -889,7 +889,7 @@ write_scndry_analysis <- function(valid_params_ls_ls,
                                   options_chr = c("Y", "N"),
                                   predictors_lup = NULL,
                                   prefd_covars_chr = NA_character_,
-                                  signft_covars_cndn_1L_chr = "any"){
+                                  signft_covars_cdn_1L_chr = "any"){
   analysis_params_ls <- valid_params_ls_ls$params_ls %>%
     append(path_params_ls[1:2])
   rename_lup <- valid_params_ls_ls$rename_lup
@@ -983,7 +983,7 @@ write_scndry_analysis <- function(valid_params_ls_ls,
                                               options_chr = options_chr,
                                               output_data_dir_1L_chr = path_params_ls$paths_ls$write_to_dir_nm_1L_chr,
                                               seed_1L_int = params_ls$seed_1L_int,
-                                              signft_covars_cndn_1L_chr = signft_covars_cndn_1L_chr)
+                                              signft_covars_cdn_1L_chr = signft_covars_cdn_1L_chr)
   if(!is.null(params_ls$prefd_covars_chr)){
     cmprsns_ls$mdl_smry_ls$prefd_covars_chr <- params_ls$prefd_covars_chr
   }
@@ -1634,7 +1634,7 @@ write_ts_mdl_plts <- function (brms_mdl, # Rename lngl
                                                                           ifelse(is.null(brms_mdl),
                                                                                  " from table",
                                                                                  sfx_1L_chr)),
-                                                      table_predn_mdl = table_predn_mdl
+                                                      table_predn_mdl = table_predn_mdl,
                                                       tfd_data_tb = tfd_data_tb,
                                                       tfmn_1L_chr = tfmn_1L_chr,
                                                       type_1L_chr = c("coefs", "hetg",

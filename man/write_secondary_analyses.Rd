@@ -7,7 +7,15 @@
 write_secondary_analyses(
   input_params_ls,
   backend_1L_chr = "cmdstanr",
-  new_dir_nm_1L_chr = "F_TS_Mdls"
+  combinations_1L_lgl = F,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
+  cores_1L_int = 1L,
+  depnt_var_min_val_1L_dbl = numeric(0),
+  existing_predrs_ls = NULL,
+  max_nbr_of_covars_1L_int = integer(0),
+  new_dir_nm_1L_chr = "F_TS_Mdls",
+  options_chr = c("Y", "N")
 )
 }
 \arguments{
@@ -15,7 +23,23 @@ write_secondary_analyses(
 
 \item{backend_1L_chr}{Backend (a character vector of length one), Default: 'cmdstanr'}
 
+\item{combinations_1L_lgl}{Combinations (a logical vector of length one), Default: F}
+
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
+\item{cores_1L_int}{Cores (an integer vector of length one), Default: 1}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
+
+\item{existing_predrs_ls}{Existing predictors (a list), Default: NULL}
+
+\item{max_nbr_of_covars_1L_int}{Maximum number of covariates (an integer vector of length one), Default: integer(0)}
+
 \item{new_dir_nm_1L_chr}{New directory name (a character vector of length one), Default: 'F_TS_Mdls'}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 }
 \value{
 Results (a list)

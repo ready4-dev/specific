@@ -7,8 +7,15 @@
 write_mdls_with_covars_cmprsn(
   scored_data_tb,
   bl_tb,
+  combinations_1L_lgl = F,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
+  depnt_var_min_val_1L_dbl = numeric(0),
   ds_smry_ls,
+  existing_predrs_ls = NULL,
+  max_nbr_of_covars_1L_int = integer(0),
   mdl_smry_ls,
+  options_chr = c("Y", "N"),
   output_data_dir_1L_chr,
   seed_1L_int = 1234,
   session_data_ls = NULL
@@ -19,9 +26,23 @@ write_mdls_with_covars_cmprsn(
 
 \item{bl_tb}{Baseline (a tibble)}
 
+\item{combinations_1L_lgl}{Combinations (a logical vector of length one), Default: F}
+
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
+
 \item{ds_smry_ls}{Dataset summary (a list)}
 
+\item{existing_predrs_ls}{Existing predictors (a list), Default: NULL}
+
+\item{max_nbr_of_covars_1L_int}{Maximum number of covariates (an integer vector of length one), Default: integer(0)}
+
 \item{mdl_smry_ls}{Model summary (a list)}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 
 \item{output_data_dir_1L_chr}{Output data directory (a character vector of length one)}
 

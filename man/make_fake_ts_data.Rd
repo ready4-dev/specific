@@ -4,10 +4,16 @@
 \alias{make_fake_ts_data}
 \title{Make fake time series data}
 \usage{
-make_fake_ts_data(outp_smry_ls, depnt_vars_are_NA_1L_lgl = T)
+make_fake_ts_data(
+  outp_smry_ls,
+  depnt_var_min_val_1L_dbl = numeric(0),
+  depnt_vars_are_NA_1L_lgl = T
+)
 }
 \arguments{
 \item{outp_smry_ls}{Output summary (a list)}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
 
 \item{depnt_vars_are_NA_1L_lgl}{Dependent variables are NA (a logical vector of length one), Default: T}
 }

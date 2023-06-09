@@ -5,12 +5,14 @@
 #' @param x An object of class SpecificProject
 #' @param type_1L_chr Type (a character vector of length one), Default: 'results'
 #' @param what_1L_chr What (a character vector of length one), Default: 'prefd_mdls'
+#' @param ... Additional arguments
 #' @return Object (an output object of multiple potential types)
 #' @rdname procure-methods
 #' @aliases procure,SpecificProject-method
 #' @export 
 #' @importFrom ready4 procure
-methods::setMethod("procure", "SpecificProject", function (x, type_1L_chr = "results", what_1L_chr = "prefd_mdls") 
+methods::setMethod("procure", "SpecificProject", function (x, type_1L_chr = "results", what_1L_chr = "prefd_mdls", 
+    ...) 
 {
     if (type_1L_chr == "results") {
         results_ls <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls

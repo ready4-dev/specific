@@ -7,9 +7,9 @@
 \alias{metamorphose,SpecificConverter-method}
 \title{Metamorphose data from one model module (or sub-module) instance to an instance of a different model module or sub-module}
 \usage{
-\S4method{metamorphose}{SpecificMixed}(x, to_1L_chr = "SpecificSynopsis", rmd_fl_nms_ls = NULL)
+\S4method{metamorphose}{SpecificMixed}(x, to_1L_chr = "SpecificSynopsis", rmd_fl_nms_ls = NULL, ...)
 
-\S4method{metamorphose}{SpecificConverter}(x, paths_chr = NA_character_)
+\S4method{metamorphose}{SpecificConverter}(x, paths_chr = NA_character_, ...)
 }
 \arguments{
 \item{x}{An object of class SpecificConverter}
@@ -17,6 +17,8 @@
 \item{to_1L_chr}{To (a character vector of length one), Default: 'SpecificSynopsis'}
 
 \item{rmd_fl_nms_ls}{R Markdown file names (a list), Default: NULL}
+
+\item{...}{Additional arguments}
 
 \item{paths_chr}{Paths (a character vector), Default: 'NA'}
 }

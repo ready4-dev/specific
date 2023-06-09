@@ -6,43 +6,55 @@
 \usage{
 write_mdl_type_multi_outps(
   data_tb,
-  folds_1L_int = 10,
-  predrs_var_nms_chr,
-  covar_var_nms_chr = NA_character_,
-  start_1L_chr = NULL,
   mdl_type_1L_chr,
-  depnt_var_nm_1L_chr = "utl_total_w",
-  path_to_write_to_1L_chr,
   new_dir_nm_1L_chr,
-  mdl_types_lup = NULL,
+  path_to_write_to_1L_chr,
+  predrs_var_nms_chr,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
+  covar_var_nms_chr = NA_character_,
+  depnt_var_min_val_1L_dbl = numeric(0),
+  depnt_var_nm_1L_chr = "utl_total_w",
   fl_nm_pfx_1L_chr = "C_PREDR",
-  plt_indcs_int = c(3, 5)
+  folds_1L_int = 10,
+  mdl_types_lup = NULL,
+  options_chr = c("Y", "N"),
+  plt_indcs_int = c(3, 5),
+  start_1L_chr = NULL
 )
 }
 \arguments{
 \item{data_tb}{Data (a tibble)}
 
-\item{folds_1L_int}{Folds (an integer vector of length one), Default: 10}
-
-\item{predrs_var_nms_chr}{Predictors variable names (a character vector)}
-
-\item{covar_var_nms_chr}{Covariate variable names (a character vector), Default: 'NA'}
-
-\item{start_1L_chr}{Start (a character vector of length one), Default: NULL}
-
 \item{mdl_type_1L_chr}{Model type (a character vector of length one)}
-
-\item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
-
-\item{path_to_write_to_1L_chr}{Path to write to (a character vector of length one)}
 
 \item{new_dir_nm_1L_chr}{New directory name (a character vector of length one)}
 
-\item{mdl_types_lup}{Model types (a lookup table), Default: NULL}
+\item{path_to_write_to_1L_chr}{Path to write to (a character vector of length one)}
+
+\item{predrs_var_nms_chr}{Predictors variable names (a character vector)}
+
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
+\item{covar_var_nms_chr}{Covariate variable names (a character vector), Default: 'NA'}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
+
+\item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
 
 \item{fl_nm_pfx_1L_chr}{File name prefix (a character vector of length one), Default: 'C_PREDR'}
 
+\item{folds_1L_int}{Folds (an integer vector of length one), Default: 10}
+
+\item{mdl_types_lup}{Model types (a lookup table), Default: NULL}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
+
 \item{plt_indcs_int}{Plot indices (an integer vector), Default: c(3, 5)}
+
+\item{start_1L_chr}{Start (a character vector of length one), Default: NULL}
 }
 \value{
 Summary of model single predictors (a tibble)

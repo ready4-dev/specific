@@ -4,10 +4,22 @@
 \alias{write_scndry_analysis_dir}
 \title{Write secondary analysis directory}
 \usage{
-write_scndry_analysis_dir(paths_ls, reference_1L_int = 1)
+write_scndry_analysis_dir(
+  paths_ls,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
+  options_chr = c("Y", "N"),
+  reference_1L_int = 1
+)
 }
 \arguments{
 \item{paths_ls}{Paths (a list)}
+
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 
 \item{reference_1L_int}{Reference (an integer vector of length one), Default: 1}
 }

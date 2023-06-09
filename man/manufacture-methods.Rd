@@ -9,17 +9,25 @@
 \alias{manufacture,SpecificSynopsis-method}
 \title{Manufacture a new object}
 \usage{
-\S4method{manufacture}{SpecificResults}(x, what_1L_chr = "indexed_shareable")
+\S4method{manufacture}{SpecificResults}(x, what_1L_chr = "indexed_shareable", ...)
 
-\S4method{manufacture}{SpecificProject}(x, what_1L_chr = "ds_descvs_ls", scndry_anlys_params_ls = NULL)
+\S4method{manufacture}{SpecificProject}(
+  x,
+  what_1L_chr = "ds_descvs_ls",
+  scndry_anlys_params_ls = NULL,
+  ...
+)
 
 \S4method{manufacture}{SpecificSynopsis}(
   x,
+  consent_1L_chr = "",
+  depnt_var_min_val_1L_dbl = numeric(0),
   depnt_var_nms_chr = NA_character_,
   make_cmpst_plt_1L_lgl = F,
   scndry_anlys_params_ls = NULL,
   version_1L_chr = "",
-  what_1L_chr = "input_params_ls"
+  what_1L_chr = "input_params_ls",
+  ...
 )
 }
 \arguments{
@@ -27,7 +35,13 @@
 
 \item{what_1L_chr}{What (a character vector of length one), Default: 'input_params_ls'}
 
+\item{...}{Additional arguments}
+
 \item{scndry_anlys_params_ls}{Secondary analysis parameters (a list), Default: NULL}
+
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
 
 \item{depnt_var_nms_chr}{Dependent variable names (a character vector), Default: 'NA'}
 

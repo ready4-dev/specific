@@ -1,8 +1,12 @@
 author_SpecificModels <- function(x,
-                                  prefd_mdl_types_chr = NULL,
-                                  what_1L_chr = "all",
+                                  consent_1L_chr = "",
                                   digits_1L_int = 3L,
-                                  reference_1L_int = NULL){
+                                  prefd_mdl_types_chr = NULL,
+                                  reference_1L_int = NULL,
+                                  what_1L_chr = "all",
+                                  x_labels_chr = character(0),
+                                  ...){
+  series_1L_lgl <- x@a_YouthvarsProfile %>% inherits("YouthvarsSeries")
   if(what_1L_chr %in% c("all","descriptives","models","workspace")){
     session_data_ls <- sessionInfo()
     if(what_1L_chr %in% c("workspace","all")){
@@ -12,7 +16,7 @@ author_SpecificModels <- function(x,
       }else{
         transform_paths_ls <- NULL
       }
-      path_params_ls <- make_path_params_ls() # # add consent args
+      path_params_ls <- make_path_params_ls()
       path_params_ls$path_from_top_level_1L_chr <- x@paths_chr
       path_params_ls$use_fake_data_1L_lgl <- x@b_SpecificParameters@fake_1L_lgl
       paths_ls <- path_params_ls %>%
@@ -24,22 +28,26 @@ author_SpecificModels <- function(x,
                                 paths_ls,
                                 !!!transform_paths_ls$args_ls)
       }
-      paths_ls <- ready4show::write_all_outp_dirs(paths_ls = paths_ls)
+      paths_ls <- ready4show::write_all_outp_dirs(paths_ls = paths_ls,
+                                                  consent_1L_chr = consent_1L_chr)
       x@b_SpecificParameters@paths_ls <- paths_ls
     }
     if(what_1L_chr %in% c("descriptives","all")){
       ds_descvs_ls <- manufacture(x,
                                   what_1L_chr = "ds_descvs_ls")
-      descv_tbl_ls <- youthvars::write_descv_tbls(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
-                                                  ds_descvs_ls = ds_descvs_ls,
-                                                  predictors_lup = x@b_SpecificParameters@predictors_lup,
-                                                  descv_outp_dir_1L_chr = x@b_SpecificParameters@paths_ls$descv_outp_dir_1L_chr,
-                                                  nbr_of_digits_1L_int = digits_1L_int,
-                                                  participation_var_1L_chr = x@a_YouthvarsProfile@participation_var_1L_chr)
+      descv_tbl_ls <- write_descv_tbls(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
+                                       consent_1L_chr = consent_1L_chr,
+                                       descv_outp_dir_1L_chr = x@b_SpecificParameters@paths_ls$descv_outp_dir_1L_chr,
+                                       ds_descvs_ls = ds_descvs_ls,
+                                       nbr_of_digits_1L_int = digits_1L_int,
+                                       participation_var_1L_chr = if(!series_1L_lgl){character(0)}else{x@a_YouthvarsProfile@participation_var_1L_chr},
+                                       predictors_lup = x@b_SpecificParameters@predictors_lup)
       descv_plts_paths_ls <- youthvars::write_descv_plots(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb,
+                                                          consent_1L_chr = consent_1L_chr,
                                                           ds_descvs_ls = ds_descvs_ls,
                                                           descv_outp_dir_1L_chr = x@b_SpecificParameters@paths_ls$descv_outp_dir_1L_chr,
-                                                          lbl_nms_chr = x@b_SpecificParameters@itm_labels_chr, # Should be domain labels
+                                                          lbl_nms_chr = x@b_SpecificParameters@itm_labels_chr,
+                                                          x_labels_chr = x_labels_chr,
                                                           maui_domains_pfxs_1L_chr = hutils::longest_prefix(x@b_SpecificParameters@domain_labels_chr))
 
     }
@@ -59,25 +67,26 @@ author_SpecificModels <- function(x,
       x <- investigate(x)
       x <- investigate(x)
       x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$session_data_ls <- session_data_ls
-      # author(x,
-      #        type_1L_chr = "purge_write")
-    }
-  }else{
-    methods::callNextMethod()
-  }
+      }
+    }else{
+      x <- methods::callNextMethod()
+      }
   return(x)
 }
 author_SpecificProject <- function(x,
+                                   consent_1L_chr = "",
                                    fl_nm_1L_chr = "I_ALL_OUTPUT_",
                                    path_1L_chr = NA_character_,
                                    type_1L_chr = "results",
-                                   what_1L_chr = "public"){
+                                   what_1L_chr = "public",
+                                   ...){
   if(type_1L_chr %in% c("purge_all","purge_write")){
     outp_smry_ls_ls <- manufactureSlot(x,
                                        "c_SpecificResults",
                                        what_1L_chr = "indexed_shareable")
     purrr::walk(outp_smry_ls_ls,
-                ~ write_to_delete_mdl_fls(.x))
+                ~ write_to_delete_mdl_fls(.x,
+                                          consent_1L_chr = consent_1L_chr))
   }
   if(type_1L_chr != "purge_all"){
     path_1L_chr <- ifelse(is.na(path_1L_chr),
@@ -102,17 +111,32 @@ author_SpecificProject <- function(x,
         output_xx@paths_chr <- NA_character_
       }
     }
-    saveRDS(output_xx,
-            paste0(path_1L_chr,
-                   "/",
-                   fl_nm_1L_chr,
-                   ".RDS"))
+    ready4::write_with_consent(consented_fn = saveRDS,
+                               prompt_1L_chr = paste0("Do you confirm that you want to write the file ",
+                                                      paste0(fl_nm_1L_chr, ".RDS"),
+                                                      " to ",
+                                                      path_1L_chr,
+                                                      "?"),
+                               consent_1L_chr = consent_1L_chr,
+                               consent_indcs_int = consent_indcs_int,
+                               consented_args_ls = list(object = output_xx,
+                                                        file = paste0(path_1L_chr, "/", fl_nm_1L_chr,".RDS")),
+                               consented_msg_1L_chr = paste0("File ",
+                                                             paste0(fl_nm_1L_chr, ".RDS"),
+                                                             " has been written to ",
+                                                             path_1L_chr,
+                                                             "."),
+                               declined_msg_1L_chr = "Write request cancelled - no new files have been written.",
+                               options_chr = options_chr)
   }
+  return(x)
 }
 author_SpecificSynopsis <- function(x,
-                                     reference_1L_int = NA_integer_,
-                                     type_1L_chr = "Report",
-                                     what_1L_chr = "Catalogue"){
+                                    consent_1L_chr = "",
+                                    reference_1L_int = NA_integer_,
+                                    type_1L_chr = "Report",
+                                    what_1L_chr = "Catalogue",
+                                    ...){
   if(what_1L_chr == "Catalogue"){
     outp_smry_ls_ls <- manufacture(x@b_SpecificResults,
                                    what_1L_chr = "indexed_shareable")
@@ -131,31 +155,13 @@ author_SpecificSynopsis <- function(x,
                                       authorReport(x %>%
                                                      renewSlot("b_SpecificResults@a_SpecificShareable@shareable_outp_ls",
                                                                .x),
+                                                   consent_1L_chr = consent_1L_chr,
                                                    fl_nm_1L_chr = fl_nm_1L_chr,
-                                                   what_1L_chr = "Catalogue")
+                                                   what_1L_chr = "Catalogue",
+                                                   ...)
                                       fl_nm_1L_chr
                                     }
     )
-    # if(!is.na(x@e_Ready4useRepos@dv_ds_nm_1L_chr)){
-    #   ready4::write_to_dv_with_wait(dss_tb = tibble::tibble(ds_obj_nm_chr = ctlg_nms_chr,
-    #                                                         title_chr = purrr::map_chr(1:length(ctlg_nms_chr),
-    #                                                                                    ~ paste0("Catalogue of utility mapping models",
-    #                                                                                             ifelse(.x==1,
-    #                                                                                                    " (Primary Analysis)",
-    #                                                                                                    paste0(" (Supplementary Analysis ",
-    #                                                                                                           (.x-1),
-    #                                                                                                           ")"))))),
-    #                                 dv_nm_1L_chr = x@e_Ready4useRepos@dv_nm_1L_chr,
-    #                                 ds_url_1L_chr = x@e_Ready4useRepos@dv_ds_nm_1L_chr,
-    #                                 parent_dv_dir_1L_chr = paste0(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls$path_to_write_to_1L_chr,"/H_Dataverse"),
-    #                                 paths_to_dirs_chr = paste0(x@a_Ready4showPaths@outp_data_dir_1L_chr,
-    #                                                            "/",
-    #                                                            x@a_Ready4showPaths@reports_dir_1L_chr,
-    #                                                            "/",
-    #                                                            what_1L_chr),
-    #                                 inc_fl_types_chr = ".pdf",
-    #                                 paths_are_rltv_1L_lgl = F)
-    # }
   }
-
+  return(x)
 }

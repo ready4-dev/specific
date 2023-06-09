@@ -1,6 +1,7 @@
 procure_SpecificProject <- function(x,
                                     type_1L_chr = "results",
-                                    what_1L_chr = "prefd_mdls"){
+                                    what_1L_chr = "prefd_mdls",
+                                    ...){
   if(type_1L_chr == "results"){
     results_ls <- x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls
     if(!is.null(results_ls$mdl_smry_ls)){

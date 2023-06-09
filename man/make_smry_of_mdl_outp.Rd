@@ -7,6 +7,7 @@
 make_smry_of_mdl_outp(
   data_tb,
   folds_1L_int = 10,
+  depnt_var_min_val_1L_dbl = numeric(0),
   depnt_var_nm_1L_chr = "utl_total_w",
   start_1L_chr = NULL,
   tfmn_1L_chr = "NTF",
@@ -21,6 +22,8 @@ make_smry_of_mdl_outp(
 \item{data_tb}{Data (a tibble)}
 
 \item{folds_1L_int}{Folds (an integer vector of length one), Default: 10}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
 
 \item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
 

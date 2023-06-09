@@ -6,6 +6,7 @@
 \usage{
 make_mdl(
   data_tb,
+  depnt_var_min_val_1L_dbl = numeric(0),
   depnt_var_nm_1L_chr = "utl_total_w",
   tfmn_1L_chr = "NTF",
   predr_var_nm_1L_chr,
@@ -18,6 +19,8 @@ make_mdl(
 }
 \arguments{
 \item{data_tb}{Data (a tibble)}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
 
 \item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
 

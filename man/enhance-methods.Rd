@@ -8,8 +8,10 @@
 \S4method{enhance}{SpecificSynopsis}(
   x,
   depnt_var_nms_chr = NA_character_,
+  depnt_var_min_val_1L_dbl = numeric(0),
   what_1L_chr = "shareable_outp_ls",
-  with_1L_chr = "results_ls"
+  with_1L_chr = "results_ls",
+  ...
 )
 }
 \arguments{
@@ -17,9 +19,13 @@
 
 \item{depnt_var_nms_chr}{Dependent variable names (a character vector), Default: 'NA'}
 
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
+
 \item{what_1L_chr}{What (a character vector of length one), Default: 'shareable_outp_ls'}
 
 \item{with_1L_chr}{With (a character vector of length one), Default: 'results_ls'}
+
+\item{...}{Additional arguments}
 }
 \value{
 x (An object of class SpecificSynopsis)

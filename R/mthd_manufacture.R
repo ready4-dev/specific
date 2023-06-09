@@ -4,6 +4,7 @@
 #' @description manufacture method applied to SpecificResults
 #' @param x An object of class SpecificResults
 #' @param what_1L_chr What (a character vector of length one), Default: 'indexed_shareable'
+#' @param ... Additional arguments
 #' @return Object (an output object of multiple potential types)
 #' @rdname manufacture-methods
 #' @aliases manufacture,SpecificResults-method
@@ -11,7 +12,7 @@
 #' @importFrom purrr map
 #' @importFrom methods callNextMethod
 #' @importFrom ready4 manufacture
-methods::setMethod("manufacture", "SpecificResults", function (x, what_1L_chr = "indexed_shareable") 
+methods::setMethod("manufacture", "SpecificResults", function (x, what_1L_chr = "indexed_shareable", ...) 
 {
     if (what_1L_chr == "indexed_shareable") {
         shareable_outp_ls <- procureSlot(x, "a_SpecificShareable@shareable_outp_ls")
@@ -41,6 +42,7 @@ methods::setMethod("manufacture", "SpecificResults", function (x, what_1L_chr = 
 #' @param x An object of class SpecificProject
 #' @param what_1L_chr What (a character vector of length one), Default: 'ds_descvs_ls'
 #' @param scndry_anlys_params_ls Secondary analysis parameters (a list), Default: NULL
+#' @param ... Additional arguments
 #' @return Object (an output object of multiple potential types)
 #' @rdname manufacture-methods
 #' @aliases manufacture,SpecificProject-method
@@ -48,8 +50,10 @@ methods::setMethod("manufacture", "SpecificResults", function (x, what_1L_chr = 
 #' @importFrom dplyr pull
 #' @importFrom ready4show make_header_yaml_args_ls make_output_format_ls
 #' @importFrom ready4 manufacture
-methods::setMethod("manufacture", "SpecificProject", function (x, what_1L_chr = "ds_descvs_ls", scndry_anlys_params_ls = NULL) 
+methods::setMethod("manufacture", "SpecificProject", function (x, what_1L_chr = "ds_descvs_ls", scndry_anlys_params_ls = NULL, 
+    ...) 
 {
+    series_1L_lgl <- x@a_YouthvarsProfile %>% inherits("YouthvarsSeries")
     if (what_1L_chr %in% c("ds_descvs_ls", "ds_smry_ls", "input_params_ls")) {
         ds_descvs_ls <- make_ds_descvs_ls(candidate_predrs_chr = x@b_SpecificParameters@candidate_predrs_chr, 
             candidate_covar_nms_chr = x@b_SpecificParameters@candidate_covars_chr, 
@@ -57,10 +61,22 @@ methods::setMethod("manufacture", "SpecificProject", function (x, what_1L_chr = 
             dictionary_tb = x@a_YouthvarsProfile@a_Ready4useDyad@dictionary_r3, 
             id_var_nm_1L_chr = x@a_YouthvarsProfile@id_var_nm_1L_chr, 
             is_fake_1L_lgl = x@b_SpecificParameters@fake_1L_lgl, 
-            msrmnt_date_var_nm_1L_chr = x@b_SpecificParameters@msrmnt_date_var_nm_1L_chr, 
-            round_var_nm_1L_chr = x@a_YouthvarsProfile@timepoint_var_nm_1L_chr, 
-            round_vals_chr = x@a_YouthvarsProfile@timepoint_vals_chr, 
-            utl_wtd_var_nm_1L_chr = x@b_SpecificParameters@depnt_var_nm_1L_chr, 
+            msrmnt_date_var_nm_1L_chr = if (!series_1L_lgl) {
+                character(0)
+            }
+            else {
+                x@b_SpecificParameters@msrmnt_date_var_nm_1L_chr
+            }, round_var_nm_1L_chr = if (!series_1L_lgl) {
+                character(0)
+            }
+            else {
+                x@a_YouthvarsProfile@timepoint_var_nm_1L_chr
+            }, round_vals_chr = if (!series_1L_lgl) {
+                "Overall"
+            }
+            else {
+                x@a_YouthvarsProfile@timepoint_vals_chr
+            }, utl_wtd_var_nm_1L_chr = x@b_SpecificParameters@depnt_var_nm_1L_chr, 
             maui_item_pfx_1L_chr = x@b_SpecificParameters@itm_prefix_1L_chr, 
             utl_unwtd_var_nm_1L_chr = x@b_SpecificParameters@total_unwtd_var_nm_1L_chr)
         ds_descvs_ls$nbr_obs_in_raw_ds_1L_dbl <- nrow(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb)
@@ -126,11 +142,14 @@ methods::setMethod("manufacture", "SpecificProject", function (x, what_1L_chr = 
 #' @name manufacture-SpecificSynopsis
 #' @description manufacture method applied to SpecificSynopsis
 #' @param x An object of class SpecificSynopsis
+#' @param consent_1L_chr Consent (a character vector of length one), Default: ''
+#' @param depnt_var_min_val_1L_dbl Dependent variable minimum value (a double vector of length one), Default: numeric(0)
 #' @param depnt_var_nms_chr Dependent variable names (a character vector), Default: 'NA'
 #' @param make_cmpst_plt_1L_lgl Make composite plot (a logical vector of length one), Default: F
 #' @param scndry_anlys_params_ls Secondary analysis parameters (a list), Default: NULL
 #' @param version_1L_chr Version (a character vector of length one), Default: ''
 #' @param what_1L_chr What (a character vector of length one), Default: 'input_params_ls'
+#' @param ... Additional arguments
 #' @return Object (an output object of multiple potential types)
 #' @rdname manufacture-methods
 #' @aliases manufacture,SpecificSynopsis-method
@@ -138,8 +157,10 @@ methods::setMethod("manufacture", "SpecificProject", function (x, what_1L_chr = 
 #' @importFrom ready4show make_header_yaml_args_ls make_output_format_ls
 #' @importFrom ready4 get_from_lup_obj manufacture
 #' @importFrom methods callNextMethod
-methods::setMethod("manufacture", "SpecificSynopsis", function (x, depnt_var_nms_chr = NA_character_, make_cmpst_plt_1L_lgl = F, 
-    scndry_anlys_params_ls = NULL, version_1L_chr = "", what_1L_chr = "input_params_ls") 
+methods::setMethod("manufacture", "SpecificSynopsis", function (x, consent_1L_chr = "", depnt_var_min_val_1L_dbl = numeric(0), 
+    depnt_var_nms_chr = NA_character_, make_cmpst_plt_1L_lgl = F, 
+    scndry_anlys_params_ls = NULL, version_1L_chr = "", what_1L_chr = "input_params_ls", 
+    ...) 
 {
     if (what_1L_chr %in% c("abstract_args_ls", "ds_descvs_ls", 
         "ds_smry_ls", "input_params_ls", "results_ls", "mdl_smry_ls")) {
@@ -148,7 +169,8 @@ methods::setMethod("manufacture", "SpecificSynopsis", function (x, depnt_var_nms
             paths_chr = x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls$path_to_write_to_1L_chr)
         if (what_1L_chr %in% c("ds_descvs_ls", "ds_smry_ls", 
             "mdl_smry_ls")) {
-            object_xx <- manufacture(y_SpecificMixed, what_1L_chr = what_1L_chr)
+            object_xx <- manufacture(y_SpecificMixed, depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
+                what_1L_chr = what_1L_chr)
         }
         if (what_1L_chr %in% c("abstract_args_ls", "input_params_ls", 
             "results_ls")) {
@@ -164,7 +186,7 @@ methods::setMethod("manufacture", "SpecificSynopsis", function (x, depnt_var_nms
                 supplementary_digits_1L_int = ifelse(length(x@digits_int) > 
                   1, x@digits_int[2], x@digits_int[1]))
             object_xx <- make_input_params(y_SpecificMixed@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
-                control_ls = y_SpecificMixed@b_SpecificParameters@control_ls, 
+                consent_1L_chr = consent_1L_chr, control_ls = y_SpecificMixed@b_SpecificParameters@control_ls, 
                 ds_descvs_ls = manufacture(y_SpecificMixed, what_1L_chr = "ds_descvs_ls"), 
                 dv_ds_nm_and_url_chr = c(x@e_Ready4useRepos@dv_nm_1L_chr, 
                   x@e_Ready4useRepos@dv_ds_nm_1L_chr), header_yaml_args_ls = header_yaml_args_ls, 
@@ -188,7 +210,9 @@ methods::setMethod("manufacture", "SpecificSynopsis", function (x, depnt_var_nms
                 var_nm_change_lup = x@correspondences_r3)
             if (what_1L_chr %in% c("abstract_args_ls", "results_ls")) {
                 object_xx$study_descs_ls$predr_ctgs_ls <- make_predr_ctgs_ls(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls)
-                object_xx <- make_results_ls(dv_ds_nm_and_url_chr = object_xx$path_params_ls$dv_ds_nm_and_url_chr, 
+                object_xx <- make_results_ls(consent_1L_chr = consent_1L_chr, 
+                  dv_ds_nm_and_url_chr = object_xx$path_params_ls$dv_ds_nm_and_url_chr, 
+                  depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
                   make_cmpst_plt_1L_lgl = make_cmpst_plt_1L_lgl, 
                   outp_smry_ls = x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls, 
                   output_format_ls = object_xx$output_format_ls, 

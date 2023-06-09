@@ -7,8 +7,11 @@
 write_study_outp_ds(
   input_params_ls,
   abstract_args_ls = NULL,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
   dv_mdl_desc_1L_chr = "An R model.",
   inc_fl_types_chr = ".pdf",
+  options_chr = c("Y", "N"),
   purge_data_1L_lgl = FALSE,
   start_at_int = c(2, 1)
 )
@@ -18,9 +21,15 @@ write_study_outp_ds(
 
 \item{abstract_args_ls}{Abstract arguments (a list), Default: NULL}
 
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
 \item{dv_mdl_desc_1L_chr}{Dataverse model description (a character vector of length one), Default: 'An R model.'}
 
 \item{inc_fl_types_chr}{Include file types (a character vector), Default: '.pdf'}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 
 \item{purge_data_1L_lgl}{Purge data (a logical vector of length one), Default: FALSE}
 

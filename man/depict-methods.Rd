@@ -13,7 +13,9 @@
   axis_title_sclg_1L_dbl = 2,
   base_height_1L_dbl = 13,
   base_size_1L_dbl = 30,
+  consent_1L_chr = "",
   depnt_var_desc_1L_chr = NA_character_,
+  depnt_var_min_val_1L_dbl = numeric(0),
   dim_plot_heights_int = c(10L, 1L),
   dim_plot_log_log_tfmn_1L_lgl = F,
   dim_plot_rows_cols_pair_int = c(3L, 2L),
@@ -32,14 +34,16 @@
   utl_by_rnd_plots_params_ls = list(width_1L_dbl = 6, height_1L_dbl = 4),
   what_1L_chr = "composite_mdl",
   write_1L_lgl = F,
-  y_label_1L_chr = " "
+  y_label_1L_chr = " ",
+  ...
 )
 
 \S4method{depict}{SpecificProject}(
   x,
   mdl_indcs_int = NULL,
   output_type_1L_chr = "HTML",
-  plt_indcs_int = NULL
+  plt_indcs_int = NULL,
+  ...
 )
 }
 \arguments{
@@ -53,7 +57,11 @@
 
 \item{base_size_1L_dbl}{Base size (a double vector of length one), Default: 30}
 
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
 \item{depnt_var_desc_1L_chr}{Dependent variable description (a character vector of length one), Default: 'NA'}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
 
 \item{dim_plot_heights_int}{Dimension plot heights (an integer vector), Default: c(10L, 1L)}
 
@@ -92,6 +100,8 @@
 \item{write_1L_lgl}{Write (a logical vector of length one), Default: F}
 
 \item{y_label_1L_chr}{Y label (a character vector of length one), Default: ' '}
+
+\item{...}{Additional arguments}
 
 \item{output_type_1L_chr}{Output type (a character vector of length one), Default: 'HTML'}
 

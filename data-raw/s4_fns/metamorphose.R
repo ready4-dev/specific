@@ -1,5 +1,6 @@
 metamorphose_SpecificConverter <- function(x,
-                                           paths_chr = NA_character_){
+                                           paths_chr = NA_character_,
+                                           ...){
   domain_labels_chr <- x@a_ScorzProfile@domain_wtd_var_nms_chr
   x_SpecificModels <- SpecificModels(a_YouthvarsProfile = procureSlot(x@a_ScorzProfile,"a_YouthvarsProfile"),
                                      b_SpecificParameters = SpecificParameters(depnt_var_nm_1L_chr = x@a_ScorzProfile@total_wtd_var_nm_1L_chr,
@@ -12,7 +13,8 @@ metamorphose_SpecificConverter <- function(x,
 }
 metamorphose_SpecificMixed <- function(x,
                                        to_1L_chr = "SpecificSynopsis",
-                                       rmd_fl_nms_ls = NULL){
+                                       rmd_fl_nms_ls = NULL,
+                                       ...){
   if(is.null(rmd_fl_nms_ls)){
     rmd_fl_nms_ls <- ready4show::make_rmd_fl_nms_ls("Lngl_Mdls_HTML",
                                                     pdf_fl_nm_1L_chr = "Lngl_Mdls_PDF",

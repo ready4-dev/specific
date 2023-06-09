@@ -9,7 +9,11 @@ write_mdl_cmprsn(
   ds_smry_ls,
   mdl_smry_ls,
   output_data_dir_1L_chr,
-  depnt_var_max_val_1L_dbl = 0.99,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
+  depnt_var_max_val_1L_dbl = 0.99999,
+  depnt_var_min_val_1L_dbl = 1e-05,
+  options_chr = c("Y", "N"),
   seed_1L_int = 1234
 )
 }
@@ -22,7 +26,15 @@ write_mdl_cmprsn(
 
 \item{output_data_dir_1L_chr}{Output data directory (a character vector of length one)}
 
-\item{depnt_var_max_val_1L_dbl}{Dependent variable maximum value (a double vector of length one), Default: 0.99}
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
+\item{depnt_var_max_val_1L_dbl}{Dependent variable maximum value (a double vector of length one), Default: 0.99999}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: 1e-05}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 
 \item{seed_1L_int}{Seed (an integer vector of length one), Default: 1234}
 }

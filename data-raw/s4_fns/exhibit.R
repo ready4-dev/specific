@@ -6,8 +6,7 @@ exhibit_SpecificProject <- function(x,
                                     timepoints_int = NA_integer_,
                                     type_1L_chr = "data",
                                     what_1L_chr = "correlation",
-                                    ...
-                                    ){
+                                    ...){
   if(type_1L_chr == "data"){
     if(what_1L_chr == "correlation"){
       if(is.na(timepoints_int)){
@@ -39,8 +38,7 @@ exhibit_SpecificProject <- function(x,
                      youthvars::make_corstars_tbl_xx(caption_1L_chr = captions_chr[.x],
                                                      mkdn_tbl_ref_1L_chr = mkdn_tbl_refs_chr[.x],
                                                      method_chr = method_chr,
-                                                     result_chr = output_type_1L_chr
-                     ))
+                                                     result_chr = output_type_1L_chr))
     }
   }else{
     heading_grps_chr <- NULL

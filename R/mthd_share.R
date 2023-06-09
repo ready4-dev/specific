@@ -5,16 +5,19 @@
 #' @param x An object of class SpecificProject
 #' @param fl_nm_1L_chr File name (a character vector of length one), Default: 'mdl_ingredients'
 #' @param repos_Ready4useRepos PARAM_DESCRIPTION
+#' @param ... Additional arguments
 #' @return NULL
 #' @rdname share-methods
 #' @aliases share,SpecificProject-method
 #' @export 
 #' @importFrom ready4 share
-methods::setMethod("share", "SpecificProject", function (x, fl_nm_1L_chr = "mdl_ingredients", repos_Ready4useRepos) 
+methods::setMethod("share", "SpecificProject", function (x, fl_nm_1L_chr = "mdl_ingredients", repos_Ready4useRepos, 
+    ...) 
 {
     x@c_SpecificResults@b_SpecificPrivate <- SpecificPrivate()
     x@paths_chr <- NA_character_
-    y <- share(repos_Ready4useRepos, obj_to_share_xx = x, fl_nm_1L_chr = fl_nm_1L_chr)
+    y <- share(repos_Ready4useRepos, obj_to_share_xx = x, fl_nm_1L_chr = fl_nm_1L_chr, 
+        ...)
 })
 #' 
 #' Share data via an online repository
@@ -22,19 +25,22 @@ methods::setMethod("share", "SpecificProject", function (x, fl_nm_1L_chr = "mdl_
 #' @description share method applied to SpecificSynopsis
 #' @param x An object of class SpecificSynopsis
 #' @param consolidate_1L_lgl Consolidate (a logical vector of length one), Default: T
+#' @param consent_local_1L_chr Consent local (a character vector of length one), Default: ''
 #' @param fl_nm_1L_chr File name (a character vector of length one), Default: 'mdl_ingredients'
 #' @param type_1L_chr Type (a character vector of length one), Default: 'Models'
 #' @param what_1L_chr What (a character vector of length one), Default: 'ingredients'
+#' @param ... Additional arguments
 #' @return NULL
 #' @rdname share-methods
 #' @aliases share,SpecificSynopsis-method
 #' @export 
 #' @importFrom purrr reduce map_chr
 #' @importFrom dplyr bind_rows distinct mutate
-#' @importFrom ready4 write_to_dv_with_wait share
+#' @importFrom ready4 write_with_consent write_to_dv_with_wait share
 #' @importFrom tibble tibble
-methods::setMethod("share", "SpecificSynopsis", function (x, consolidate_1L_lgl = T, fl_nm_1L_chr = "mdl_ingredients", 
-    type_1L_chr = "Models", what_1L_chr = "ingredients") 
+methods::setMethod("share", "SpecificSynopsis", function (x, consolidate_1L_lgl = T, consent_local_1L_chr = "", 
+    fl_nm_1L_chr = "mdl_ingredients", type_1L_chr = "Models", 
+    what_1L_chr = "ingredients", ...) 
 {
     path_to_outp_dir_1L_chr <- x@a_Ready4showPaths@outp_data_dir_1L_chr
     if (type_1L_chr == "Models" & what_1L_chr %in% c("ingredients")) {
@@ -66,8 +72,16 @@ methods::setMethod("share", "SpecificSynopsis", function (x, consolidate_1L_lgl 
                   .x$mdls_lup <- .x$mdls_lup %>% dplyr::mutate(source_chr = "Primary Analysis")
                   .x
                 })
-            saveRDS(object_xx, paste0(path_to_outp_dir_1L_chr, 
-                "/Output/G_Shareable/Ingredients/mdl_ingredients.RDS"))
+            ready4::write_with_consent(consented_fn = saveRDS, 
+                prompt_1L_chr = paste0("Do you confirm that you want to write the file ", 
+                  paste0(path_to_outp_dir_1L_chr, "/Output/G_Shareable/Ingredients/mdl_ingredients.RDS"), 
+                  "?"), consent_1L_chr = consent_local_1L_chr, 
+                consent_indcs_int = consent_indcs_int, consented_args_ls = list(object = object_xx, 
+                  paste0(path_to_outp_dir_1L_chr, "/Output/G_Shareable/Ingredients/mdl_ingredients.RDS")), 
+                consented_msg_1L_chr = paste0("File ", paste0(path_to_outp_dir_1L_chr, 
+                  "/Output/G_Shareable/Ingredients/mdl_ingredients.RDS"), 
+                  " has been written."), declined_msg_1L_chr = "Write request cancelled - no new files have been written.", 
+                options_chr = options_chr)
         }
         Y <- share(x@e_Ready4useRepos, obj_to_share_xx = object_xx, 
             fl_nm_1L_chr = fl_nm_1L_chr)

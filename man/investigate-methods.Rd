@@ -11,31 +11,75 @@
 \alias{investigate,SpecificFixed-method}
 \title{Investigate solutions to an inverse problem}
 \usage{
-\S4method{investigate}{SpecificModels}(x, depnt_var_max_val_1L_dbl = Inf, session_ls = NULL)
+\S4method{investigate}{SpecificModels}(
+  x,
+  consent_1L_chr = "",
+  depnt_var_max_val_1L_dbl = Inf,
+  depnt_var_min_val_1L_dbl = 1e-05,
+  session_ls = NULL,
+  ...
+)
 
 \S4method{investigate}{SpecificMixed}(
   x,
   backend_1L_chr = "cmdstanr",
+  combinations_1L_lgl = F,
+  consent_1L_chr = "",
+  cores_1L_int = 1L,
+  depnt_var_min_val_1L_dbl = numeric(0),
+  existing_predrs_ls = NULL,
+  max_nbr_of_covars_1L_int = integer(0),
   new_dir_nm_1L_chr = "F_TS_Mdls",
-  scndry_anlys_params_ls = NULL
+  scndry_anlys_params_ls = NULL,
+  ...
 )
 
-\S4method{investigate}{SpecificPredictors}(x)
+\S4method{investigate}{SpecificPredictors}(
+  x,
+  consent_1L_chr = "",
+  depnt_var_min_val_1L_dbl = numeric(0),
+  signft_covars_cdn_1L_chr = "any",
+  ...
+)
 
-\S4method{investigate}{SpecificFixed}(x)
+\S4method{investigate}{SpecificFixed}(
+  x,
+  combinations_1L_lgl = F,
+  consent_1L_chr = "",
+  depnt_var_min_val_1L_dbl = numeric(0),
+  existing_predrs_ls = NULL,
+  max_nbr_of_covars_1L_int = integer(0),
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class SpecificFixed}
 
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
 \item{depnt_var_max_val_1L_dbl}{Dependent variable maximum value (a double vector of length one), Default: Inf}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
 
 \item{session_ls}{Session (a list), Default: NULL}
 
+\item{...}{Additional arguments}
+
 \item{backend_1L_chr}{Backend (a character vector of length one), Default: 'cmdstanr'}
+
+\item{combinations_1L_lgl}{Combinations (a logical vector of length one), Default: F}
+
+\item{cores_1L_int}{Cores (an integer vector of length one), Default: 1}
+
+\item{existing_predrs_ls}{Existing predictors (a list), Default: NULL}
+
+\item{max_nbr_of_covars_1L_int}{Maximum number of covariates (an integer vector of length one), Default: integer(0)}
 
 \item{new_dir_nm_1L_chr}{New directory name (a character vector of length one), Default: 'F_TS_Mdls'}
 
 \item{scndry_anlys_params_ls}{Secondary analysis parameters (a list), Default: NULL}
+
+\item{signft_covars_cdn_1L_chr}{Significant covariates condition (a character vector of length one), Default: 'any'}
 }
 \value{
 X (Modelling project dataset, input parameters and predictor comparison results.)

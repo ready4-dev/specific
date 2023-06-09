@@ -11,37 +11,50 @@
 \usage{
 \S4method{author}{SpecificModels}(
   x,
-  prefd_mdl_types_chr = NULL,
-  what_1L_chr = "all",
+  consent_1L_chr = "",
   digits_1L_int = 3L,
-  reference_1L_int = NULL
+  prefd_mdl_types_chr = NULL,
+  reference_1L_int = NULL,
+  what_1L_chr = "all",
+  x_labels_chr = character(0),
+  ...
 )
 
 \S4method{author}{SpecificSynopsis}(
   x,
+  consent_1L_chr = "",
   reference_1L_int = NA_integer_,
   type_1L_chr = "Report",
-  what_1L_chr = "Catalogue"
+  what_1L_chr = "Catalogue",
+  ...
 )
 
 \S4method{author}{SpecificProject}(
   x,
+  consent_1L_chr = "",
   fl_nm_1L_chr = "I_ALL_OUTPUT_",
   path_1L_chr = NA_character_,
   type_1L_chr = "results",
-  what_1L_chr = "public"
+  what_1L_chr = "public",
+  ...
 )
 }
 \arguments{
 \item{x}{An object of class SpecificProject}
 
-\item{prefd_mdl_types_chr}{Preferred model types (a character vector), Default: NULL}
-
-\item{what_1L_chr}{What (a character vector of length one), Default: 'public'}
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
 
 \item{digits_1L_int}{Digits (an integer vector of length one), Default: 3}
 
+\item{prefd_mdl_types_chr}{Preferred model types (a character vector), Default: NULL}
+
 \item{reference_1L_int}{Reference (an integer vector of length one), Default: NA}
+
+\item{what_1L_chr}{What (a character vector of length one), Default: 'public'}
+
+\item{x_labels_chr}{X labels (a character vector), Default: character(0)}
+
+\item{...}{Additional arguments}
 
 \item{type_1L_chr}{Type (a character vector of length one), Default: 'results'}
 
@@ -51,6 +64,10 @@
 }
 \value{
 x (An object of class SpecificModels)
+
+x (An object of class SpecificSynopsis)
+
+x (An object of class SpecificProject)
 }
 \description{
 author method applied to SpecificModels

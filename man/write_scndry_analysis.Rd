@@ -11,9 +11,19 @@ write_scndry_analysis(
   reference_1L_int,
   backend_1L_chr = "cmdstanr",
   candidate_predrs_chr = NULL,
+  combinations_1L_lgl = F,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
+  cores_1L_int = 1L,
+  depnt_var_max_val_1L_dbl = 0.99999,
+  depnt_var_min_val_1L_dbl = 1e-05,
+  existing_predrs_ls = NULL,
+  max_nbr_of_covars_1L_int = integer(0),
   new_dir_nm_1L_chr = "F_TS_Mdls",
+  options_chr = c("Y", "N"),
   predictors_lup = NULL,
-  prefd_covars_chr = NA_character_
+  prefd_covars_chr = NA_character_,
+  signft_covars_cdn_1L_chr = "any"
 )
 }
 \arguments{
@@ -29,11 +39,31 @@ write_scndry_analysis(
 
 \item{candidate_predrs_chr}{Candidate predictors (a character vector), Default: NULL}
 
+\item{combinations_1L_lgl}{Combinations (a logical vector of length one), Default: F}
+
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
+\item{cores_1L_int}{Cores (an integer vector of length one), Default: 1}
+
+\item{depnt_var_max_val_1L_dbl}{Dependent variable maximum value (a double vector of length one), Default: 0.99999}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: 1e-05}
+
+\item{existing_predrs_ls}{Existing predictors (a list), Default: NULL}
+
+\item{max_nbr_of_covars_1L_int}{Maximum number of covariates (an integer vector of length one), Default: integer(0)}
+
 \item{new_dir_nm_1L_chr}{New directory name (a character vector of length one), Default: 'F_TS_Mdls'}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 
 \item{predictors_lup}{Predictors (a lookup table), Default: NULL}
 
 \item{prefd_covars_chr}{Preferred covariates (a character vector), Default: 'NA'}
+
+\item{signft_covars_cdn_1L_chr}{Significant covariates condition (a character vector of length one), Default: 'any'}
 }
 \value{
 Output summary (a list)

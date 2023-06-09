@@ -6,49 +6,61 @@
 \usage{
 write_mdl_type_sngl_outps(
   data_tb,
-  folds_1L_int = 10,
-  depnt_var_nm_1L_chr = "utl_total_w",
-  start_1L_chr = NULL,
-  tfmn_1L_chr = "NTF",
-  predr_var_nm_1L_chr,
-  predr_var_desc_1L_chr,
+  mdl_fl_nm_1L_chr,
+  path_to_write_to_1L_chr,
   predr_vals_dbl,
+  predr_var_desc_1L_chr,
+  predr_var_nm_1L_chr,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
   covar_var_nms_chr = NA_character_,
+  depnt_var_nm_1L_chr = "utl_total_w",
+  depnt_var_min_val_1L_dbl = numeric(0),
+  folds_1L_int = 10,
   mdl_type_1L_chr = "OLS_NTF",
   mdl_types_lup = NULL,
-  path_to_write_to_1L_chr,
-  mdl_fl_nm_1L_chr,
-  plt_indcs_int = NA_integer_
+  options_chr = c("Y", "N"),
+  start_1L_chr = NULL,
+  plt_indcs_int = NA_integer_,
+  tfmn_1L_chr = "NTF"
 )
 }
 \arguments{
 \item{data_tb}{Data (a tibble)}
 
-\item{folds_1L_int}{Folds (an integer vector of length one), Default: 10}
+\item{mdl_fl_nm_1L_chr}{Model file name (a character vector of length one)}
 
-\item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
-
-\item{start_1L_chr}{Start (a character vector of length one), Default: NULL}
-
-\item{tfmn_1L_chr}{Transformation (a character vector of length one), Default: 'NTF'}
-
-\item{predr_var_nm_1L_chr}{Predictor variable name (a character vector of length one)}
-
-\item{predr_var_desc_1L_chr}{Predictor variable description (a character vector of length one)}
+\item{path_to_write_to_1L_chr}{Path to write to (a character vector of length one)}
 
 \item{predr_vals_dbl}{Predictor values (a double vector)}
 
+\item{predr_var_desc_1L_chr}{Predictor variable description (a character vector of length one)}
+
+\item{predr_var_nm_1L_chr}{Predictor variable name (a character vector of length one)}
+
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
 \item{covar_var_nms_chr}{Covariate variable names (a character vector), Default: 'NA'}
+
+\item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
+
+\item{folds_1L_int}{Folds (an integer vector of length one), Default: 10}
 
 \item{mdl_type_1L_chr}{Model type (a character vector of length one), Default: 'OLS_NTF'}
 
 \item{mdl_types_lup}{Model types (a lookup table), Default: NULL}
 
-\item{path_to_write_to_1L_chr}{Path to write to (a character vector of length one)}
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 
-\item{mdl_fl_nm_1L_chr}{Model file name (a character vector of length one)}
+\item{start_1L_chr}{Start (a character vector of length one), Default: NULL}
 
 \item{plt_indcs_int}{Plot indices (an integer vector), Default: NA}
+
+\item{tfmn_1L_chr}{Transformation (a character vector of length one), Default: 'NTF'}
 }
 \value{
 Summary of one predictor model (a tibble)

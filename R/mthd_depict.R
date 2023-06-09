@@ -7,7 +7,9 @@
 #' @param axis_title_sclg_1L_dbl Axis title scaling (a double vector of length one), Default: 2
 #' @param base_height_1L_dbl Base height (a double vector of length one), Default: 13
 #' @param base_size_1L_dbl Base size (a double vector of length one), Default: 30
+#' @param consent_1L_chr Consent (a character vector of length one), Default: ''
 #' @param depnt_var_desc_1L_chr Dependent variable description (a character vector of length one), Default: 'NA'
+#' @param depnt_var_min_val_1L_dbl Dependent variable minimum value (a double vector of length one), Default: numeric(0)
 #' @param dim_plot_heights_int Dimension plot heights (an integer vector), Default: c(10L, 1L)
 #' @param dim_plot_log_log_tfmn_1L_lgl Dimension plot log log transformation (a logical vector of length one), Default: F
 #' @param dim_plot_rows_cols_pair_int Dimension plot rows columns pair (an integer vector), Default: c(3L, 2L)
@@ -27,6 +29,7 @@
 #' @param what_1L_chr What (a character vector of length one), Default: 'composite_mdl'
 #' @param write_1L_lgl Write (a logical vector of length one), Default: F
 #' @param y_label_1L_chr Y label (a character vector of length one), Default: ' '
+#' @param ... Additional arguments
 #' @return Plot (a plot)
 #' @rdname depict-methods
 #' @aliases depict,SpecificSynopsis-method
@@ -34,11 +37,12 @@
 #' @importFrom ready4show ready4show_correspondences
 #' @importFrom rlang exec
 #' @importFrom youthvars make_var_by_round_plt make_sub_tot_plts
-#' @importFrom ready4 get_from_lup_obj depict
+#' @importFrom ready4 get_from_lup_obj write_with_consent depict
 #' @importFrom cowplot get_legend plot_grid save_plot
 #' @importFrom ggplot2 theme
 methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_dbl = 1.5, axis_title_sclg_1L_dbl = 2, 
-    base_height_1L_dbl = 13, base_size_1L_dbl = 30, depnt_var_desc_1L_chr = NA_character_, 
+    base_height_1L_dbl = 13, base_size_1L_dbl = 30, consent_1L_chr = "", 
+    depnt_var_desc_1L_chr = NA_character_, depnt_var_min_val_1L_dbl = numeric(0), 
     dim_plot_heights_int = c(10L, 1L), dim_plot_log_log_tfmn_1L_lgl = F, 
     dim_plot_rows_cols_pair_int = c(3L, 2L), labels_chr = c("A", 
         "B", "C", "D"), label_x_1L_dbl = 0.2, label_y_1L_dbl = 0.9, 
@@ -47,7 +51,7 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
     timepoint_old_nms_chr = NA_character_, timepoint_new_nms_chr = NA_character_, 
     use_png_fls_1L_lgl = F, utl_plot_label_1L_chr = " ", utl_by_rnd_plots_params_ls = list(width_1L_dbl = 6, 
         height_1L_dbl = 4), what_1L_chr = "composite_mdl", write_1L_lgl = F, 
-    y_label_1L_chr = " ") 
+    y_label_1L_chr = " ", ...) 
 {
     plt <- NULL
     outp_smry_ls <- append(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls, 
@@ -62,6 +66,7 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
     if (what_1L_chr == "composite_mdl") {
         plt <- make_cmpst_sctr_and_dnst_plt(outp_smry_ls, base_size_1L_dbl = base_size_1L_dbl, 
             correspondences_lup = correspondences_lup, depnt_var_desc_1L_chr = depnt_var_desc_1L_chr, 
+            depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
             labels_chr = labels_chr, label_x_1L_dbl = label_x_1L_dbl, 
             label_y_1L_dbl = label_y_1L_dbl, label_size_1L_dbl = label_size_1L_dbl, 
             mdl_indcs_int = mdl_indcs_int, use_png_fls_1L_lgl = use_png_fls_1L_lgl)
@@ -69,7 +74,8 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
             "/dens_and_sctr.png")
     }
     if (what_1L_chr == "composite_utl") {
-        ds_descvs_ls <- manufacture(x, what_1L_chr = "ds_descvs_ls")
+        ds_descvs_ls <- manufacture(x, depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
+            what_1L_chr = "ds_descvs_ls")
         outp_smry_ls <- append(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls, 
             x@b_SpecificResults@b_SpecificPrivate@private_outp_ls)
         maui_domains_col_nms_chr <- x@c_SpecificParameters@domain_labels_chr
@@ -101,7 +107,14 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
             "/Output/_Descriptives/combined_utl.png")
     }
     if (write_1L_lgl) {
-        cowplot::save_plot(write_path_1L_chr, plt, base_height = base_height_1L_dbl)
+        ready4::write_with_consent(consented_fn = cowplot::save_plot, 
+            prompt_1L_chr = paste0("Do you confirm that you want to write the file ", 
+                write_path_1L_chr, "?"), consent_1L_chr = consent_1L_chr, 
+            consent_indcs_int = consent_indcs_int, consented_args_ls = list(filename = write_path_1L_chr, 
+                plot = plt, base_height = base_height_1L_dbl), 
+            consented_msg_1L_chr = paste0("File ", write_path_1L_chr, 
+                " has been written."), declined_msg_1L_chr = "Write request cancelled - no new files have been written.", 
+            options_chr = options_chr)
     }
     return(plt)
 })
@@ -113,6 +126,7 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
 #' @param mdl_indcs_int Model indices (an integer vector), Default: NULL
 #' @param output_type_1L_chr Output type (a character vector of length one), Default: 'HTML'
 #' @param plt_indcs_int Plot indices (an integer vector), Default: NULL
+#' @param ... Additional arguments
 #' @return NULL
 #' @rdname depict-methods
 #' @aliases depict,SpecificProject-method
@@ -121,7 +135,7 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
 #' @importFrom knitr include_graphics
 #' @importFrom ready4 depict
 methods::setMethod("depict", "SpecificProject", function (x, mdl_indcs_int = NULL, output_type_1L_chr = "HTML", 
-    plt_indcs_int = NULL) 
+    plt_indcs_int = NULL, ...) 
 {
     if (is.null(mdl_indcs_int)) {
         mdl_indcs_int <- 1

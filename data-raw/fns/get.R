@@ -41,21 +41,20 @@ get_cndts_for_mxd_mdls <- function(mdl_types_lup = NULL,
 get_covars_by_ctg <-  function(results_ls,
                                collapse_1L_lgl = F){
   covars_by_ctg_ls <- results_ls$candidate_covars_ls %>%
-    purrr::map( ~ .x #%>% tolower()
-                ) %>%
+    purrr::map( ~ .x) %>%
     stats::setNames(get_covar_ctgs(results_ls,
                                    collapse_1L_lgl = F))
   if(collapse_1L_lgl){
     covars_by_ctg_ls <- covars_by_ctg_ls %>%
       purrr::map2(names(covars_by_ctg_ls),
                   ~{
-                    covars_1L_chr <- .x  %>% paste0(collapse = ", ") %>%
-                      stringi::stri_replace_last_fixed(","," and")
-                    paste0(ifelse(length(.x)>1,.y %>% Hmisc::capitalize(),paste0("The ",.y)),
+                    covars_1L_chr <- .x  %>%
+                      sort() %>%
+                      ready4::make_list_phrase()
+                    paste0(ifelse(length(.x)>1, .y %>% Hmisc::capitalize(), paste0("The ",.y)),
                            " covariate",
                            ifelse(length(.x)>1,"s were "," was "),
                            covars_1L_chr,".")
-
                   })
   }
   return(covars_by_ctg_ls)
@@ -163,8 +162,7 @@ get_mdl_cmprsns <- function(results_ls,
 get_mdls_with_signft_covars <- function(outp_smry_ls,
                                         params_ls_ls){
   signft_covars_chr <- outp_smry_ls$mdls_with_covars_smry_tb %>%
-    get_signft_covars(covar_var_nms_chr = params_ls_ls$params_ls$candidate_covar_nms_chr)
-
+    get_signft_covars(covar_var_nms_chr = params_ls_ls$params_ls$candidate_covar_nms_chr) # (Maybe) Needs editing to account for dummy variables - Need to check.  Would then need to update make_results_ls_spine
   signft_vars_ls <- outp_smry_ls[["mdls_with_covars_smry_tb"]]$Significant %>%
     purrr::map(~strsplit(.x, " ")) %>% purrr::flatten()
   mdls_with_signft_covars_ls <- signft_covars_chr %>%
@@ -389,15 +387,39 @@ get_selected_mixed_mdls <- function(results_ls,
   }
   return(mixed_mdls_xx)
 }
-get_signft_covars <- function (mdls_with_covars_smry_tb, covar_var_nms_chr)
+get_signft_covars <- function (mdls_with_covars_smry_tb, covar_var_nms_chr, what_1L_chr = "any", X_Ready4useDyad = NULL)
 {
+
   signif_vars_chr <- mdls_with_covars_smry_tb$Significant %>%
     purrr::map(~strsplit(.x, " ")) %>% purrr::flatten() %>%
     purrr::flatten_chr() %>% unique()
   signt_covars_chr <- covar_var_nms_chr[covar_var_nms_chr %in%
                                           signif_vars_chr]
-  if(identical(signt_covars_chr, character(0)))
+  if(what_1L_chr == "all"){
+    signt_covars_chr <- signt_covars_chr[signt_covars_chr %>% purrr::map_lgl(~sum((mdls_with_covars_smry_tb$Significant %>%
+                                                                                     purrr::map(~strsplit(.x, " ")) %>% purrr::flatten() %>%
+                                                                                     purrr::flatten_chr()) ==.x)==length(signt_covars_chr))]
+  }
+  if(!is.null(X_Ready4useDyad)){
+    dummys_chr <- manufacture(X_Ready4useDyad, flatten_1L_lgl = T, type_1L_chr = "dummys", what_1L_chr = "factors")
+    signt_dumys_ls <- mdls_with_covars_smry_tb$Significant %>%
+      purrr::map(~{
+        terms_1L_chr <- .x
+        dummys_chr[dummys_chr %>%
+                     purrr::map_lgl(~stringr::str_detect(terms_1L_chr,.x))]
+      })
+    signt_dumys_chr <- signt_dumys_ls %>% purrr::flatten_chr() %>% unique()
+    if(what_1L_chr == "all" && !identical(signt_dumys_chr, character(0))){
+      signt_dumys_chr  <- signt_dumys_chr[signt_dumys_chr %>% purrr::map_lgl(~sum((signt_dumys_ls %>% purrr::flatten_chr())==.x)==length(signt_dumys_chr))]
+    }
+    signt_fctrs_chr <- signt_dumys_chr  %>%
+      purrr::map_chr(~manufacture(X_Ready4useDyad, flatten_1L_lgl = T, type_1L_chr = "dummys", what_1L_chr = "factors-d", match_1L_chr = .x)) %>%
+      unique()
+    signt_covars_chr <- c(signt_covars_chr, signt_fctrs_chr) %>% sort()
+  }
+  if(identical(signt_covars_chr, character(0))){
     signt_covars_chr <- NA_character_
+  }
   return(signt_covars_chr)
 }
 get_table_predn_mdl <- function(mdl_nm_1L_chr,
@@ -406,10 +428,10 @@ get_table_predn_mdl <- function(mdl_nm_1L_chr,
   mdl_type_1L_chr <- get_mdl_type_from_nm(mdl_nm_1L_chr,
                                           mdl_types_lup = ingredients_ls$mdl_types_lup)
   tfmn_1L_chr <- ready4::get_from_lup_obj(ingredients_ls$mdl_types_lup,
-                                            match_value_xx = mdl_type_1L_chr,
-                                            match_var_nm_1L_chr = "short_name_chr",
-                                            target_var_nm_1L_chr = "tfmn_chr",
-                                            evaluate_1L_lgl = F)
+                                          match_value_xx = mdl_type_1L_chr,
+                                          match_var_nm_1L_chr = "short_name_chr",
+                                          target_var_nm_1L_chr = "tfmn_chr",
+                                          evaluate_1L_lgl = F)
   if(is.null(analysis_1L_chr)){
     fake_ds_tb <- ingredients_ls$fake_ds_tb
   }else{
@@ -420,7 +442,7 @@ get_table_predn_mdl <- function(mdl_nm_1L_chr,
   }
   fake_ds_tb <- fake_ds_tb %>%
     add_tfd_var_to_ds(depnt_var_nm_1L_chr = ingredients_ls$depnt_var_nm_1L_chr,
-                       tfmn_1L_chr = tfmn_1L_chr)
+                      tfmn_1L_chr = tfmn_1L_chr)
   table_predn_mdl <- make_shareable_mdl(fake_ds_tb = fake_ds_tb,
                                         mdl_smry_tb = ingredients_ls$mdls_smry_tb %>% dplyr::filter(Model == mdl_nm_1L_chr),
                                         depnt_var_nm_1L_chr = ingredients_ls$depnt_var_nm_1L_chr,
@@ -429,10 +451,10 @@ get_table_predn_mdl <- function(mdl_nm_1L_chr,
                                         mdl_type_1L_chr = mdl_type_1L_chr,
                                         mdl_types_lup = ingredients_ls$mdl_types_lup,
                                         control_1L_chr = ready4::get_from_lup_obj(ingredients_ls$mdl_types_lup,
-                                                                                     match_value_xx = mdl_type_1L_chr,
-                                                                                     match_var_nm_1L_chr = "short_name_chr",
-                                                                                     target_var_nm_1L_chr = "control_chr",
-                                                                                     evaluate_1L_lgl = F),
+                                                                                  match_value_xx = mdl_type_1L_chr,
+                                                                                  match_var_nm_1L_chr = "short_name_chr",
+                                                                                  target_var_nm_1L_chr = "control_chr",
+                                                                                  evaluate_1L_lgl = F),
                                         start_1L_chr = NA_character_,
                                         seed_1L_int = ingredients_ls$seed_1L_int)
   return(table_predn_mdl)

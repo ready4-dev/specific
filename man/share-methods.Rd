@@ -7,14 +7,16 @@
 \alias{share,SpecificSynopsis-method}
 \title{Share data via an online repository}
 \usage{
-\S4method{share}{SpecificProject}(x, fl_nm_1L_chr = "mdl_ingredients", repos_Ready4useRepos)
+\S4method{share}{SpecificProject}(x, fl_nm_1L_chr = "mdl_ingredients", repos_Ready4useRepos, ...)
 
 \S4method{share}{SpecificSynopsis}(
   x,
   consolidate_1L_lgl = T,
+  consent_local_1L_chr = "",
   fl_nm_1L_chr = "mdl_ingredients",
   type_1L_chr = "Models",
-  what_1L_chr = "ingredients"
+  what_1L_chr = "ingredients",
+  ...
 )
 }
 \arguments{
@@ -24,7 +26,11 @@
 
 \item{repos_Ready4useRepos}{PARAM_DESCRIPTION}
 
+\item{...}{Additional arguments}
+
 \item{consolidate_1L_lgl}{Consolidate (a logical vector of length one), Default: T}
+
+\item{consent_local_1L_chr}{Consent local (a character vector of length one), Default: ''}
 
 \item{type_1L_chr}{Type (a character vector of length one), Default: 'Models'}
 

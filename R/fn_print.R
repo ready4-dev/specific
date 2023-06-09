@@ -43,14 +43,22 @@ print_cohort_table <- function (params_ls, caption_1L_chr, mkdn_tbl_ref_1L_chr)
             "%", "\\\\%") %>% stringr::str_replace(",", "\\\\,"))
     }
     if (params_ls$output_type_1L_chr == "PDF") {
+        if (is.na(results_ls$cohort_ls$n_fup_1L_dbl)) {
+            fup_chr <- character(0)
+            header_chr <- c(" ", " ", " ", " ")
+        }
+        else {
+            fup_chr <- c("(N =", paste0(results_ls$cohort_ls$n_fup_1L_dbl, 
+                ")"))
+            header_chr <- c(" ", " ", Baseline = 2, `Follow-Up` = 2)
+        }
         names(df) <- c("", "", "(N =", paste0(results_ls$cohort_ls$n_inc_1L_dbl, 
-            ")"), "(N =", paste0(results_ls$cohort_ls$n_fup_1L_dbl, 
-            ")"))
+            ")"), fup_chr)
         df %>% kableExtra::kbl(booktabs = T, caption = knitr::opts_current$get("tab.cap"), 
-            escape = F) %>% kableExtra::kable_styling() %>% kableExtra::column_spec(3:6, 
-            width = "3em") %>% kableExtra::column_spec(1, bold = T, 
-            width = "14em") %>% kableExtra::add_header_above(c(" ", 
-            " ", Baseline = 2, `Follow-Up` = 2)) %>% kableExtra::collapse_rows(columns = 1)
+            escape = F) %>% kableExtra::kable_styling() %>% kableExtra::column_spec(3:ifelse(is.na(results_ls$cohort_ls$n_fup_1L_dbl), 
+            4, 6), width = "3em") %>% kableExtra::column_spec(1, 
+            bold = T, width = "14em") %>% kableExtra::add_header_above(header_chr) %>% 
+            kableExtra::collapse_rows(columns = 1)
     }
     else {
         df <- df %>% youthvars::transform_tb_for_merged_col_1(output_type_1L_chr = params_ls$output_type_1L_chr)
@@ -85,17 +93,28 @@ print_cors_tbl <- function (params_ls, caption_1L_chr, mkdn_tbl_ref_1L_chr)
     tb <- tb %>% dplyr::mutate(label = label %>% purrr::map_chr(~stringr::str_remove_all(.x, 
         " \\(weighted total\\)")))
     if (params_ls$output_type_1L_chr == "PDF") {
+        if (is.na(results_ls$cohort_ls$n_fup_1L_dbl)) {
+            fup_chr <- character(0)
+            header_chr <- c(" ", " ", " ", " ", " ")
+        }
+        else {
+            fup_chr <- c("(N =", paste0(results_ls$cohort_ls$n_fup_1L_dbl, 
+                ")"))
+            header_chr <- c(" ", " ", Baseline = 2, `Follow-Up` = 2, 
+                " ")
+        }
         names(tb) <- c("", "", "(N =", paste0(results_ls$cohort_ls$n_inc_1L_dbl, 
-            ")"), "(N =", paste0(results_ls$cohort_ls$n_fup_1L_dbl, 
-            ")"), "\\textit{p}")
+            ")"), fup_chr, "\\textit{p}")
         tb %>% kableExtra::kbl(booktabs = T, caption = knitr::opts_current$get("tab.cap"), 
-            escape = F) %>% kableExtra::kable_styling() %>% kableExtra::column_spec(3:6, 
-            width = "3em") %>% kableExtra::column_spec(1, bold = T, 
-            width = "14em") %>% kableExtra::add_header_above(c(" ", 
-            " ", Baseline = 2, `Follow-Up` = 2, " ")) %>% kableExtra::collapse_rows(columns = 1)
+            escape = F) %>% kableExtra::kable_styling() %>% kableExtra::column_spec(3:ifelse(is.na(results_ls$cohort_ls$n_fup_1L_dbl), 
+            4, 6), width = "3em") %>% kableExtra::column_spec(1, 
+            bold = T, width = "14em") %>% kableExtra::add_header_above(header_chr) %>% 
+            kableExtra::collapse_rows(columns = 1)
     }
     else {
         tb <- tb %>% youthvars::transform_tb_for_merged_col_1(output_type_1L_chr = params_ls$output_type_1L_chr)
+        add_to_row_ls <- make_bl_fup_add_to_row_ls(tb, n_at_bl_1L_int = results_ls$cohort_ls$n_inc_1L_dbl, 
+            n_at_fup_1L_int = results_ls$cohort_ls$n_fup_1L_dbl)
         tb %>% ready4show::print_table(output_type_1L_chr = params_ls$output_type_1L_chr, 
             caption_1L_chr = caption_1L_chr, mkdn_tbl_ref_1L_chr = mkdn_tbl_ref_1L_chr, 
             use_rdocx_1L_lgl = ifelse(params_ls$output_type_1L_chr == 

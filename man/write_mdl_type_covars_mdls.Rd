@@ -6,7 +6,11 @@
 \usage{
 write_mdl_type_covars_mdls(
   data_tb,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
+  depnt_var_min_val_1L_dbl = numeric(0),
   depnt_var_nm_1L_chr = "utl_total_w",
+  options_chr = c("Y", "N"),
   predrs_var_nms_chr,
   covar_var_nms_chr,
   mdl_type_1L_chr,
@@ -20,7 +24,15 @@ write_mdl_type_covars_mdls(
 \arguments{
 \item{data_tb}{Data (a tibble)}
 
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
+
 \item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 
 \item{predrs_var_nms_chr}{Predictors variable names (a character vector)}
 

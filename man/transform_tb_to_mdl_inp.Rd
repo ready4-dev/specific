@@ -6,6 +6,8 @@
 \usage{
 transform_tb_to_mdl_inp(
   data_tb,
+  depnt_var_min_val_1L_dbl = numeric(0),
+  depnt_var_max_val_1L_dbl = 0.99999,
   depnt_var_nm_1L_chr = "utl_total_w",
   predr_vars_nms_chr,
   id_var_nm_1L_chr = "fkClientID",
@@ -19,6 +21,10 @@ transform_tb_to_mdl_inp(
 }
 \arguments{
 \item{data_tb}{Data (a tibble)}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
+
+\item{depnt_var_max_val_1L_dbl}{Dependent variable maximum value (a double vector of length one), Default: 0.99999}
 
 \item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
 
@@ -42,5 +48,5 @@ transform_tb_to_mdl_inp(
 Transformed for model input (a tibble)
 }
 \description{
-transform_tb_to_mdl_inp() is a Transform function that edits an object in such a way that core object attributes - e.g. shape, dimensions, elements, type - are altered. Specifically, this function implements an algorithm to transform tibble to model input. Function argument data_tb specifies the object to be updated. Argument depnt_var_nm_1L_chr provides the object to be updated. The function returns Transformed for model input (a tibble).
+transform_tb_to_mdl_inp() is a Transform function that edits an object in such a way that core object attributes - e.g. shape, dimensions, elements, type - are altered. Specifically, this function implements an algorithm to transform tibble to model input. Function argument data_tb specifies the object to be updated. Argument depnt_var_min_val_1L_dbl provides the object to be updated. The function returns Transformed for model input (a tibble).
 }

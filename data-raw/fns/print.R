@@ -18,22 +18,30 @@ print_cohort_table <- function(params_ls,
                     purrr::map_chr(~Hmisc::capitalize(.x)))
   df <- dplyr::filter(df,!df[,3]=="")
   if(params_ls$output_type_1L_chr == "PDF"){
-      df <- df %>%
+    df <- df %>%
       dplyr::mutate_all(~ stringr::str_replace(.x,"%","\\\\%") %>%
                           stringr::str_replace(",","\\\\,"))
   }
   if(params_ls$output_type_1L_chr == "PDF"){
+    if(is.na(results_ls$cohort_ls$n_fup_1L_dbl)){
+      fup_chr <- character(0)
+      header_chr <- c(" ", " ", " ", " ")
+    }else{
+      fup_chr <- c("(N =",paste0(results_ls$cohort_ls$n_fup_1L_dbl,")"))
+      header_chr <- c(" ", " ", "Baseline" = 2, "Follow-Up" = 2)
+    }
     names(df) <- c("","",
                    "(N =",paste0(results_ls$cohort_ls$n_inc_1L_dbl,")"),
-                   "(N =",paste0(results_ls$cohort_ls$n_fup_1L_dbl,")"))
+                   fup_chr
+    )
     df %>%
       kableExtra::kbl(booktabs = T,
                       caption = knitr::opts_current$get("tab.cap"),
                       escape = F) %>%
       kableExtra::kable_styling() %>%
-      kableExtra::column_spec(3:6, width = "3em") %>%
+      kableExtra::column_spec(3:ifelse(is.na(results_ls$cohort_ls$n_fup_1L_dbl),4,6), width = "3em") %>%
       kableExtra::column_spec(1, bold = T, width = "14em") %>%
-      kableExtra::add_header_above(c(" ", " ", "Baseline" = 2, "Follow-Up" = 2)) %>%
+      kableExtra::add_header_above(header_chr) %>%
       kableExtra::collapse_rows(columns = 1)
   }else{
     df <- df %>% youthvars::transform_tb_for_merged_col_1(output_type_1L_chr = params_ls$output_type_1L_chr)
@@ -50,31 +58,41 @@ print_cohort_table <- function(params_ls,
   }
 }
 print_cors_tbl <- function(params_ls,
-                            caption_1L_chr,
-                            mkdn_tbl_ref_1L_chr){
+                           caption_1L_chr,
+                           mkdn_tbl_ref_1L_chr){
   results_ls <- params_ls$results_ls
   tb <- results_ls$tables_ls$predd_dist_and_cors
   tb <- tb %>%
     dplyr::mutate(label = label %>%
                     purrr::map_chr(~stringr::str_remove_all(.x," \\(weighted total\\)")))
   if(params_ls$output_type_1L_chr == "PDF"){
+    if(is.na(results_ls$cohort_ls$n_fup_1L_dbl)){
+      fup_chr <- character(0)
+      header_chr <- c(" ", " ", " ", " ", " ")
+    }else{
+      fup_chr <- c("(N =",paste0(results_ls$cohort_ls$n_fup_1L_dbl,")"))
+      header_chr <- c(" ", " ", "Baseline" = 2, "Follow-Up" = 2, " ")
+    }
     names(tb) <- c("","",
                    "(N =",
                    paste0(results_ls$cohort_ls$n_inc_1L_dbl,")"),
-                   "(N =",paste0(results_ls$cohort_ls$n_fup_1L_dbl,")"),
+                   fup_chr,
                    "\\textit{p}")
     tb %>%
       kableExtra::kbl(booktabs = T,
                       caption = knitr::opts_current$get("tab.cap"),
                       escape = F) %>%
       kableExtra::kable_styling() %>%
-      kableExtra::column_spec(3:6, width = "3em") %>%
+      kableExtra::column_spec(3:ifelse(is.na(results_ls$cohort_ls$n_fup_1L_dbl),4,6), width = "3em") %>%
       kableExtra::column_spec(1, bold = T, width = "14em") %>%
-      kableExtra::add_header_above(c(" ", " ", "Baseline" = 2, "Follow-Up" = 2, " ")) %>%
+      kableExtra::add_header_above(header_chr) %>%
       kableExtra::collapse_rows(columns = 1)
   }else{
     tb <- tb %>%
       youthvars::transform_tb_for_merged_col_1(output_type_1L_chr = params_ls$output_type_1L_chr)
+    add_to_row_ls <- make_bl_fup_add_to_row_ls(tb,
+                                               n_at_bl_1L_int = results_ls$cohort_ls$n_inc_1L_dbl,
+                                               n_at_fup_1L_int = results_ls$cohort_ls$n_fup_1L_dbl)
     tb %>%
       ready4show::print_table(output_type_1L_chr = params_ls$output_type_1L_chr,
                               caption_1L_chr = caption_1L_chr,
@@ -110,23 +128,6 @@ print_indpnt_predrs_coefs_tbl <- function(params_ls,
   tb <- results_ls$tables_ls$ind_preds_coefs_tbl %>%
     transform_nms_in_mdl_tbl(col_nm_1L_chr = "Parameter",
                              var_nm_change_lup = results_ls$var_nm_change_lup)
-  # add_to_row_ls <- list()
-  # add_to_row_ls$pos <- list(-1, 0, nrow(tb))
-  # add_to_row_ls$command <- c(paste0("\\toprule \n",
-  #                                   "&\\multicolumn{5}{c}{",
-  #                                   paste0(results_ls$ttu_lngl_ls$best_mdls_tb[[1,"model_type"]],
-  #                                          " - ",
-  #                                          results_ls$ttu_lngl_ls$best_mdls_tb[[1,"link_and_tfmn_chr"]]),
-  #                                   "}&\\multicolumn{5}{c}{",
-  #                                   paste0(results_ls$ttu_lngl_ls$best_mdls_tb[[2,"model_type"]],
-  #                                          " - ",                                             results_ls$ttu_lngl_ls$best_mdls_tb[[2,"link_and_tfmn_chr"]]),
-  #                                   "}\\\\\n"),
-  #                            paste0("Parameter & Estimate	& SE	& 95CI & R2	& Sigma & Estimate & SE	& 95CI & R2 & Sigma \\\\\n",
-  #                                   "\\midrule \n"),
-  #                            paste0("\\hline\n","{\\footnotesize ",
-  #                                   make_scaling_text(results_ls),
-  #                                   "}\n")
-  # )
   if(params_ls$output_type_1L_chr =="Word"){
     tb$Parameter <- stringr::str_replace_all(stringr::str_replace_all(stringr::str_replace_all(tb$Parameter, '\\\\textbf', ''), '\\{', ''), '\\}', '')
   }
@@ -143,7 +144,6 @@ print_indpnt_predrs_coefs_tbl <- function(params_ls,
       kableExtra::kable_styling(latex_options = c("repeat_header")) %>%
       kableExtra::column_spec(3:6, width = "3em") %>%
       kableExtra::row_spec(which(!is.na(tb[,5])), bold = T) %>%
-      #kableExtra::column_spec(1, bold = T, width = "14em") %>%
       kableExtra::add_header_above(parse(text=paste0("c(",
                                                      "\" \"",
                                                      ", ",
@@ -167,13 +167,13 @@ print_indpnt_predrs_coefs_tbl <- function(params_ls,
   }else{
     add_to_row_ls <- NULL
     tb %>%
-    ready4show::print_table(output_type_1L_chr = params_ls$output_type_1L_chr,
-                            caption_1L_chr = caption_1L_chr,
-                            mkdn_tbl_ref_1L_chr = mkdn_tbl_ref_1L_chr,
-                            use_rdocx_1L_lgl = ifelse(params_ls$output_type_1L_chr=="Word",T,F),
-                            add_to_row_ls = add_to_row_ls,
-                            footnotes_chr = make_scaling_text(results_ls),
-                            sanitize_fn = force)
+      ready4show::print_table(output_type_1L_chr = params_ls$output_type_1L_chr,
+                              caption_1L_chr = caption_1L_chr,
+                              mkdn_tbl_ref_1L_chr = mkdn_tbl_ref_1L_chr,
+                              use_rdocx_1L_lgl = ifelse(params_ls$output_type_1L_chr=="Word",T,F),
+                              add_to_row_ls = add_to_row_ls,
+                              footnotes_chr = make_scaling_text(results_ls),
+                              sanitize_fn = force)
   }
 }
 print_indpnt_predrs_lngl_mdl_coefs <- function(params_ls,

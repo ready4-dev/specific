@@ -5,7 +5,7 @@
 \alias{procure,SpecificProject-method}
 \title{Procure items from a dataset}
 \usage{
-\S4method{procure}{SpecificProject}(x, type_1L_chr = "results", what_1L_chr = "prefd_mdls")
+\S4method{procure}{SpecificProject}(x, type_1L_chr = "results", what_1L_chr = "prefd_mdls", ...)
 }
 \arguments{
 \item{x}{An object of class SpecificProject}
@@ -13,6 +13,8 @@
 \item{type_1L_chr}{Type (a character vector of length one), Default: 'results'}
 
 \item{what_1L_chr}{What (a character vector of length one), Default: 'prefd_mdls'}
+
+\item{...}{Additional arguments}
 }
 \value{
 Object (an output object of multiple potential types)

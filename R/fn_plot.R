@@ -107,7 +107,7 @@ plot_obsd_predd_dnst <- function (tfd_data_tb, depnt_var_nm_1L_chr = "utl_total_
 #' @importFrom rlang sym exec
 #' @importFrom purrr map_chr
 #' @importFrom ready4 get_from_lup_obj
-#' @importFrom ggplot2 ggplot geom_point aes theme_bw xlim ylim scale_color_manual labs theme
+#' @importFrom ggplot2 aes ggplot geom_point theme_bw xlim ylim scale_color_manual labs theme
 #' @keywords internal
 plot_obsd_predd_sctr_cmprsn <- function (tfd_data_tb, depnt_var_nm_1L_chr = "utl_total_w", depnt_var_desc_1L_chr = "Total weighted utility score", 
     round_var_nm_1L_chr = "round", args_ls = NULL, base_size_1L_dbl = 11, 
@@ -119,15 +119,24 @@ plot_obsd_predd_sctr_cmprsn <- function (tfd_data_tb, depnt_var_nm_1L_chr = "utl
     if (is.na(y_lbl_1L_chr)) 
         y_lbl_1L_chr <- paste0(predd_val_var_nm_1L_chr, " ", 
             depnt_var_desc_1L_chr)
-    if (!is.null(correspondences_lup)) 
+    if (!is.null(correspondences_lup) && !identical(round_var_nm_1L_chr, 
+        character(0)) && ifelse(identical(round_var_nm_1L_chr, 
+        character(0)), T, !is.na(round_var_nm_1L_chr))) 
         tfd_data_tb <- tfd_data_tb %>% dplyr::mutate(`:=`(!!rlang::sym(round_var_nm_1L_chr), 
             !!rlang::sym(round_var_nm_1L_chr) %>% purrr::map_chr(~ready4::get_from_lup_obj(correspondences_lup, 
                 match_value_xx = .x, match_var_nm_1L_chr = "old_nms_chr", 
                 target_var_nm_1L_chr = "new_nms_chr"))))
+    if (!identical(round_var_nm_1L_chr, character(0)) && ifelse(identical(round_var_nm_1L_chr, 
+        character(0)), T, !is.na(round_var_nm_1L_chr))) {
+        mapping_aes <- ggplot2::aes(x = !!rlang::sym(depnt_var_nm_1L_chr), 
+            y = !!rlang::sym(predd_val_var_nm_1L_chr), col = !!rlang::sym(round_var_nm_1L_chr))
+    }
+    else {
+        mapping_aes <- ggplot2::aes(x = !!rlang::sym(depnt_var_nm_1L_chr), 
+            y = !!rlang::sym(predd_val_var_nm_1L_chr))
+    }
     ggplot2::ggplot(tfd_data_tb) + rlang::exec(ggplot2::geom_point, 
-        ggplot2::aes(x = !!rlang::sym(depnt_var_nm_1L_chr), y = !!rlang::sym(predd_val_var_nm_1L_chr), 
-            col = !!rlang::sym(round_var_nm_1L_chr)), size = 1, 
-        !!!args_ls) + ggplot2::theme_bw(base_size = base_size_1L_dbl) + 
+        mapping_aes, size = 1, !!!args_ls) + ggplot2::theme_bw(base_size = base_size_1L_dbl) + 
         ggplot2::xlim(0, 1) + ggplot2::ylim(0, 1) + ggplot2::scale_color_manual(values = c("#D55E00", 
         "#56B4E9")) + ggplot2::labs(x = x_lbl_1L_chr, y = y_lbl_1L_chr, 
         col = "") + ggplot2::theme(legend.position = "bottom")

@@ -1,6 +1,6 @@
 Package: specific
 Title: Specify Models to Solve Inverse Problems
-Version: 0.0.0.9085
+Version: 0.0.0.9086
 Authors@R: c(
     person("Matthew", "Hamilton", , "matthew.hamilton@orygen.org.au", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7407-9194")),
@@ -66,7 +66,7 @@ Imports:
     utils,
     viridis,
     xfun,
-    youthvars (>= 0.0.0.9117)
+    youthvars (>= 0.0.0.9118)
 VignetteBuilder: knitr
 Depends: 
     ggfortify,

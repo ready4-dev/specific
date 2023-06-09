@@ -7,13 +7,21 @@
 write_ts_mdls_from_alg_outp(
   outp_smry_ls,
   predictors_lup,
-  utl_min_val_1L_dbl = -1,
   backend_1L_chr = getOption("brms.backend", "rstan"),
+  combinations_1L_lgl = F,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
+  control_ls = NULL,
+  cores_1L_int = 1L,
+  depnt_var_min_val_1L_dbl = numeric(0),
+  existing_predrs_ls = NULL,
   iters_1L_int = 4000L,
+  max_nbr_of_covars_1L_int = integer(0),
   new_dir_nm_1L_chr = "F_TS_Mdls",
+  options_chr = c("Y", "N"),
   path_to_write_to_1L_chr = NA_character_,
   prior_ls = NULL,
-  control_ls = NULL
+  utl_min_val_1L_dbl = -1
 )
 }
 \arguments{
@@ -21,19 +29,35 @@ write_ts_mdls_from_alg_outp(
 
 \item{predictors_lup}{Predictors (a lookup table)}
 
-\item{utl_min_val_1L_dbl}{Utility minimum value (a double vector of length one), Default: -1}
-
 \item{backend_1L_chr}{Backend (a character vector of length one), Default: getOption("brms.backend", "rstan")}
+
+\item{combinations_1L_lgl}{Combinations (a logical vector of length one), Default: F}
+
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
+\item{control_ls}{Control (a list), Default: NULL}
+
+\item{cores_1L_int}{Cores (an integer vector of length one), Default: 1}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
+
+\item{existing_predrs_ls}{Existing predictors (a list), Default: NULL}
 
 \item{iters_1L_int}{Iterations (an integer vector of length one), Default: 4000}
 
+\item{max_nbr_of_covars_1L_int}{Maximum number of covariates (an integer vector of length one), Default: integer(0)}
+
 \item{new_dir_nm_1L_chr}{New directory name (a character vector of length one), Default: 'F_TS_Mdls'}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 
 \item{path_to_write_to_1L_chr}{Path to write to (a character vector of length one), Default: 'NA'}
 
 \item{prior_ls}{Prior (a list), Default: NULL}
 
-\item{control_ls}{Control (a list), Default: NULL}
+\item{utl_min_val_1L_dbl}{Utility minimum value (a double vector of length one), Default: -1}
 }
 \value{
 Output summary (a list)

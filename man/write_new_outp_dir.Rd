@@ -4,12 +4,24 @@
 \alias{write_new_outp_dir}
 \title{Write new output directory}
 \usage{
-write_new_outp_dir(path_to_write_to_1L_chr, new_dir_nm_1L_chr)
+write_new_outp_dir(
+  path_to_write_to_1L_chr,
+  new_dir_nm_1L_chr,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
+  options_chr = c("Y", "N")
+)
 }
 \arguments{
 \item{path_to_write_to_1L_chr}{Path to write to (a character vector of length one)}
 
 \item{new_dir_nm_1L_chr}{New directory name (a character vector of length one)}
+
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 }
 \value{
 Output directory (a character vector of length one)

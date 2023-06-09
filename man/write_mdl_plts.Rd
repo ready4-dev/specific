@@ -7,19 +7,23 @@
 write_mdl_plts(
   data_tb,
   model_mdl,
-  mdl_fl_nm_1L_chr = "OLS_NTF",
-  depnt_var_nm_1L_chr = "utl_total_w",
-  depnt_var_desc_1L_chr = "Utility score",
-  tfmn_1L_chr = "NTF",
   predr_var_nm_1L_chr,
   predr_var_desc_1L_chr,
   predr_vals_dbl,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
   covar_var_nms_chr = NA_character_,
-  path_to_write_to_1L_chr,
-  predn_type_1L_chr = NULL,
-  tfmn_for_bnml_1L_lgl = F,
+  depnt_var_min_val_1L_dbl = numeric(0),
+  depnt_var_nm_1L_chr = "utl_total_w",
+  depnt_var_desc_1L_chr = "Utility score",
   family_1L_chr = NA_character_,
-  plt_indcs_int = 1:5
+  mdl_fl_nm_1L_chr = "OLS_NTF",
+  options_chr = c("Y", "N"),
+  path_to_write_to_1L_chr,
+  plt_indcs_int = 1:5,
+  predn_type_1L_chr = NULL,
+  tfmn_1L_chr = "NTF",
+  tfmn_for_bnml_1L_lgl = F
 )
 }
 \arguments{
@@ -27,31 +31,39 @@ write_mdl_plts(
 
 \item{model_mdl}{Model (a model)}
 
-\item{mdl_fl_nm_1L_chr}{Model file name (a character vector of length one), Default: 'OLS_NTF'}
-
-\item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
-
-\item{depnt_var_desc_1L_chr}{Dependent variable description (a character vector of length one), Default: 'Utility score'}
-
-\item{tfmn_1L_chr}{Transformation (a character vector of length one), Default: 'NTF'}
-
 \item{predr_var_nm_1L_chr}{Predictor variable name (a character vector of length one)}
 
 \item{predr_var_desc_1L_chr}{Predictor variable description (a character vector of length one)}
 
 \item{predr_vals_dbl}{Predictor values (a double vector)}
 
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
 \item{covar_var_nms_chr}{Covariate variable names (a character vector), Default: 'NA'}
 
-\item{path_to_write_to_1L_chr}{Path to write to (a character vector of length one)}
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
 
-\item{predn_type_1L_chr}{Prediction type (a character vector of length one), Default: NULL}
+\item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
 
-\item{tfmn_for_bnml_1L_lgl}{Transformation for binomial (a logical vector of length one), Default: F}
+\item{depnt_var_desc_1L_chr}{Dependent variable description (a character vector of length one), Default: 'Utility score'}
 
 \item{family_1L_chr}{Family (a character vector of length one), Default: 'NA'}
 
+\item{mdl_fl_nm_1L_chr}{Model file name (a character vector of length one), Default: 'OLS_NTF'}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
+
+\item{path_to_write_to_1L_chr}{Path to write to (a character vector of length one)}
+
 \item{plt_indcs_int}{Plot indices (an integer vector), Default: 1:5}
+
+\item{predn_type_1L_chr}{Prediction type (a character vector of length one), Default: NULL}
+
+\item{tfmn_1L_chr}{Transformation (a character vector of length one), Default: 'NTF'}
+
+\item{tfmn_for_bnml_1L_lgl}{Transformation for binomial (a logical vector of length one), Default: F}
 }
 \description{
 write_mdl_plts() is a Write function that writes a file to a specified local directory. Specifically, this function implements an algorithm to write model plots. The function is called for its side effects and does not return a value. WARNING: This function writes R scripts to your local environment. Make sure to only use if you want this behaviour

@@ -7,14 +7,14 @@
 make_shareable_mdl(
   fake_ds_tb,
   mdl_smry_tb,
+  control_1L_chr = NA_character_,
   depnt_var_nm_1L_chr = "utl_total_w",
   id_var_nm_1L_chr = "fkClientID",
-  tfmn_1L_chr = "CLL",
   mdl_type_1L_chr = "OLS_CLL",
   mdl_types_lup = NULL,
-  control_1L_chr = NA_character_,
+  seed_1L_int = 12345L,
   start_1L_chr = NA_character_,
-  seed_1L_int = 12345L
+  tfmn_1L_chr = "CLL"
 )
 }
 \arguments{
@@ -22,21 +22,21 @@ make_shareable_mdl(
 
 \item{mdl_smry_tb}{Model summary (a tibble)}
 
+\item{control_1L_chr}{Control (a character vector of length one), Default: 'NA'}
+
 \item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
 
 \item{id_var_nm_1L_chr}{Identity variable name (a character vector of length one), Default: 'fkClientID'}
-
-\item{tfmn_1L_chr}{Transformation (a character vector of length one), Default: 'CLL'}
 
 \item{mdl_type_1L_chr}{Model type (a character vector of length one), Default: 'OLS_CLL'}
 
 \item{mdl_types_lup}{Model types (a lookup table), Default: NULL}
 
-\item{control_1L_chr}{Control (a character vector of length one), Default: 'NA'}
+\item{seed_1L_int}{Seed (an integer vector of length one), Default: 12345}
 
 \item{start_1L_chr}{Start (a character vector of length one), Default: 'NA'}
 
-\item{seed_1L_int}{Seed (an integer vector of length one), Default: 12345}
+\item{tfmn_1L_chr}{Transformation (a character vector of length one), Default: 'CLL'}
 }
 \value{
 Model (a model)

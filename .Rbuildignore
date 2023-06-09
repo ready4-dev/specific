@@ -153,3 +153,5 @@
 ^data-raw/draft_vignettes/MORE_WIP\.R$
 ^data-raw/s4_fns/enhance\.R$
 ^data-raw/Fake/Output/_Descriptives/ll_sub_ttl\.png$
+^data-raw/import\.R$
+^data-raw/NOTES\.R$

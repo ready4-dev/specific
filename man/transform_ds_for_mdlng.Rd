@@ -7,6 +7,7 @@
 transform_ds_for_mdlng(
   data_tb,
   depnt_var_nm_1L_chr = "utl_total_w",
+  depnt_var_min_val_1L_dbl = numeric(0),
   predr_var_nm_1L_chr,
   covar_var_nms_chr = NA_character_
 )
@@ -15,6 +16,8 @@ transform_ds_for_mdlng(
 \item{data_tb}{Data (a tibble)}
 
 \item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
 
 \item{predr_var_nm_1L_chr}{Predictor variable name (a character vector of length one)}
 

@@ -17,7 +17,19 @@ library(ready4show)
 library(ready4use)
 library(scorz)
 library(betareg)
+library(youthvars)
 library(specific)
+```
+
+## Set consent policy
+By default, methods in the `specific` package will request your consent before writing files to your machine. This is the safest option. However, as there are many files that need to be written locally for this program to execute, you can overwrite this default by supplying the value "Y" to methods with a `consent_1L_chr` argument.
+
+```{r eval = FALSE}
+consent_1L_chr <- "" # Default value - asks for consent prior to writing each file.
+```
+
+```{r echo = FALSE}
+consent_1L_chr <- "Y" # Gives consent to write files without additional requests.
 ```
 
 ## Import data
@@ -27,8 +39,7 @@ We start by ingesting our data. As this example uses EQ-5D data, we import a `Sc
 ```{r message=FALSE}
 X <- SpecificConverter(a_ScorzProfile = ready4use::Ready4useRepos(gh_repo_1L_chr = "ready4-dev/scorz", 
                                                                   gh_tag_1L_chr = "Documentation_0.0") %>%
-                         ingest(fls_to_ingest_chr = "ymh_ScorzEuroQol5",
-                                metadata_1L_lgl = F)) %>%
+                         ingest(fls_to_ingest_chr = "ymh_ScorzEuroQol5",  metadata_1L_lgl = F)) %>% 
   metamorphose() 
 ```
 ```{r}
@@ -37,8 +48,7 @@ class(X)
 
 ## Inspect data
 ```{r echo = F, message=FALSE}
-ds_tb <- X %>%
-  procureSlot("a_YouthvarsProfile@a_Ready4useDyad@ds_tb") 
+ds_tb <- X %>% procureSlot("a_YouthvarsProfile@a_Ready4useDyad@ds_tb") 
 ```
 
 The dataset we are using has a total of `r nrow(ds_tb)` records at two timepoints on `r length(ds_tb$uid %>% unique())` study participants. The first six records are reproduced below.
@@ -46,8 +56,7 @@ The dataset we are using has a total of `r nrow(ds_tb)` records at two timepoint
 ```{r inputds, echo=F, eval = knitr::is_html_output(), results='asis'}
 X %>%
   procureSlot("a_YouthvarsProfile@a_Ready4useDyad") %>%
-  exhibit(display_1L_chr = "head",
-          scroll_box_args_ls = list(width = "100%"))
+  exhibit(display_1L_chr = "head", scroll_box_args_ls = list(width = "100%"))
 ```
 
 To source dataset of `X` is contained in the `a_YouthvarsProfile` slot and is a `YouthvarsSeries` module. For more information about methods that can be used to explore this dataset, [read this vignette from the youthvars package](https://ready4-dev.github.io/youthvars/articles/V_02.html).
@@ -60,15 +69,12 @@ In preparation for exploring our dataset, we need to declare a set of model para
 The dependent variable (total EQ-5D utility score) has already been specified when we imported the data from the `ScorzEuroQol5` module.
 
 ```{r}
-procureSlot(X,
-            "b_SpecificParameters@depnt_var_nm_1L_chr")
+procureSlot(X, "b_SpecificParameters@depnt_var_nm_1L_chr")
 ```
 We can now add details of the allowable range of dependent variable values.
 
 ```{r}
-X <- renewSlot(X,
-               "b_SpecificParameters@depnt_var_min_max_dbl",
-               c(-1,1))
+X <- renewSlot(X, "b_SpecificParameters@depnt_var_min_max_dbl", c(-1,1))
 ```
 
 ### Candidate predictors
@@ -76,34 +82,25 @@ X <- renewSlot(X,
 We can now specify the names of candidate predictor variables.
 
 ```{r}
-X <- renewSlot(X,
-               "b_SpecificParameters@candidate_predrs_chr",
-               new_val_xx = c("K10_int","Psych_well_int")) 
+X <- renewSlot(X, "b_SpecificParameters@candidate_predrs_chr", c("K10_int","Psych_well_int")) 
 ```
 
 We next add meta-data about each candidate predictor variable in the form of a `specific_predictors` object.
 
 ```{r}
-X <- renewSlot(X, 
-               "b_SpecificParameters@predictors_lup", 
+X <- renewSlot(X, "b_SpecificParameters@predictors_lup", 
                short_name_chr = c("K10_int","Psych_well_int"),
                long_name_chr = c("Kessler Psychological Distress - 10 Item Total Score",
                                  "Overall Wellbeing Measure (Winefield et al. 2012)"),
-               min_val_dbl = c(10,18),
-               max_val_dbl = c(50,90),
-               class_chr = "integer",
-               increment_dbl = 1,
-               class_fn_chr = "as.integer",
-               mdl_scaling_dbl = 0.01,
-               covariate_lgl = F)
+               min_val_dbl = c(10,18), max_val_dbl = c(50,90), class_chr = "integer",
+               increment_dbl = 1,  class_fn_chr = c("youthvars::youthvars_k10_aus","as.integer"),
+               mdl_scaling_dbl = 0.01, covariate_lgl = F)
 ```
 
 The `specific_predictors` object that we have added to `X` can be inspected using the `exhibitSlot` method.
 
 ```{r}
-exhibitSlot(X,
-            "b_SpecificParameters@predictors_lup",
-            scroll_box_args_ls = list(width = "100%"))
+exhibitSlot(X, "b_SpecificParameters@predictors_lup", scroll_box_args_ls = list(width = "100%"))
 ```
 
 ### Covariates
@@ -113,17 +110,15 @@ We also specify the covariates that we aim to explore in conjunction with each c
 ```{r}
 X <- renewSlot(X, 
                "b_SpecificParameters@candidate_covars_chr",
-               new_val_xx = c("d_sex_birth_s", "d_age",  "d_sexual_ori_s", "d_studying_working"))
+               c("d_sex_birth_s", "d_age",  "d_sexual_ori_s", "d_studying_working"))
 ```
 
 ### Descriptive variables
 We also specify variables that we will use for generating descriptive statistics about the dataset. 
 
 ```{r}
-X <- renewSlot(X,
-               "b_SpecificParameters@descv_var_nms_chr",
-               c("d_age","Gender","d_relation_s",
-                 "d_sexual_ori_s", "Region", "d_studying_working")) 
+X <- renewSlot(X,"b_SpecificParameters@descv_var_nms_chr",
+               c("d_age","Gender","d_relation_s", "d_sexual_ori_s", "Region", "d_studying_working")) 
 ```
 
 ### Temporal variables
@@ -157,9 +152,7 @@ exhibitSlot(X,
 We can choose to select just a subset of these to explore using the `renewSlot` method. As this is an illustrative example, we have restricted the models we will explore to just four types, passing the relevant row numbers to the `slice_indcs_int` argument.
 
 ```{r warning=F}
-X <- renewSlot(X,
-               "b_SpecificParameters@candidate_mdls_lup",
-               slice_indcs_int = c(1L,5L,7L,8L))
+X <- renewSlot(X, "b_SpecificParameters@candidate_mdls_lup", slice_indcs_int = c(1L,5L,7L,8L))
 ```
 
 ### Other parameters
@@ -167,16 +160,13 @@ X <- renewSlot(X,
 Depending on the type of analysis we plan on undertaking, we can also specify parameters such as the number of folds to use in cross validation, the maximum number of model runs to allow and a seed to ensure reproducibility of results. In this case we are going to use the default values generated when we first created `X`.
 
 ```{r}
-procureSlot(X,
-            "b_SpecificParameters@folds_1L_int")
+procureSlot(X, "b_SpecificParameters@folds_1L_int")
 ```
 ```{r}
-procureSlot(X,
-            "b_SpecificParameters@max_mdl_runs_1L_int")
+procureSlot(X, "b_SpecificParameters@max_mdl_runs_1L_int")
 ```
 ```{r}
-procureSlot(X,
-            "b_SpecificParameters@seed_1L_int")
+procureSlot(X, "b_SpecificParameters@seed_1L_int")
 ```
 
 ## Model testing
@@ -192,34 +182,26 @@ X <- ratify(X)
 We add details of the directory to which we will write all output. In this example we create a temporary directory (`tempdir()`), but in practice this would be an existing directory on your local machine.
 
 ```{r warning = F}
-X <- renewSlot(X,
-               "paths_chr",
-               tempdir())
+X <- renewSlot(X, "paths_chr", tempdir())
 ```
 
 It can be useful to save fake data (useful for demonstrating the generalisability and replicability of an analysis) and real data (required for write-up and reproducibility) is distinctly labelled directories. By default, `X` is created with a flag to save all output in a sub-directory "Real". As we are using fake data, we can override this value.
 
 ```{r}
-X <- renewSlot(X,
-               "b_SpecificParameters@fake_1L_lgl",
-               T)
+X <- renewSlot(X, "b_SpecificParameters@fake_1L_lgl", T)
 ```
 
 We can now write a number of sub-directories to our specified output directory.
 
 ```{r}
-X <- author(X,
-            what_1L_chr = "workspace")
+X <- author(X, what_1L_chr = "workspace", consent_1L_chr = consent_1L_chr)
 ```
 
 ### Descriptives
 The first set of outputs we write to our output directories is a set of descriptive tables and plots.
 
 ```{r, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
-X <- author(X,
-            what_1L_chr = "descriptives",
-            digits_1L_int = 3L)
-
+X <- author(X, consent_1L_chr = consent_1L_chr, digits_1L_int = 3L,  what_1L_chr = "descriptives")
 ```
 
 ### Model comparisons

@@ -7,14 +7,15 @@
 fit_ts_model_with_brm(
   data_tb,
   depnt_var_nm_1L_chr,
-  predr_vars_nms_chr,
-  id_var_nm_1L_chr,
-  backend_1L_chr = getOption("brms.backend", "rstan"),
   family_fn_1L_chr,
+  id_var_nm_1L_chr,
+  predr_vars_nms_chr,
+  backend_1L_chr = getOption("brms.backend", "rstan"),
+  control_ls = NULL,
+  is_csnl_1L_lgl = F,
   iters_1L_int = 4000L,
   seed_1L_int = 1000L,
-  prior_ls = NULL,
-  control_ls = NULL
+  prior_ls = NULL
 )
 }
 \arguments{
@@ -22,21 +23,23 @@ fit_ts_model_with_brm(
 
 \item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one)}
 
-\item{predr_vars_nms_chr}{Predictor variables names (a character vector)}
+\item{family_fn_1L_chr}{Family function (a character vector of length one)}
 
 \item{id_var_nm_1L_chr}{Identity variable name (a character vector of length one)}
 
+\item{predr_vars_nms_chr}{Predictor variables names (a character vector)}
+
 \item{backend_1L_chr}{Backend (a character vector of length one), Default: getOption("brms.backend", "rstan")}
 
-\item{family_fn_1L_chr}{Family function (a character vector of length one)}
+\item{control_ls}{Control (a list), Default: NULL}
+
+\item{is_csnl_1L_lgl}{Is cross-sectional (a logical vector of length one), Default: F}
 
 \item{iters_1L_int}{Iterations (an integer vector of length one), Default: 4000}
 
 \item{seed_1L_int}{Seed (an integer vector of length one), Default: 1000}
 
 \item{prior_ls}{Prior (a list), Default: NULL}
-
-\item{control_ls}{Control (a list), Default: NULL}
 }
 \value{
 Model list (a list of models)

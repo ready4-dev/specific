@@ -101,19 +101,26 @@ methods::setMethod("renew", methods::className("specific_predictors", package = 
 #' @param new_val_xx New value (an output object of multiple potential types)
 #' @param type_1L_chr Type (a character vector of length one), Default: 'results'
 #' @param what_1L_chr What (a character vector of length one), Default: 'prefd_mdls'
+#' @param ... Additional arguments
 #' @return x (An object of class SpecificProject)
 #' @rdname renew-methods
 #' @aliases renew,SpecificProject-method
 #' @export 
 #' @importFrom ready4 renew
-methods::setMethod("renew", "SpecificProject", function (x, new_val_xx, type_1L_chr = "results", what_1L_chr = "prefd_mdls") 
+methods::setMethod("renew", "SpecificProject", function (x, new_val_xx, type_1L_chr = "results", what_1L_chr = "prefd_mdls", 
+    ...) 
 {
     if (type_1L_chr == "results") {
         if (what_1L_chr == "prefd_mdls") 
             x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$prefd_mdl_types_chr <- new_val_xx
     }
-    if (what_1L_chr == "prefd_covars") 
+    if (what_1L_chr == "prefd_covars") {
         x@c_SpecificResults@a_SpecificShareable@shareable_outp_ls$mdl_smry_ls$prefd_covars_chr <- new_val_xx
+    }
+    if (what_1L_chr %in% c("base", "dummys", "levels")) {
+        x@a_YouthvarsProfile@a_Ready4useDyad <- renew(x@a_YouthvarsProfile@a_Ready4useDyad, 
+            new_val_xx = new_val_xx, type_1L_chr = what_1L_chr)
+    }
     return(x)
 })
 #' 
@@ -125,13 +132,14 @@ methods::setMethod("renew", "SpecificProject", function (x, new_val_xx, type_1L_
 #' @param a_Ready4useRepos PARAM_DESCRIPTION
 #' @param type_1L_chr Type (a character vector of length one), Default: 'results'
 #' @param what_1L_chr What (a character vector of length one), Default: 'dv_ls'
+#' @param ... Additional arguments
 #' @return x (An object of class SpecificMixed)
 #' @rdname renew-methods
 #' @aliases renew,SpecificMixed-method
 #' @export 
 #' @importFrom ready4 renew
 methods::setMethod("renew", "SpecificMixed", function (x, new_val_xx = NULL, a_Ready4useRepos, type_1L_chr = "results", 
-    what_1L_chr = "dv_ls") 
+    what_1L_chr = "dv_ls", ...) 
 {
     dv_ls <- list(dv_nm_1L_chr = procureSlot(a_Ready4useRepos, 
         "dv_nm_1L_chr"), ds_url_1L_chr = procureSlot(a_Ready4useRepos, 

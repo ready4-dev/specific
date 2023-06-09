@@ -87,14 +87,15 @@ renew.specific_predictors(
   slice_indcs_int = NA_integer_
 )
 
-\S4method{renew}{SpecificProject}(x, new_val_xx, type_1L_chr = "results", what_1L_chr = "prefd_mdls")
+\S4method{renew}{SpecificProject}(x, new_val_xx, type_1L_chr = "results", what_1L_chr = "prefd_mdls", ...)
 
 \S4method{renew}{SpecificMixed}(
   x,
   new_val_xx = NULL,
   a_Ready4useRepos,
   type_1L_chr = "results",
-  what_1L_chr = "dv_ls"
+  what_1L_chr = "dv_ls",
+  ...
 )
 }
 \arguments{
@@ -153,6 +154,8 @@ renew.specific_predictors(
 \item{type_1L_chr}{Type (a character vector of length one), Default: 'results'}
 
 \item{what_1L_chr}{What (a character vector of length one), Default: 'dv_ls'}
+
+\item{...}{Additional arguments}
 
 \item{a_Ready4useRepos}{PARAM_DESCRIPTION}
 }

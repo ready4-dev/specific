@@ -5,6 +5,7 @@
 #' @param x An object of class SpecificMixed
 #' @param to_1L_chr To (a character vector of length one), Default: 'SpecificSynopsis'
 #' @param rmd_fl_nms_ls R Markdown file names (a list), Default: NULL
+#' @param ... Additional arguments
 #' @return Y (a ready4 S4)
 #' @rdname metamorphose-methods
 #' @aliases metamorphose,SpecificMixed-method
@@ -12,7 +13,8 @@
 #' @importFrom ready4show make_rmd_fl_nms_ls
 #' @importFrom stringi stri_replace_last_regex
 #' @importFrom ready4 metamorphose
-methods::setMethod("metamorphose", "SpecificMixed", function (x, to_1L_chr = "SpecificSynopsis", rmd_fl_nms_ls = NULL) 
+methods::setMethod("metamorphose", "SpecificMixed", function (x, to_1L_chr = "SpecificSynopsis", rmd_fl_nms_ls = NULL, 
+    ...) 
 {
     if (is.null(rmd_fl_nms_ls)) {
         rmd_fl_nms_ls <- ready4show::make_rmd_fl_nms_ls("Lngl_Mdls_HTML", 
@@ -34,12 +36,13 @@ methods::setMethod("metamorphose", "SpecificMixed", function (x, to_1L_chr = "Sp
 #' @description metamorphose method applied to SpecificConverter
 #' @param x An object of class SpecificConverter
 #' @param paths_chr Paths (a character vector), Default: 'NA'
+#' @param ... Additional arguments
 #' @return X (Modelling project dataset, input parameters and model comparison results.)
 #' @rdname metamorphose-methods
 #' @aliases metamorphose,SpecificConverter-method
 #' @export 
 #' @importFrom ready4 metamorphose
-methods::setMethod("metamorphose", "SpecificConverter", function (x, paths_chr = NA_character_) 
+methods::setMethod("metamorphose", "SpecificConverter", function (x, paths_chr = NA_character_, ...) 
 {
     domain_labels_chr <- x@a_ScorzProfile@domain_wtd_var_nms_chr
     x_SpecificModels <- SpecificModels(a_YouthvarsProfile = procureSlot(x@a_ScorzProfile, 

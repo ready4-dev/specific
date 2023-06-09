@@ -7,6 +7,14 @@
 write_analyses(
   input_params_ls,
   abstract_args_ls = NULL,
+  combinations_1L_lgl = F,
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
+  cores_1L_int = 1L,
+  depnt_var_min_val_1L_dbl = numeric(0),
+  existing_predrs_ls = NULL,
+  max_nbr_of_covars_1L_int = integer(0),
+  options_chr = c("Y", "N"),
   start_at_int = c(2, 1)
 )
 }
@@ -14,6 +22,22 @@ write_analyses(
 \item{input_params_ls}{Input parameters (a list)}
 
 \item{abstract_args_ls}{Abstract arguments (a list), Default: NULL}
+
+\item{combinations_1L_lgl}{Combinations (a logical vector of length one), Default: F}
+
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
+\item{cores_1L_int}{Cores (an integer vector of length one), Default: 1}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
+
+\item{existing_predrs_ls}{Existing predictors (a list), Default: NULL}
+
+\item{max_nbr_of_covars_1L_int}{Maximum number of covariates (an integer vector of length one), Default: integer(0)}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
 
 \item{start_at_int}{Start at (an integer vector), Default: c(2, 1)}
 }

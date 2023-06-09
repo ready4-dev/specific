@@ -1,7 +1,8 @@
 depict_SpecificProject <- function(x,
                                   mdl_indcs_int = NULL,
                                   output_type_1L_chr = "HTML",
-                                  plt_indcs_int = NULL){
+                                  plt_indcs_int = NULL,
+                                  ...){
   if(is.null(mdl_indcs_int)){
     mdl_indcs_int <- 1
   }
@@ -42,11 +43,12 @@ depict_SpecificSynopsis <- function(x,
                                     axis_title_sclg_1L_dbl = 2,
                                     base_height_1L_dbl = 13,
                                     base_size_1L_dbl = 30,
+                                    consent_1L_chr = "",
                                     depnt_var_desc_1L_chr = NA_character_,
+                                    depnt_var_min_val_1L_dbl = numeric(0),
                                     dim_plot_heights_int = c(10L, 1L),
                                     dim_plot_log_log_tfmn_1L_lgl = F,
                                     dim_plot_rows_cols_pair_int = c(3L,2L),
-
                                     labels_chr = c("A","B","C","D"),
                                     label_x_1L_dbl = 0.2,
                                     label_y_1L_dbl = 0.9,
@@ -63,7 +65,8 @@ depict_SpecificSynopsis <- function(x,
                                                                       height_1L_dbl = 4),
                                     what_1L_chr = "composite_mdl",
                                     write_1L_lgl = F,
-                                    y_label_1L_chr = " "){
+                                    y_label_1L_chr = " ",
+                                    ...){
   plt <- NULL
   outp_smry_ls <- append(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
                          x@b_SpecificResults@b_SpecificPrivate@private_outp_ls)
@@ -79,17 +82,18 @@ depict_SpecificSynopsis <- function(x,
                                         base_size_1L_dbl =  base_size_1L_dbl,
                                         correspondences_lup = correspondences_lup,
                                         depnt_var_desc_1L_chr = depnt_var_desc_1L_chr,
+                                        depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl,
                                         labels_chr = labels_chr,
                                         label_x_1L_dbl = label_x_1L_dbl,
                                         label_y_1L_dbl = label_y_1L_dbl,
                                         label_size_1L_dbl = label_size_1L_dbl,
                                         mdl_indcs_int = mdl_indcs_int,
                                         use_png_fls_1L_lgl = use_png_fls_1L_lgl)
-    write_path_1L_chr <- paste0(outp_smry_ls$path_to_write_to_1L_chr,
-                                "/dens_and_sctr.png")
+    write_path_1L_chr <- paste0(outp_smry_ls$path_to_write_to_1L_chr, "/dens_and_sctr.png")
   }
   if(what_1L_chr == "composite_utl"){
     ds_descvs_ls <- manufacture(x,
+                                depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl,
                                 what_1L_chr = "ds_descvs_ls")
     outp_smry_ls <- append(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls,
                            x@b_SpecificResults@b_SpecificPrivate@private_outp_ls)
@@ -121,7 +125,6 @@ depict_SpecificSynopsis <- function(x,
                                       make_log_log_tfmn_1L_lgl = dim_plot_log_log_tfmn_1L_lgl,
                                       y_label_1L_chr = y_label_1L_chr))
     legend_ls <- cowplot::get_legend(first_plt)
-
     plt <- cowplot::plot_grid(first_plt +
                                 ggplot2::theme(legend.position="none"),
                               second_plt,
@@ -129,13 +132,23 @@ depict_SpecificSynopsis <- function(x,
                               nrow = 3L,
                               rel_heights = rel_heights_dbl,
                               scale = scale_dbl)
-    write_path_1L_chr <- paste0(x@a_Ready4showPaths@outp_data_dir_1L_chr,
-                                "/Output/_Descriptives/combined_utl.png")
+    write_path_1L_chr <- paste0(x@a_Ready4showPaths@outp_data_dir_1L_chr, "/Output/_Descriptives/combined_utl.png")
   }
   if(write_1L_lgl){
-    cowplot::save_plot(write_path_1L_chr,
-                       plt,
-                       base_height = base_height_1L_dbl)
+    ready4::write_with_consent(consented_fn = cowplot::save_plot,
+                               prompt_1L_chr = paste0("Do you confirm that you want to write the file ",
+                                                      write_path_1L_chr,
+                                                      "?"),
+                               consent_1L_chr = consent_1L_chr,
+                               consent_indcs_int = consent_indcs_int,
+                               consented_args_ls = list(filename = write_path_1L_chr,
+                                                        plot = plt,
+                                                        base_height = base_height_1L_dbl),
+                               consented_msg_1L_chr = paste0("File ",
+                                                             write_path_1L_chr,
+                                                             " has been written."),
+                               declined_msg_1L_chr = "Write request cancelled - no new files have been written.",
+                               options_chr = options_chr)
   }
   return(plt)
 }

@@ -9,7 +9,8 @@
   x,
   class_fn_1L_chr = "as.numeric",
   prototype_lup = NULL,
-  scndry_anlys_params_ls = NULL
+  scndry_anlys_params_ls = NULL,
+  ...
 )
 }
 \arguments{
@@ -20,6 +21,8 @@
 \item{prototype_lup}{Prototype (a lookup table), Default: NULL}
 
 \item{scndry_anlys_params_ls}{Secondary analysis parameters (a list), Default: NULL}
+
+\item{...}{Additional arguments}
 }
 \value{
 x (An object of class SpecificModels)

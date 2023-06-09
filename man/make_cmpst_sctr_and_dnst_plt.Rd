@@ -10,6 +10,7 @@ make_cmpst_sctr_and_dnst_plt(
   predr_var_nms_chr = NA_character_,
   base_size_1L_dbl = 16,
   correspondences_lup = NULL,
+  depnt_var_min_val_1L_dbl = numeric(0),
   depnt_var_desc_1L_chr = NA_character_,
   labels_chr = c("A", "B", "C", "D"),
   label_x_1L_dbl = 0.1,
@@ -29,6 +30,8 @@ make_cmpst_sctr_and_dnst_plt(
 \item{base_size_1L_dbl}{Base size (a double vector of length one), Default: 16}
 
 \item{correspondences_lup}{Correspondences (a lookup table), Default: NULL}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
 
 \item{depnt_var_desc_1L_chr}{Dependent variable description (a character vector of length one), Default: 'NA'}
 

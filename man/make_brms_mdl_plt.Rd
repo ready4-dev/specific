@@ -6,6 +6,7 @@
 \usage{
 make_brms_mdl_plt(
   outp_smry_ls,
+  depnt_var_min_val_1L_dbl = numeric(0),
   depnt_var_desc_1L_chr,
   mdl_nm_1L_chr,
   type_1L_chr,
@@ -20,6 +21,8 @@ make_brms_mdl_plt(
 }
 \arguments{
 \item{outp_smry_ls}{Output summary (a list)}
+
+\item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
 
 \item{depnt_var_desc_1L_chr}{Dependent variable description (a character vector of length one)}
 

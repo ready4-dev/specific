@@ -18,23 +18,26 @@ make_abstract_args_ls <- function (results_ls, fl_nm_1L_chr = "abstract.txt")
             ifelse(get_nbr_of_predrs(results_ls, as_words_1L_lgl = F) > 
                 1, "s", ""), " of ", get_predr_ctgs(results_ls), 
             "."), Methods = paste0(results_ls$study_descs_ls$sample_desc_1L_chr, 
-            " Follow-up measurements were ", results_ls$study_descs_ls$time_btwn_bl_and_fup_1L_chr, 
-            " after baseline. ", paste0(length(mdl_cmprsns_ls$OLS) %>% 
+            ifelse(is.na(results_ls$study_descs_ls$time_btwn_bl_and_fup_1L_chr), 
+                "", paste0(" Follow-up measurements were ", results_ls$study_descs_ls$time_btwn_bl_and_fup_1L_chr, 
+                  " after baseline. ")), paste0(length(mdl_cmprsns_ls$OLS) %>% 
                 xfun::numbers_to_words() %>% Hmisc::capitalize()), 
-            " Ordinary Least Squares (OLS) and ", length(mdl_cmprsns_ls$GLM) %>% 
+            " ordinary least squares (OLS) and ", length(mdl_cmprsns_ls$GLM) %>% 
                 xfun::numbers_to_words(), " generalised linear models (GLMs) were explored to identify the best algorithm. ", 
             " Predictive ability of ", get_nbr_of_predrs(results_ls), 
             " candidate measure", ifelse(get_nbr_of_predrs(results_ls, 
                 as_words_1L_lgl = F) > 1, "s", ""), " of ", get_predr_ctgs(results_ls), 
             " were assessed using ten fold cross validation", 
             ifelse(get_nbr_of_predrs(results_ls, as_words_1L_lgl = F) > 
-                1, " and forest models", ""), ". Linear / generalised linear mixed effect models were then used to construct longitudinal predictive models for ", 
-            get_hlth_utl_nm(results_ls), " change."), Results = paste0(make_ten_fold_text(results_ls, 
-            for_abstract_1L_lgl = T), make_random_forest_text(results_ls, 
-            for_abstract_1L_lgl = T), ". ", make_selected_mdl_text(results_ls, 
-            for_abstract_1L_lgl = T), paste0(" The mean ratio between the within-person and between-person associated coefficients was ", 
-            make_within_between_ratios_text(results_ls, exclude_covars_1L_lgl = T), 
-            ".")), Conclusions = get_conclusion_text(results_ls), 
+                1, " and forest models", ""), ifelse(is.na(results_ls$study_descs_ls$time_btwn_bl_and_fup_1L_chr), 
+                ". ", paste0(". Linear / generalised linear mixed effect models were then used to construct longitudinal predictive models for ", 
+                  get_hlth_utl_nm(results_ls), " change."))), 
+        Results = paste0(make_ten_fold_text(results_ls, for_abstract_1L_lgl = T), 
+            ". ", make_selected_mdl_text(results_ls, for_abstract_1L_lgl = T), 
+            ifelse(is.na(results_ls$study_descs_ls$time_btwn_bl_and_fup_1L_chr), 
+                "", paste0(" The mean ratio between the within-person and between-person associated coefficients was ", 
+                  make_within_between_ratios_text(results_ls, 
+                    exclude_covars_1L_lgl = T), "."))), Conclusions = get_conclusion_text(results_ls), 
         Data = make_data_availability_text(results_ls)), fl_nm_1L_chr = fl_nm_1L_chr)
     return(abstract_args_ls)
 }
@@ -122,15 +125,22 @@ make_analysis_ds_smry_ls <- function (ds_descvs_ls, candidate_covar_nms_chr, pre
 #' @keywords internal
 make_bl_fup_add_to_row_ls <- function (df, n_at_bl_1L_int, n_at_fup_1L_int) 
 {
+    if (is.na(n_at_fup_1L_int)) {
+        fup_1L_chr <- character(0)
+    }
+    else {
+        fup_1L_chr <- paste0(" & \\multicolumn{2}{c}{\\textbf{Follow-up (N=", 
+            n_at_fup_1L_int, ")}}")
+    }
     add_to_row_ls <- list(pos = list(-1, nrow(df)), command = c(paste("\\toprule \n", 
         paste0("\\multicolumn{2}{c}{} & \\multicolumn{2}{c}{\\textbf{Baseline (N=", 
-            n_at_bl_1L_int, ")}} & \\multicolumn{2}{c}{\\textbf{Follow-up (N=", 
-            n_at_fup_1L_int, ")}} \\\\\n")), paste("\\bottomrule \n")))
+            n_at_bl_1L_int, ")}}", fup_1L_chr, " \\\\\n")), paste("\\bottomrule \n")))
     return(add_to_row_ls)
 }
 #' Make bayesian regression models model plot
 #' @description make_brms_mdl_plt() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make bayesian regression models model plot. The function returns Plot (a plot).
 #' @param outp_smry_ls Output summary (a list)
+#' @param depnt_var_min_val_1L_dbl Dependent variable minimum value (a double vector of length one), Default: numeric(0)
 #' @param depnt_var_desc_1L_chr Dependent variable description (a character vector of length one)
 #' @param mdl_nm_1L_chr Model name (a character vector of length one)
 #' @param type_1L_chr Type (a character vector of length one)
@@ -148,10 +158,10 @@ make_bl_fup_add_to_row_ls <- function (df, n_at_bl_1L_int, n_at_fup_1L_int)
 #' @importFrom purrr flatten_chr
 #' @importFrom rlang exec
 #' @keywords internal
-make_brms_mdl_plt <- function (outp_smry_ls, depnt_var_desc_1L_chr, mdl_nm_1L_chr, 
-    type_1L_chr, base_size_1L_dbl = 8, brms_mdl = NULL, correspondences_lup = NULL, 
-    new_var_nm_1L_chr = "Predicted", predn_type_1L_chr = NULL, 
-    x_lbl_1L_chr = NA_character_, y_lbl_1L_chr = NA_character_) 
+make_brms_mdl_plt <- function (outp_smry_ls, depnt_var_min_val_1L_dbl = numeric(0), 
+    depnt_var_desc_1L_chr, mdl_nm_1L_chr, type_1L_chr, base_size_1L_dbl = 8, 
+    brms_mdl = NULL, correspondences_lup = NULL, new_var_nm_1L_chr = "Predicted", 
+    predn_type_1L_chr = NULL, x_lbl_1L_chr = NA_character_, y_lbl_1L_chr = NA_character_) 
 {
     sfx_1L_chr <- " from brmsfit"
     mdl_types_lup <- outp_smry_ls$mdl_types_lup
@@ -166,7 +176,8 @@ make_brms_mdl_plt <- function (outp_smry_ls, depnt_var_desc_1L_chr, mdl_nm_1L_ch
         match_var_nm_1L_chr = "short_name_chr", target_var_nm_1L_chr = "tfmn_chr", 
         evaluate_1L_lgl = F)
     plot_fn_and_args_ls <- make_plot_fn_and_args_ls(brms_mdl = brms_mdl, 
-        tfd_data_tb = outp_smry_ls$scored_data_tb %>% transform_tb_to_mdl_inp(depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr, 
+        tfd_data_tb = outp_smry_ls$scored_data_tb %>% transform_tb_to_mdl_inp(depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
+            depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr, 
             predr_vars_nms_chr = outp_smry_ls$predr_vars_nms_ls %>% 
                 purrr::flatten_chr() %>% unique(), id_var_nm_1L_chr = outp_smry_ls$id_var_nm_1L_chr, 
             round_var_nm_1L_chr = outp_smry_ls$round_var_nm_1L_chr, 
@@ -303,6 +314,7 @@ make_brms_mdl_smry_tbl <- function (smry_mdl_ls, grp_1L_chr, popl_1L_chr, fam_1L
 #' @param predr_var_nms_chr Predictor variable names (a character vector), Default: 'NA'
 #' @param base_size_1L_dbl Base size (a double vector of length one), Default: 16
 #' @param correspondences_lup Correspondences (a lookup table), Default: NULL
+#' @param depnt_var_min_val_1L_dbl Dependent variable minimum value (a double vector of length one), Default: numeric(0)
 #' @param depnt_var_desc_1L_chr Dependent variable description (a character vector of length one), Default: 'NA'
 #' @param labels_chr Labels (a character vector), Default: c("A", "B", "C", "D")
 #' @param label_x_1L_dbl Label x (a double vector of length one), Default: 0.1
@@ -319,10 +331,10 @@ make_brms_mdl_smry_tbl <- function (smry_mdl_ls, grp_1L_chr, popl_1L_chr, fam_1L
 #' @importFrom cowplot ggdraw draw_image plot_grid
 make_cmpst_sctr_and_dnst_plt <- function (outp_smry_ls, output_data_dir_1L_chr = NA_character_, 
     predr_var_nms_chr = NA_character_, base_size_1L_dbl = 16, 
-    correspondences_lup = NULL, depnt_var_desc_1L_chr = NA_character_, 
-    labels_chr = c("A", "B", "C", "D"), label_x_1L_dbl = 0.1, 
-    label_y_1L_dbl = 0.9, label_size_1L_dbl = 22, mdl_indcs_int = 1:2, 
-    use_png_fls_1L_lgl = T) 
+    correspondences_lup = NULL, depnt_var_min_val_1L_dbl = numeric(0), 
+    depnt_var_desc_1L_chr = NA_character_, labels_chr = c("A", 
+        "B", "C", "D"), label_x_1L_dbl = 0.1, label_y_1L_dbl = 0.9, 
+    label_size_1L_dbl = 22, mdl_indcs_int = 1:2, use_png_fls_1L_lgl = T) 
 {
     if (use_png_fls_1L_lgl) {
         filtered_paths_chr <- outp_smry_ls$file_paths_chr %>% 
@@ -356,6 +368,7 @@ make_cmpst_sctr_and_dnst_plt <- function (outp_smry_ls, output_data_dir_1L_chr =
                 make_brms_mdl_plt(outp_smry_ls, base_size_1L_dbl = base_size_1L_dbl, 
                   brms_mdl = brms_mdl, correspondences_lup = correspondences_lup, 
                   depnt_var_desc_1L_chr = depnt_var_desc_1L_chr, 
+                  depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
                   mdl_nm_1L_chr = mdl_nm_1L_chr, type_1L_chr = .x, 
                   predn_type_1L_chr = NULL, x_lbl_1L_chr = paste0("Observed ", 
                     depnt_var_desc_1L_chr), y_lbl_1L_chr = paste0("Predicted ", 
@@ -390,9 +403,7 @@ make_cndt_predr_text <- function (results_ls, type_1L_chr = "description")
     }
     if (type_1L_chr == "comparison") {
         text_1L_chr <- paste0(ifelse(nbr_of_predrs_1L_int > 1, 
-            paste0("We compared the usefulness of the candidate predictors by using a random forest model including ", 
-                ifelse(nbr_of_predrs_1L_int > 2, paste0("all ", 
-                  get_nbr_of_predrs(results_ls)), "both"), " candidate predictors and by evaluating the independent predictive ability of different candidate predictors using 10-fold cross-validation."), 
+            paste0("We ", "evaluated", " the independent predictive ability of different candidate predictors using 10-fold cross-validation."), 
             ""))
     }
     return(text_1L_chr)
@@ -521,14 +532,18 @@ make_covar_ttu_tbl_refs <- function (params_ls)
 #' @return Title (a character vector of length one)
 #' @rdname make_covar_ttu_tbl_title
 #' @export 
+#' @importFrom purrr map_chr
+#' @importFrom ready4 get_from_lup_obj make_list_phrase
 #' @importFrom stringi stri_replace_last
 #' @keywords internal
 make_covar_ttu_tbl_title <- function (results_ls, ref_1L_int = 1) 
 {
-    title_1L_chr <- paste0("Estimated coefficients from longitudinal models based on individual candidate predictors with ", 
-        results_ls$ttu_lngl_ls$incld_covars_chr %>% paste0(collapse = ", ") %>% 
-            stringi::stri_replace_last(fixed = ",", " and"), 
-        " using ", results_ls$ttu_lngl_ls$best_mdls_tb[[ref_1L_int, 
+    title_1L_chr <- paste0("Estimated coefficients from utility mapping models based on individual candidate predictors with ", 
+        results_ls$ttu_lngl_ls$incld_covars_chr %>% purrr::map_chr(~ready4::get_from_lup_obj(results_ls$mdl_ingredients_ls$dictionary_tb, 
+            match_value_xx = .x, match_var_nm_1L_chr = "var_nm_chr", 
+            target_var_nm_1L_chr = "var_desc_chr")) %>% ready4::make_list_phrase() %>% 
+            paste0(collapse = ", ") %>% stringi::stri_replace_last(fixed = ",", 
+            " and"), " using ", results_ls$ttu_lngl_ls$best_mdls_tb[[ref_1L_int, 
             "model_type"]], " (", results_ls$ttu_lngl_ls$best_mdls_tb[[ref_1L_int, 
             "link_and_tfmn_chr"]], ")")
     return(title_1L_chr)
@@ -539,8 +554,10 @@ make_covar_ttu_tbl_title <- function (results_ls, ref_1L_int = 1)
 #' @return Text (a character vector of length one)
 #' @rdname make_covariates_text
 #' @export 
+#' @importFrom Hmisc capitalize
+#' @importFrom purrr map_chr map map_lgl flatten_chr map2_chr
+#' @importFrom ready4 get_from_lup_obj
 #' @importFrom stringi stri_replace_last
-#' @importFrom purrr map_chr map_lgl map flatten_chr map2_chr
 #' @importFrom stringr str_detect
 make_covariates_text <- function (results_ls) 
 {
@@ -551,28 +568,36 @@ make_covariates_text <- function (results_ls)
         else {
             n_predrs_1L_int <- get_nbr_of_predrs(results_ls, 
                 as_words_1L_lgl = F)
-            text_1L_chr <- paste0("The confounding effect of other participant characteristics when using the candidate predictors in predicting utility score were also evaluated. Using the baseline data, ", 
-                ifelse(is.na(results_ls$ttu_cs_ls$sig_covars_all_predrs_mdls_chr[1]), 
+            tfmn_fn <- function(x, results_ls) {
+                ifelse(is.na(results_ls$cohort_ls$n_fup_1L_dbl), 
+                  Hmisc::capitalize(x), x)
+            }
+            text_1L_chr <- paste0("The confounding effect of other participant characteristics when using the candidate predictors in predicting utility score were also evaluated. ", 
+                ifelse(is.na(results_ls$cohort_ls$n_fup_1L_dbl), 
+                  "", "Using the baseline data, "), ifelse(is.na(results_ls$ttu_cs_ls$sig_covars_all_predrs_mdls_chr[1]), 
                   "no confounding factor", results_ls$ttu_cs_ls$sig_covars_all_predrs_mdls_chr %>% 
+                    purrr::map_chr(~ready4::get_from_lup_obj(data_lookup_tb = results_ls$mdl_ingredients_ls$dictionary_tb, 
+                      match_var_nm_1L_chr = "var_nm_chr", match_value_xx = .x, 
+                      target_var_nm_1L_chr = "var_desc_chr")) %>% 
                     paste0(collapse = ", ") %>% stringi::stri_replace_last(fixed = ",", 
-                    " and")), " ", ifelse(is.na(results_ls$ttu_cs_ls$sig_covars_all_predrs_mdls_chr[1]), 
+                    " and") %>% tfmn_fn(results_ls)), " ", ifelse(is.na(results_ls$ttu_cs_ls$sig_covars_all_predrs_mdls_chr[1]), 
                   "was", ifelse(length(results_ls$ttu_cs_ls$sig_covars_all_predrs_mdls_chr) == 
                     1, "was", "were")), " found to independently predict utility scores in models for ", 
                 ifelse(n_predrs_1L_int == 1, "the ", ifelse(n_predrs_1L_int == 
-                  2, "both ", paste0("all ", get_nbr_of_predrs(results_ls)))), 
-                "candidate predictor", ifelse(n_predrs_1L_int == 
+                  2, "both ", paste0("all ", get_nbr_of_predrs(results_ls), 
+                  " "))), "candidate predictor", ifelse(n_predrs_1L_int == 
                   1, " ", "s "), "*(p<0.01)*.")
             mdls_with_signft_covars_ls <- results_ls$mdls_with_signft_covars_ls
             duplicates_int <- which(duplicated(mdls_with_signft_covars_ls))
             if (!identical(integer(0), duplicates_int)) {
                 unduplicated_ls <- mdls_with_signft_covars_ls[!duplicated(mdls_with_signft_covars_ls)]
                 duplicated_ls <- mdls_with_signft_covars_ls[duplicates_int]
-                add_to_chr <- duplicates_int %>% purrr::map_chr(~{
+                add_to_chr <- duplicates_int %>% purrr::map(~{
                   match_chr <- mdls_with_signft_covars_ls[[.x]]
                   mdls_with_signft_covars_ls[1:(.x - 1)] %>% 
                     purrr::map_lgl(~identical(.x, match_chr)) %>% 
                     names()
-                })
+                }) %>% purrr::flatten_chr() %>% unique()
                 signft_covars_chr <- names(unduplicated_ls) %>% 
                   purrr::map(~{
                     vars_chr <- c(.x, names(duplicated_ls)[which(.x == 
@@ -668,6 +693,33 @@ make_cs_ts_ratios_tb <- function (predr_ctgs_ls, mdl_coef_ratios_ls, candidate_p
     })
     cs_ts_ratios_tb <- dplyr::distinct(cs_ts_ratios_tb)
     return(cs_ts_ratios_tb)
+}
+#' Make cross-sectional example predictors
+#' @description make_csnl_example_predrs() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make cross-sectional example predictors. The function returns Predictors (a ready4 S3).
+
+#' @return Predictors (a ready4 S3)
+#' @rdname make_csnl_example_predrs
+#' @export 
+#' @importFrom dplyr mutate case_when
+#' @keywords internal
+make_csnl_example_predrs <- function () 
+{
+    predictors_r3 <- Ready4useRepos(dv_nm_1L_chr = "TTU", dv_ds_nm_1L_chr = "https://doi.org/10.7910/DVN/DKDIB0", 
+        dv_server_1L_chr = "dataverse.harvard.edu") %>% ingest(fls_to_ingest_chr = c("predictors_r3"), 
+        metadata_1L_lgl = F)
+    predictors_r3 <- renew.specific_predictors(predictors_r3, 
+        filter_cdn_1L_chr = "short_name_chr == 'SOFAS'") %>% 
+        renew.specific_predictors(short_name_chr = c("K10", "MLT", 
+            "CHU9D", "AQOL6D"), long_name_chr = c("K10 total score", 
+            "MLT total score", "CHU9D health utility", "AQOL6D health utility"), 
+            min_val_dbl = c(10, 0, -0.1059, 0.03), max_val_dbl = c(50, 
+                100, 1, 1), class_chr = c("integer", "numeric", 
+                "numeric", "numeric"), increment_dbl = 1, class_fn_chr = c("youthvars::youthvars_k10_aus", 
+                "as.double", "youthvars::youthvars_chu9d_adolaus", 
+                "youthvars::youthvars_aqol6d_adol"), mdl_scaling_dbl = c(0.01, 
+                0.01, 1, 1), covariate_lgl = F) %>% dplyr::mutate(covariate_lgl = dplyr::case_when(short_name_chr == 
+        "SOFAS" ~ F, T ~ covariate_lgl))
+    return(predictors_r3)
 }
 #' Make data availability text
 #' @description make_data_availability_text() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make data availability text. The function returns Text (a character vector of length one).
@@ -780,32 +832,49 @@ make_ethics_text <- function (results_ls)
 #' Make fake time series data
 #' @description make_fake_ts_data() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make fake time series data. The function returns Fk data (a tibble).
 #' @param outp_smry_ls Output summary (a list)
+#' @param depnt_var_min_val_1L_dbl Dependent variable minimum value (a double vector of length one), Default: numeric(0)
 #' @param depnt_vars_are_NA_1L_lgl Dependent variables are NA (a logical vector of length one), Default: T
 #' @return Fk data (a tibble)
 #' @rdname make_fake_ts_data
 #' @export 
 #' @importFrom purrr flatten_chr map_lgl
+#' @importFrom dplyr select ungroup mutate group_by pull across all_of
 #' @importFrom synthpop syn
-#' @importFrom dplyr mutate group_by pull ungroup across all_of
 #' @importFrom rlang sym
-make_fake_ts_data <- function (outp_smry_ls, depnt_vars_are_NA_1L_lgl = T) 
+make_fake_ts_data <- function (outp_smry_ls, depnt_var_min_val_1L_dbl = numeric(0), 
+    depnt_vars_are_NA_1L_lgl = T) 
 {
-    data_tb <- outp_smry_ls$scored_data_tb %>% transform_tb_to_mdl_inp(depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr, 
+    data_tb <- outp_smry_ls$scored_data_tb %>% transform_tb_to_mdl_inp(depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
+        depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr, 
         predr_vars_nms_chr = outp_smry_ls$predr_vars_nms_ls %>% 
             purrr::flatten_chr() %>% unique(), id_var_nm_1L_chr = outp_smry_ls$id_var_nm_1L_chr, 
         round_var_nm_1L_chr = outp_smry_ls$round_var_nm_1L_chr, 
         round_bl_val_1L_chr = outp_smry_ls$round_bl_val_1L_chr)
+    if (identical(outp_smry_ls$round_var_nm_1L_chr, character(0)) | 
+        ifelse(identical(outp_smry_ls$round_var_nm_1L_chr, character(0)), 
+            T, is.na(outp_smry_ls$round_var_nm_1L_chr))) {
+        data_tb <- data_tb %>% dplyr::select(-(outp_smry_ls$predr_vars_nms_ls %>% 
+            purrr::flatten_chr() %>% unique() %>% paste0("_change")))
+    }
     fk_data_ls <- synthpop::syn(data_tb, visit.sequence = names(data_tb)[names(data_tb) != 
         outp_smry_ls$id_var_nm_1L_chr], seed = outp_smry_ls$seed_1L_int)
-    fk_data_tb <- fk_data_ls$syn %>% dplyr::mutate(`:=`(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr), 
-        as.character(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr)))) %>% 
-        dplyr::group_by(!!rlang::sym(outp_smry_ls$id_var_nm_1L_chr)) %>% 
-        dplyr::mutate(`:=`(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr), 
-            !!rlang::sym(outp_smry_ls$round_var_nm_1L_chr) %>% 
-                transform_timepoint_vals(timepoint_levels_chr = outp_smry_ls$scored_data_tb %>% 
-                  dplyr::pull(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr)) %>% 
-                  unique(), bl_val_1L_chr = outp_smry_ls$round_bl_val_1L_chr))) %>% 
-        dplyr::ungroup()
+    fk_data_tb <- fk_data_ls$syn
+    if (identical(outp_smry_ls$round_var_nm_1L_chr, character(0)) | 
+        ifelse(identical(outp_smry_ls$round_var_nm_1L_chr, character(0)), 
+            T, is.na(outp_smry_ls$round_var_nm_1L_chr))) {
+        fk_data_tb <- fk_data_tb %>% dplyr::ungroup()
+    }
+    else {
+        fk_data_tb <- fk_data_tb %>% dplyr::mutate(`:=`(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr), 
+            as.character(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr)))) %>% 
+            dplyr::group_by(!!rlang::sym(outp_smry_ls$id_var_nm_1L_chr)) %>% 
+            dplyr::mutate(`:=`(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr), 
+                !!rlang::sym(outp_smry_ls$round_var_nm_1L_chr) %>% 
+                  transform_timepoint_vals(timepoint_levels_chr = outp_smry_ls$scored_data_tb %>% 
+                    dplyr::pull(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr)) %>% 
+                    unique(), bl_val_1L_chr = outp_smry_ls$round_bl_val_1L_chr))) %>% 
+            dplyr::ungroup()
+    }
     if (depnt_vars_are_NA_1L_lgl) {
         depnt_vars_chr <- names(fk_data_tb)[names(fk_data_tb) %>% 
             purrr::map_lgl(~startsWith(.x, outp_smry_ls$depnt_var_nm_1L_chr))]
@@ -877,15 +946,17 @@ make_hlth_utl_and_predrs_ls <- function (outp_smry_ls, descv_tbls_ls, nbr_of_dig
         match_value_xx = var_nm_1L_chr, target_var_nm_1L_chr = paste0(descv_tbls_ls$ds_descvs_ls$round_vals_chr[1], 
             "_val_2_ls"), evaluate_1L_lgl = F) %>% stringr::str_remove("\\(") %>% 
         stringr::str_remove("\\)") %>% as.numeric() %>% round(nbr_of_digits_1L_int), 
-        fup_hu_mean_1L_dbl = descv_tbls_ls$main_outc_tbl_tb %>% 
-            dplyr::filter(label == "Mean (SD)") %>% ready4::get_from_lup_obj(match_var_nm_1L_chr = "variable", 
+        fup_hu_mean_1L_dbl = ifelse(length(descv_tbls_ls$ds_descvs_ls$round_vals_chr) < 
+            2, NA_real_, descv_tbls_ls$main_outc_tbl_tb %>% dplyr::filter(label == 
+            "Mean (SD)") %>% ready4::get_from_lup_obj(match_var_nm_1L_chr = "variable", 
             match_value_xx = var_nm_1L_chr, target_var_nm_1L_chr = paste0(descv_tbls_ls$ds_descvs_ls$round_vals_chr[2], 
                 "_val_1_dbl"), evaluate_1L_lgl = F) %>% as.numeric() %>% 
-            round(nbr_of_digits_1L_int), fup_hu_sd_1L_dbl = descv_tbls_ls$main_outc_tbl_tb %>% 
-            dplyr::filter(label == "Mean (SD)") %>% ready4::get_from_lup_obj(match_var_nm_1L_chr = "variable", 
+            round(nbr_of_digits_1L_int)), fup_hu_sd_1L_dbl = ifelse(length(descv_tbls_ls$ds_descvs_ls$round_vals_chr) < 
+            2, NA_real_, descv_tbls_ls$main_outc_tbl_tb %>% dplyr::filter(label == 
+            "Mean (SD)") %>% ready4::get_from_lup_obj(match_var_nm_1L_chr = "variable", 
             match_value_xx = var_nm_1L_chr, target_var_nm_1L_chr = paste0(descv_tbls_ls$ds_descvs_ls$round_vals_chr[2], 
                 "_val_2_ls"), evaluate_1L_lgl = F) %>% stringr::str_remove("\\(") %>% 
-            stringr::str_remove("\\)") %>% as.numeric() %>% round(nbr_of_digits_1L_int), 
+            stringr::str_remove("\\)") %>% as.numeric() %>% round(nbr_of_digits_1L_int)), 
         predrs_nartv_seq_chr = ranked_predrs_ls$unranked_predrs_chr, 
         cor_seq_dscdng_chr = ranked_predrs_ls$ranked_predrs_chr)
     return(hlth_utl_and_predrs_ls)
@@ -957,6 +1028,56 @@ make_indpnt_predrs_lngl_tbls_ref <- function (params_ls)
             " and"))))
     return(text_1L_chr)
 }
+#' Make inner loop model summary
+#' @description make_inner_loop_mdl_smry() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make inner loop model summary. The function returns Models summary (a tibble).
+#' @param idx_1L_int Index (an integer vector of length one)
+#' @param data_tb Data (a tibble)
+#' @param mdl_nms_ls Model names (a list)
+#' @param mdl_smry_dir_1L_chr Model summary directory (a character vector of length one)
+#' @param mdl_types_lup Model types (a lookup table)
+#' @param predictors_lup Predictors (a lookup table)
+#' @param predr_vars_nms_ls Predictor variables names (a list)
+#' @param depnt_var_min_val_1L_dbl Dependent variable minimum value (a double vector of length one), Default: numeric(0)
+#' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: 'utl_total_w'
+#' @param id_var_nm_1L_chr Identity variable name (a character vector of length one), Default: 'fkClientID'
+#' @param round_var_nm_1L_chr Round variable name (a character vector of length one), Default: 'round'
+#' @param round_bl_val_1L_chr Round baseline value (a character vector of length one), Default: 'Baseline'
+#' @param utl_min_val_1L_dbl Utility minimum value (a double vector of length one), Default: -1
+#' @param backend_1L_chr Backend (a character vector of length one), Default: getOption("brms.backend", "rstan")
+#' @param iters_1L_int Iterations (an integer vector of length one), Default: 4000
+#' @param seed_1L_int Seed (an integer vector of length one), Default: 1000
+#' @param prior_ls Prior (a list), Default: NULL
+#' @param control_ls Control (a list), Default: NULL
+#' @return Models summary (a tibble)
+#' @rdname make_inner_loop_mdl_smry
+#' @export 
+#' @importFrom purrr map_dfr
+#' @keywords internal
+make_inner_loop_mdl_smry <- function (idx_1L_int, data_tb, mdl_nms_ls, mdl_smry_dir_1L_chr, 
+    mdl_types_lup, predictors_lup, predr_vars_nms_ls, depnt_var_min_val_1L_dbl = numeric(0), 
+    depnt_var_nm_1L_chr = "utl_total_w", id_var_nm_1L_chr = "fkClientID", 
+    round_var_nm_1L_chr = "round", round_bl_val_1L_chr = "Baseline", 
+    utl_min_val_1L_dbl = -1, backend_1L_chr = getOption("brms.backend", 
+        "rstan"), iters_1L_int = 4000L, seed_1L_int = 1000L, 
+    prior_ls = NULL, control_ls = NULL) 
+{
+    mdls_smry_tb <- purrr::map_dfr(mdl_nms_ls[[idx_1L_int]], 
+        ~{
+            smry_ls <- make_smry_of_ts_mdl_outp(data_tb = data_tb, 
+                depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
+                predr_vars_nms_chr = predr_vars_nms_ls[[idx_1L_int]], 
+                mdl_nm_1L_chr = .x, path_to_write_to_1L_chr = mdl_smry_dir_1L_chr, 
+                depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, id_var_nm_1L_chr = id_var_nm_1L_chr, 
+                round_var_nm_1L_chr = round_var_nm_1L_chr, round_bl_val_1L_chr = round_bl_val_1L_chr, 
+                predictors_lup = predictors_lup, utl_min_val_1L_dbl = utl_min_val_1L_dbl, 
+                backend_1L_chr = backend_1L_chr, iters_1L_int = iters_1L_int, 
+                mdl_types_lup = mdl_types_lup, seed_1L_int = seed_1L_int, 
+                prior_ls = prior_ls, control_ls = control_ls)
+            Sys.sleep(5)
+            smry_ls$smry_of_ts_mdl_tb
+        })
+    return(mdls_smry_tb)
+}
 #' Make input parameters
 #' @description make_input_params() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make input parameters. The function returns Parameters (a list of lists).
 #' @param ds_tb Dataset (a tibble)
@@ -964,10 +1085,13 @@ make_indpnt_predrs_lngl_tbls_ref <- function (params_ls)
 #' @param header_yaml_args_ls Header yaml arguments (a list)
 #' @param maui_params_ls Multi-attribute utility instrument parameters (a list)
 #' @param predictors_lup Predictors (a lookup table)
+#' @param consent_1L_chr Consent (a character vector of length one), Default: ''
+#' @param consent_indcs_int Consent indices (an integer vector), Default: 1
 #' @param control_ls Control (a list), Default: NULL
 #' @param dv_ds_nm_and_url_chr Dataverse dataset name and url (a character vector), Default: NULL
 #' @param iters_1L_int Iterations (an integer vector of length one), Default: 4000
 #' @param mdl_smry_ls Model summary (a list), Default: make_mdl_smry_ls()
+#' @param options_chr Options (a character vector), Default: c("Y", "N")
 #' @param output_format_ls Output format (a list), Default: make_output_format_ls()
 #' @param path_params_ls Path parameters (a list), Default: NULL
 #' @param prefd_covars_chr Preferred covariates (a character vector), Default: NULL
@@ -981,14 +1105,17 @@ make_indpnt_predrs_lngl_tbls_ref <- function (params_ls)
 #' @export 
 #' @importFrom ready4show make_path_params_ls
 make_input_params <- function (ds_tb, ds_descvs_ls, header_yaml_args_ls, maui_params_ls, 
-    predictors_lup, control_ls = NULL, dv_ds_nm_and_url_chr = NULL, 
-    iters_1L_int = 4000L, mdl_smry_ls = make_mdl_smry_ls(), output_format_ls = make_output_format_ls(), 
-    path_params_ls = NULL, prefd_covars_chr = NULL, prefd_mdl_types_chr = NULL, 
-    prior_ls = NULL, seed_1L_int = 12345, scndry_anlys_params_ls = NULL, 
-    write_new_dir_1L_lgl = T) 
+    predictors_lup, consent_1L_chr = "", consent_indcs_int = 1L, 
+    control_ls = NULL, dv_ds_nm_and_url_chr = NULL, iters_1L_int = 4000L, 
+    mdl_smry_ls = make_mdl_smry_ls(), options_chr = c("Y", "N"), 
+    output_format_ls = make_output_format_ls(), path_params_ls = NULL, 
+    prefd_covars_chr = NULL, prefd_mdl_types_chr = NULL, prior_ls = NULL, 
+    seed_1L_int = 12345, scndry_anlys_params_ls = NULL, write_new_dir_1L_lgl = T) 
 {
     path_params_ls <- ready4show::make_path_params_ls(use_fake_data_1L_lgl = ds_descvs_ls$is_fake_1L_lgl, 
-        dv_ds_nm_and_url_chr = dv_ds_nm_and_url_chr, write_new_dir_1L_lgl = write_new_dir_1L_lgl)
+        consent_1L_chr = consent_1L_chr, consent_indcs_int = consent_indcs_int, 
+        dv_ds_nm_and_url_chr = dv_ds_nm_and_url_chr, options_chr = options_chr, 
+        write_new_dir_1L_lgl = write_new_dir_1L_lgl)
     params_ls_ls <- make_analysis_core_params_ls(ds_descvs_ls = ds_descvs_ls, 
         output_format_ls = output_format_ls, predictors_lup = predictors_lup, 
         prefd_covars_chr = prefd_covars_chr, prefd_mdl_types_chr = prefd_mdl_types_chr, 
@@ -1162,7 +1289,7 @@ make_lngl_ttu_r2_text <- function (results_ls, part_int = 1)
 #' @keywords internal
 make_lngl_ttu_with_covars_text <- function (results_ls) 
 {
-    text_1L_chr <- ifelse((is.na(results_ls$ttu_lngl_ls$incld_covars_chr) | 
+    text_1L_chr <- ifelse((is.na(results_ls$ttu_lngl_ls$incld_covars_chr[1]) | 
         length(results_ls$ttu_lngl_ls$incld_covars_chr) == 0), 
         "", paste0("We also evaluated models with ", results_ls$ttu_lngl_ls$incld_covars_chr %>% 
             paste0(collapse = ", ") %>% stringi::stri_replace_last(fixed = ",", 
@@ -1205,6 +1332,7 @@ make_maui_params_ls <- function (maui_itm_short_nms_chr, maui_domains_pfxs_1L_ch
 #' Make model
 #' @description make_mdl() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make model. The function returns Model (a model).
 #' @param data_tb Data (a tibble)
+#' @param depnt_var_min_val_1L_dbl Dependent variable minimum value (a double vector of length one), Default: numeric(0)
 #' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: 'utl_total_w'
 #' @param tfmn_1L_chr Transformation (a character vector of length one), Default: 'NTF'
 #' @param predr_var_nm_1L_chr Predictor variable name (a character vector of length one)
@@ -1220,13 +1348,15 @@ make_maui_params_ls <- function (maui_itm_short_nms_chr, maui_domains_pfxs_1L_ch
 #' @importFrom ready4 get_from_lup_obj
 #' @importFrom stringi stri_locate_last_fixed
 #' @importFrom stringr str_sub
-make_mdl <- function (data_tb, depnt_var_nm_1L_chr = "utl_total_w", tfmn_1L_chr = "NTF", 
-    predr_var_nm_1L_chr, covar_var_nms_chr = NA_character_, mdl_type_1L_chr = "OLS_NTF", 
-    mdl_types_lup = NULL, control_1L_chr = NA_character_, start_1L_chr = NULL) 
+make_mdl <- function (data_tb, depnt_var_min_val_1L_dbl = numeric(0), depnt_var_nm_1L_chr = "utl_total_w", 
+    tfmn_1L_chr = "NTF", predr_var_nm_1L_chr, covar_var_nms_chr = NA_character_, 
+    mdl_type_1L_chr = "OLS_NTF", mdl_types_lup = NULL, control_1L_chr = NA_character_, 
+    start_1L_chr = NULL) 
 {
     if (is.null(mdl_types_lup)) 
         utils::data("mdl_types_lup", envir = environment())
     data_tb <- transform_ds_for_mdlng(data_tb, depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, 
+        depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
         predr_var_nm_1L_chr = predr_var_nm_1L_chr, covar_var_nms_chr = covar_var_nms_chr)
     if (is.null(start_1L_chr)) {
         start_1L_chr <- ready4::get_from_lup_obj(mdl_types_lup, 
@@ -1307,8 +1437,8 @@ make_mdl_coef_ratio_ls <- function (mdl_ingredients_ls, predr_ctgs_ls = NULL)
         mdls_chr %>% purrr::map_dbl(~{
             coefs_dbl <- mdl_ingredients_ls$mdls_smry_tb %>% 
                 dplyr::filter(Model %in% .x) %>% dplyr::filter(Parameter %in% 
-                paste0(predr_1L_chr, (c(" baseline", " change")))) %>% 
-                dplyr::pull(Estimate)
+                paste0(predr_1L_chr, (c(" baseline", " scaled", 
+                  " unscaled", " change")))) %>% dplyr::pull(Estimate)
             coefs_dbl[2]/coefs_dbl[1]
         })
     }) %>% stats::setNames(predrs_chr)
@@ -1340,7 +1470,9 @@ make_mdl_desc_lines <- function (outp_smry_ls, mdl_nm_1L_chr, output_type_1L_chr
     predictors_chr <- mdl_smry_tb$Parameter[!mdl_smry_tb$Parameter %in% 
         c("SD (Intercept)", "Intercept", "R2", "RMSE", "Sigma")] %>% 
         purrr::map_chr(~stringr::str_remove(.x, " baseline") %>% 
-            stringr::str_remove(" change")) %>% unique()
+            stringr::str_remove(" change") %>% stringr::str_remove(.x, 
+            " scaled") %>% stringr::str_remove(" unscaled")) %>% 
+        unique()
     predictors_desc_chr <- predictors_chr %>% purrr::map_chr(~{
         scaling_1L_dbl <- ready4::get_from_lup_obj(outp_smry_ls$predictors_lup, 
             match_value_xx = .x, match_var_nm_1L_chr = "short_name_chr", 
@@ -1475,7 +1607,7 @@ make_mdls_smry_tbls_ls <- function (outp_smry_ls, nbr_of_digits_1L_int = 2L)
 {
     mdls_smry_tb <- outp_smry_ls$mdls_smry_tb %>% dplyr::mutate(dplyr::across(c("Estimate", 
         "SE"), ~round(.x, nbr_of_digits_1L_int) %>% format(nsmall = nbr_of_digits_1L_int))) %>% 
-        dplyr::mutate(`95% CI` = `95% CI` %>% transform_chr_digit_pairs())
+        dplyr::mutate(`95% CI` = `95% CI` %>% transform_chr_digit_pairs(nbr_of_digits_1L_int = nbr_of_digits_1L_int))
     rownames(mdls_smry_tb) <- NULL
     indpt_predrs_mdls_tb <- mdls_smry_tb %>% dplyr::filter(Model %in% 
         (paste0(outp_smry_ls$predr_cmprsn_tb$predr_chr, "_1_") %>% 
@@ -1500,6 +1632,44 @@ make_mdls_smry_tbls_ls <- function (outp_smry_ls, nbr_of_digits_1L_int = 2L)
     mdls_smry_tbls_ls <- list(indpt_predrs_mdls_tb = indpt_predrs_mdls_tb, 
         covar_mdls_tb = covar_mdls_tb, prefd_predr_mdl_smry_tb = prefd_predr_mdl_smry_tb)
     return(mdls_smry_tbls_ls)
+}
+#' Make manuscript summary tables list
+#' @description make_ms_smry_tbls_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make manuscript summary tables list. The function returns Manuscript summary tables (a list).
+#' @param outp_smry_ls Output summary (a list)
+#' @param mdls_smry_tbls_ls Models summary tables (a list)
+#' @param covars_mdls_ls Covariates models (a list)
+#' @param descv_tbls_ls Descriptive tables (a list)
+#' @param nbr_of_digits_1L_int Number of digits (an integer vector of length one), Default: 2
+#' @return Manuscript summary tables (a list)
+#' @rdname make_ms_smry_tbls_ls
+#' @export 
+#' @importFrom purrr map map_chr map_dbl
+#' @importFrom stats setNames
+#' @importFrom tibble as_tibble
+#' @importFrom dplyr mutate across everything
+#' @importFrom stringr str_replace_all
+#' @keywords internal
+make_ms_smry_tbls_ls <- function (outp_smry_ls, mdls_smry_tbls_ls, covars_mdls_ls, descv_tbls_ls, 
+    nbr_of_digits_1L_int = 2L) 
+{
+    mdl_types_tables_ls <- purrr::map(1:length(outp_smry_ls$prefd_mdl_types_chr), 
+        ~make_mdl_type_smry_tbl(mdls_tb = mdls_smry_tbls_ls$covar_mdls_tb, 
+            mdl_nms_chr = covars_mdls_ls[[.x]], mdl_type_1L_chr = outp_smry_ls$prefd_mdl_types_chr[.x], 
+            add_mdl_nm_sfx_1L_lgl = F)) %>% stats::setNames(1:length(outp_smry_ls$prefd_mdl_types_chr) %>% 
+        purrr::map_chr(~paste0("mdl_type_", .x, "_covar_mdls_tb")))
+    ms_smry_tbls_ls <- append(mdl_types_tables_ls, list(ind_preds_coefs_tbl = make_all_mdl_types_smry_tbl(outp_smry_ls, 
+        mdls_tb = mdls_smry_tbls_ls$indpt_predrs_mdls_tb), participant_descs = descv_tbls_ls$cohort_desc_tb, 
+        predd_dist_and_cors = descv_tbls_ls$predr_pars_and_cors_tb, 
+        tenf_prefd_mdl_tb = outp_smry_ls[["smry_of_mdl_sngl_predrs_tb"]] %>% 
+            tibble::as_tibble() %>% dplyr::mutate(dplyr::across(where(is.numeric), 
+            ~.x %>% purrr::map_dbl(~min(max(.x, -1.1), 1.1)))) %>% 
+            transform_tbl_to_rnd_vars(nbr_of_digits_1L_int = nbr_of_digits_1L_int) %>% 
+            dplyr::mutate(dplyr::across(.cols = dplyr::everything(), 
+                ~.x %>% stringr::str_replace_all("-1.10", "< -1.00") %>% 
+                  stringr::str_replace_all("1.10", "> 1.00"))), 
+        tenf_sngl_predr_tb = make_tfd_sngl_predr_mdls_tb(outp_smry_ls, 
+            nbr_of_digits_1L_int = nbr_of_digits_1L_int)))
+    return(ms_smry_tbls_ls)
 }
 #' Make number at follow-up text
 #' @description make_nbr_at_fup_text() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make number at follow-up text. The function returns Number at follow-up (a character vector of length one).
@@ -1529,20 +1699,20 @@ make_nbr_included_text <- function (results_ls)
         results_ls$cohort_ls$n_all_1l_dbl, " participants with complete ", 
         results_ls$study_descs_ls$health_utl_nm_1L_chr, " data")
 }
-#' Make paths to ss plots list
-#' @description make_paths_to_ss_plts_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make paths to ss plots list. The function returns Paths to ss plots (a list).
+#' Make paths to manuscript summary plots list
+#' @description make_paths_to_ms_smry_plts_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make paths to manuscript summary plots list. The function returns Paths to manuscript summary plots (a list).
 #' @param output_data_dir_1L_chr Output data directory (a character vector of length one)
 #' @param outp_smry_ls Output summary (a list)
 #' @param additional_paths_chr Additional paths (a character vector), Default: '/dens_and_sctr.png'
-#' @return Paths to ss plots (a list)
-#' @rdname make_paths_to_ss_plts_ls
+#' @return Paths to manuscript summary plots (a list)
+#' @rdname make_paths_to_ms_smry_plts_ls
 #' @export 
 #' @importFrom purrr map_lgl
 #' @importFrom stringr str_detect
 #' @keywords internal
-make_paths_to_ss_plts_ls <- function (output_data_dir_1L_chr, outp_smry_ls, additional_paths_chr = "/dens_and_sctr.png") 
+make_paths_to_ms_smry_plts_ls <- function (output_data_dir_1L_chr, outp_smry_ls, additional_paths_chr = "/dens_and_sctr.png") 
 {
-    paths_to_ss_plts_ls = list(combined_utl = paste0(output_data_dir_1L_chr, 
+    paths_to_ms_smry_plts_ls = list(combined_utl = paste0(output_data_dir_1L_chr, 
         "/_Descriptives/combined_utl.png"), composite = paste0(output_data_dir_1L_chr, 
         additional_paths_chr[1]), items = paste0(output_data_dir_1L_chr, 
         "/_Descriptives/qstn_rspns.png"), density = paste0(output_data_dir_1L_chr, 
@@ -1550,7 +1720,7 @@ make_paths_to_ss_plts_ls <- function (output_data_dir_1L_chr, outp_smry_ls, addi
             purrr::map_lgl(~stringr::str_detect(.x, "A_TFMN_CMPRSN_DNSTY"))]), 
         importance = paste0(output_data_dir_1L_chr, "/", outp_smry_ls$file_paths_chr[outp_smry_ls$file_paths_chr %>% 
             purrr::map_lgl(~stringr::str_detect(.x, "B_PRED_CMPRSN_BORUTA_VAR_IMP"))]))
-    return(paths_to_ss_plts_ls)
+    return(paths_to_ms_smry_plts_ls)
 }
 #' Make plot function and arguments list
 #' @description make_plot_fn_and_args_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make plot function and arguments list. The function returns Plot function and arguments (a list).
@@ -1727,12 +1897,16 @@ make_predr_vals <- function (predr_var_nm_1L_chr, candidate_predrs_lup = NULL)
 #' @description make_predr_vars_nms_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make predictor variables names list. The function returns Predictor variables names (a list).
 #' @param main_predrs_chr Main predictors (a character vector)
 #' @param covars_ls Covariates (a list)
+#' @param combinations_1L_lgl Combinations (a logical vector of length one), Default: F
 #' @param existing_predrs_ls Existing predictors (a list), Default: NULL
+#' @param max_nbr_of_covars_1L_int Maximum number of covariates (an integer vector of length one), Default: integer(0)
 #' @return Predictor variables names (a list)
 #' @rdname make_predr_vars_nms_ls
 #' @export 
-#' @importFrom purrr map discard flatten map_lgl
-make_predr_vars_nms_ls <- function (main_predrs_chr, covars_ls, existing_predrs_ls = NULL) 
+#' @importFrom purrr map discard flatten map_lgl flatten_chr
+#' @importFrom gtools combinations
+make_predr_vars_nms_ls <- function (main_predrs_chr, covars_ls, combinations_1L_lgl = F, 
+    existing_predrs_ls = NULL, max_nbr_of_covars_1L_int = integer(0)) 
 {
     predr_vars_nms_ls <- covars_ls %>% purrr::map(~{
         covars_chr <- .x
@@ -1741,6 +1915,23 @@ make_predr_vars_nms_ls <- function (main_predrs_chr, covars_ls, existing_predrs_
     }) %>% purrr::flatten() %>% unique()
     predr_vars_nms_ls <- predr_vars_nms_ls[order(sapply(predr_vars_nms_ls, 
         length))]
+    if (combinations_1L_lgl) {
+        main_predrs_ls <- predr_vars_nms_ls[predr_vars_nms_ls %>% 
+            purrr::map_lgl(~length(.x) == 1)]
+        combinations_from_chr <- setdiff(predr_vars_nms_ls[predr_vars_nms_ls %>% 
+            purrr::map_lgl(~length(.x) > 1)] %>% purrr::flatten_chr(), 
+            main_predrs_chr)
+        combinations_ls <- 1:(ifelse(identical(max_nbr_of_covars_1L_int, 
+            integer(0)), length(combinations_from_chr), min(max_nbr_of_covars_1L_int, 
+            length(combinations_from_chr)))) %>% purrr::map(~gtools::combinations(length(combinations_from_chr), 
+            .x, combinations_from_chr) %>% t() %>% as.data.frame() %>% 
+            as.list() %>% unname()) %>% purrr::flatten()
+        combinations_ls <- main_predrs_ls %>% purrr::map(~{
+            main_1L_chr <- .x
+            combinations_ls %>% purrr::map(~c(main_1L_chr, .x))
+        }) %>% purrr::flatten()
+        predr_vars_nms_ls <- append(main_predrs_ls, combinations_ls)
+    }
     if (!is.null(existing_predrs_ls)) {
         predr_vars_nms_ls <- predr_vars_nms_ls[predr_vars_nms_ls %>% 
             purrr::map_lgl(~{
@@ -1928,7 +2119,11 @@ make_ranked_predrs_ls <- function (descv_tbls_ls, old_nms_chr = NULL, new_nms_ch
 #' @description make_results_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make results list. The function returns Results (a list).
 #' @param spine_of_results_ls Spine of results (a list), Default: NULL
 #' @param abstract_args_ls Abstract arguments (a list), Default: NULL
+#' @param consent_1L_chr Consent (a character vector of length one), Default: ''
+#' @param consent_indcs_int Consent indices (an integer vector), Default: 1
+#' @param depnt_var_min_val_1L_dbl Dependent variable minimum value (a double vector of length one), Default: numeric(0)
 #' @param dv_ds_nm_and_url_chr Dataverse dataset name and url (a character vector), Default: NULL
+#' @param options_chr Options (a character vector), Default: c("Y", "N")
 #' @param output_format_ls Output format (a list), Default: NULL
 #' @param params_ls_ls Parameters (a list of lists), Default: NULL
 #' @param path_params_ls Path parameters (a list), Default: NULL
@@ -1947,15 +2142,17 @@ make_ranked_predrs_ls <- function (descv_tbls_ls, old_nms_chr = NULL, new_nms_ch
 #' @export 
 #' @importFrom purrr map_lgl map_chr
 #' @importFrom stringr str_detect
+#' @importFrom ready4 write_with_consent get_from_lup_obj
 #' @importFrom cowplot save_plot
-#' @importFrom ready4 get_from_lup_obj
 #' @importFrom tibble tibble
 #' @importFrom dplyr filter pull
 make_results_ls <- function (spine_of_results_ls = NULL, abstract_args_ls = NULL, 
-    dv_ds_nm_and_url_chr = NULL, output_format_ls = NULL, params_ls_ls = NULL, 
-    path_params_ls = NULL, study_descs_ls = NULL, fn_ls = NULL, 
-    include_idx_int = NULL, var_nm_change_lup = NULL, ctgl_vars_regrouping_ls = NULL, 
-    make_cmpst_plt_1L_lgl = T, outp_smry_ls = NULL, sig_covars_some_predrs_mdls_tb = NULL, 
+    consent_1L_chr = "", consent_indcs_int = 1L, depnt_var_min_val_1L_dbl = numeric(0), 
+    dv_ds_nm_and_url_chr = NULL, options_chr = c("Y", "N"), output_format_ls = NULL, 
+    params_ls_ls = NULL, path_params_ls = NULL, study_descs_ls = NULL, 
+    fn_ls = NULL, include_idx_int = NULL, var_nm_change_lup = NULL, 
+    ctgl_vars_regrouping_ls = NULL, make_cmpst_plt_1L_lgl = T, 
+    outp_smry_ls = NULL, sig_covars_some_predrs_mdls_tb = NULL, 
     sig_thresh_covars_1L_chr = NULL, version_1L_chr = NULL) 
 {
     if (is.null(spine_of_results_ls)) {
@@ -1974,10 +2171,20 @@ make_results_ls <- function (spine_of_results_ls = NULL, abstract_args_ls = NULL
         readRDS()
     if (make_cmpst_plt_1L_lgl) {
         composite_plt <- make_cmpst_sctr_and_dnst_plt(spine_of_results_ls$outp_smry_ls, 
+            depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
             output_data_dir_1L_chr = spine_of_results_ls$output_data_dir_1L_chr, 
             predr_var_nms_chr = spine_of_results_ls$outp_smry_ls$predr_vars_nms_ls[[1]])
-        cowplot::save_plot(paste0(spine_of_results_ls$output_data_dir_1L_chr, 
-            "/dens_and_sctr.png"), composite_plt, base_height = 20)
+        ready4::write_with_consent(consented_fn = cowplot::save_plot, 
+            prompt_1L_chr = paste0("Do you confirm that you want to write the file ", 
+                paste0(spine_of_results_ls$output_data_dir_1L_chr, 
+                  "/dens_and_sctr.png"), "?"), consent_1L_chr = consent_1L_chr, 
+            consent_indcs_int = consent_indcs_int, consented_args_ls = list(filename = paste0(spine_of_results_ls$output_data_dir_1L_chr, 
+                "/dens_and_sctr.png"), plot = composite_plt, 
+                base_height = 20), consented_msg_1L_chr = paste0("File ", 
+                paste0(spine_of_results_ls$output_data_dir_1L_chr, 
+                  "/dens_and_sctr.png"), " has been written."), 
+            declined_msg_1L_chr = "Write request cancelled - no new files have been written.", 
+            options_chr = options_chr)
     }
     ttu_cs_ls <- make_ttu_cs_ls(spine_of_results_ls$outp_smry_ls, 
         sig_covars_some_predrs_mdls_tb = sig_covars_some_predrs_mdls_tb, 
@@ -2021,7 +2228,7 @@ make_results_ls <- function (spine_of_results_ls = NULL, abstract_args_ls = NULL
         mdl_ingredients_ls = spine_of_results_ls$mdl_ingredients_ls, 
         mdls_with_signft_covars_ls = spine_of_results_ls$mdls_with_signft_covars_ls, 
         output_format_ls = params_ls_ls$output_format_ls, path_params_ls = params_ls_ls$path_params_ls, 
-        paths_to_figs_ls = make_paths_to_ss_plts_ls(spine_of_results_ls$output_data_dir_1L_chr, 
+        paths_to_figs_ls = make_paths_to_ms_smry_plts_ls(spine_of_results_ls$output_data_dir_1L_chr, 
             outp_smry_ls = spine_of_results_ls$outp_smry_ls), 
         predr_var_nms_chr = spine_of_results_ls$outp_smry_ls$predr_vars_nms_ls[[1]] %>% 
             purrr::map_chr(~ifelse(.x %in% spine_of_results_ls$var_nm_change_lup$old_nms_chr, 
@@ -2030,12 +2237,14 @@ make_results_ls <- function (spine_of_results_ls = NULL, abstract_args_ls = NULL
                   evaluate_1L_lgl = F), .x)), r_version_1L_chr = paste0(spine_of_results_ls$outp_smry_ls$session_ls$R.version$major, 
             ".", spine_of_results_ls$outp_smry_ls$session_ls$R.version$minor), 
         study_descs_ls = spine_of_results_ls$study_descs_ls, 
-        tables_ls = make_ss_tbls_ls(spine_of_results_ls$outp_smry_ls, 
+        tables_ls = make_ms_smry_tbls_ls(spine_of_results_ls$outp_smry_ls, 
             mdls_smry_tbls_ls = mdls_smry_tbls_ls, covars_mdls_ls = covars_mdls_ls, 
             descv_tbls_ls = descv_tbls_ls, nbr_of_digits_1L_int = spine_of_results_ls$nbr_of_digits_1L_int), 
         ttu_cs_ls = ttu_cs_ls, ttu_lngl_ls = ttu_lngl_ls, ttu_version_1L_chr = spine_of_results_ls$outp_smry_ls$session_ls$otherPkgs$TTU$Version, 
         var_nm_change_lup = spine_of_results_ls$var_nm_change_lup, 
         version_1L_chr = version_1L_chr)
+    results_ls <- transform_tbls_for_covar_nms(results_ls) %>% 
+        transform_tbls_for_csnl_mdls()
     return(results_ls)
 }
 #' Make results list spine
@@ -2161,7 +2370,9 @@ make_scaling_text <- function (results_ls, table_1L_chr = "cfscl")
     predrs_chr <- table_df$Parameter %>% setdiff(c("SD (Intercept)", 
         "Intercept")) %>% stringr::str_replace_all(" model", 
         "") %>% stringr::str_replace_all(" baseline", "") %>% 
-        stringr::str_replace_all(" change", "") %>% unique()
+        stringr::str_replace_all(" change", "") %>% stringr::str_replace_all(" scaled", 
+        "") %>% stringr::str_replace_all(" unscaled", "") %>% 
+        unique()
     predrs_lup <- results_ls$mdl_ingredients_ls$predictors_lup %>% 
         dplyr::filter(short_name_chr %in% predrs_chr)
     scaling_dbl <- predrs_lup$mdl_scaling_dbl %>% unique()
@@ -2243,14 +2454,14 @@ make_selected_mdl_text <- function (results_ls, for_abstract_1L_lgl = F)
 #' @description make_shareable_mdl() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make shareable model. The function returns Model (a model).
 #' @param fake_ds_tb Fake dataset (a tibble)
 #' @param mdl_smry_tb Model summary (a tibble)
+#' @param control_1L_chr Control (a character vector of length one), Default: 'NA'
 #' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: 'utl_total_w'
 #' @param id_var_nm_1L_chr Identity variable name (a character vector of length one), Default: 'fkClientID'
-#' @param tfmn_1L_chr Transformation (a character vector of length one), Default: 'CLL'
 #' @param mdl_type_1L_chr Model type (a character vector of length one), Default: 'OLS_CLL'
 #' @param mdl_types_lup Model types (a lookup table), Default: NULL
-#' @param control_1L_chr Control (a character vector of length one), Default: 'NA'
-#' @param start_1L_chr Start (a character vector of length one), Default: 'NA'
 #' @param seed_1L_int Seed (an integer vector of length one), Default: 12345
+#' @param start_1L_chr Start (a character vector of length one), Default: 'NA'
+#' @param tfmn_1L_chr Transformation (a character vector of length one), Default: 'CLL'
 #' @return Model (a model)
 #' @rdname make_shareable_mdl
 #' @export 
@@ -2262,10 +2473,10 @@ make_selected_mdl_text <- function (results_ls, for_abstract_1L_lgl = F)
 #' @importFrom purrr map_chr
 #' @importFrom stringr str_replace_all
 #' @importFrom assertthat assert_that
-make_shareable_mdl <- function (fake_ds_tb, mdl_smry_tb, depnt_var_nm_1L_chr = "utl_total_w", 
-    id_var_nm_1L_chr = "fkClientID", tfmn_1L_chr = "CLL", mdl_type_1L_chr = "OLS_CLL", 
-    mdl_types_lup = NULL, control_1L_chr = NA_character_, start_1L_chr = NA_character_, 
-    seed_1L_int = 12345L) 
+make_shareable_mdl <- function (fake_ds_tb, mdl_smry_tb, control_1L_chr = NA_character_, 
+    depnt_var_nm_1L_chr = "utl_total_w", id_var_nm_1L_chr = "fkClientID", 
+    mdl_type_1L_chr = "OLS_CLL", mdl_types_lup = NULL, seed_1L_int = 12345L, 
+    start_1L_chr = NA_character_, tfmn_1L_chr = "CLL") 
 {
     if (is.null(mdl_types_lup)) 
         utils::data(mdl_types_lup, envir = environment())
@@ -2276,7 +2487,9 @@ make_shareable_mdl <- function (fake_ds_tb, mdl_smry_tb, depnt_var_nm_1L_chr = "
     predr_var_nms_chr <- mdl_smry_tb$Parameter[!mdl_smry_tb$Parameter %in% 
         c("SD (Intercept)", "Intercept", "R2", "RMSE", "Sigma")] %>% 
         stringi::stri_replace_last_fixed(" baseline", "_baseline") %>% 
-        stringi::stri_replace_last_fixed(" change", "_change")
+        stringi::stri_replace_last_fixed(" change", "_change") %>% 
+        stringi::stri_replace_last_fixed(" scaled", "_scaled") %>% 
+        stringi::stri_replace_last_fixed(" unscaled", "_unscaled")
     tfd_depnt_var_nm_1L_chr <- transform_depnt_var_nm(depnt_var_nm_1L_chr, 
         tfmn_1L_chr = tfmn_1L_chr)
     if (length(predr_var_nms_chr) > 1) {
@@ -2332,11 +2545,12 @@ make_shareable_mdl <- function (fake_ds_tb, mdl_smry_tb, depnt_var_nm_1L_chr = "
 #' @rdname make_smry_of_brm_mdl
 #' @export 
 #' @importFrom stats predict
+#' @importFrom dplyr mutate across everything pull rename select
 #' @importFrom brms bayes_R2
 #' @importFrom psych describe
-#' @importFrom dplyr pull mutate rename select
 #' @importFrom rlang sym
-#' @importFrom purrr map flatten_chr
+#' @importFrom purrr map flatten_chr map_chr
+#' @importFrom stringi stri_replace_last_fixed
 #' @keywords internal
 make_smry_of_brm_mdl <- function (mdl_ls, data_tb, depnt_var_nm_1L_chr = "utl_total_w", 
     predr_vars_nms_chr, mdl_nm_1L_chr = NA_character_, seed_1L_dbl = 23456, 
@@ -2348,9 +2562,11 @@ make_smry_of_brm_mdl <- function (mdl_ls, data_tb, depnt_var_nm_1L_chr = "utl_to
     predictions <- stats::predict(mdl_ls, summary = F) %>% calculate_depnt_var_tfmn(tfmn_1L_chr = tfmn_1L_chr, 
         tfmn_is_outp_1L_lgl = T)
     sd_intcpt_df <- summary(mdl_ls, digits = 4)$random[[1]]
-    sd_intcpt_df <- sd_intcpt_df[1:nrow(sd_intcpt_df), 1:4]
+    sd_intcpt_df <- sd_intcpt_df[1:nrow(sd_intcpt_df), 1:4] %>% 
+        dplyr::mutate(dplyr::across(dplyr::everything(), as.numeric))
     coef <- summary(mdl_ls, digits = 4)$fixed
-    coef <- coef[1:nrow(coef), 1:4]
+    coef <- coef[1:nrow(coef), 1:4] %>% dplyr::mutate(dplyr::across(dplyr::everything(), 
+        as.numeric))
     R2 <- brms::bayes_R2(mdl_ls) %>% as.vector()
     RMSE <- psych::describe(apply(predictions, 1, calculate_rmse, 
         y_dbl = data_tb %>% dplyr::pull(!!rlang::sym(depnt_var_nm_1L_chr))), 
@@ -2361,10 +2577,16 @@ make_smry_of_brm_mdl <- function (mdl_ls, data_tb, depnt_var_nm_1L_chr = "utl_to
     smry_of_brm_mdl_tb <- data.frame(round(rbind(sd_intcpt_df, 
         coef, R2, RMSE, Sigma), 3)) %>% dplyr::mutate(Parameter = c("SD (Intercept)", 
         "Intercept", purrr::map(predr_vars_nms_chr, ~paste0(.x, 
-            c(" baseline", " change"))) %>% purrr::flatten_chr(), 
-        "R2", "RMSE", "Sigma"), Model = mdl_nm_1L_chr) %>% dplyr::mutate(`95% CI` = paste(l.95..CI, 
-        ",", u.95..CI)) %>% dplyr::rename(SE = Est.Error) %>% 
-        dplyr::select(Model, Parameter, Estimate, SE, `95% CI`)
+            c("", " baseline", " change", " scaled", " unscaled"))) %>% 
+            purrr::flatten_chr() %>% intersect(purrr::map_chr(names(mdl_ls$data), 
+            ~stringi::stri_replace_last_fixed(.x, "_baseline", 
+                " baseline") %>% stringi::stri_replace_last_fixed("_change", 
+                " change") %>% stringi::stri_replace_last_fixed("_scaled", 
+                " scaled") %>% stringi::stri_replace_last_fixed("_unscaled", 
+                " unscaled"))), "R2", "RMSE", "Sigma"), Model = mdl_nm_1L_chr) %>% 
+        dplyr::mutate(`95% CI` = paste(l.95..CI, ",", u.95..CI)) %>% 
+        dplyr::rename(SE = Est.Error) %>% dplyr::select(Model, 
+        Parameter, Estimate, SE, `95% CI`)
     rownames(smry_of_brm_mdl_tb) <- NULL
     return(smry_of_brm_mdl_tb)
 }
@@ -2372,6 +2594,7 @@ make_smry_of_brm_mdl <- function (mdl_ls, data_tb, depnt_var_nm_1L_chr = "utl_to
 #' @description make_smry_of_mdl_outp() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make summary of model output. The function returns Summary of one predictor model (a tibble).
 #' @param data_tb Data (a tibble)
 #' @param folds_1L_int Folds (an integer vector of length one), Default: 10
+#' @param depnt_var_min_val_1L_dbl Dependent variable minimum value (a double vector of length one), Default: numeric(0)
 #' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: 'utl_total_w'
 #' @param start_1L_chr Start (a character vector of length one), Default: NULL
 #' @param tfmn_1L_chr Transformation (a character vector of length one), Default: 'NTF'
@@ -2392,16 +2615,17 @@ make_smry_of_brm_mdl <- function (mdl_ls, data_tb, depnt_var_nm_1L_chr = "utl_to
 #' @importFrom tibble tibble
 #' @importFrom caret R2 RMSE MAE
 #' @keywords internal
-make_smry_of_mdl_outp <- function (data_tb, folds_1L_int = 10, depnt_var_nm_1L_chr = "utl_total_w", 
-    start_1L_chr = NULL, tfmn_1L_chr = "NTF", predr_var_nm_1L_chr, 
-    covar_var_nms_chr = NA_character_, mdl_type_1L_chr = "OLS_NTF", 
-    mdl_types_lup = NULL, predn_type_1L_chr = NULL) 
+make_smry_of_mdl_outp <- function (data_tb, folds_1L_int = 10, depnt_var_min_val_1L_dbl = numeric(0), 
+    depnt_var_nm_1L_chr = "utl_total_w", start_1L_chr = NULL, 
+    tfmn_1L_chr = "NTF", predr_var_nm_1L_chr, covar_var_nms_chr = NA_character_, 
+    mdl_type_1L_chr = "OLS_NTF", mdl_types_lup = NULL, predn_type_1L_chr = NULL) 
 {
     if (is.null(mdl_types_lup)) 
         utils::data("mdl_types_lup", envir = environment())
     data_tb <- data_tb %>% dplyr::filter(!is.na(!!rlang::sym(predr_var_nm_1L_chr)))
-    data_tb <- transform_ds_for_mdlng(data_tb, depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, 
-        predr_var_nm_1L_chr = predr_var_nm_1L_chr, covar_var_nms_chr = covar_var_nms_chr)
+    data_tb <- transform_ds_for_mdlng(data_tb, depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
+        depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, predr_var_nm_1L_chr = predr_var_nm_1L_chr, 
+        covar_var_nms_chr = covar_var_nms_chr)
     mdl_desc_1L_chr <- ready4::get_from_lup_obj(mdl_types_lup, 
         match_var_nm_1L_chr = "short_name_chr", match_value_xx = mdl_type_1L_chr, 
         target_var_nm_1L_chr = "long_name_chr", evaluate_1L_lgl = F)
@@ -2412,6 +2636,7 @@ make_smry_of_mdl_outp <- function (data_tb, folds_1L_int = 10, depnt_var_nm_1L_c
         target_var_nm_1L_chr = "control_chr", evaluate_1L_lgl = F)
     smry_of_one_predr_mdl_tb <- purrr::map_dfr(folds_ls, ~{
         model_mdl <- make_mdl(data_tb[-.x, ], depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, 
+            depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
             start_1L_chr = start_1L_chr, tfmn_1L_chr = tfmn_1L_chr, 
             predr_var_nm_1L_chr = predr_var_nm_1L_chr, covar_var_nms_chr = covar_var_nms_chr, 
             mdl_type_1L_chr = mdl_type_1L_chr, mdl_types_lup = mdl_types_lup, 
@@ -2444,6 +2669,7 @@ make_smry_of_mdl_outp <- function (data_tb, folds_1L_int = 10, depnt_var_nm_1L_c
 #' @param predr_vars_nms_chr Predictor variables names (a character vector)
 #' @param mdl_nm_1L_chr Model name (a character vector of length one)
 #' @param path_to_write_to_1L_chr Path to write to (a character vector of length one), Default: 'NA'
+#' @param depnt_var_min_val_1L_dbl Dependent variable minimum value (a double vector of length one), Default: numeric(0)
 #' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: 'utl_total_w'
 #' @param id_var_nm_1L_chr Identity variable name (a character vector of length one), Default: 'fkClientID'
 #' @param round_var_nm_1L_chr Round variable name (a character vector of length one), Default: 'round'
@@ -2466,11 +2692,11 @@ make_smry_of_mdl_outp <- function (data_tb, folds_1L_int = 10, depnt_var_nm_1L_c
 #' @importFrom rlang exec
 #' @keywords internal
 make_smry_of_ts_mdl_outp <- function (data_tb, predr_vars_nms_chr, mdl_nm_1L_chr, path_to_write_to_1L_chr = NA_character_, 
-    depnt_var_nm_1L_chr = "utl_total_w", id_var_nm_1L_chr = "fkClientID", 
-    round_var_nm_1L_chr = "round", round_bl_val_1L_chr = "Baseline", 
-    predictors_lup, utl_min_val_1L_dbl = -1, backend_1L_chr = getOption("brms.backend", 
-        "rstan"), iters_1L_int = 4000L, mdl_types_lup, seed_1L_int = 1000L, 
-    prior_ls = NULL, control_ls = NULL) 
+    depnt_var_min_val_1L_dbl = numeric(0), depnt_var_nm_1L_chr = "utl_total_w", 
+    id_var_nm_1L_chr = "fkClientID", round_var_nm_1L_chr = "round", 
+    round_bl_val_1L_chr = "Baseline", predictors_lup, utl_min_val_1L_dbl = -1, 
+    backend_1L_chr = getOption("brms.backend", "rstan"), iters_1L_int = 4000L, 
+    mdl_types_lup, seed_1L_int = 1000L, prior_ls = NULL, control_ls = NULL) 
 {
     scaling_fctr_dbl <- predr_vars_nms_chr %>% purrr::map_dbl(~ifelse(.x %in% 
         predictors_lup$short_name_chr, ready4::get_from_lup_obj(predictors_lup, 
@@ -2486,10 +2712,11 @@ make_smry_of_ts_mdl_outp <- function (data_tb, predr_vars_nms_chr, mdl_nm_1L_chr
     tfmn_1L_chr <- ready4::get_from_lup_obj(mdl_types_lup, target_var_nm_1L_chr = "tfmn_chr", 
         match_value_xx = mdl_type_1L_chr, match_var_nm_1L_chr = "short_name_chr", 
         evaluate_1L_lgl = F)
-    tfd_data_tb <- transform_tb_to_mdl_inp(data_tb, depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, 
-        predr_vars_nms_chr = predr_vars_nms_chr, id_var_nm_1L_chr = id_var_nm_1L_chr, 
-        round_var_nm_1L_chr = round_var_nm_1L_chr, round_bl_val_1L_chr = round_bl_val_1L_chr, 
-        scaling_fctr_dbl = scaling_fctr_dbl, tfmn_1L_chr = tfmn_1L_chr)
+    tfd_data_tb <- transform_tb_to_mdl_inp(data_tb, depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
+        depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, predr_vars_nms_chr = predr_vars_nms_chr, 
+        id_var_nm_1L_chr = id_var_nm_1L_chr, round_var_nm_1L_chr = round_var_nm_1L_chr, 
+        round_bl_val_1L_chr = round_bl_val_1L_chr, scaling_fctr_dbl = scaling_fctr_dbl, 
+        tfmn_1L_chr = tfmn_1L_chr)
     tfd_depnt_var_nm_1L_chr <- transform_depnt_var_nm(depnt_var_nm_1L_chr, 
         tfmn_1L_chr = tfmn_1L_chr)
     family_fn_1L_chr <- ready4::get_from_lup_obj(mdl_types_lup, 
@@ -2500,9 +2727,11 @@ make_smry_of_ts_mdl_outp <- function (data_tb, predr_vars_nms_chr, mdl_nm_1L_chr
         start = -3)), "\")"), "gaussian(identity)"), family_fn_1L_chr)
     args_ls <- list(data_tb = tfd_data_tb, depnt_var_nm_1L_chr = tfd_depnt_var_nm_1L_chr, 
         predr_vars_nms_chr = predr_vars_nms_chr, id_var_nm_1L_chr = id_var_nm_1L_chr, 
-        iters_1L_int = iters_1L_int, backend_1L_chr = backend_1L_chr, 
-        family_fn_1L_chr = family_fn_1L_chr, seed_1L_int = seed_1L_int, 
-        prior_ls = prior_ls, control_ls = control_ls)
+        is_csnl_1L_lgl = !(!identical(round_var_nm_1L_chr, character(0)) && 
+            ifelse(identical(round_var_nm_1L_chr, character(0)), 
+                T, !is.na(round_var_nm_1L_chr))), iters_1L_int = iters_1L_int, 
+        backend_1L_chr = backend_1L_chr, family_fn_1L_chr = family_fn_1L_chr, 
+        seed_1L_int = seed_1L_int, prior_ls = prior_ls, control_ls = control_ls)
     mdl_ls <- rlang::exec(fit_ts_model_with_brm, !!!args_ls)
     smry_of_ts_mdl_ls <- list(smry_of_ts_mdl_tb = make_smry_of_brm_mdl(mdl_ls, 
         data_tb = tfd_data_tb, depnt_var_nm_1L_chr = tfd_depnt_var_nm_1L_chr, 
@@ -2563,44 +2792,6 @@ make_sngl_mdl_smry_tb <- function (mdls_tb, mdl_nm_1L_chr, mdl_type_1L_chr, add_
         paste0("_1_", mdl_type_1L_chr), " model"))))
     rownames(new_tb) <- NULL
     return(new_tb)
-}
-#' Make ss tables list
-#' @description make_ss_tbls_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make ss tables list. The function returns Ss tables (a list).
-#' @param outp_smry_ls Output summary (a list)
-#' @param mdls_smry_tbls_ls Models summary tables (a list)
-#' @param covars_mdls_ls Covariates models (a list)
-#' @param descv_tbls_ls Descriptive tables (a list)
-#' @param nbr_of_digits_1L_int Number of digits (an integer vector of length one), Default: 2
-#' @return Ss tables (a list)
-#' @rdname make_ss_tbls_ls
-#' @export 
-#' @importFrom purrr map map_chr map_dbl
-#' @importFrom stats setNames
-#' @importFrom tibble as_tibble
-#' @importFrom dplyr mutate across everything
-#' @importFrom stringr str_replace_all
-#' @keywords internal
-make_ss_tbls_ls <- function (outp_smry_ls, mdls_smry_tbls_ls, covars_mdls_ls, descv_tbls_ls, 
-    nbr_of_digits_1L_int = 2L) 
-{
-    mdl_types_tables_ls <- purrr::map(1:length(outp_smry_ls$prefd_mdl_types_chr), 
-        ~make_mdl_type_smry_tbl(mdls_tb = mdls_smry_tbls_ls$covar_mdls_tb, 
-            mdl_nms_chr = covars_mdls_ls[[.x]], mdl_type_1L_chr = outp_smry_ls$prefd_mdl_types_chr[.x], 
-            add_mdl_nm_sfx_1L_lgl = F)) %>% stats::setNames(1:length(outp_smry_ls$prefd_mdl_types_chr) %>% 
-        purrr::map_chr(~paste0("mdl_type_", .x, "_covar_mdls_tb")))
-    ss_tbls_ls <- append(mdl_types_tables_ls, list(ind_preds_coefs_tbl = make_all_mdl_types_smry_tbl(outp_smry_ls, 
-        mdls_tb = mdls_smry_tbls_ls$indpt_predrs_mdls_tb), participant_descs = descv_tbls_ls$cohort_desc_tb, 
-        predd_dist_and_cors = descv_tbls_ls$predr_pars_and_cors_tb, 
-        tenf_prefd_mdl_tb = outp_smry_ls[["smry_of_mdl_sngl_predrs_tb"]] %>% 
-            tibble::as_tibble() %>% dplyr::mutate(dplyr::across(where(is.numeric), 
-            ~.x %>% purrr::map_dbl(~min(max(.x, -1.1), 1.1)))) %>% 
-            transform_tbl_to_rnd_vars(nbr_of_digits_1L_int = nbr_of_digits_1L_int) %>% 
-            dplyr::mutate(dplyr::across(.cols = dplyr::everything(), 
-                ~.x %>% stringr::str_replace_all("-1.10", "< -1.00") %>% 
-                  stringr::str_replace_all("1.10", "> 1.00"))), 
-        tenf_sngl_predr_tb = make_tfd_sngl_predr_mdls_tb(outp_smry_ls, 
-            nbr_of_digits_1L_int = nbr_of_digits_1L_int)))
-    return(ss_tbls_ls)
 }
 #' Make study descriptions list
 #' @description make_study_descs_ls() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make study descriptions list. The function returns Input parameters (a list).
@@ -2818,33 +3009,17 @@ make_uid_rename_lup <- function (data_tb, id_var_nm_1L_chr = "UID")
 #' @return Unique list element index (an integer vector)
 #' @rdname make_unique_ls_elmt_idx_int
 #' @export 
-#' @importFrom tibble as_tibble
-#' @importFrom dplyr mutate case_when group_by row_number ungroup
-#' @importFrom purrr map2_chr map flatten_int
-#' @importFrom ready4 get_from_lup_obj
+#' @importFrom tibble tibble
+#' @importFrom purrr map_chr
+#' @importFrom dplyr group_by mutate row_number
 #' @keywords internal
 make_unique_ls_elmt_idx_int <- function (data_ls) 
 {
-    combos_tb <- tibble::as_tibble(data_ls, .name_repair = ~paste0("r_", 
-        1:length(data_ls))) %>% t() %>% as.data.frame()
-    combos_tb <- combos_tb %>% tibble::as_tibble()
-    if (ncol(combos_tb) > 1) {
-        combos_tb <- combos_tb %>% dplyr::mutate(V2 = dplyr::case_when(V1 == 
-            V2 ~ NA_character_, T ~ V2)) %>% dplyr::mutate(combo_chr = purrr::map2_chr(V1, 
-            V2, ~ifelse(ncol(combos_tb) == 1 | is.na(.y), .x, 
-                paste0(.x, "_", .y))))
-        combos_tb <- combos_tb %>% dplyr::group_by(combo_chr) %>% 
-            dplyr::mutate(combo_id = dplyr::row_number())
-        unique_ls_elmt_idx_int <- purrr::map(data_ls %>% unique(), 
-            ~ready4::get_from_lup_obj(combos_tb %>% dplyr::ungroup(), 
-                match_var_nm_1L_chr = "combo_chr", match_value_xx = paste0(.x[1], 
-                  ifelse(is.na(.x[2]), "", paste0("_", .x[2]))), 
-                target_var_nm_1L_chr = "combo_id", evaluate_1L_lgl = F)) %>% 
-            purrr::flatten_int()
-    }
-    else {
-        unique_ls_elmt_idx_int <- 1
-    }
+    combos_tb <- tibble::tibble(names_chr = data_ls %>% purrr::map_chr(~paste0(.x[1], 
+        ifelse(length(.x) > 1, .x[2], ""))), indices_int = NA_integer_)
+    combos_tb <- combos_tb %>% dplyr::group_by(names_chr) %>% 
+        dplyr::mutate(indices_int = dplyr::row_number())
+    unique_ls_elmt_idx_int <- combos_tb$indices_int
     return(unique_ls_elmt_idx_int)
 }
 #' Make valid parameters list list
