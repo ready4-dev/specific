@@ -13,12 +13,16 @@ The steps in this exploratory analysis workflow may need to be performed iterati
 
 ```{r message=FALSE, warning=FALSE}
 library(ready4)
+library(specific)
+```
+
+```{r echo=FALSE}
+# Remove this chunk once it clear that these libraries are not required for vignette rendering
 # library(ready4show)
 # library(ready4use)
 # library(scorz)
 # library(betareg)
 # library(youthvars)
-library(specific)
 ```
 
 ## Set consent policy
@@ -332,7 +336,7 @@ X <- authorData(X, consent_1L_chr = consent_1L_chr)
 For the purposes of efficient computation, multiple objects containing copies of the source dataset were saved to our output directory during the analysis process. We therefore need to delete all of these copies by supplying "purge_write" to the `type_1L_chr` argument of the `author` method.
 
 ```{r eval=F}
-author(X, consent_1L_chr = consent_1L_chr, type_1L_chr = "purge_write")
+X <- author(X, consent_1L_chr = consent_1L_chr, type_1L_chr = "purge_write")
 ```
 
 <!-- ## Share output -->
