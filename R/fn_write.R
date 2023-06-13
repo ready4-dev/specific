@@ -1037,7 +1037,7 @@ write_scndry_analysis <- function (valid_params_ls_ls, candidate_covar_nms_chr, 
         new_dir_nm_1L_chr = new_dir_nm_1L_chr, options_chr = options_chr, 
         path_to_write_to_1L_chr = outp_smry_ls$path_to_write_to_1L_chr, 
         predictors_lup = params_ls$predictors_lup, prior_ls = params_ls$prior_ls, 
-        utl_min_val_1L_dbl = params_ls$utl_min_val_1L_dbl, )
+        utl_min_val_1L_dbl = params_ls$utl_min_val_1L_dbl)
     return(outp_smry_ls)
 }
 #' Write secondary analysis directory
@@ -1695,15 +1695,16 @@ write_ts_mdls <- function (data_tb, mdl_types_lup, mdl_nms_ls, mdl_smry_dir_1L_c
 {
     if (!dir.exists(mdl_smry_dir_1L_chr)) 
         dir.create(mdl_smry_dir_1L_chr)
-    args_ls <- list(data_tb = data_tb, mdl_nms_ls = mdl_nms_ls, 
-        mdl_smry_dir_1L_chr = mdl_smry_dir_1L_chr, mdl_types_lup = mdl_types_lup, 
-        predictors_lup = predictors_lup, predr_vars_nms_ls = predr_vars_nms_ls, 
-        depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
+    args_ls <- list(backend_1L_chr = backend_1L_chr, consent_1L_chr = consent_1L_chr, 
+        consent_indcs_int = consent_indcs_int, control_ls = control_ls, 
+        data_tb = data_tb, mdl_nms_ls = mdl_nms_ls, mdl_smry_dir_1L_chr = mdl_smry_dir_1L_chr, 
+        mdl_types_lup = mdl_types_lup, predictors_lup = predictors_lup, 
+        predr_vars_nms_ls = predr_vars_nms_ls, depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
         depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, id_var_nm_1L_chr = id_var_nm_1L_chr, 
-        round_var_nm_1L_chr = round_var_nm_1L_chr, round_bl_val_1L_chr = round_bl_val_1L_chr, 
-        utl_min_val_1L_dbl = utl_min_val_1L_dbl, backend_1L_chr = backend_1L_chr, 
-        iters_1L_int = iters_1L_int, seed_1L_int = seed_1L_int, 
-        prior_ls = prior_ls, control_ls = control_ls)
+        iters_1L_int = iters_1L_int, options_chr = options_chr, 
+        prior_ls = prior_ls, round_var_nm_1L_chr = round_var_nm_1L_chr, 
+        round_bl_val_1L_chr = round_bl_val_1L_chr, seed_1L_int = seed_1L_int, 
+        utl_min_val_1L_dbl = utl_min_val_1L_dbl)
     if (cores_1L_int > 1) {
         threaded_ls <- parallel::mclapply(1:length(mdl_nms_ls), 
             function(idx_1L_int, args_ls) {
