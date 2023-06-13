@@ -1037,42 +1037,46 @@ make_indpnt_predrs_lngl_tbls_ref <- function (params_ls)
 #' @param mdl_types_lup Model types (a lookup table)
 #' @param predictors_lup Predictors (a lookup table)
 #' @param predr_vars_nms_ls Predictor variables names (a list)
+#' @param backend_1L_chr Backend (a character vector of length one), Default: getOption("brms.backend", "rstan")
+#' @param consent_1L_chr Consent (a character vector of length one), Default: ''
+#' @param consent_indcs_int Consent indices (an integer vector), Default: 1
+#' @param control_ls Control (a list), Default: NULL
 #' @param depnt_var_min_val_1L_dbl Dependent variable minimum value (a double vector of length one), Default: numeric(0)
 #' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: 'utl_total_w'
 #' @param id_var_nm_1L_chr Identity variable name (a character vector of length one), Default: 'fkClientID'
+#' @param iters_1L_int Iterations (an integer vector of length one), Default: 4000
+#' @param options_chr Options (a character vector), Default: c("Y", "N")
+#' @param prior_ls Prior (a list), Default: NULL
 #' @param round_var_nm_1L_chr Round variable name (a character vector of length one), Default: 'round'
 #' @param round_bl_val_1L_chr Round baseline value (a character vector of length one), Default: 'Baseline'
-#' @param utl_min_val_1L_dbl Utility minimum value (a double vector of length one), Default: -1
-#' @param backend_1L_chr Backend (a character vector of length one), Default: getOption("brms.backend", "rstan")
-#' @param iters_1L_int Iterations (an integer vector of length one), Default: 4000
 #' @param seed_1L_int Seed (an integer vector of length one), Default: 1000
-#' @param prior_ls Prior (a list), Default: NULL
-#' @param control_ls Control (a list), Default: NULL
+#' @param utl_min_val_1L_dbl Utility minimum value (a double vector of length one), Default: -1
 #' @return Models summary (a tibble)
 #' @rdname make_inner_loop_mdl_smry
 #' @export 
 #' @importFrom purrr map_dfr
 #' @keywords internal
 make_inner_loop_mdl_smry <- function (idx_1L_int, data_tb, mdl_nms_ls, mdl_smry_dir_1L_chr, 
-    mdl_types_lup, predictors_lup, predr_vars_nms_ls, depnt_var_min_val_1L_dbl = numeric(0), 
+    mdl_types_lup, predictors_lup, predr_vars_nms_ls, backend_1L_chr = getOption("brms.backend", 
+        "rstan"), consent_1L_chr = "", consent_indcs_int = 1L, 
+    control_ls = NULL, depnt_var_min_val_1L_dbl = numeric(0), 
     depnt_var_nm_1L_chr = "utl_total_w", id_var_nm_1L_chr = "fkClientID", 
+    iters_1L_int = 4000L, options_chr = c("Y", "N"), prior_ls = NULL, 
     round_var_nm_1L_chr = "round", round_bl_val_1L_chr = "Baseline", 
-    utl_min_val_1L_dbl = -1, backend_1L_chr = getOption("brms.backend", 
-        "rstan"), iters_1L_int = 4000L, seed_1L_int = 1000L, 
-    prior_ls = NULL, control_ls = NULL) 
+    seed_1L_int = 1000L, utl_min_val_1L_dbl = -1) 
 {
     mdls_smry_tb <- purrr::map_dfr(mdl_nms_ls[[idx_1L_int]], 
         ~{
-            smry_ls <- make_smry_of_ts_mdl_outp(data_tb = data_tb, 
-                depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
-                predr_vars_nms_chr = predr_vars_nms_ls[[idx_1L_int]], 
-                mdl_nm_1L_chr = .x, path_to_write_to_1L_chr = mdl_smry_dir_1L_chr, 
+            smry_ls <- make_smry_of_ts_mdl_outp(backend_1L_chr = backend_1L_chr, 
+                consent_1L_chr = consent_1L_chr, consent_indcs_int = consent_indcs_int, 
+                control_ls = control_ls, data_tb = data_tb, depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, 
                 depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, id_var_nm_1L_chr = id_var_nm_1L_chr, 
-                round_var_nm_1L_chr = round_var_nm_1L_chr, round_bl_val_1L_chr = round_bl_val_1L_chr, 
-                predictors_lup = predictors_lup, utl_min_val_1L_dbl = utl_min_val_1L_dbl, 
-                backend_1L_chr = backend_1L_chr, iters_1L_int = iters_1L_int, 
-                mdl_types_lup = mdl_types_lup, seed_1L_int = seed_1L_int, 
-                prior_ls = prior_ls, control_ls = control_ls)
+                iters_1L_int = iters_1L_int, predr_vars_nms_chr = predr_vars_nms_ls[[idx_1L_int]], 
+                mdl_nm_1L_chr = .x, mdl_types_lup = mdl_types_lup, 
+                options_chr = options_chr, path_to_write_to_1L_chr = mdl_smry_dir_1L_chr, 
+                predictors_lup = predictors_lup, prior_ls = prior_ls, 
+                round_bl_val_1L_chr = round_bl_val_1L_chr, round_var_nm_1L_chr = round_var_nm_1L_chr, 
+                utl_min_val_1L_dbl = utl_min_val_1L_dbl, seed_1L_int = seed_1L_int)
             Sys.sleep(5)
             smry_ls$smry_of_ts_mdl_tb
         })

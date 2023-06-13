@@ -1022,24 +1022,41 @@ make_inner_loop_mdl_smry <- function(idx_1L_int,
                                      mdl_types_lup,
                                      predictors_lup,
                                      predr_vars_nms_ls,
+                                     backend_1L_chr = getOption("brms.backend", "rstan"),
+                                     consent_1L_chr = "",
+                                     consent_indcs_int = 1L,
+                                     control_ls = NULL,
                                      depnt_var_min_val_1L_dbl = numeric(0),
                                      depnt_var_nm_1L_chr = "utl_total_w",
-                                     id_var_nm_1L_chr = "fkClientID", round_var_nm_1L_chr = "round",
-                                     round_bl_val_1L_chr = "Baseline", utl_min_val_1L_dbl = -1, backend_1L_chr = getOption("brms.backend",
-                                                                                                                           "rstan"),
+                                     id_var_nm_1L_chr = "fkClientID",
                                      iters_1L_int = 4000L,
-                                     seed_1L_int = 1000L, prior_ls = NULL, control_ls = NULL){
+                                     options_chr = c("Y", "N"),
+                                     prior_ls = NULL,
+                                     round_var_nm_1L_chr = "round",
+                                     round_bl_val_1L_chr = "Baseline",
+                                     seed_1L_int = 1000L,
+                                     utl_min_val_1L_dbl = -1){
   mdls_smry_tb <- purrr::map_dfr(mdl_nms_ls[[idx_1L_int]], ~{
-    smry_ls <- make_smry_of_ts_mdl_outp(data_tb = data_tb,
+    smry_ls <- make_smry_of_ts_mdl_outp(backend_1L_chr = backend_1L_chr,
+                                        consent_1L_chr = consent_1L_chr,
+                                        consent_indcs_int = consent_indcs_int,
+                                        control_ls = control_ls,
+                                        data_tb = data_tb,
                                         depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl,
+                                        depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
+                                        id_var_nm_1L_chr = id_var_nm_1L_chr,
+                                        iters_1L_int = iters_1L_int,
                                         predr_vars_nms_chr = predr_vars_nms_ls[[idx_1L_int]],
                                         mdl_nm_1L_chr = .x,
+                                        mdl_types_lup = mdl_types_lup,
+                                        options_chr = options_chr,
                                         path_to_write_to_1L_chr = mdl_smry_dir_1L_chr,
-                                        depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, id_var_nm_1L_chr = id_var_nm_1L_chr,
-                                        round_var_nm_1L_chr = round_var_nm_1L_chr, round_bl_val_1L_chr = round_bl_val_1L_chr,
-                                        predictors_lup = predictors_lup, utl_min_val_1L_dbl = utl_min_val_1L_dbl,
-                                        backend_1L_chr = backend_1L_chr, iters_1L_int = iters_1L_int,
-                                        mdl_types_lup = mdl_types_lup, seed_1L_int = seed_1L_int, prior_ls = prior_ls, control_ls = control_ls)
+                                        predictors_lup = predictors_lup,
+                                        prior_ls = prior_ls,
+                                        round_bl_val_1L_chr = round_bl_val_1L_chr,
+                                        round_var_nm_1L_chr = round_var_nm_1L_chr,
+                                        utl_min_val_1L_dbl = utl_min_val_1L_dbl,
+                                        seed_1L_int = seed_1L_int)
     Sys.sleep(5)
     smry_ls$smry_of_ts_mdl_tb
   })
@@ -2487,9 +2504,11 @@ make_smry_of_ts_mdl_outp <- function (data_tb, # rename ts to lngl
                   prior_ls = prior_ls, control_ls = control_ls)
   mdl_ls <- rlang::exec(fit_ts_model_with_brm, !!!args_ls)
   smry_of_ts_mdl_ls <- list(smry_of_ts_mdl_tb = make_smry_of_brm_mdl(mdl_ls,
-                                                                     data_tb = tfd_data_tb, depnt_var_nm_1L_chr = tfd_depnt_var_nm_1L_chr,
+                                                                     data_tb = tfd_data_tb,
+                                                                     depnt_var_nm_1L_chr = tfd_depnt_var_nm_1L_chr,
                                                                      predr_vars_nms_chr = predr_vars_nms_chr,
-                                                                     mdl_nm_1L_chr = mdl_nm_1L_chr, tfmn_1L_chr = tfmn_1L_chr))
+                                                                     mdl_nm_1L_chr = mdl_nm_1L_chr,
+                                                                     tfmn_1L_chr = tfmn_1L_chr))
   if (!is.na(path_to_write_to_1L_chr)) {
     smry_of_ts_mdl_ls$path_to_mdl_ls_1L_chr <- paste0(path_to_write_to_1L_chr,
                                                       "/", mdl_nm_1L_chr, ".RDS")

@@ -12,17 +12,20 @@ make_inner_loop_mdl_smry(
   mdl_types_lup,
   predictors_lup,
   predr_vars_nms_ls,
+  backend_1L_chr = getOption("brms.backend", "rstan"),
+  consent_1L_chr = "",
+  consent_indcs_int = 1L,
+  control_ls = NULL,
   depnt_var_min_val_1L_dbl = numeric(0),
   depnt_var_nm_1L_chr = "utl_total_w",
   id_var_nm_1L_chr = "fkClientID",
+  iters_1L_int = 4000L,
+  options_chr = c("Y", "N"),
+  prior_ls = NULL,
   round_var_nm_1L_chr = "round",
   round_bl_val_1L_chr = "Baseline",
-  utl_min_val_1L_dbl = -1,
-  backend_1L_chr = getOption("brms.backend", "rstan"),
-  iters_1L_int = 4000L,
   seed_1L_int = 1000L,
-  prior_ls = NULL,
-  control_ls = NULL
+  utl_min_val_1L_dbl = -1
 )
 }
 \arguments{
@@ -40,27 +43,33 @@ make_inner_loop_mdl_smry(
 
 \item{predr_vars_nms_ls}{Predictor variables names (a list)}
 
+\item{backend_1L_chr}{Backend (a character vector of length one), Default: getOption("brms.backend", "rstan")}
+
+\item{consent_1L_chr}{Consent (a character vector of length one), Default: ''}
+
+\item{consent_indcs_int}{Consent indices (an integer vector), Default: 1}
+
+\item{control_ls}{Control (a list), Default: NULL}
+
 \item{depnt_var_min_val_1L_dbl}{Dependent variable minimum value (a double vector of length one), Default: numeric(0)}
 
 \item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
 
 \item{id_var_nm_1L_chr}{Identity variable name (a character vector of length one), Default: 'fkClientID'}
 
+\item{iters_1L_int}{Iterations (an integer vector of length one), Default: 4000}
+
+\item{options_chr}{Options (a character vector), Default: c("Y", "N")}
+
+\item{prior_ls}{Prior (a list), Default: NULL}
+
 \item{round_var_nm_1L_chr}{Round variable name (a character vector of length one), Default: 'round'}
 
 \item{round_bl_val_1L_chr}{Round baseline value (a character vector of length one), Default: 'Baseline'}
 
-\item{utl_min_val_1L_dbl}{Utility minimum value (a double vector of length one), Default: -1}
-
-\item{backend_1L_chr}{Backend (a character vector of length one), Default: getOption("brms.backend", "rstan")}
-
-\item{iters_1L_int}{Iterations (an integer vector of length one), Default: 4000}
-
 \item{seed_1L_int}{Seed (an integer vector of length one), Default: 1000}
 
-\item{prior_ls}{Prior (a list), Default: NULL}
-
-\item{control_ls}{Control (a list), Default: NULL}
+\item{utl_min_val_1L_dbl}{Utility minimum value (a double vector of length one), Default: -1}
 }
 \value{
 Models summary (a tibble)

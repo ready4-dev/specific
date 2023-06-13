@@ -16,7 +16,7 @@
 #' @export 
 #' @importFrom ready4show make_paths_ls write_all_outp_dirs
 #' @importFrom rlang exec
-#' @importFrom youthvars write_descv_plots
+#' @importFrom youthvars write_descv_tbls write_descv_plots
 #' @importFrom hutils longest_prefix
 #' @importFrom methods callNextMethod
 #' @importFrom ready4 author
@@ -50,7 +50,7 @@ methods::setMethod("author", "SpecificModels", function (x, consent_1L_chr = "",
         }
         if (what_1L_chr %in% c("descriptives", "all")) {
             ds_descvs_ls <- manufacture(x, what_1L_chr = "ds_descvs_ls")
-            descv_tbl_ls <- write_descv_tbls(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
+            descv_tbl_ls <- youthvars::write_descv_tbls(x@a_YouthvarsProfile@a_Ready4useDyad@ds_tb, 
                 consent_1L_chr = consent_1L_chr, descv_outp_dir_1L_chr = x@b_SpecificParameters@paths_ls$descv_outp_dir_1L_chr, 
                 ds_descvs_ls = ds_descvs_ls, nbr_of_digits_1L_int = digits_1L_int, 
                 participation_var_1L_chr = if (!series_1L_lgl) {
