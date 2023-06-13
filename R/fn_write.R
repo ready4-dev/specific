@@ -741,6 +741,7 @@ write_new_outp_dir <- function (path_to_write_to_1L_chr, new_dir_nm_1L_chr, cons
 #' @rdname write_predr_and_covars_cmprsn
 #' @export 
 #' @importFrom youthvars transform_ds_for_tstng
+#' @importFrom ready4use Ready4useDyad
 write_predr_and_covars_cmprsn <- function (scored_data_tb, bl_tb, consent_1L_chr = "", consent_indcs_int = 1L, 
     depnt_var_min_val_1L_dbl = numeric(0), ds_smry_ls, mdl_smry_ls, 
     options_chr = c("Y", "N"), output_data_dir_1L_chr, seed_1L_int = 1234, 
@@ -783,7 +784,7 @@ write_predr_and_covars_cmprsn <- function (scored_data_tb, bl_tb, consent_1L_chr
         predrs_var_nms_chr = ds_smry_ls$candidate_predrs_chr)
     mdl_smry_ls$signt_covars_chr <- get_signft_covars(mdls_with_covars_smry_tb = mdl_smry_ls$mdls_with_covars_smry_tb, 
         covar_var_nms_chr = ds_smry_ls$candidate_covar_nms_chr, 
-        X_Ready4useDyad = Ready4useDyad(ds_tb = scored_data_tb, 
+        X_Ready4useDyad = ready4use::Ready4useDyad(ds_tb = scored_data_tb, 
             dictionary_r3 = ds_smry_ls$dictionary_tb), what_1L_chr = signft_covars_cdn_1L_chr)
     predr_and_covars_cmprsn_ls <- list(bl_tb = bl_tb, ds_smry_ls = ds_smry_ls, 
         mdl_smry_ls = mdl_smry_ls)
