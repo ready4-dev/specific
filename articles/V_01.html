@@ -97,11 +97,6 @@ types, predictors and covariates to use and modify default values to
 ensure model convergence.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ready4-dev.github.io/ready4/" class="external-link">ready4</a></span><span class="op">)</span></span>
-<span><span class="co"># library(ready4show)</span></span>
-<span><span class="co"># library(ready4use)</span></span>
-<span><span class="co"># library(scorz)</span></span>
-<span><span class="co"># library(betareg)</span></span>
-<span><span class="co"># library(youthvars)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ready4-dev.github.io/specific/">specific</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="set-consent-policy">Set consent policy<a class="anchor" aria-label="anchor" href="#set-consent-policy"></a>
@@ -1240,12 +1235,12 @@ directory.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/author-methods.html" class="external-link">author</a></span><span class="op">(</span><span class="va">X</span>, what_1L_chr <span class="op">=</span> <span class="st">"workspace"</span>, consent_1L_chr <span class="op">=</span> <span class="va">consent_1L_chr</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## New directories created:</span></span>
-<span><span class="co">## /tmp/RtmpuIrnex/Fake</span></span>
-<span><span class="co">## /tmp/RtmpuIrnex/Fake/Markdown</span></span>
-<span><span class="co">## /tmp/RtmpuIrnex/Fake/Output</span></span>
-<span><span class="co">## /tmp/RtmpuIrnex/Fake/Reports</span></span>
-<span><span class="co">## /tmp/RtmpuIrnex/Fake/Output/_Descriptives</span></span>
-<span><span class="co">## /tmp/RtmpuIrnex/Fake/Output/H_Dataverse</span></span></code></pre>
+<span><span class="co">## /tmp/RtmpOQRZWH/Fake</span></span>
+<span><span class="co">## /tmp/RtmpOQRZWH/Fake/Markdown</span></span>
+<span><span class="co">## /tmp/RtmpOQRZWH/Fake/Output</span></span>
+<span><span class="co">## /tmp/RtmpOQRZWH/Fake/Reports</span></span>
+<span><span class="co">## /tmp/RtmpOQRZWH/Fake/Output/_Descriptives</span></span>
+<span><span class="co">## /tmp/RtmpOQRZWH/Fake/Output/H_Dataverse</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="descriptives">Descriptives<a class="anchor" aria-label="anchor" href="#descriptives"></a>
@@ -1706,7 +1701,7 @@ directory during the analysis process. We therefore need to delete all
 of these copies by supplying “purge_write” to the
 <code>type_1L_chr</code> argument of the <code>author</code> method.</p>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/author-methods.html" class="external-link">author</a></span><span class="op">(</span><span class="va">X</span>, consent_1L_chr <span class="op">=</span> <span class="va">consent_1L_chr</span>, type_1L_chr <span class="op">=</span> <span class="st">"purge_write"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/author-methods.html" class="external-link">author</a></span><span class="op">(</span><span class="va">X</span>, consent_1L_chr <span class="op">=</span> <span class="va">consent_1L_chr</span>, type_1L_chr <span class="op">=</span> <span class="st">"purge_write"</span><span class="op">)</span></span></code></pre></div>
 <!-- ## Share output -->
 <!-- We can now publicly share our dataset and its associated metadata, using `Ready4useRepos` and its `share` method [as described in a vignette from the ready4use package](https://ready4-dev.github.io/ready4use/articles/V_01.html). -->
 <p>A copy of the module <code>X</code> is available for download as the
