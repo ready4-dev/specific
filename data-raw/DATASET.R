@@ -19,7 +19,7 @@ x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify Models To Solve Inv
                                               "https://github.com/ready4-dev/specific",
                                               "https://www.ready4-dev.com/")) %>%
   ready4fun::make_manifest(addl_pkgs_ls = ready4fun::make_addl_pkgs_ls(depends_chr = c("ggfortify"),
-                                                                       suggests_chr = c("rmarkdown","scorz"),#
+                                                                       suggests_chr = c("rmarkdown"),#,"scorz"
                                                                        imports_chr = c("knitrBootstrap")),
                            build_ignore_ls = ready4fun::make_build_ignore_ls(file_nms_chr = c("initial_setup.R")),
                            check_type_1L_chr = "ready4",
