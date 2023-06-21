@@ -89,6 +89,7 @@ methods::setMethod("author", "SpecificModels", function (x, consent_1L_chr = "",
 #' @name author-SpecificSynopsis
 #' @description author method applied to SpecificSynopsis
 #' @param x An object of class SpecificSynopsis
+#' @param args_ls Arguments (a list), Default: NULL
 #' @param consent_1L_chr Consent (a character vector of length one), Default: ''
 #' @param reference_1L_int Reference (an integer vector of length one), Default: NA
 #' @param type_1L_chr Type (a character vector of length one), Default: 'Report'
@@ -100,7 +101,7 @@ methods::setMethod("author", "SpecificModels", function (x, consent_1L_chr = "",
 #' @export 
 #' @importFrom purrr map2_chr
 #' @importFrom ready4 author
-methods::setMethod("author", "SpecificSynopsis", function (x, consent_1L_chr = "", reference_1L_int = NA_integer_, 
+methods::setMethod("author", "SpecificSynopsis", function (x, args_ls = NULL, consent_1L_chr = "", reference_1L_int = NA_integer_, 
     type_1L_chr = "Report", what_1L_chr = "Catalogue", ...) 
 {
     if (what_1L_chr == "Catalogue") {
@@ -115,8 +116,8 @@ methods::setMethod("author", "SpecificSynopsis", function (x, consent_1L_chr = "
                 fl_nm_1L_chr <- paste0("AAA_TTU_MDL_CTG", ifelse(.y == 
                   1, "", paste0("-", (.y - 1))))
                 authorReport(x %>% renewSlot("b_SpecificResults@a_SpecificShareable@shareable_outp_ls", 
-                  .x), consent_1L_chr = consent_1L_chr, fl_nm_1L_chr = fl_nm_1L_chr, 
-                  what_1L_chr = "Catalogue", ...)
+                  .x), args_ls = args_ls, consent_1L_chr = consent_1L_chr, 
+                  fl_nm_1L_chr = fl_nm_1L_chr, what_1L_chr = what_1L_chr)
                 fl_nm_1L_chr
             })
     }

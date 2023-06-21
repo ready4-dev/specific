@@ -130,6 +130,7 @@ author_SpecificProject <- function(x,
   return(x)
 }
 author_SpecificSynopsis <- function(x,
+                                    args_ls = NULL,
                                     consent_1L_chr = "",
                                     reference_1L_int = NA_integer_,
                                     type_1L_chr = "Report",
@@ -153,10 +154,10 @@ author_SpecificSynopsis <- function(x,
                                       authorReport(x %>%
                                                      renewSlot("b_SpecificResults@a_SpecificShareable@shareable_outp_ls",
                                                                .x),
+                                                   args_ls = args_ls,
                                                    consent_1L_chr = consent_1L_chr,
                                                    fl_nm_1L_chr = fl_nm_1L_chr,
-                                                   what_1L_chr = "Catalogue",
-                                                   ...)
+                                                   what_1L_chr = what_1L_chr)
                                       fl_nm_1L_chr
                                     }
     )

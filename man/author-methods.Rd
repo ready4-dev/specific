@@ -22,6 +22,7 @@
 
 \S4method{author}{SpecificSynopsis}(
   x,
+  args_ls = NULL,
   consent_1L_chr = "",
   reference_1L_int = NA_integer_,
   type_1L_chr = "Report",
@@ -55,6 +56,8 @@
 \item{x_labels_chr}{X labels (a character vector), Default: character(0)}
 
 \item{...}{Additional arguments}
+
+\item{args_ls}{Arguments (a list), Default: NULL}
 
 \item{type_1L_chr}{Type (a character vector of length one), Default: 'results'}
 
