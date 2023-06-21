@@ -1397,52 +1397,43 @@ make_mdl_coef_ratio_ls <- function(mdl_ingredients_ls,
   }
   return(mdl_coef_ratios_ls)
 }
-make_mdl_desc_lines <- function(outp_smry_ls,
-                                mdl_nm_1L_chr,
-                                output_type_1L_chr = "PDF"){
-  mdl_smry_tb <- outp_smry_ls$mdls_smry_tb %>%
-    dplyr::filter(Model == mdl_nm_1L_chr)
-  predictors_chr <- mdl_smry_tb$Parameter[!mdl_smry_tb$Parameter %in% c("SD (Intercept)","Intercept","R2","RMSE","Sigma")] %>%
-    purrr::map_chr(~stringr::str_remove(.x," baseline") %>% stringr::str_remove(" change") %>% stringr::str_remove(.x," scaled") %>% stringr::str_remove(" unscaled") ) %>% unique()
-  predictors_desc_chr <- predictors_chr %>%
-    purrr::map_chr(~{
-      scaling_1L_dbl <- ready4::get_from_lup_obj(outp_smry_ls$predictors_lup,
-                                                 match_value_xx = .x,
-                                                 match_var_nm_1L_chr = "short_name_chr",
-                                                 target_var_nm_1L_chr = "mdl_scaling_dbl",
-                                                 evaluate_1L_lgl = F)
-      paste0(.x,
-             " (",
-             ready4::get_from_lup_obj(outp_smry_ls$dictionary_tb,
-                                      match_value_xx = .x,
-                                      match_var_nm_1L_chr = "var_nm_chr",
-                                      target_var_nm_1L_chr = "var_desc_chr",
-                                      evaluate_1L_lgl = F),
-             ifelse(scaling_1L_dbl == 1,
-                    "",
-                    paste0(" (multiplied by ", scaling_1L_dbl,")")),
-             ")")
-    })
-  if(length(predictors_desc_chr) > 1)
-    predictors_desc_chr <- paste0(c(paste0("\n - ",
-                                           predictors_desc_chr[-length(predictors_desc_chr)],
-                                           collapse = ";"),
-                                    paste0("\n - ",predictors_desc_chr[length(predictors_desc_chr)])),
+make_mdl_desc_lines <- function (outp_smry_ls,
+                                 mdl_nm_1L_chr,
+                                 output_type_1L_chr = "PDF"){
+  mdl_smry_tb <- outp_smry_ls$mdls_smry_tb %>% dplyr::filter(Model ==
+                                                               mdl_nm_1L_chr)
+  predictors_chr <- mdl_smry_tb$Parameter[!mdl_smry_tb$Parameter %in%
+                                            c("SD (Intercept)", "Intercept", "R2", "RMSE", "Sigma")] %>%
+    purrr::map_chr(~stringr::str_remove(.x, " baseline") %>%
+                     stringr::str_remove(" change") %>% stringr::str_remove(" scaled") %>% stringr::str_remove(" unscaled")) %>%
+    unique()
+  predictors_desc_chr <- predictors_chr %>% purrr::map_chr(~{
+    scaling_1L_dbl <- ready4::get_from_lup_obj(outp_smry_ls$predictors_lup,
+                                               match_value_xx = .x, match_var_nm_1L_chr = "short_name_chr",
+                                               target_var_nm_1L_chr = "mdl_scaling_dbl", evaluate_1L_lgl = F)
+    paste0(.x, " (", ready4::get_from_lup_obj(outp_smry_ls$dictionary_tb,
+                                              match_value_xx = .x, match_var_nm_1L_chr = "var_nm_chr",
+                                              target_var_nm_1L_chr = "var_desc_chr", evaluate_1L_lgl = F),
+           ifelse(scaling_1L_dbl == 1, "", paste0(" (multiplied by ",
+                                                  scaling_1L_dbl, ")")), ")")
+  })
+  if (length(predictors_desc_chr) > 1)
+    predictors_desc_chr <- paste0(c(paste0("\n - ", predictors_desc_chr[-length(predictors_desc_chr)],
+                                           collapse = ";"), paste0("\n - ", predictors_desc_chr[length(predictors_desc_chr)])),
                                   collapse = "; and")
-
-
   mdl_desc_lines_chr <- paste0(paste0("This model predicts values at two timepoints for ",
                                       ready4::get_from_lup_obj(outp_smry_ls$dictionary_tb,
                                                                match_value_xx = outp_smry_ls$depnt_var_nm_1L_chr,
-                                                               match_var_nm_1L_chr = "var_nm_chr",
-                                                               target_var_nm_1L_chr = "var_desc_chr",
+                                                               match_var_nm_1L_chr = "var_nm_chr", target_var_nm_1L_chr = "var_desc_chr",
                                                                evaluate_1L_lgl = F),
                                       ". The predictor variables are ",
-                                      "baseline values and subsequent changes in ",
-                                      collapse = ""), predictors_desc_chr,". ",
+                                      "baseline values and subsequent changes in ", collapse = ""),
+                               predictors_desc_chr,
+                               ". ",
                                "The catalogue reference for this model is ",
                                ifelse(output_type_1L_chr == "PDF",
-                                      paste0("\\texttt{\\detokenize{",mdl_nm_1L_chr,"}}"),
+                                      paste0("\\texttt{\\detokenize{",
+                                             mdl_nm_1L_chr, "}}"),
                                       mdl_nm_1L_chr),
                                ".")
   return(mdl_desc_lines_chr)
@@ -2173,7 +2164,7 @@ make_scaling_text <- function(results_ls,
   }
   predrs_chr <- table_df$Parameter %>% setdiff(c("SD (Intercept)","Intercept")) %>% stringr::str_replace_all(" model","") %>%
     stringr::str_replace_all(" baseline","") %>% stringr::str_replace_all(" change","") %>%
-    stringr::str_replace_all(" scaled","") %>% stringr::str_replace_all(" unscaled","") %>%unique()
+    stringr::str_replace_all(" scaled","") %>% stringr::str_replace_all(" unscaled","") %>% unique()
   predrs_lup <- results_ls$mdl_ingredients_ls$predictors_lup %>%
     dplyr::filter(short_name_chr %in% predrs_chr)
   scaling_dbl <- predrs_lup$mdl_scaling_dbl %>% unique()

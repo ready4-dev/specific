@@ -1549,9 +1549,9 @@ write_to_delete_mdl_fls <- function (outp_smry_ls, consent_1L_chr = "", consent_
             paths_to_mdls_chr = paths_to_mdls_chr), consented_msg_1L_chr = paste0("File", 
             ifelse(length(paths_to_mdls_chr) > 1, paste0("s ", 
                 ready4::make_list_phrase(paths_to_mdls_chr), 
-                " have been written."), paste0(" ", paths_to_mdls_chr, 
-                " has been written."))), declined_msg_1L_chr = "Write request cancelled - no new files have been written.", 
-        options_chr = options_chr, prompt_1L_chr = paste0("Do you confirm that you want to write the file", 
+                " have been deleted."), paste0(" ", paths_to_mdls_chr, 
+                " has been deleted."))), declined_msg_1L_chr = "Write request cancelled - no new files have been written.", 
+        options_chr = options_chr, prompt_1L_chr = paste0("Do you confirm that you want to delete the file", 
             ifelse(length(paths_to_mdls_chr) > 1, paste0("s ", 
                 ready4::make_list_phrase(paths_to_mdls_chr)), 
                 paste0(" ", paths_to_mdls_chr)), "?"))

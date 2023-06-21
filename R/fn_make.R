@@ -1474,9 +1474,8 @@ make_mdl_desc_lines <- function (outp_smry_ls, mdl_nm_1L_chr, output_type_1L_chr
     predictors_chr <- mdl_smry_tb$Parameter[!mdl_smry_tb$Parameter %in% 
         c("SD (Intercept)", "Intercept", "R2", "RMSE", "Sigma")] %>% 
         purrr::map_chr(~stringr::str_remove(.x, " baseline") %>% 
-            stringr::str_remove(" change") %>% stringr::str_remove(.x, 
-            " scaled") %>% stringr::str_remove(" unscaled")) %>% 
-        unique()
+            stringr::str_remove(" change") %>% stringr::str_remove(" scaled") %>% 
+            stringr::str_remove(" unscaled")) %>% unique()
     predictors_desc_chr <- predictors_chr %>% purrr::map_chr(~{
         scaling_1L_dbl <- ready4::get_from_lup_obj(outp_smry_ls$predictors_lup, 
             match_value_xx = .x, match_var_nm_1L_chr = "short_name_chr", 

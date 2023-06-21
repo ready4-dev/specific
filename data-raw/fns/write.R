@@ -1522,23 +1522,19 @@ write_to_delete_ds_copies <- function(input_params_ls = NULL,
                                  options_chr = options_chr)
     })
 }
-write_to_delete_mdl_fls <- function(outp_smry_ls,
-                                    consent_1L_chr = "",
-                                    consent_indcs_int = 1L,
-                                    options_chr = c("Y", "N")){
+write_to_delete_mdl_fls <- function (outp_smry_ls,
+                                     consent_1L_chr = "",
+                                     consent_indcs_int = 1L,
+                                     options_chr = c("Y", "N")){
   paths_to_mdls_chr <- outp_smry_ls$file_paths_chr[outp_smry_ls$file_paths_chr %>%
-                                                     purrr::map_lgl(~endsWith(.x,".RDS") &
-                                                                      (startsWith(.x,"A_Candidate_Mdls_Cmprsn") |
-                                                                         startsWith(.x,"C_Predrs_Sngl_Mdl_Cmprsn") |
-                                                                         startsWith(.x,"D_Predr_Covars_Cmprsn") |
-                                                                         startsWith(.x,"E_Predrs_W_Covars_Sngl_Mdl_Cmprsn") |
-                                                                         startsWith(.x,"F_TS_Mdls") ) &
-                                                                      !endsWith(.x,"mdls_smry_tb.RDS"))]
-  consented_fn <- function(outp_smry_ls,
-                           paths_to_mdls_chr){
+                                                     purrr::map_lgl(~endsWith(.x, ".RDS") & (startsWith(.x,
+                                                                                                        "A_Candidate_Mdls_Cmprsn") | startsWith(.x, "C_Predrs_Sngl_Mdl_Cmprsn") |
+                                                                                               startsWith(.x, "D_Predr_Covars_Cmprsn") | startsWith(.x,
+                                                                                                                                                    "E_Predrs_W_Covars_Sngl_Mdl_Cmprsn") | startsWith(.x,
+                                                                                                                                                                                                      "F_TS_Mdls")) & !endsWith(.x, "mdls_smry_tb.RDS"))]
+  consented_fn <- function(outp_smry_ls, paths_to_mdls_chr) {
     paths_to_mdls_chr %>% purrr::walk(~unlink(paste0(outp_smry_ls$path_to_write_to_1L_chr,
-                                                     "/",
-                                                     .x)))
+                                                     "/", .x)))
   }
   ready4::write_with_consent(consented_fn = consented_fn,
                              consent_1L_chr = consent_1L_chr,
@@ -1546,16 +1542,18 @@ write_to_delete_mdl_fls <- function(outp_smry_ls,
                              consented_args_ls = list(outp_smry_ls = outp_smry_ls,
                                                       paths_to_mdls_chr = paths_to_mdls_chr),
                              consented_msg_1L_chr = paste0("File",
-                                                           ifelse(length(paths_to_mdls_chr)>1,
-                                                                  paste0("s ",ready4::make_list_phrase(paths_to_mdls_chr), " have been written."),
-                                                                  paste0(" ",paths_to_mdls_chr," has been written."))),
+                                                           ifelse(length(paths_to_mdls_chr) > 1,
+                                                                  paste0("s ",
+                                                                         ready4::make_list_phrase(paths_to_mdls_chr),
+                                                                         " have been deleted."),
+                                                                  paste0(" ", paths_to_mdls_chr,
+                                                                         " has been deleted."))),
                              declined_msg_1L_chr = "Write request cancelled - no new files have been written.",
                              options_chr = options_chr,
-                             prompt_1L_chr = paste0("Do you confirm that you want to write the file",
-                                                    ifelse(length(paths_to_mdls_chr)>1,
-                                                           paste0("s ",ready4::make_list_phrase(paths_to_mdls_chr)),
-                                                           paste0(" ",paths_to_mdls_chr)),
-                                                    "?"))
+                             prompt_1L_chr = paste0("Do you confirm that you want to delete the file",
+                                                    ifelse(length(paths_to_mdls_chr) > 1, paste0("s ",
+                                                                                                 ready4::make_list_phrase(paths_to_mdls_chr)),
+                                                           paste0(" ", paths_to_mdls_chr)), "?"))
 }
 write_ts_mdl_plts <- function (brms_mdl, # Rename lngl
                                mdl_nm_1L_chr,
