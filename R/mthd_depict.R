@@ -113,8 +113,7 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
             consent_indcs_int = consent_indcs_int, consented_args_ls = list(filename = write_path_1L_chr, 
                 plot = plt, base_height = base_height_1L_dbl), 
             consented_msg_1L_chr = paste0("File ", write_path_1L_chr, 
-                " has been written."), declined_msg_1L_chr = "Write request cancelled - no new files have been written.", 
-            options_chr = options_chr)
+                " has been written."), declined_msg_1L_chr = "Write request cancelled - no new files have been written.")
     }
     return(plt)
 })

@@ -80,8 +80,7 @@ methods::setMethod("share", "SpecificSynopsis", function (x, consolidate_1L_lgl 
                   paste0(path_to_outp_dir_1L_chr, "/Output/G_Shareable/Ingredients/mdl_ingredients.RDS")), 
                 consented_msg_1L_chr = paste0("File ", paste0(path_to_outp_dir_1L_chr, 
                   "/Output/G_Shareable/Ingredients/mdl_ingredients.RDS"), 
-                  " has been written."), declined_msg_1L_chr = "Write request cancelled - no new files have been written.", 
-                options_chr = options_chr)
+                  " has been written."), declined_msg_1L_chr = "Write request cancelled - no new files have been written.")
         }
         Y <- share(x@e_Ready4useRepos, obj_to_share_xx = object_xx, 
             fl_nm_1L_chr = fl_nm_1L_chr)

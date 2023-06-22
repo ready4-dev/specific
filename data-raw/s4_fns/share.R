@@ -66,8 +66,7 @@ share_SpecificSynopsis <- function(x,
                                  consented_msg_1L_chr = paste0("File ",
                                                                paste0(path_to_outp_dir_1L_chr,"/Output/G_Shareable/Ingredients/mdl_ingredients.RDS"),
                                                                " has been written."),
-                                 declined_msg_1L_chr = "Write request cancelled - no new files have been written.",
-                                 options_chr = options_chr)
+                                 declined_msg_1L_chr = "Write request cancelled - no new files have been written.")
     }
     Y <- share(x@e_Ready4useRepos,
                obj_to_share_xx = object_xx,

@@ -145,8 +145,7 @@ depict_SpecificSynopsis <- function(x,
                                consented_msg_1L_chr = paste0("File ",
                                                              write_path_1L_chr,
                                                              " has been written."),
-                               declined_msg_1L_chr = "Write request cancelled - no new files have been written.",
-                               options_chr = options_chr)
+                               declined_msg_1L_chr = "Write request cancelled - no new files have been written.")
   }
   return(plt)
 }
