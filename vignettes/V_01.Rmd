@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Note: **This vignette uses fake data** - it is for illustrative purposes only and should not be used to inform decision making.
+Note: **This vignette uses fake data** - it is for illustrative purposes only and should not be used to inform decision making. Furthermore, as this packake is optimised only for certain types of utility mapping studies, it is recommended to use the [TTU package](https://ready4-dev.github.io/TTU/index.html) (which depends upon `specific`) instead of using specific modules directly as workflow syntax will be simpler and functionality more complete.
 
 The steps in this exploratory analysis workflow may need to be performed iteratively, both in order to identify the optimal model types, predictors and covariates to use and modify default values to ensure model convergence. 
 
