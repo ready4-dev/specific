@@ -1,8 +1,8 @@
 Package: specific
 Title: Specify Models to Solve Inverse Problems
-Version: 0.0.0.9100
+Version: 0.0.0.9101
 Authors@R: c(
-    person("Matthew", "Hamilton", , "matthew.hamilton@orygen.org.au", role = c("aut", "cre"),
+    person("Matthew", "Hamilton", , "matthew.hamilton1@monash.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7407-9194")),
     person("Caroline", "Gao", , "caroline.gao@orygen.org.au", role = "aut",
            comment = c(ORCID = "0000-0002-0987-2759")),
@@ -15,8 +15,7 @@ Description: Tools to standardise the formalising and testing of models to
     ready4 framework (https://www.ready4-dev.com/).  This development
     version of the specific package has been made available as part of the
     process of testing and documenting the package.  If you have any
-    questions, please contact the authors
-    (matthew.hamilton@orygen.org.au).
+    questions, please contact the authors (matthew.hamilton1@monash.edu).
 License: GPL-3 + file LICENSE
 URL: https://ready4-dev.github.io/specific/,
     https://github.com/ready4-dev/specific, https://www.ready4-dev.com/
@@ -55,7 +54,6 @@ Imports:
     ready4show (>= 0.0.0.9109),
     ready4use (>= 0.0.0.9229),
     rlang,
-    scorz (>= 0.0.0.9059),
     stats,
     stringi,
     stringr,
@@ -123,14 +121,9 @@ Collate:
     'pkg_specific.R'
     'specific-package.R'
 Suggests: 
-    betareg,
-    cmdstanr (>= 0.5.3),
-    rmarkdown,
-    rstan
-Remotes:  
+    rmarkdown
+Remotes: 
     ready4-dev/ready4,
     ready4-dev/ready4show,
     ready4-dev/ready4use,
-    ready4-dev/youthvars,
-    stan-dev/cmdstanr,
-    ready4-dev/scorz
+    ready4-dev/youthvars
