@@ -83,7 +83,7 @@ methods::setMethod("share", "SpecificSynopsis", function (x, consolidate_1L_lgl 
                   " has been written."), declined_msg_1L_chr = "Write request cancelled - no new files have been written.")
         }
         Y <- share(x@e_Ready4useRepos, obj_to_share_xx = object_xx, 
-            fl_nm_1L_chr = fl_nm_1L_chr)
+            fl_nm_1L_chr = fl_nm_1L_chr, description_1L_chr = "R list object with data necessary to use the mapping models in conjunction with the R youthu package.")
     }
     if (type_1L_chr == "Report") {
         if (what_1L_chr == "Catalogue") {
