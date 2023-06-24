@@ -76,7 +76,7 @@ methods::setMethod("share", "SpecificSynopsis", function (x, consolidate_1L_lgl 
                 prompt_1L_chr = paste0("Do you confirm that you want to write the file ", 
                   paste0(path_to_outp_dir_1L_chr, "/Output/G_Shareable/Ingredients/mdl_ingredients.RDS"), 
                   "?"), consent_1L_chr = consent_local_1L_chr, 
-                consent_indcs_int = consent_indcs_int, consented_args_ls = list(object = object_xx, 
+                consented_args_ls = list(object = object_xx, 
                   paste0(path_to_outp_dir_1L_chr, "/Output/G_Shareable/Ingredients/mdl_ingredients.RDS")), 
                 consented_msg_1L_chr = paste0("File ", paste0(path_to_outp_dir_1L_chr, 
                   "/Output/G_Shareable/Ingredients/mdl_ingredients.RDS"), 

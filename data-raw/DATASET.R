@@ -436,7 +436,7 @@ z <- ready4pack::make_pt_ready4pack_manifest(x,
                                              pkg_ds_ls_ls = datasets_ls) %>%
   ready4pack::ready4pack_manifest()
 z <- ready4::author(z)
-ready4::write_extra_pkgs_to_actions()
+ready4::write_extra_pkgs_to_actions(consent_1L_chr = "Y")
 usethis::use_package("betareg",
                      type = "Suggests")
 usethis::use_dev_package("cmdstanr",
