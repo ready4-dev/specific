@@ -110,7 +110,7 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
         ready4::write_with_consent(consented_fn = cowplot::save_plot, 
             prompt_1L_chr = paste0("Do you confirm that you want to write the file ", 
                 write_path_1L_chr, "?"), consent_1L_chr = consent_1L_chr, 
-            consent_indcs_int = consent_indcs_int, consented_args_ls = list(filename = write_path_1L_chr, 
+            consented_args_ls = list(filename = write_path_1L_chr, 
                 plot = plt, base_height = base_height_1L_dbl), 
             consented_msg_1L_chr = paste0("File ", write_path_1L_chr, 
                 " has been written."), declined_msg_1L_chr = "Write request cancelled - no new files have been written.")

@@ -14,8 +14,7 @@ solve inverse problems. Designed for use in models developed with the
 ready4 framework (https://www.ready4-dev.com/).  This development
 version of the specific package has been made available as part of the
 process of testing and documenting the package.  If you have any
-questions, please contact the authors
-(matthew.hamilton@orygen.org.au).
+questions, please contact the authors (matthew.hamilton1@monash.edu).
 
 To install a development version of this software, run the following commands in your R console:
 
