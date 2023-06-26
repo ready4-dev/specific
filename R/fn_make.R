@@ -2539,11 +2539,11 @@ make_shareable_mdl <- function (fake_ds_tb, mdl_smry_tb, control_1L_chr = NA_cha
 #' @description make_smry_of_brm_mdl() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make summary of bayesian regression model model. The function returns Summary of bayesian regression model model (a tibble).
 #' @param mdl_ls Model list (a list of models)
 #' @param data_tb Data (a tibble)
-#' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: 'utl_total_w'
 #' @param predr_vars_nms_chr Predictor variables names (a character vector)
+#' @param tfmn_1L_chr Transformation (a character vector of length one)
+#' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: 'utl_total_w'
 #' @param mdl_nm_1L_chr Model name (a character vector of length one), Default: 'NA'
 #' @param seed_1L_dbl Seed (a double vector of length one), Default: 23456
-#' @param tfmn_1L_chr Transformation (a character vector of length one)
 #' @return Summary of bayesian regression model model (a tibble)
 #' @rdname make_smry_of_brm_mdl
 #' @export 
@@ -2552,12 +2552,11 @@ make_shareable_mdl <- function (fake_ds_tb, mdl_smry_tb, control_1L_chr = NA_cha
 #' @importFrom brms bayes_R2
 #' @importFrom psych describe
 #' @importFrom rlang sym
-#' @importFrom purrr map flatten_chr map_chr
+#' @importFrom purrr map flatten_chr
 #' @importFrom stringi stri_replace_last_fixed
 #' @keywords internal
-make_smry_of_brm_mdl <- function (mdl_ls, data_tb, depnt_var_nm_1L_chr = "utl_total_w", 
-    predr_vars_nms_chr, mdl_nm_1L_chr = NA_character_, seed_1L_dbl = 23456, 
-    tfmn_1L_chr) 
+make_smry_of_brm_mdl <- function (mdl_ls, data_tb, predr_vars_nms_chr, tfmn_1L_chr, depnt_var_nm_1L_chr = "utl_total_w", 
+    mdl_nm_1L_chr = NA_character_, seed_1L_dbl = 23456) 
 {
     if (is.na(mdl_nm_1L_chr)) 
         mdl_nm_1L_chr <- predr_vars_nms_chr[1]
@@ -2579,17 +2578,33 @@ make_smry_of_brm_mdl <- function (mdl_ls, data_tb, depnt_var_nm_1L_chr = "utl_to
     Sigma <- summary(mdl_ls, digits = 4)$spec_par[1:4]
     smry_of_brm_mdl_tb <- data.frame(round(rbind(sd_intcpt_df, 
         coef, R2, RMSE, Sigma), 3)) %>% dplyr::mutate(Parameter = c("SD (Intercept)", 
-        "Intercept", purrr::map(predr_vars_nms_chr, ~paste0(.x, 
-            c("", " baseline", " change", " scaled", " unscaled"))) %>% 
-            purrr::flatten_chr() %>% intersect(purrr::map_chr(names(mdl_ls$data), 
-            ~stringi::stri_replace_last_fixed(.x, "_baseline", 
-                " baseline") %>% stringi::stri_replace_last_fixed("_change", 
-                " change") %>% stringi::stri_replace_last_fixed("_scaled", 
-                " scaled") %>% stringi::stri_replace_last_fixed("_unscaled", 
-                " unscaled"))), "R2", "RMSE", "Sigma"), Model = mdl_nm_1L_chr) %>% 
-        dplyr::mutate(`95% CI` = paste(l.95..CI, ",", u.95..CI)) %>% 
-        dplyr::rename(SE = Est.Error) %>% dplyr::select(Model, 
-        Parameter, Estimate, SE, `95% CI`)
+        "Intercept", purrr::map(predr_vars_nms_chr, ~{
+            possibilities_chr <- paste0(.x, c("", " baseline", 
+                " change", " scaled", " unscaled"))
+            if (possibilities_chr[1] %in% names(mdl_ls$data)) {
+                values_xx <- mdl_ls$data %>% dplyr::pull(.x)
+                if (is.factor(values_xx)) {
+                  possibilities_chr <- c(possibilities_chr[1], 
+                    paste0(.x, levels(values_xx)[2:length(levels(values_xx))]))
+                }
+            }
+            possibilities_chr
+        }) %>% purrr::flatten_chr() %>% intersect(purrr::map(names(mdl_ls$data), 
+            ~{
+                values_xx <- mdl_ls$data %>% dplyr::pull(.x)
+                if (is.factor(values_xx)) {
+                  paste0(.x, levels(values_xx)[2:length(levels(values_xx))])
+                } else {
+                  stringi::stri_replace_last_fixed(.x, "_baseline", 
+                    " baseline") %>% stringi::stri_replace_last_fixed("_change", 
+                    " change") %>% stringi::stri_replace_last_fixed("_scaled", 
+                    " scaled") %>% stringi::stri_replace_last_fixed("_unscaled", 
+                    " unscaled")
+                }
+            }) %>% purrr::flatten_chr()), "R2", "RMSE", "Sigma"), 
+        Model = mdl_nm_1L_chr) %>% dplyr::mutate(`95% CI` = paste(l.95..CI, 
+        ",", u.95..CI)) %>% dplyr::rename(SE = Est.Error) %>% 
+        dplyr::select(Model, Parameter, Estimate, SE, `95% CI`)
     rownames(smry_of_brm_mdl_tb) <- NULL
     return(smry_of_brm_mdl_tb)
 }

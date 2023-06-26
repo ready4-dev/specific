@@ -7,11 +7,11 @@
 make_smry_of_brm_mdl(
   mdl_ls,
   data_tb,
-  depnt_var_nm_1L_chr = "utl_total_w",
   predr_vars_nms_chr,
+  tfmn_1L_chr,
+  depnt_var_nm_1L_chr = "utl_total_w",
   mdl_nm_1L_chr = NA_character_,
-  seed_1L_dbl = 23456,
-  tfmn_1L_chr
+  seed_1L_dbl = 23456
 )
 }
 \arguments{
@@ -19,15 +19,15 @@ make_smry_of_brm_mdl(
 
 \item{data_tb}{Data (a tibble)}
 
-\item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
-
 \item{predr_vars_nms_chr}{Predictor variables names (a character vector)}
+
+\item{tfmn_1L_chr}{Transformation (a character vector of length one)}
+
+\item{depnt_var_nm_1L_chr}{Dependent variable name (a character vector of length one), Default: 'utl_total_w'}
 
 \item{mdl_nm_1L_chr}{Model name (a character vector of length one), Default: 'NA'}
 
 \item{seed_1L_dbl}{Seed (a double vector of length one), Default: 23456}
-
-\item{tfmn_1L_chr}{Transformation (a character vector of length one)}
 }
 \value{
 Summary of bayesian regression model model (a tibble)
