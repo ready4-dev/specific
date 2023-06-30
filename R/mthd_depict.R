@@ -28,6 +28,7 @@
 #' @param utl_by_rnd_plots_params_ls Utility by round plots parameters (a list), Default: list(width_1L_dbl = 6, height_1L_dbl = 4)
 #' @param what_1L_chr What (a character vector of length one), Default: 'composite_mdl'
 #' @param write_1L_lgl Write (a logical vector of length one), Default: F
+#' @param x_labels_chr X labels (a character vector), Default: character(0)
 #' @param y_label_1L_chr Y label (a character vector of length one), Default: ' '
 #' @param ... Additional arguments
 #' @return Plot (a plot)
@@ -51,7 +52,7 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
     timepoint_old_nms_chr = NA_character_, timepoint_new_nms_chr = NA_character_, 
     use_png_fls_1L_lgl = F, utl_plot_label_1L_chr = " ", utl_by_rnd_plots_params_ls = list(width_1L_dbl = 6, 
         height_1L_dbl = 4), what_1L_chr = "composite_mdl", write_1L_lgl = F, 
-    y_label_1L_chr = " ", ...) 
+    x_labels_chr = character(0), y_label_1L_chr = " ", ...) 
 {
     plt <- NULL
     outp_smry_ls <- append(x@b_SpecificResults@a_SpecificShareable@shareable_outp_ls, 
@@ -98,7 +99,7 @@ methods::setMethod("depict", "SpecificSynopsis", function (x, axis_text_sclg_1L_
                 plot_rows_cols_pair_int = dim_plot_rows_cols_pair_int, 
                 round_var_nm_1L_chr = ds_descvs_ls$round_var_nm_1L_chr, 
                 heights_int = dim_plot_heights_int, make_log_log_tfmn_1L_lgl = dim_plot_log_log_tfmn_1L_lgl, 
-                y_label_1L_chr = y_label_1L_chr))
+                x_labels_chr = x_labels_chr, y_label_1L_chr = y_label_1L_chr))
         legend_ls <- cowplot::get_legend(first_plt)
         plt <- cowplot::plot_grid(first_plt + ggplot2::theme(legend.position = "none"), 
             second_plt, legend_ls, nrow = 3L, rel_heights = rel_heights_dbl, 

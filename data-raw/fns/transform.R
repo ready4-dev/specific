@@ -472,70 +472,82 @@ transform_rprt_lup <- function(rprt_lup, # Generalise TTU parts - Also need to a
 transform_tb_to_mdl_inp <- function (data_tb,
                                      depnt_var_min_val_1L_dbl = numeric(0),
                                      depnt_var_max_val_1L_dbl = 0.99999,
-                                     depnt_var_nm_1L_chr = "utl_total_w", # remove default
+                                     depnt_var_nm_1L_chr = "utl_total_w",
                                      predr_vars_nms_chr,
-                                     id_var_nm_1L_chr = "fkClientID", round_var_nm_1L_chr = "round",
-                                     round_bl_val_1L_chr = "Baseline", drop_all_msng_1L_lgl = T, scaling_fctr_dbl = 1,
-                                     tfmn_1L_chr = "NTF", ungroup_1L_lgl = F)
-{
-  if(length(scaling_fctr_dbl)!=length(predr_vars_nms_chr)){
-    scaling_fctr_dbl <- rep(scaling_fctr_dbl[1],length(predr_vars_nms_chr))
+                                     id_var_nm_1L_chr = "fkClientID",
+                                     round_var_nm_1L_chr = "round",
+                                     round_bl_val_1L_chr = "Baseline",
+                                     drop_all_msng_1L_lgl = T,
+                                     scaling_fctr_dbl = 1,
+                                     tfmn_1L_chr = "NTF",
+                                     tidy_1L_lgl = F,
+                                     ungroup_1L_lgl = F) {
+  if (length(scaling_fctr_dbl) != length(predr_vars_nms_chr)) {
+    scaling_fctr_dbl <- rep(scaling_fctr_dbl[1], length(predr_vars_nms_chr))
   }
-  data_tb <- data.frame(data_tb) %>%
-    ready4use::remove_labels_from_ds()
-  tfd_for_mdl_inp_tb <- data_tb %>% dplyr::select(dplyr::all_of(id_var_nm_1L_chr), dplyr::all_of(round_var_nm_1L_chr),
-                                                  dplyr::all_of(predr_vars_nms_chr),
-                                                  dplyr::all_of(depnt_var_nm_1L_chr)
-  ) %>% dplyr::group_by(!!rlang::sym(id_var_nm_1L_chr))
-
-  tfd_for_mdl_inp_tb <- if(!identical(round_var_nm_1L_chr, character(0)) && ifelse(identical(round_var_nm_1L_chr, character(0)),T,!is.na(round_var_nm_1L_chr))){
+  data_tb <- data.frame(data_tb) %>% ready4use::remove_labels_from_ds()
+  tfd_for_mdl_inp_tb <- data_tb %>% dplyr::select(dplyr::all_of(id_var_nm_1L_chr),
+                                                  dplyr::all_of(round_var_nm_1L_chr), dplyr::all_of(predr_vars_nms_chr),
+                                                  dplyr::all_of(depnt_var_nm_1L_chr)) %>% dplyr::group_by(!!rlang::sym(id_var_nm_1L_chr))
+  tfd_for_mdl_inp_tb <- if (!identical(round_var_nm_1L_chr, character(0)) && ifelse(identical(round_var_nm_1L_chr, character(0)), T, !is.na(round_var_nm_1L_chr))) {
     tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% dplyr::arrange(!!rlang::sym(id_var_nm_1L_chr),
                                                                 !!rlang::sym(round_var_nm_1L_chr))
     tfd_for_mdl_inp_tb <- purrr::reduce(1:length(predr_vars_nms_chr),
-                                        .init = tfd_for_mdl_inp_tb,
-                                        ~ {
+                                        .init = tfd_for_mdl_inp_tb, ~{
                                           idx_1L_int <- as.integer(.y)
                                           .x %>% dplyr::mutate(dplyr::across(dplyr::all_of(predr_vars_nms_chr[idx_1L_int]),
-                                                                             .fns = list(baseline = ~if(!is.numeric(.)){.}else{dplyr::first(.)*scaling_fctr_dbl[idx_1L_int]},
-                                                                                         change = ~ifelse(!!rlang::sym(round_var_nm_1L_chr) == round_bl_val_1L_chr,
-                                                                                                          0,
-                                                                                                          if(!is.numeric(.)){.}else{(. - dplyr::lag(.))*scaling_fctr_dbl[idx_1L_int]}))))
+                                                                             .fns = list(baseline = ~ if (!is.numeric(.)) {
+                                                                               .
+                                                                             } else {
+                                                                               dplyr::first(.) * scaling_fctr_dbl[idx_1L_int]
+                                                                             }, change = ~ifelse(!!rlang::sym(round_var_nm_1L_chr) ==
+                                                                                                   round_bl_val_1L_chr, 0, if (!is.numeric(.)) {
+                                                                                                     .
+                                                                                                   } else {
+                                                                                                     (. - dplyr::lag(.)) * scaling_fctr_dbl[idx_1L_int]
+                                                                                                   }))))
                                         })
-  }else{
+  }  else {
     tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% dplyr::arrange(!!rlang::sym(id_var_nm_1L_chr))
     tfd_for_mdl_inp_tb <- purrr::reduce(1:length(predr_vars_nms_chr),
-                                        .init = tfd_for_mdl_inp_tb,
-                                        ~ {
+                                        .init = tfd_for_mdl_inp_tb, ~{
                                           idx_1L_int <- as.integer(.y)
                                           table_tb <- .x %>% dplyr::mutate(dplyr::across(dplyr::all_of(predr_vars_nms_chr[idx_1L_int]),
-                                                                                         .fns = list(baseline = ~if(!is.numeric(.)){.}else{dplyr::first(.)*scaling_fctr_dbl[idx_1L_int]},
-                                                                                                     change = ~ 0)))
-                                          old_name_1L_chr <- paste0(predr_vars_nms_chr[idx_1L_int],"_baseline")
-                                          new_name_1L_chr <- paste0(predr_vars_nms_chr[idx_1L_int],ifelse(scaling_fctr_dbl[idx_1L_int]==1,"_unscaled","_scaled"))
-                                          table_tb <- table_tb %>% dplyr::rename(!!rlang::sym(new_name_1L_chr) := !!rlang::sym(old_name_1L_chr))
+                                                                                         .fns = list(baseline = ~if (!is.numeric(.)) {
+                                                                                           .
+                                                                                         } else {
+                                                                                           dplyr::first(.) * scaling_fctr_dbl[idx_1L_int]
+                                                                                         }, change = ~0)))
+                                          old_name_1L_chr <- paste0(predr_vars_nms_chr[idx_1L_int],
+                                                                    "_baseline")
+                                          new_name_1L_chr <- paste0(predr_vars_nms_chr[idx_1L_int],
+                                                                    ifelse(scaling_fctr_dbl[idx_1L_int] == 1, "_unscaled",
+                                                                           "_scaled"))
+                                          table_tb <- table_tb %>% dplyr::rename(`:=`(!!rlang::sym(new_name_1L_chr),
+                                                                                      !!rlang::sym(old_name_1L_chr)))
                                         })
   }
-
-  if(!identical(depnt_var_min_val_1L_dbl, numeric(0))){
-    tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% dplyr::mutate(!!rlang::sym(depnt_var_nm_1L_chr) := !!rlang::sym(depnt_var_nm_1L_chr) %>%
-                                                                 purrr::map_dbl(~max(.x,depnt_var_min_val_1L_dbl)))
+  if (!identical(depnt_var_min_val_1L_dbl, numeric(0))) {
+    tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% dplyr::mutate(`:=`(!!rlang::sym(depnt_var_nm_1L_chr),
+                                                                    !!rlang::sym(depnt_var_nm_1L_chr) %>% purrr::map_dbl(~max(.x, depnt_var_min_val_1L_dbl))))
   }
-  tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>%
-    add_tfd_var_to_ds(depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
-                      tfmn_1L_chr = tfmn_1L_chr,
-                      depnt_var_max_val_1L_dbl = depnt_var_max_val_1L_dbl)
-  if(drop_all_msng_1L_lgl){
-    tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>%
-      stats::na.omit()
+  tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% add_tfd_var_to_ds(depnt_var_nm_1L_chr = depnt_var_nm_1L_chr, tfmn_1L_chr = tfmn_1L_chr, depnt_var_max_val_1L_dbl = depnt_var_max_val_1L_dbl)
+  if (drop_all_msng_1L_lgl) {
+    tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% stats::na.omit()
   }
-  if(ungroup_1L_lgl){
-    tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>%
-      dplyr::ungroup()
+  if (ungroup_1L_lgl) {
+    tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% dplyr::ungroup()
   }
-  tfd_for_mdl_inp_tb  <- tfd_for_mdl_inp_tb %>%
-    transform_uid_var(id_var_nm_1L_chr = id_var_nm_1L_chr)
-
-
+  tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% transform_uid_var(id_var_nm_1L_chr = id_var_nm_1L_chr)
+  if(tidy_1L_lgl){
+    if (identical(round_var_nm_1L_chr, character(0)) |
+        ifelse(identical(round_var_nm_1L_chr, character(0)),
+               T, is.na(round_var_nm_1L_chr))) {
+      tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>%
+        dplyr::select(-(predr_vars_nms_chr %>% paste0("_change"))) %>%
+        dplyr::select(-(intersect(predr_vars_nms_chr %>% paste0("_unscaled"), names(tfd_for_mdl_inp_tb))))
+    }
+  }
   return(tfd_for_mdl_inp_tb)
 }
 transform_tbl_to_rnd_vars <- function(ds_tb,

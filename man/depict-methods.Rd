@@ -34,6 +34,7 @@
   utl_by_rnd_plots_params_ls = list(width_1L_dbl = 6, height_1L_dbl = 4),
   what_1L_chr = "composite_mdl",
   write_1L_lgl = F,
+  x_labels_chr = character(0),
   y_label_1L_chr = " ",
   ...
 )
@@ -98,6 +99,8 @@
 \item{what_1L_chr}{What (a character vector of length one), Default: 'composite_mdl'}
 
 \item{write_1L_lgl}{Write (a logical vector of length one), Default: F}
+
+\item{x_labels_chr}{X labels (a character vector), Default: character(0)}
 
 \item{y_label_1L_chr}{Y label (a character vector of length one), Default: ' '}
 

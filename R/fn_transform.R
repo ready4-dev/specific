@@ -573,6 +573,7 @@ transform_rprt_lup <- function (rprt_lup, add_suplry_rprt_1L_lgl = T, add_sharin
 #' @param drop_all_msng_1L_lgl Drop all missing (a logical vector of length one), Default: T
 #' @param scaling_fctr_dbl Scaling factor (a double vector), Default: 1
 #' @param tfmn_1L_chr Transformation (a character vector of length one), Default: 'NTF'
+#' @param tidy_1L_lgl Tidy (a logical vector of length one), Default: F
 #' @param ungroup_1L_lgl Ungroup (a logical vector of length one), Default: F
 #' @return Transformed for model input (a tibble)
 #' @rdname transform_tb_to_mdl_inp
@@ -586,7 +587,8 @@ transform_tb_to_mdl_inp <- function (data_tb, depnt_var_min_val_1L_dbl = numeric
     depnt_var_nm_1L_chr = "utl_total_w", predr_vars_nms_chr, 
     id_var_nm_1L_chr = "fkClientID", round_var_nm_1L_chr = "round", 
     round_bl_val_1L_chr = "Baseline", drop_all_msng_1L_lgl = T, 
-    scaling_fctr_dbl = 1, tfmn_1L_chr = "NTF", ungroup_1L_lgl = F) 
+    scaling_fctr_dbl = 1, tfmn_1L_chr = "NTF", tidy_1L_lgl = F, 
+    ungroup_1L_lgl = F) 
 {
     if (length(scaling_fctr_dbl) != length(predr_vars_nms_chr)) {
         scaling_fctr_dbl <- rep(scaling_fctr_dbl[1], length(predr_vars_nms_chr))
@@ -650,6 +652,14 @@ transform_tb_to_mdl_inp <- function (data_tb, depnt_var_min_val_1L_dbl = numeric
         tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% dplyr::ungroup()
     }
     tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% transform_uid_var(id_var_nm_1L_chr = id_var_nm_1L_chr)
+    if (tidy_1L_lgl) {
+        if (identical(round_var_nm_1L_chr, character(0)) | ifelse(identical(round_var_nm_1L_chr, 
+            character(0)), T, is.na(round_var_nm_1L_chr))) {
+            tfd_for_mdl_inp_tb <- tfd_for_mdl_inp_tb %>% dplyr::select(-(predr_vars_nms_chr %>% 
+                paste0("_change"))) %>% dplyr::select(-(intersect(predr_vars_nms_chr %>% 
+                paste0("_unscaled"), names(tfd_for_mdl_inp_tb))))
+        }
+    }
     return(tfd_for_mdl_inp_tb)
 }
 #' Transform table to round variables

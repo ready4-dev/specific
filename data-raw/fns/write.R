@@ -1109,174 +1109,114 @@ write_shareable_mdls <- function (outp_smry_ls,
                                   new_dir_nm_1L_chr = "G_Shareable",
                                   options_chr = c("Y", "N"),
                                   shareable_title_detail_1L_chr = "",
-                                  write_mdls_to_dv_1L_lgl = F)
-{
+                                  write_mdls_to_dv_1L_lgl = F) {
   output_dir_chr <- write_shareable_dir(outp_smry_ls = outp_smry_ls,
-                                        consent_1L_chr = consent_1L_chr,
-                                        consent_indcs_int = consent_indcs_int,
-                                        new_dir_nm_1L_chr = new_dir_nm_1L_chr,
-                                        options_chr = options_chr)
+                                        consent_1L_chr = consent_1L_chr, consent_indcs_int = consent_indcs_int,
+                                        new_dir_nm_1L_chr = new_dir_nm_1L_chr, options_chr = options_chr)
   incld_mdl_paths_chr <- make_incld_mdl_paths(outp_smry_ls)
-  fake_ds_tb <- make_fake_ts_data(outp_smry_ls, depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl, depnt_vars_are_NA_1L_lgl = F)
+  fake_ds_tb <- make_fake_ts_data(outp_smry_ls, depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl,
+                                  depnt_vars_are_NA_1L_lgl = F)
   mdl_types_lup <- outp_smry_ls$mdl_types_lup
   shareable_mdls_ls <- outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr() %>%
     purrr::map2(incld_mdl_paths_chr, ~{
-      model_mdl <- readRDS(paste0(outp_smry_ls$path_to_write_to_1L_chr,"/",.y))
-
-      mdl_smry_tb <- outp_smry_ls$mdls_smry_tb %>% dplyr::filter(Model ==
-                                                                   .x)
+      model_mdl <- readRDS(paste0(outp_smry_ls$path_to_write_to_1L_chr, "/", .y))
+      mdl_smry_tb <- outp_smry_ls$mdls_smry_tb %>% dplyr::filter(Model == .x)
       mdl_nm_1L_chr <- .x
-      mdl_type_1L_chr <- get_mdl_type_from_nm(mdl_nm_1L_chr,
-                                              mdl_types_lup = mdl_types_lup)
-      tfmn_1L_chr <- ready4::get_from_lup_obj(mdl_types_lup,
-                                              match_value_xx = mdl_type_1L_chr,
-                                              match_var_nm_1L_chr = "short_name_chr",
-                                              target_var_nm_1L_chr = "tfmn_chr",
-                                              evaluate_1L_lgl = F)
-      predn_type_1L_chr <- ready4::get_from_lup_obj(mdl_types_lup,
-                                                    match_value_xx = mdl_type_1L_chr,
-                                                    match_var_nm_1L_chr = "short_name_chr",
-                                                    target_var_nm_1L_chr = "predn_type_chr",
-                                                    evaluate_1L_lgl = F)
+      mdl_type_1L_chr <- get_mdl_type_from_nm(mdl_nm_1L_chr, mdl_types_lup = mdl_types_lup)
+      tfmn_1L_chr <- ready4::get_from_lup_obj(mdl_types_lup, match_value_xx = mdl_type_1L_chr, match_var_nm_1L_chr = "short_name_chr",
+                                              target_var_nm_1L_chr = "tfmn_chr", evaluate_1L_lgl = F)
+      predn_type_1L_chr <- ready4::get_from_lup_obj(mdl_types_lup, match_value_xx = mdl_type_1L_chr, match_var_nm_1L_chr = "short_name_chr",
+                                                    target_var_nm_1L_chr = "predn_type_chr", evaluate_1L_lgl = F)
       if (is.na(predn_type_1L_chr))
         predn_type_1L_chr <- NULL
-      control_1L_chr <- ready4::get_from_lup_obj(mdl_types_lup,
-                                                 match_value_xx = mdl_type_1L_chr,
-                                                 match_var_nm_1L_chr = "short_name_chr",
-                                                 target_var_nm_1L_chr = "control_chr",
-                                                 evaluate_1L_lgl = F)
-      sd_dbl <- mdl_smry_tb %>%
-        dplyr::filter(Parameter == "SD (Intercept)") %>%
-        dplyr::select(Estimate, SE) %>%
-        t() %>%
-        as.vector()
-      mdl_fake_ds_tb <- fake_ds_tb %>%
-        add_tfd_var_to_ds(depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr,
-                          tfmn_1L_chr = tfmn_1L_chr,
-                          depnt_var_max_val_1L_dbl = 0.999) %>%
+      control_1L_chr <- ready4::get_from_lup_obj(mdl_types_lup, match_value_xx = mdl_type_1L_chr, match_var_nm_1L_chr = "short_name_chr",
+                                                 target_var_nm_1L_chr = "control_chr", evaluate_1L_lgl = F)
+      sd_dbl <- mdl_smry_tb %>% dplyr::filter(Parameter == "SD (Intercept)") %>% dplyr::select(Estimate, SE) %>% t() %>% as.vector()
+      mdl_fake_ds_tb <- fake_ds_tb %>% add_tfd_var_to_ds(depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr,
+                                                         tfmn_1L_chr = tfmn_1L_chr, depnt_var_max_val_1L_dbl = 0.999) %>%
         dplyr::select(names(model_mdl$data))
       model_mdl$data <- mdl_fake_ds_tb
       table_predn_mdl <- make_shareable_mdl(fake_ds_tb = mdl_fake_ds_tb,
-                                            mdl_smry_tb = mdl_smry_tb, depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr,
+                                            mdl_smry_tb = mdl_smry_tb,
+                                            depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr,
                                             id_var_nm_1L_chr = outp_smry_ls$id_var_nm_1L_chr,
-                                            tfmn_1L_chr = tfmn_1L_chr,
-                                            mdl_type_1L_chr = mdl_type_1L_chr,
-                                            mdl_types_lup = mdl_types_lup,
-                                            control_1L_chr = control_1L_chr,
-                                            start_1L_chr = NA_character_,
-                                            seed_1L_int = outp_smry_ls$seed_1L_int)
-      c(4,3) %>%
-        purrr::walk2(list(table_predn_mdl, model_mdl),
-                     ~{
-          ready4::write_with_consent(consented_fn = saveRDS,
-                                     prompt_1L_chr = paste0("Do you confirm that you want to write the file ",
-                                                            paste0(mdl_nm_1L_chr, ".RDS"),
-                                                            " to ",
-                                                            output_dir_chr[.x],
-                                                            "?"),
-                                     consent_1L_chr = consent_1L_chr,
-                                     consent_indcs_int = consent_indcs_int,
-                                     consented_args_ls = list(object = .y,
-                                                              file = paste0(output_dir_chr[.x], "/", mdl_nm_1L_chr,".RDS")),
-                                     consented_msg_1L_chr = paste0("File ",
-                                                                   paste0(mdl_nm_1L_chr, ".RDS"),
-                                                                   " has been written to ",
-                                                                   output_dir_chr[.x],
-                                                                   "."),
-                                     declined_msg_1L_chr = "Write request cancelled - no new files have been written.",
-                                     options_chr = options_chr)
-        })
+                                            tfmn_1L_chr = tfmn_1L_chr, mdl_type_1L_chr = mdl_type_1L_chr,
+                                            mdl_types_lup = mdl_types_lup, control_1L_chr = control_1L_chr,
+                                            start_1L_chr = NA_character_, seed_1L_int = outp_smry_ls$seed_1L_int)
+      c(4, 3) %>% purrr::walk2(list(table_predn_mdl, model_mdl),
+                               ~{
+                                 ready4::write_with_consent(consented_fn = saveRDS,
+                                                            prompt_1L_chr = paste0("Do you confirm that you want to write the file ",
+                                                                                   paste0(mdl_nm_1L_chr, ".RDS"), " to ",
+                                                                                   output_dir_chr[.x], "?"),
+                                                            consent_1L_chr = consent_1L_chr,
+                                                            consent_indcs_int = consent_indcs_int,
+                                                            consented_args_ls = list(object = .y,
+                                                                                     file = paste0(output_dir_chr[.x], "/",  mdl_nm_1L_chr, ".RDS")),
+                                                            consented_msg_1L_chr = paste0("File ", paste0(mdl_nm_1L_chr, ".RDS"), " has been written to ",
+                                                                                          output_dir_chr[.x], "."),
+                                                            declined_msg_1L_chr = "Write request cancelled - no new files have been written.",
+                                                            options_chr = options_chr)
+                               })
       scaling_fctr_dbl <- make_scaling_fctr_dbl(outp_smry_ls)
-      write_ts_mdl_plts(brms_mdl = model_mdl,
-                        consent_1L_chr = consent_1L_chr,
-                        consent_indcs_int = consent_indcs_int,
-                        depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr,
-                        mdl_nm_1L_chr = mdl_nm_1L_chr,
-                        options_chr = options_chr,
+      write_ts_mdl_plts(brms_mdl = model_mdl, consent_1L_chr = consent_1L_chr,
+                        consent_indcs_int = consent_indcs_int, depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr,
+                        mdl_nm_1L_chr = mdl_nm_1L_chr, options_chr = options_chr,
                         path_to_write_to_1L_chr = output_dir_chr[3],
-                        predn_type_1L_chr = predn_type_1L_chr,
-                        round_var_nm_1L_chr = outp_smry_ls$round_var_nm_1L_chr,
-                        sd_dbl = sd_dbl,
-                        sfx_1L_chr = " from table",
+                        predn_type_1L_chr = predn_type_1L_chr, round_var_nm_1L_chr = outp_smry_ls$round_var_nm_1L_chr,
+                        sd_dbl = sd_dbl, sfx_1L_chr = " from table",
                         table_predn_mdl = table_predn_mdl,
                         tfd_data_tb = outp_smry_ls$scored_data_tb %>%
                           transform_tb_to_mdl_inp(depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl,
                                                   depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr,
-                                                  predr_vars_nms_chr = outp_smry_ls$predr_vars_nms_ls %>% purrr::flatten_chr() %>% unique(),
-                                                  id_var_nm_1L_chr = outp_smry_ls$id_var_nm_1L_chr,
+                                                  predr_vars_nms_chr = outp_smry_ls$predr_vars_nms_ls %>%
+                                                    purrr::flatten_chr() %>% unique(), id_var_nm_1L_chr = outp_smry_ls$id_var_nm_1L_chr,
                                                   round_var_nm_1L_chr = outp_smry_ls$round_var_nm_1L_chr,
                                                   round_bl_val_1L_chr = outp_smry_ls$round_bl_val_1L_chr,
-                                                  scaling_fctr_dbl = scaling_fctr_dbl),
-                        tfmn_1L_chr = tfmn_1L_chr,
+                                                  scaling_fctr_dbl = scaling_fctr_dbl), tfmn_1L_chr = tfmn_1L_chr,
                         utl_min_val_1L_dbl = ifelse(!is.null(outp_smry_ls$utl_min_val_1L_dbl),
-                                                    outp_smry_ls$utl_min_val_1L_dbl,
-                                                    -1))
+                                                    outp_smry_ls$utl_min_val_1L_dbl, -1))
       table_predn_mdl
     }) %>% stats::setNames(outp_smry_ls$mdl_nms_ls %>% purrr::flatten_chr())
   outp_smry_ls$shareable_mdls_ls <- shareable_mdls_ls
-  outp_smry_ls$shareable_mdls_tb <-  NULL
+  outp_smry_ls$shareable_mdls_tb <- NULL
   ingredients_ls <- list(depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr,
-                         dictionary_tb = outp_smry_ls$dictionary_tb %>%
-                           dplyr::filter(var_nm_chr %in% names(fake_ds_tb)),
-                         id_var_nm_1L_chr = outp_smry_ls$id_var_nm_1L_chr,
-                         fake_ds_tb = fake_ds_tb,
-                         mdls_lup = outp_smry_ls$shareable_mdls_ls %>%
+                         dictionary_tb = outp_smry_ls$dictionary_tb %>% dplyr::filter(var_nm_chr %in%
+                                                                                        names(fake_ds_tb)), id_var_nm_1L_chr = outp_smry_ls$id_var_nm_1L_chr,
+                         fake_ds_tb = fake_ds_tb, mdls_lup = outp_smry_ls$shareable_mdls_ls %>%
                            purrr::map2_dfr(names(outp_smry_ls$shareable_mdls_ls),
                                            ~{
-                                             if(inherits(.x,"betareg")){
+                                             if (inherits(.x, "betareg")) {
                                                coeffs_dbl <- .x$coefficients$mean
-                                             }else{
+                                             } else {
                                                coeffs_dbl <- .x$coefficients
                                              }
                                              mdl_type_1L_chr = get_mdl_type_from_nm(.y,
                                                                                     mdl_types_lup = outp_smry_ls$mdl_types_lup)
-                                             tibble::tibble(mdl_nms_chr = .y) %>%
-                                               dplyr::mutate(predrs_ls = list(coeffs_dbl %>%
-                                                                                names() %>%
-                                                                                stringr::str_remove_all("_change") %>%
-                                                                                stringr::str_remove_all("_baseline") %>%
-                                                                                stringr::str_remove_all("_scaled") %>%
-                                                                                stringr::str_remove_all("_unscaled") %>%
-                                                                                unique() %>%
-                                                                                purrr::discard(~ .x== "(Intercept)")),
-                                                             mdl_type_chr = mdl_type_1L_chr,
-                                                             tfmn_chr = ready4::get_from_lup_obj(outp_smry_ls$mdl_types_lup,
-                                                                                                 match_value_xx = mdl_type_1L_chr,
-                                                                                                 match_var_nm_1L_chr = "short_name_chr",
-                                                                                                 target_var_nm_1L_chr = "tfmn_chr",
-                                                                                                 evaluate_1L_lgl = F))
-                                           }),
-                         mdls_smry_tb = outp_smry_ls$mdls_smry_tb,
-                         mdl_types_lup = mdl_types_lup,
-                         predictors_lup = outp_smry_ls$predictors_lup,
+                                             tibble::tibble(mdl_nms_chr = .y) %>% dplyr::mutate(predrs_ls = list(coeffs_dbl %>%
+                                                                                                                   names() %>% stringr::str_remove_all("_change") %>%
+                                                                                                                   stringr::str_remove_all("_baseline") %>%
+                                                                                                                   stringr::str_remove_all("_scaled") %>% stringr::str_remove_all("_unscaled") %>%
+                                                                                                                   unique() %>% purrr::discard(~.x == "(Intercept)")),
+                                                                                                mdl_type_chr = mdl_type_1L_chr, tfmn_chr = ready4::get_from_lup_obj(outp_smry_ls$mdl_types_lup,
+                                                                                                                                                                    match_value_xx = mdl_type_1L_chr, match_var_nm_1L_chr = "short_name_chr",
+                                                                                                                                                                    target_var_nm_1L_chr = "tfmn_chr", evaluate_1L_lgl = F))
+                                           }), mdls_smry_tb = outp_smry_ls$mdls_smry_tb,
+                         mdl_types_lup = mdl_types_lup, predictors_lup = outp_smry_ls$predictors_lup,
                          round_var_nm_1L_chr = outp_smry_ls$round_var_nm_1L_chr,
-                         seed_1L_int = outp_smry_ls$seed_1L_int,
-                         utl_min_val_1L_dbl = ifelse(!is.null(outp_smry_ls$utl_min_val_1L_dbl),
-                                                     outp_smry_ls$utl_min_val_1L_dbl,
-                                                     -1))
+                         seed_1L_int = outp_smry_ls$seed_1L_int, utl_min_val_1L_dbl = ifelse(!is.null(outp_smry_ls$utl_min_val_1L_dbl),
+                                                                                             outp_smry_ls$utl_min_val_1L_dbl, -1))
   ready4::write_with_consent(consented_fn = saveRDS,
-                             prompt_1L_chr = paste0("Do you confirm that you want to write the file ",
-                                                    paste0("mdl_ingredients", ".RDS"),
-                                                    " to ",
-                                                    output_dir_chr[2],
-                                                    "?"),
-                             consent_1L_chr = consent_1L_chr,
-                             consent_indcs_int = consent_indcs_int,
+                             prompt_1L_chr = paste0("Do you confirm that you want to write the file ", paste0("mdl_ingredients", ".RDS"), " to ", output_dir_chr[2], "?"),
+                             consent_1L_chr = consent_1L_chr, consent_indcs_int = consent_indcs_int,
                              consented_args_ls = list(object = ingredients_ls,
-                                                      file = paste0(output_dir_chr[2], "/", "mdl_ingredients",".RDS")),
-                             consented_msg_1L_chr = paste0("File ",
-                                                           paste0("mdl_ingredients", ".RDS"),
-                                                           " has been written to ",
-                                                           output_dir_chr[2],
-                                                           "."),
+                                                      file = paste0(output_dir_chr[2], "/", "mdl_ingredients", ".RDS")),
+                             consented_msg_1L_chr = paste0("File ", paste0("mdl_ingredients", ".RDS"), " has been written to ", output_dir_chr[2], "."),
                              declined_msg_1L_chr = "Write request cancelled - no new files have been written.",
                              options_chr = options_chr)
-  outp_smry_ls <- write_mdls_to_dv(outp_smry_ls,
-                                   consent_1L_chr = consent_1L_chr,
-                                   consent_indcs_int = consent_indcs_int,
-                                   new_dir_nm_1L_chr = new_dir_nm_1L_chr,
-                                   options_chr = options_chr,
-                                   output_dir_chr = output_dir_chr,
+  outp_smry_ls <- write_mdls_to_dv(outp_smry_ls, consent_1L_chr = consent_1L_chr,
+                                   consent_indcs_int = consent_indcs_int, new_dir_nm_1L_chr = new_dir_nm_1L_chr,
+                                   options_chr = options_chr, output_dir_chr = output_dir_chr,
                                    shareable_title_detail_1L_chr = shareable_title_detail_1L_chr)
   return(outp_smry_ls)
 }

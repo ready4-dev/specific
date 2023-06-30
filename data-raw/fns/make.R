@@ -860,38 +860,44 @@ make_ethics_text <- function(results_ls){
 #                                            T ~ d_age))
 #   return(data_tb)
 # }
-make_fake_ts_data <- function (outp_smry_ls, # rename lngl
-                               depnt_var_min_val_1L_dbl = numeric(0),
-                               depnt_vars_are_NA_1L_lgl = T)
-{
-  data_tb <- outp_smry_ls$scored_data_tb %>% transform_tb_to_mdl_inp(depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl,#
+make_fake_ts_data <- function (outp_smry_ls, depnt_var_min_val_1L_dbl = numeric(0),
+                               depnt_vars_are_NA_1L_lgl = T) {
+  data_tb <- outp_smry_ls$scored_data_tb %>% transform_tb_to_mdl_inp(depnt_var_min_val_1L_dbl = depnt_var_min_val_1L_dbl,
                                                                      depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr,
-                                                                     predr_vars_nms_chr = outp_smry_ls$predr_vars_nms_ls %>% purrr::flatten_chr() %>% unique(),
-                                                                     id_var_nm_1L_chr = outp_smry_ls$id_var_nm_1L_chr, round_var_nm_1L_chr = outp_smry_ls$round_var_nm_1L_chr,
-                                                                     round_bl_val_1L_chr = outp_smry_ls$round_bl_val_1L_chr)
-  if(identical(outp_smry_ls$round_var_nm_1L_chr, character(0)) | ifelse(identical(outp_smry_ls$round_var_nm_1L_chr, character(0)),T,is.na(outp_smry_ls$round_var_nm_1L_chr))){
-    data_tb <- data_tb %>%
-      dplyr::select(-(outp_smry_ls$predr_vars_nms_ls %>% purrr::flatten_chr() %>% unique() %>% paste0("_change")))
-  }
+                                                                     predr_vars_nms_chr = outp_smry_ls$predr_vars_nms_ls %>%
+                                                                       purrr::flatten_chr() %>% unique(),
+                                                                     id_var_nm_1L_chr = outp_smry_ls$id_var_nm_1L_chr,
+                                                                     round_var_nm_1L_chr = outp_smry_ls$round_var_nm_1L_chr,
+                                                                     round_bl_val_1L_chr = outp_smry_ls$round_bl_val_1L_chr,
+                                                                     scaling_fctr_dbl = outp_smry_ls$predr_vars_nms_ls %>%
+                                                                       purrr::flatten_chr() %>% unique() %>%
+                                                                       purrr::map_dbl(~ifelse(.x %in% outp_smry_ls$predictors_lup$short_name_chr,
+                                                                                              ready4::get_from_lup_obj(outp_smry_ls$predictors_lup,
+                                                                                                                       match_var_nm_1L_chr = "short_name_chr",
+                                                                                                                       match_value_xx = .x,
+                                                                                                                       target_var_nm_1L_chr = "mdl_scaling_dbl"),
+                                                                                              1)),
+                                                                     tidy_1L_lgl = T)
   fk_data_ls <- synthpop::syn(data_tb, visit.sequence = names(data_tb)[names(data_tb) !=
                                                                          outp_smry_ls$id_var_nm_1L_chr], seed = outp_smry_ls$seed_1L_int)
   fk_data_tb <- fk_data_ls$syn
-  if(identical(outp_smry_ls$round_var_nm_1L_chr, character(0)) | ifelse(identical(outp_smry_ls$round_var_nm_1L_chr, character(0)),T,is.na(outp_smry_ls$round_var_nm_1L_chr))){
-    fk_data_tb <- fk_data_tb %>%
-      dplyr::ungroup()
-  } else {
-    fk_data_tb <- fk_data_tb %>%
-      dplyr::mutate(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr) := as.character(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr))) %>%
+  if (identical(outp_smry_ls$round_var_nm_1L_chr, character(0)) |
+      ifelse(identical(outp_smry_ls$round_var_nm_1L_chr, character(0)),
+             T, is.na(outp_smry_ls$round_var_nm_1L_chr))) {
+    fk_data_tb <- fk_data_tb %>% dplyr::ungroup()
+  }
+  else {
+    fk_data_tb <- fk_data_tb %>% dplyr::mutate(`:=`(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr),
+                                                    as.character(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr)))) %>%
       dplyr::group_by(!!rlang::sym(outp_smry_ls$id_var_nm_1L_chr)) %>%
-      dplyr::mutate(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr) := !!rlang::sym(outp_smry_ls$round_var_nm_1L_chr) %>%
-                      transform_timepoint_vals(timepoint_levels_chr = outp_smry_ls$scored_data_tb %>%
-                                                 dplyr::pull(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr)) %>%
-                                                 unique(),
-                                               bl_val_1L_chr = outp_smry_ls$round_bl_val_1L_chr)
-      )%>%
+      dplyr::mutate(`:=`(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr),
+                         !!rlang::sym(outp_smry_ls$round_var_nm_1L_chr) %>%
+                           transform_timepoint_vals(timepoint_levels_chr = outp_smry_ls$scored_data_tb %>%
+                                                      dplyr::pull(!!rlang::sym(outp_smry_ls$round_var_nm_1L_chr)) %>%
+                                                      unique(), bl_val_1L_chr = outp_smry_ls$round_bl_val_1L_chr))) %>%
       dplyr::ungroup()
   }
-  if(depnt_vars_are_NA_1L_lgl){
+  if (depnt_vars_are_NA_1L_lgl) {
     depnt_vars_chr <- names(fk_data_tb)[names(fk_data_tb) %>%
                                           purrr::map_lgl(~startsWith(.x, outp_smry_ls$depnt_var_nm_1L_chr))]
     fk_data_tb <- fk_data_tb %>% dplyr::mutate(dplyr::across(dplyr::all_of(depnt_vars_chr),
@@ -2243,7 +2249,7 @@ make_selected_mdl_text <- function(results_ls,
 make_shareable_mdl <- function (fake_ds_tb,
                                 mdl_smry_tb,
                                 control_1L_chr = NA_character_,
-                                depnt_var_nm_1L_chr = "utl_total_w", # Remove default
+                                depnt_var_nm_1L_chr = "utl_total_w",
                                 id_var_nm_1L_chr = "fkClientID",
                                 mdl_type_1L_chr = "OLS_CLL",
                                 mdl_types_lup = NULL,
@@ -2255,81 +2261,80 @@ make_shareable_mdl <- function (fake_ds_tb,
     utils::data(mdl_types_lup, envir = environment())
   if (is.na(tfmn_1L_chr))
     tfmn_1L_chr <- ready4::get_from_lup_obj(mdl_types_lup,
-                                            match_value_xx = mdl_type_1L_chr,
-                                            match_var_nm_1L_chr = "short_name_chr",
-                                            target_var_nm_1L_chr = "tfmn_chr",
-                                            evaluate_1L_lgl = F)
-  predr_var_nms_chr <- mdl_smry_tb$Parameter[!mdl_smry_tb$Parameter %in% c("SD (Intercept)", "Intercept",
-                                                                           "R2", "RMSE","Sigma")] %>%
-    stringi::stri_replace_last_fixed(" baseline","_baseline") %>%
-    stringi::stri_replace_last_fixed(" change","_change") %>%
-    stringi::stri_replace_last_fixed(" scaled","_scaled") %>%
-    stringi::stri_replace_last_fixed(" unscaled","_unscaled")
-  tfd_depnt_var_nm_1L_chr <- transform_depnt_var_nm(depnt_var_nm_1L_chr,
-                                                    tfmn_1L_chr = tfmn_1L_chr)
+                                            match_value_xx = mdl_type_1L_chr, match_var_nm_1L_chr = "short_name_chr",
+                                            target_var_nm_1L_chr = "tfmn_chr", evaluate_1L_lgl = F)
+  predr_var_nms_chr <- mdl_smry_tb$Parameter[!mdl_smry_tb$Parameter %in%
+                                               c("SD (Intercept)", "Intercept", "R2", "RMSE", "Sigma")] %>%
+    stringi::stri_replace_last_fixed(" baseline", "_baseline") %>%
+    stringi::stri_replace_last_fixed(" change", "_change") %>%
+    stringi::stri_replace_last_fixed(" scaled", "_scaled") %>%
+    stringi::stri_replace_last_fixed(" unscaled", "_unscaled")
+  X <- ready4use::Ready4useDyad(ds_tb = outp_smry_ls$scored_data_tb, dictionary_r3 = outp_smry_ls$dictionary_tb)
+  dummys_chr <- manufacture(X, flatten_1L_lgl = T)
+  predr_var_nms_chr <- predr_var_nms_chr %>% purrr::map_chr(~ifelse(.x %in% dummys_chr,
+                                                                    manufacture(X, flatten_1L_lgl = T, what_1L_chr = "factors-d", match_1L_chr = .x),
+                                                                    .x)) %>% unique()
+  tfd_depnt_var_nm_1L_chr <- transform_depnt_var_nm(depnt_var_nm_1L_chr, tfmn_1L_chr = tfmn_1L_chr)
   if (length(predr_var_nms_chr) > 1) {
     covar_var_nms_chr <- predr_var_nms_chr[2:length(predr_var_nms_chr)]
-  }else{
+  } else {
     covar_var_nms_chr <- NA_character_
   }
-  model_mdl <- make_mdl(fake_ds_tb %>%
-                          dplyr::select(tidyselect::all_of(c(id_var_nm_1L_chr,
-                                                             tfd_depnt_var_nm_1L_chr,
-                                                             predr_var_nms_chr))),
+  model_mdl <- make_mdl(fake_ds_tb %>% dplyr::select(tidyselect::all_of(c(id_var_nm_1L_chr, tfd_depnt_var_nm_1L_chr, predr_var_nms_chr))),
                         depnt_var_nm_1L_chr = depnt_var_nm_1L_chr,
-                        predr_var_nm_1L_chr = predr_var_nms_chr[1], covar_var_nms_chr = covar_var_nms_chr,
-                        tfmn_1L_chr = tfmn_1L_chr, mdl_type_1L_chr = mdl_type_1L_chr,
-                        mdl_types_lup = mdl_types_lup, control_1L_chr = control_1L_chr,
+                        predr_var_nm_1L_chr = predr_var_nms_chr[1],
+                        covar_var_nms_chr = covar_var_nms_chr,
+                        tfmn_1L_chr = tfmn_1L_chr,
+                        mdl_type_1L_chr = mdl_type_1L_chr,
+                        mdl_types_lup = mdl_types_lup,
+                        control_1L_chr = control_1L_chr,
                         start_1L_chr = start_1L_chr)
-  if(ready4::get_from_lup_obj(mdl_types_lup,
-                              match_value_xx = mdl_type_1L_chr,
-                              match_var_nm_1L_chr = "short_name_chr",
-                              target_var_nm_1L_chr = "fn_chr",
-                              evaluate_1L_lgl = F) == "betareg::betareg"){
+  if (ready4::get_from_lup_obj(mdl_types_lup,
+                               match_value_xx = mdl_type_1L_chr,
+                               match_var_nm_1L_chr = "short_name_chr",
+                               target_var_nm_1L_chr = "fn_chr",
+                               evaluate_1L_lgl = F) == "betareg::betareg") {
     model_coeffs_dbl <- model_mdl$coefficients$mean
-
-  }else{
+  }  else {
     model_coeffs_dbl <- model_mdl$coefficients
   }
   param_nms_chr <- model_coeffs_dbl %>% names()
-  mdl_smry_tb <- mdl_smry_tb %>% dplyr::mutate(Parameter = dplyr::case_when(Parameter ==
-                                                                              "Intercept" ~ "(Intercept)", TRUE ~ purrr::map_chr(Parameter,
-                                                                                                                                 ~stringr::str_replace_all(.x, " ", "_")))) %>% dplyr::filter(Parameter %in%
-                                                                                                                                                                                                param_nms_chr) %>% dplyr::slice(match(param_nms_chr, Parameter))
+  mdl_smry_tb <- mdl_smry_tb %>% dplyr::mutate(Parameter = dplyr::case_when(Parameter == "Intercept" ~ "(Intercept)",
+                                                                            TRUE ~ purrr::map_chr(Parameter,
+                                                                                                  ~stringr::str_replace_all(.x, " ", "_")))) %>%
+    dplyr::filter(Parameter %in% param_nms_chr) %>% dplyr::slice(match(param_nms_chr, Parameter))
   assertthat::assert_that(all(param_nms_chr == mdl_smry_tb$Parameter),
                           msg = "Parameter names mismatch between data and model summary table")
   model_coeffs_dbl <- mdl_smry_tb$Estimate
   names(model_coeffs_dbl) <- param_nms_chr
-  if(ready4::get_from_lup_obj(mdl_types_lup,
-                              match_value_xx = mdl_type_1L_chr,
-                              match_var_nm_1L_chr = "short_name_chr",
-                              target_var_nm_1L_chr = "fn_chr",
-                              evaluate_1L_lgl = F) == "betareg::betareg"){
+  if (ready4::get_from_lup_obj(mdl_types_lup, match_value_xx = mdl_type_1L_chr, match_var_nm_1L_chr = "short_name_chr",
+                               target_var_nm_1L_chr = "fn_chr", evaluate_1L_lgl = F) == "betareg::betareg") {
     model_mdl$coefficients$mean <- model_coeffs_dbl
-
-  }else{
+  }  else {
     model_mdl$coefficients <- model_coeffs_dbl
   }
   return(model_mdl)
 }
 make_smry_of_brm_mdl <- function (mdl_ls,
                                   data_tb,
-                                  predr_vars_nms_chr,
-                                  tfmn_1L_chr,
                                   depnt_var_nm_1L_chr = "utl_total_w",
+                                  predr_vars_nms_chr,
                                   mdl_nm_1L_chr = NA_character_,
-                                  seed_1L_dbl = 23456) {
+                                  seed_1L_dbl = 23456,
+                                  tfmn_1L_chr) {
   if (is.na(mdl_nm_1L_chr))
     mdl_nm_1L_chr <- predr_vars_nms_chr[1]
   set.seed(seed_1L_dbl)
-  predictions <- stats::predict(mdl_ls, summary = F) %>% calculate_depnt_var_tfmn(tfmn_1L_chr = tfmn_1L_chr, tfmn_is_outp_1L_lgl = T)
+  predictions <- stats::predict(mdl_ls, summary = F) %>%
+    calculate_depnt_var_tfmn(tfmn_1L_chr = tfmn_1L_chr, tfmn_is_outp_1L_lgl = T)
   sd_intcpt_df <- summary(mdl_ls, digits = 4)$random[[1]]
   sd_intcpt_df <- sd_intcpt_df[1:nrow(sd_intcpt_df), 1:4] %>%
     dplyr::mutate(dplyr::across(dplyr::everything(), as.numeric))
   coef <- summary(mdl_ls, digits = 4)$fixed
   coef <- coef[1:nrow(coef), 1:4] %>% dplyr::mutate(dplyr::across(dplyr::everything(), as.numeric))
   R2 <- brms::bayes_R2(mdl_ls) %>% as.vector()
-  RMSE <- psych::describe(apply(predictions, 1, calculate_rmse, y_dbl = data_tb %>% dplyr::pull(!!rlang::sym(depnt_var_nm_1L_chr))),
+  RMSE <- psych::describe(apply(predictions, 1, calculate_rmse,
+                                y_dbl = data_tb %>% dplyr::pull(!!rlang::sym(depnt_var_nm_1L_chr))),
                           quant = c(0.25, 0.75), skew = F, ranges = F)
   RMSE <- cbind(RMSE$mean, RMSE$sd, RMSE$Q0.25, RMSE$Q0.75) %>% as.vector()
   Sigma <- summary(mdl_ls, digits = 4)$spec_par[1:4]
@@ -2358,8 +2363,7 @@ make_smry_of_brm_mdl <- function (mdl_ls,
                                                                                       stringi::stri_replace_last_fixed("_unscaled"," unscaled")
                                                                                   }
                                                                                 }) %>%
-                                                                       purrr::flatten_chr()
-                                  ),
+                                                                       purrr::flatten_chr()),
                                 "R2", "RMSE", "Sigma"), Model = mdl_nm_1L_chr) %>%
     dplyr::mutate(`95% CI` = paste(l.95..CI, ",", u.95..CI)) %>%
     dplyr::rename(SE = Est.Error) %>% dplyr::select(Model, Parameter, Estimate, SE, `95% CI`)

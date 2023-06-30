@@ -63,6 +63,7 @@ depict_SpecificSynopsis <- function(x,
                                                                       height_1L_dbl = 4),
                                     what_1L_chr = "composite_mdl",
                                     write_1L_lgl = F,
+                                    x_labels_chr = character(0),
                                     y_label_1L_chr = " ",
                                     ...){
   plt <- NULL
@@ -121,6 +122,7 @@ depict_SpecificSynopsis <- function(x,
                                       round_var_nm_1L_chr = ds_descvs_ls$round_var_nm_1L_chr,
                                       heights_int = dim_plot_heights_int,
                                       make_log_log_tfmn_1L_lgl = dim_plot_log_log_tfmn_1L_lgl,
+                                      x_labels_chr = x_labels_chr,
                                       y_label_1L_chr = y_label_1L_chr))
     legend_ls <- cowplot::get_legend(first_plt)
     plt <- cowplot::plot_grid(first_plt +

@@ -16,6 +16,7 @@ transform_tb_to_mdl_inp(
   drop_all_msng_1L_lgl = T,
   scaling_fctr_dbl = 1,
   tfmn_1L_chr = "NTF",
+  tidy_1L_lgl = F,
   ungroup_1L_lgl = F
 )
 }
@@ -41,6 +42,8 @@ transform_tb_to_mdl_inp(
 \item{scaling_fctr_dbl}{Scaling factor (a double vector), Default: 1}
 
 \item{tfmn_1L_chr}{Transformation (a character vector of length one), Default: 'NTF'}
+
+\item{tidy_1L_lgl}{Tidy (a logical vector of length one), Default: F}
 
 \item{ungroup_1L_lgl}{Ungroup (a logical vector of length one), Default: F}
 }

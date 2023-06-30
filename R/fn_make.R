@@ -837,9 +837,10 @@ make_ethics_text <- function (results_ls)
 #' @return Fk data (a tibble)
 #' @rdname make_fake_ts_data
 #' @export 
-#' @importFrom purrr flatten_chr map_lgl
-#' @importFrom dplyr select ungroup mutate group_by pull across all_of
+#' @importFrom purrr flatten_chr map_dbl map_lgl
+#' @importFrom ready4 get_from_lup_obj
 #' @importFrom synthpop syn
+#' @importFrom dplyr ungroup mutate group_by pull across all_of
 #' @importFrom rlang sym
 make_fake_ts_data <- function (outp_smry_ls, depnt_var_min_val_1L_dbl = numeric(0), 
     depnt_vars_are_NA_1L_lgl = T) 
@@ -849,13 +850,12 @@ make_fake_ts_data <- function (outp_smry_ls, depnt_var_min_val_1L_dbl = numeric(
         predr_vars_nms_chr = outp_smry_ls$predr_vars_nms_ls %>% 
             purrr::flatten_chr() %>% unique(), id_var_nm_1L_chr = outp_smry_ls$id_var_nm_1L_chr, 
         round_var_nm_1L_chr = outp_smry_ls$round_var_nm_1L_chr, 
-        round_bl_val_1L_chr = outp_smry_ls$round_bl_val_1L_chr)
-    if (identical(outp_smry_ls$round_var_nm_1L_chr, character(0)) | 
-        ifelse(identical(outp_smry_ls$round_var_nm_1L_chr, character(0)), 
-            T, is.na(outp_smry_ls$round_var_nm_1L_chr))) {
-        data_tb <- data_tb %>% dplyr::select(-(outp_smry_ls$predr_vars_nms_ls %>% 
-            purrr::flatten_chr() %>% unique() %>% paste0("_change")))
-    }
+        round_bl_val_1L_chr = outp_smry_ls$round_bl_val_1L_chr, 
+        scaling_fctr_dbl = outp_smry_ls$predr_vars_nms_ls %>% 
+            purrr::flatten_chr() %>% unique() %>% purrr::map_dbl(~ifelse(.x %in% 
+            outp_smry_ls$predictors_lup$short_name_chr, ready4::get_from_lup_obj(outp_smry_ls$predictors_lup, 
+            match_var_nm_1L_chr = "short_name_chr", match_value_xx = .x, 
+            target_var_nm_1L_chr = "mdl_scaling_dbl"), 1)), tidy_1L_lgl = T)
     fk_data_ls <- synthpop::syn(data_tb, visit.sequence = names(data_tb)[names(data_tb) != 
         outp_smry_ls$id_var_nm_1L_chr], seed = outp_smry_ls$seed_1L_int)
     fk_data_tb <- fk_data_ls$syn
@@ -2471,9 +2471,10 @@ make_selected_mdl_text <- function (results_ls, for_abstract_1L_lgl = F)
 #' @importFrom utils data
 #' @importFrom ready4 get_from_lup_obj
 #' @importFrom stringi stri_replace_last_fixed
+#' @importFrom ready4use Ready4useDyad
+#' @importFrom purrr map_chr
 #' @importFrom dplyr select mutate case_when filter slice
 #' @importFrom tidyselect all_of
-#' @importFrom purrr map_chr
 #' @importFrom stringr str_replace_all
 #' @importFrom assertthat assert_that
 make_shareable_mdl <- function (fake_ds_tb, mdl_smry_tb, control_1L_chr = NA_character_, 
@@ -2493,6 +2494,12 @@ make_shareable_mdl <- function (fake_ds_tb, mdl_smry_tb, control_1L_chr = NA_cha
         stringi::stri_replace_last_fixed(" change", "_change") %>% 
         stringi::stri_replace_last_fixed(" scaled", "_scaled") %>% 
         stringi::stri_replace_last_fixed(" unscaled", "_unscaled")
+    X <- ready4use::Ready4useDyad(ds_tb = outp_smry_ls$scored_data_tb, 
+        dictionary_r3 = outp_smry_ls$dictionary_tb)
+    dummys_chr <- manufacture(X, flatten_1L_lgl = T)
+    predr_var_nms_chr <- predr_var_nms_chr %>% purrr::map_chr(~ifelse(.x %in% 
+        dummys_chr, manufacture(X, flatten_1L_lgl = T, what_1L_chr = "factors-d", 
+        match_1L_chr = .x), .x)) %>% unique()
     tfd_depnt_var_nm_1L_chr <- transform_depnt_var_nm(depnt_var_nm_1L_chr, 
         tfmn_1L_chr = tfmn_1L_chr)
     if (length(predr_var_nms_chr) > 1) {
@@ -2539,11 +2546,11 @@ make_shareable_mdl <- function (fake_ds_tb, mdl_smry_tb, control_1L_chr = NA_cha
 #' @description make_smry_of_brm_mdl() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make summary of bayesian regression model model. The function returns Summary of bayesian regression model model (a tibble).
 #' @param mdl_ls Model list (a list of models)
 #' @param data_tb Data (a tibble)
-#' @param predr_vars_nms_chr Predictor variables names (a character vector)
-#' @param tfmn_1L_chr Transformation (a character vector of length one)
 #' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: 'utl_total_w'
+#' @param predr_vars_nms_chr Predictor variables names (a character vector)
 #' @param mdl_nm_1L_chr Model name (a character vector of length one), Default: 'NA'
 #' @param seed_1L_dbl Seed (a double vector of length one), Default: 23456
+#' @param tfmn_1L_chr Transformation (a character vector of length one)
 #' @return Summary of bayesian regression model model (a tibble)
 #' @rdname make_smry_of_brm_mdl
 #' @export 
@@ -2555,8 +2562,9 @@ make_shareable_mdl <- function (fake_ds_tb, mdl_smry_tb, control_1L_chr = NA_cha
 #' @importFrom purrr map flatten_chr
 #' @importFrom stringi stri_replace_last_fixed
 #' @keywords internal
-make_smry_of_brm_mdl <- function (mdl_ls, data_tb, predr_vars_nms_chr, tfmn_1L_chr, depnt_var_nm_1L_chr = "utl_total_w", 
-    mdl_nm_1L_chr = NA_character_, seed_1L_dbl = 23456) 
+make_smry_of_brm_mdl <- function (mdl_ls, data_tb, depnt_var_nm_1L_chr = "utl_total_w", 
+    predr_vars_nms_chr, mdl_nm_1L_chr = NA_character_, seed_1L_dbl = 23456, 
+    tfmn_1L_chr) 
 {
     if (is.na(mdl_nm_1L_chr)) 
         mdl_nm_1L_chr <- predr_vars_nms_chr[1]
