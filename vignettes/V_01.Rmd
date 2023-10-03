@@ -11,6 +11,7 @@ Note: **This vignette uses fake data** - it is for illustrative purposes only an
 
 ```{r message=FALSE, warning=FALSE}
 library(ready4)
+library(scorz)
 library(specific)
 ```
 

@@ -446,9 +446,9 @@ usethis::use_package("rstan",
 # usethis::use_package("betareg",
 #                      type = "Suggests")
 
-# usethis::use_dev_package("scorz",
-#                          type = "Imports",
-#                          remote = "ready4-dev/scorz")
+usethis::use_dev_package("scorz",
+                         type = "Imports",
+                         remote = "ready4-dev/scorz")
 write_to_edit_workflow("pkgdown.yaml", consent_1L_chr = "Y") # In other packages, run for "test-coverage.yaml" as well.
 readLines("_pkgdown.yml") %>%
   stringr::str_replace_all("  - text: Model", "  - text: Framework & Model") %>%
