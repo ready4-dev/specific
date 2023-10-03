@@ -2457,6 +2457,7 @@ make_selected_mdl_text <- function (results_ls, for_abstract_1L_lgl = F)
 #' @description make_shareable_mdl() is a Make function that creates a new R object. Specifically, this function implements an algorithm to make shareable model. The function returns Model (a model).
 #' @param fake_ds_tb Fake dataset (a tibble)
 #' @param mdl_smry_tb Model summary (a tibble)
+#' @param x_ready4use_dictionary PARAM_DESCRIPTION
 #' @param control_1L_chr Control (a character vector of length one), Default: 'NA'
 #' @param depnt_var_nm_1L_chr Dependent variable name (a character vector of length one), Default: 'utl_total_w'
 #' @param id_var_nm_1L_chr Identity variable name (a character vector of length one), Default: 'fkClientID'
@@ -2472,12 +2473,12 @@ make_selected_mdl_text <- function (results_ls, for_abstract_1L_lgl = F)
 #' @importFrom ready4 get_from_lup_obj
 #' @importFrom stringi stri_replace_last_fixed
 #' @importFrom ready4use Ready4useDyad
-#' @importFrom purrr map_chr
 #' @importFrom dplyr select mutate case_when filter slice
+#' @importFrom purrr map_chr
 #' @importFrom tidyselect all_of
 #' @importFrom stringr str_replace_all
 #' @importFrom assertthat assert_that
-make_shareable_mdl <- function (fake_ds_tb, mdl_smry_tb, control_1L_chr = NA_character_, 
+make_shareable_mdl <- function (fake_ds_tb, mdl_smry_tb, x_ready4use_dictionary, control_1L_chr = NA_character_, 
     depnt_var_nm_1L_chr = "utl_total_w", id_var_nm_1L_chr = "fkClientID", 
     mdl_type_1L_chr = "OLS_CLL", mdl_types_lup = NULL, seed_1L_int = 12345L, 
     start_1L_chr = NA_character_, tfmn_1L_chr = "CLL") 
@@ -2494,8 +2495,8 @@ make_shareable_mdl <- function (fake_ds_tb, mdl_smry_tb, control_1L_chr = NA_cha
         stringi::stri_replace_last_fixed(" change", "_change") %>% 
         stringi::stri_replace_last_fixed(" scaled", "_scaled") %>% 
         stringi::stri_replace_last_fixed(" unscaled", "_unscaled")
-    X <- ready4use::Ready4useDyad(ds_tb = outp_smry_ls$scored_data_tb, 
-        dictionary_r3 = outp_smry_ls$dictionary_tb)
+    X <- ready4use::Ready4useDyad(ds_tb = fake_ds_tb %>% dplyr::select(intersect(names(fake_ds_tb), 
+        x_ready4use_dictionary$var_nm_chr)), dictionary_r3 = x_ready4use_dictionary)
     dummys_chr <- manufacture(X, flatten_1L_lgl = T)
     predr_var_nms_chr <- predr_var_nms_chr %>% purrr::map_chr(~ifelse(.x %in% 
         dummys_chr, manufacture(X, flatten_1L_lgl = T, what_1L_chr = "factors-d", 

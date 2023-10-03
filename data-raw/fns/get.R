@@ -445,6 +445,7 @@ get_table_predn_mdl <- function(mdl_nm_1L_chr,
                       tfmn_1L_chr = tfmn_1L_chr)
   table_predn_mdl <- make_shareable_mdl(fake_ds_tb = fake_ds_tb,
                                         mdl_smry_tb = ingredients_ls$mdls_smry_tb %>% dplyr::filter(Model == mdl_nm_1L_chr),
+                                        x_ready4use_dictionary = ingredients_ls$dictionary_tb,
                                         depnt_var_nm_1L_chr = ingredients_ls$depnt_var_nm_1L_chr,
                                         id_var_nm_1L_chr = ingredients_ls$id_var_nm_1L_chr,
                                         tfmn_1L_chr = tfmn_1L_chr,

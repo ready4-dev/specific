@@ -7,6 +7,7 @@
 make_shareable_mdl(
   fake_ds_tb,
   mdl_smry_tb,
+  x_ready4use_dictionary,
   control_1L_chr = NA_character_,
   depnt_var_nm_1L_chr = "utl_total_w",
   id_var_nm_1L_chr = "fkClientID",
@@ -21,6 +22,8 @@ make_shareable_mdl(
 \item{fake_ds_tb}{Fake dataset (a tibble)}
 
 \item{mdl_smry_tb}{Model summary (a tibble)}
+
+\item{x_ready4use_dictionary}{PARAM_DESCRIPTION}
 
 \item{control_1L_chr}{Control (a character vector of length one), Default: 'NA'}
 

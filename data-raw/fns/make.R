@@ -2248,6 +2248,8 @@ make_selected_mdl_text <- function(results_ls,
 }
 make_shareable_mdl <- function (fake_ds_tb,
                                 mdl_smry_tb,
+                                x_ready4use_dictionary,
+                                #x_Ready4useDyad,
                                 control_1L_chr = NA_character_,
                                 depnt_var_nm_1L_chr = "utl_total_w",
                                 id_var_nm_1L_chr = "fkClientID",
@@ -2269,7 +2271,8 @@ make_shareable_mdl <- function (fake_ds_tb,
     stringi::stri_replace_last_fixed(" change", "_change") %>%
     stringi::stri_replace_last_fixed(" scaled", "_scaled") %>%
     stringi::stri_replace_last_fixed(" unscaled", "_unscaled")
-  X <- ready4use::Ready4useDyad(ds_tb = outp_smry_ls$scored_data_tb, dictionary_r3 = outp_smry_ls$dictionary_tb)
+  X <- ready4use::Ready4useDyad(ds_tb = fake_ds_tb %>% dplyr::select(intersect(names(fake_ds_tb), x_ready4use_dictionary$var_nm_chr)),
+                                dictionary_r3 = x_ready4use_dictionary)
   dummys_chr <- manufacture(X, flatten_1L_lgl = T)
   predr_var_nms_chr <- predr_var_nms_chr %>% purrr::map_chr(~ifelse(.x %in% dummys_chr,
                                                                     manufacture(X, flatten_1L_lgl = T, what_1L_chr = "factors-d", match_1L_chr = .x),

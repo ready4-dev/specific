@@ -7,9 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Note: **This vignette uses fake data** - it is for illustrative purposes only and should not be used to inform decision making. Furthermore, as this packake is optimised only for certain types of utility mapping studies, it is recommended to use the [TTU package](https://ready4-dev.github.io/TTU/index.html) (which depends upon `specific`) instead of using specific modules directly as workflow syntax will be simpler and functionality more complete.
-
-The steps in this exploratory analysis workflow may need to be performed iteratively, both in order to identify the optimal model types, predictors and covariates to use and modify default values to ensure model convergence. 
+Note: **This vignette uses fake data** - it is for illustrative purposes only and should not be used to inform decision making. The `specific` package includes [ready4 framework model modules](https://www.ready4-dev.com/docs/framework/implementation/modularity/#ready4-model-modules) that form part of [the ready4 youth mental health economic model](https://www.ready4-dev.com/docs/model/). Currently, these modules are not optimised to be used directly, but are instead intended for use in other model modules. For example, the [TTU package](https://ready4-dev.github.io/TTU/index.html) includes modules that extend `specific` modules to help implement [utility mapping studies](https://www.ready4-dev.com/docs/model/modules/using-modules/people/map-to-utility/). However, to illustrate the main features of `specific` modules this vignette demonstrates how `specific` modules could be used independently. In practice, workflow illustrated in this article would probably need to be performed iteratively in order to identify the optimal model types, predictors and covariates and to update default values to ensure model convergence. 
 
 ```{r message=FALSE, warning=FALSE}
 library(ready4)
@@ -26,7 +24,7 @@ library(specific)
 ```
 
 ## Set consent policy
-By default, methods in the `specific` package will request your consent before writing files to your machine. This is the safest option. However, as there are many files that need to be written locally for this program to execute, you can overwrite this default by supplying the value "Y" to methods with a `consent_1L_chr` argument.
+By default, modules in the `specific` package will request your consent before writing files to your machine. This is the safest option. However, as there are many files that need to be written locally for this program to execute, you can overwrite this default by supplying the value "Y" to methods with a `consent_1L_chr` argument.
 
 ```{r eval = FALSE}
 consent_1L_chr <- "" # Default value - asks for consent prior to writing each file.

@@ -123,9 +123,12 @@ Collate:
     'pkg_specific.R'
     'specific-package.R'
 Suggests: 
-    rmarkdown
+    cmdstanr (>= 0.5.3),
+    rmarkdown,
+    rstan
 Remotes: 
     ready4-dev/ready4,
     ready4-dev/ready4show,
     ready4-dev/ready4use,
-    ready4-dev/youthvars
+    ready4-dev/youthvars,
+    stan-dev/cmdstanr

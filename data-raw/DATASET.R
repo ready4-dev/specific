@@ -1,3 +1,4 @@
+library(ready4)
 library(ready4fun)
 library(ready4show)
 library(ready4use)
@@ -7,7 +8,7 @@ library(cmdstanr)
 fns_env_ls <- ready4fun::read_fns(c("data-raw/fns/","data-raw/mthds/"),
                                   fns_env = new.env(parent = globalenv()))
 x <- ready4fun::make_pkg_desc_ls(pkg_title_1L_chr = "Specify Models To Solve Inverse Problems" %>% tools::toTitleCase(),
-                                 pkg_desc_1L_chr = "Tools to standardise the formalising and testing of models to solve inverse problems. Designed for use in models developed with the ready4 framework (https://www.ready4-dev.com/).
+                                 pkg_desc_1L_chr = "Modules from the ready4 youth mental health economic model (https://www.ready4-dev.com/docs/model/) that can be used to standardise the formalising and testing of models to solve inverse problems. Designed for use in models developed with the ready4 framework (https://www.ready4-dev.com/).
   This development version of the specific package has been made available as part of the process of testing and documenting the package.
                             If you have any questions, please contact the authors (matthew.hamilton1@monash.edu).",
                                  authors_prsn = c(utils::person(given = "Matthew",family = "Hamilton",email = "matthew.hamilton1@monash.edu", role = c("aut", "cre"),comment = c(ORCID = "0000-0001-7407-9194")),
@@ -437,16 +438,21 @@ z <- ready4pack::make_pt_ready4pack_manifest(x,
   ready4pack::ready4pack_manifest()
 z <- ready4::author(z)
 ready4::write_extra_pkgs_to_actions(consent_1L_chr = "Y")
-usethis::use_package("betareg",
-                     type = "Suggests")
 usethis::use_dev_package("cmdstanr",
                          type = "Suggests",
                          remote = "stan-dev/cmdstanr")
 usethis::use_package("rstan",
                      type = "Suggests")
-usethis::use_dev_package("scorz",
-                         type = "Imports",
-                         remote = "ready4-dev/scorz")
+# usethis::use_package("betareg",
+#                      type = "Suggests")
+
+# usethis::use_dev_package("scorz",
+#                          type = "Imports",
+#                          remote = "ready4-dev/scorz")
+write_to_edit_workflow("pkgdown.yaml", consent_1L_chr = "Y") # In other packages, run for "test-coverage.yaml" as well.
+readLines("_pkgdown.yml") %>%
+  stringr::str_replace_all("  - text: Model", "  - text: Framework & Model") %>%
+  writeLines(con = "_pkgdown.yml")
 devtools::build_vignettes()
 # usethis::use_dev_package("ready4",
 #                          type = "Depends",

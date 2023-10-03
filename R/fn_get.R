@@ -645,7 +645,8 @@ get_table_predn_mdl <- function (mdl_nm_1L_chr, ingredients_ls, analysis_1L_chr 
         tfmn_1L_chr = tfmn_1L_chr)
     table_predn_mdl <- make_shareable_mdl(fake_ds_tb = fake_ds_tb, 
         mdl_smry_tb = ingredients_ls$mdls_smry_tb %>% dplyr::filter(Model == 
-            mdl_nm_1L_chr), depnt_var_nm_1L_chr = ingredients_ls$depnt_var_nm_1L_chr, 
+            mdl_nm_1L_chr), x_ready4use_dictionary = ingredients_ls$dictionary_tb, 
+        depnt_var_nm_1L_chr = ingredients_ls$depnt_var_nm_1L_chr, 
         id_var_nm_1L_chr = ingredients_ls$id_var_nm_1L_chr, tfmn_1L_chr = tfmn_1L_chr, 
         mdl_type_1L_chr = mdl_type_1L_chr, mdl_types_lup = ingredients_ls$mdl_types_lup, 
         control_1L_chr = ready4::get_from_lup_obj(ingredients_ls$mdl_types_lup, 

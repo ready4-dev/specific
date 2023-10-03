@@ -1193,7 +1193,8 @@ write_shareable_mdls <- function (outp_smry_ls, consent_1L_chr = "", consent_ind
                 dplyr::select(names(model_mdl$data))
             model_mdl$data <- mdl_fake_ds_tb
             table_predn_mdl <- make_shareable_mdl(fake_ds_tb = mdl_fake_ds_tb, 
-                mdl_smry_tb = mdl_smry_tb, depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr, 
+                mdl_smry_tb = mdl_smry_tb, x_ready4use_dictionary = outp_smry_ls$dictionary_tb, 
+                depnt_var_nm_1L_chr = outp_smry_ls$depnt_var_nm_1L_chr, 
                 id_var_nm_1L_chr = outp_smry_ls$id_var_nm_1L_chr, 
                 tfmn_1L_chr = tfmn_1L_chr, mdl_type_1L_chr = mdl_type_1L_chr, 
                 mdl_types_lup = mdl_types_lup, control_1L_chr = control_1L_chr, 
