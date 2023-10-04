@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">specific</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9104</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9107</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,22 +90,27 @@
     
 <p>Note: <strong>This vignette uses fake data</strong> - it is for
 illustrative purposes only and should not be used to inform decision
-making. Furthermore, as this packake is optimised only for certain types
-of utility mapping studies, it is recommended to use the <a href="https://ready4-dev.github.io/TTU/index.html" class="external-link">TTU package</a>
-(which depends upon <code>specific</code>) instead of using specific
-modules directly as workflow syntax will be simpler and functionality
-more complete.</p>
-<p>The steps in this exploratory analysis workflow may need to be
-performed iteratively, both in order to identify the optimal model
-types, predictors and covariates to use and modify default values to
-ensure model convergence.</p>
+making. The <code>specific</code> package includes <a href="https://www.ready4-dev.com/docs/framework/implementation/modularity/#ready4-model-modules" class="external-link">ready4
+framework model modules</a> that form part of <a href="https://www.ready4-dev.com/docs/model/" class="external-link">the ready4 youth mental
+health economic model</a>. Currently, these modules are not optimised to
+be used directly, but are instead intended for use in other model
+modules. For example, the <a href="https://ready4-dev.github.io/TTU/index.html" class="external-link">TTU package</a>
+includes modules that extend <code>specific</code> modules to help
+implement <a href="https://www.ready4-dev.com/docs/model/modules/using-modules/people/map-to-utility/" class="external-link">utility
+mapping studies</a>. However, to illustrate the main features of
+<code>specific</code> modules this vignette demonstrates how
+<code>specific</code> modules could be used independently. In practice,
+workflow illustrated in this article would probably need to be performed
+iteratively in order to identify the optimal model types, predictors and
+covariates and to update default values to ensure model convergence.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ready4-dev.github.io/ready4/" class="external-link">ready4</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ready4-dev.github.io/scorz/" class="external-link">scorz</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ready4-dev.github.io/specific/">specific</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="set-consent-policy">Set consent policy<a class="anchor" aria-label="anchor" href="#set-consent-policy"></a>
 </h2>
-<p>By default, methods in the <code>specific</code> package will request
+<p>By default, modules in the <code>specific</code> package will request
 your consent before writing files to your machine. This is the safest
 option. However, as there are many files that need to be written locally
 for this program to execute, you can overwrite this default by supplying
@@ -1239,12 +1244,12 @@ directory.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ready4-dev.github.io/ready4/reference/author-methods.html" class="external-link">author</a></span><span class="op">(</span><span class="va">X</span>, what_1L_chr <span class="op">=</span> <span class="st">"workspace"</span>, consent_1L_chr <span class="op">=</span> <span class="va">consent_1L_chr</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## New directories created:</span></span>
-<span><span class="co">## /tmp/RtmpWFMcd7/Fake</span></span>
-<span><span class="co">## /tmp/RtmpWFMcd7/Fake/Markdown</span></span>
-<span><span class="co">## /tmp/RtmpWFMcd7/Fake/Output</span></span>
-<span><span class="co">## /tmp/RtmpWFMcd7/Fake/Reports</span></span>
-<span><span class="co">## /tmp/RtmpWFMcd7/Fake/Output/_Descriptives</span></span>
-<span><span class="co">## /tmp/RtmpWFMcd7/Fake/Output/H_Dataverse</span></span></code></pre>
+<span><span class="co">## /tmp/Rtmpj2tVZ3/Fake</span></span>
+<span><span class="co">## /tmp/Rtmpj2tVZ3/Fake/Markdown</span></span>
+<span><span class="co">## /tmp/Rtmpj2tVZ3/Fake/Output</span></span>
+<span><span class="co">## /tmp/Rtmpj2tVZ3/Fake/Reports</span></span>
+<span><span class="co">## /tmp/Rtmpj2tVZ3/Fake/Output/_Descriptives</span></span>
+<span><span class="co">## /tmp/Rtmpj2tVZ3/Fake/Output/H_Dataverse</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="descriptives">Descriptives<a class="anchor" aria-label="anchor" href="#descriptives"></a>
