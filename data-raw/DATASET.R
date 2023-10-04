@@ -443,8 +443,8 @@ usethis::use_dev_package("cmdstanr",
                          remote = "stan-dev/cmdstanr")
 usethis::use_package("rstan",
                      type = "Suggests")
-# usethis::use_package("betareg",
-#                      type = "Suggests")
+usethis::use_package("betareg",
+                     type = "Suggests")
 
 usethis::use_dev_package("scorz",
                          type = "Imports",
